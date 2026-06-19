@@ -1,0 +1,112 @@
+/* ============================================================
+   Spyglass — Design Tokens (single source of truth)
+   Consolidated from brand/tokens.css + the per-file token
+   objects (BRAND/THEMES/T) in the prototypes. Light theme only.
+   ============================================================ */
+
+:root {
+  /* === Surfaces ================================================ */
+  --bg: #ffffff;
+  --bg-card: #ffffff;
+  --paper: #f5f5f4;
+
+  /* === Ink scale =============================================== */
+  --ink: #0a0a0a;
+  --ink-2: #525252;
+  --ink-3: #a3a3a3;
+  --ink-4: #d4d4d4;
+  --line: #e7e5e4;
+  --line-soft: #ededeb;
+
+  /* === Gold · accent / fills / CTAs ============================ */
+  --amber: #c2a24c;
+  --amber-d: #a6862f;
+  --amber-dd: #876b1e; /* deep gold — text on light (AA) */
+  --amber-ddd: #6b541a;
+  --amber-pale: #f1e7c9;
+  --amber-bg: #faf6ea;
+  --gold-line: #e5d29b;
+  --gold-light: #d8be6e;
+
+  /* === Navy · structure / primary buttons ====================== */
+  --navy: #0a1f3d;
+  --navy-2: #1a3052;
+
+  /* === Forest · positive / placed ============================== */
+  --forest: #2f4d3a;
+
+  /* === Red · pass / above-band only ============================ */
+  --red: #dc2626;
+
+  /* === Cream · text on navy ==================================== */
+  --cream: #f5efe0;
+
+  /* === Typography ============================================= */
+  --font: "Geist", -apple-system, BlinkMacSystemFont, sans-serif;
+  --mono: "Geist Mono", ui-monospace, Menlo, monospace;
+
+  /* === Radii ================================================== */
+  --r-chip: 8px;
+  --r-field: 10px;
+  --r-btn: 12px;
+  --r-panel: 14px;
+  --r-card: 20px;
+
+  /* === Shadow ================================================= */
+  --sh-card: 0 12px 32px rgba(0, 0, 0, 0.05), 0 2px 4px rgba(0, 0, 0, 0.04);
+  --sh-hover: 0 18px 40px -12px rgba(10, 31, 61, 0.22);
+
+  /* === Motion ================================================= */
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-pop: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+* {
+  box-sizing: border-box;
+}
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  font-family: var(--font);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+}
+#root {
+  min-height: 100vh;
+}
+
+a {
+  color: inherit;
+}
+
+@keyframes spgPop {
+  from {
+    opacity: 0;
+    transform: scale(0.985) translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+@keyframes spgPulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
