@@ -212,6 +212,23 @@
     mem[k]=v;
   }
 
+  // ---------- ollinApi: single data-access layer ----------
+  // Every read/write of tracker data goes through this object. To move the data
+  // somewhere central later (REST API, Supabase, Google Sheet, etc.), only the
+  // bodies of these methods change — the rest of the app stays untouched.
+  var ollinApi = {
+    async getAccounts(){ var a = await sGet("tracker:accounts"); try{ return a ? JSON.parse(a) : []; }catch(e){ return []; } },
+    async saveAccounts(list){ await sSet("tracker:accounts", JSON.stringify(list||[])); },
+    async getDone(){ var d = await sGet("tracker:done"); try{ return d ? JSON.parse(d) : {}; }catch(e){ return {}; } },
+    async saveDone(map){ await sSet("tracker:done", JSON.stringify(map||{})); },
+    async getNotes(){ var n = await sGet("tracker:notes"); try{ return n ? JSON.parse(n) : {}; }catch(e){ return {}; } },
+    async saveNotes(map){ await sSet("tracker:notes", JSON.stringify(map||{})); },
+    async getActive(){ return await sGet("tracker:active"); },
+    async setActive(id){ await sSet("tracker:active", id||""); },
+    async getSeeded(){ return await sGet("tracker:seeded"); },
+    async setSeeded(v){ await sSet("tracker:seeded", v||"1"); }
+  };
+
   // ---------- model ----------
   var CADENCE = [
     {off:0, ch:"li",   label:"LinkedIn"},
@@ -260,25 +277,25 @@
 
   // ---------- persistence ----------
   async function load(){
-    var a = await sGet("tracker:accounts");
-    var d = await sGet("tracker:done");
-    var n = await sGet("tracker:notes");
-    var act = await sGet("tracker:active");
-    var seeded = await sGet("tracker:seeded");
-    if(a){ try{ state.accounts = JSON.parse(a); }catch(e){} }
-    if(d){ try{ state.done = JSON.parse(d); }catch(e){} }
-    if(n){ try{ state.notes = JSON.parse(n); }catch(e){} }
+    var accounts = await ollinApi.getAccounts();
+    var done = await ollinApi.getDone();
+    var notes = await ollinApi.getNotes();
+    var act = await ollinApi.getActive();
+    var seeded = await ollinApi.getSeeded();
+    if(accounts && accounts.length) state.accounts = accounts;
+    state.done = done || {};
+    state.notes = notes || {};
     if(!seeded && (!state.accounts || state.accounts.length===0)){
       seed();
-      await sSet("tracker:seeded","1");
+      await ollinApi.setSeeded("1");
       await persistAccounts();
     }
     if(act && state.accounts.some(function(x){return x.id===act;})) state.activeId = act;
     if(!state.activeId && state.accounts.length) state.activeId = state.accounts[0].id;
   }
-  async function persistAccounts(){ await sSet("tracker:accounts", JSON.stringify(state.accounts)); await sSet("tracker:active", state.activeId||""); }
-  async function persistDone(){ await sSet("tracker:done", JSON.stringify(state.done)); }
-  async function persistNotes(){ await sSet("tracker:notes", JSON.stringify(state.notes)); }
+  async function persistAccounts(){ await ollinApi.saveAccounts(state.accounts); await ollinApi.setActive(state.activeId||""); }
+  async function persistDone(){ await ollinApi.saveDone(state.done); }
+  async function persistNotes(){ await ollinApi.saveNotes(state.notes); }
 
   function seed(){
     var t = todayStr();
@@ -750,7 +767,7 @@
 
   // ---------- events ----------
   document.querySelectorAll(".tab").forEach(function(b){ b.addEventListener("click", function(){ state.view=b.dataset.view; render(); }); });
-  document.getElementById("acctSelect").addEventListener("change", function(e){ state.activeId=e.target.value; sSet("tracker:active", state.activeId); render(); });
+  document.getElementById("acctSelect").addEventListener("change", function(e){ state.activeId=e.target.value; ollinApi.setActive(state.activeId); render(); });
 
   // ---------- boot ----------
   load().then(render);
