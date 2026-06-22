@@ -895,14 +895,16 @@
     return {ok:true, added:added, updated:updated};
   }
 
-  // turn any Google Sheets link into a CSV export URL
+  // turn any Google Sheets link into an anonymously-fetchable CSV URL.
+  // Use the gviz endpoint for /edit links — it works with "anyone with the
+  // link" sharing, unlike /export which often 401s for anonymous requests.
   function sheetCsvUrl(u){
     u=(u||"").trim();
-    if(/output=csv/i.test(u)) return u;
+    if(/output=csv/i.test(u) || /tqx=out:csv/i.test(u)) return u;
     var mE=u.match(/\/spreadsheets\/d\/e\/([^/]+)\/pub/);
     if(mE){ var g=(u.match(/[?&]gid=(\d+)/)||[])[1]; return "https://docs.google.com/spreadsheets/d/e/"+mE[1]+"/pub?output=csv"+(g?("&gid="+g):""); }
     var mId=u.match(/\/spreadsheets\/d\/([a-zA-Z0-9_-]+)/);
-    if(mId){ var g2=(u.match(/[#&?]gid=(\d+)/)||[])[1]; return "https://docs.google.com/spreadsheets/d/"+mId[1]+"/export?format=csv"+(g2?("&gid="+g2):""); }
+    if(mId){ var g2=(u.match(/[#&?]gid=(\d+)/)||[])[1]; return "https://docs.google.com/spreadsheets/d/"+mId[1]+"/gviz/tq?tqx=out:csv"+(g2?("&tq=&gid="+g2):""); }
     return u;
   }
 
