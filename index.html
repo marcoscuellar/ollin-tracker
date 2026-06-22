@@ -610,9 +610,13 @@
       (a.threads||[]).forEach(function(t){
         var entry=t.persona==="Blocker"?"held":("Day "+(t.entryDay||PERSONA_ENTRY[t.persona]||1));
         var row=el('<div class="thread-row"><div><div class="tname">'+esc(t.name)+'</div><div class="tmeta">'+esc(t.title)+'</div></div><span class="persona">'+esc(t.persona)+'</span><span class="lbl">'+entry+'</span></div>');
+        var actions=el('<div style="display:flex; gap:12px; align-items:center; justify-content:flex-end"></div>');
+        var editb=el('<button class="delx" style="color:var(--green-mid)">Edit</button>');
+        editb.addEventListener("click", function(){ showThreadForm(card,a.id,t); });
         var trx=el('<button class="delx">×</button>');
         trx.addEventListener("click", function(){ deleteThread(a.id,t.id); });
-        row.appendChild(trx);
+        actions.appendChild(editb); actions.appendChild(trx);
+        row.appendChild(actions);
         card.appendChild(row);
       });
 
@@ -646,7 +650,10 @@
     });
   }
 
-  function showThreadForm(card, acctId){
+  function showThreadForm(card, acctId, thread){
+    var editing=!!thread;
+    // avoid stacking multiple open forms in the same card
+    card.querySelectorAll(".form").forEach(function(x){ x.remove(); });
     var opts=PERSONAS.map(function(p){return '<option value="'+p+'">'+p+'</option>';}).join("");
     var f=el(
       '<div class="form">'+
@@ -659,30 +666,47 @@
           '<label><span class="lbl">LinkedIn URL</span><input id="t-li" placeholder="https://linkedin.com/in/…"></label>'+
           '<label><span class="lbl">Email</span><input id="t-email" placeholder="name@company.com"></label>'+
         '</div>'+
-        '<div class="form-actions"><button class="btn ghost" id="t-cancel">Cancel</button><button class="btn" id="t-save">Add contact</button></div>'+
+        '<div class="form-actions"><button class="btn ghost" id="t-cancel">Cancel</button><button class="btn" id="t-save">'+(editing?"Save changes":"Add contact")+'</button></div>'+
       '</div>');
     card.appendChild(f);
     var pSel=f.querySelector("#t-persona"), entry=f.querySelector("#t-entry");
     function syncEntry(){ var v=PERSONA_ENTRY[pSel.value]; entry.value = v===0? "" : v; entry.disabled = pSel.value==="Blocker"; }
-    pSel.addEventListener("change", syncEntry); syncEntry();
+    pSel.addEventListener("change", syncEntry);
+    // prefill (edit) or defaults (add)
+    f.querySelector("#t-name").value  = editing ? (thread.name||"")  : "";
+    f.querySelector("#t-title").value = editing ? (thread.title||"") : "";
+    f.querySelector("#t-angle").value = editing ? (thread.angle||"") : "";
+    f.querySelector("#t-li").value    = editing ? (thread.linkedin||"") : "";
+    f.querySelector("#t-email").value = editing ? (thread.email||"") : "";
+    pSel.value = editing ? (thread.persona||PERSONAS[0]) : PERSONAS[0];
+    syncEntry();
+    if(editing && thread.persona!=="Blocker") entry.value = thread.entryDay || PERSONA_ENTRY[thread.persona] || 1;
     f.querySelector("#t-name").focus();
     f.querySelector("#t-cancel").addEventListener("click", function(){ f.remove(); });
     f.querySelector("#t-save").addEventListener("click", function(){
       var name=f.querySelector("#t-name").value.trim();
       if(!name){ toast("Name required"); return; }
-      var acct=state.accounts.find(function(a){return a.id===acctId;});
-      acct.threads=acct.threads||[];
-      acct.threads.push({
-        id:"t"+Date.now(), name:name,
+      var vals={
+        name:name,
         title:f.querySelector("#t-title").value.trim(),
         persona:pSel.value,
         entryDay: pSel.value==="Blocker"?0:(parseInt(entry.value,10)||PERSONA_ENTRY[pSel.value]||1),
-        channel: CADENCE[0].ch,
         linkedin:f.querySelector("#t-li").value.trim(),
         email:f.querySelector("#t-email").value.trim(),
         angle:f.querySelector("#t-angle").value.trim()
-      });
-      persistAccounts().then(function(){ render(); toast("Contact added"); });
+      };
+      if(editing){
+        // mutate in place so the contact's id (and its sent/notes keys) stay valid
+        thread.name=vals.name; thread.title=vals.title; thread.persona=vals.persona;
+        thread.entryDay=vals.entryDay; thread.linkedin=vals.linkedin; thread.email=vals.email; thread.angle=vals.angle;
+        persistAccounts().then(function(){ render(); toast("Contact updated"); });
+      } else {
+        var acct=state.accounts.find(function(a){return a.id===acctId;});
+        acct.threads=acct.threads||[];
+        vals.id="t"+Date.now(); vals.channel=CADENCE[0].ch;
+        acct.threads.push(vals);
+        persistAccounts().then(function(){ render(); toast("Contact added"); });
+      }
     });
   }
 
