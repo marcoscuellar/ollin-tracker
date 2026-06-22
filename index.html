@@ -381,7 +381,14 @@
   // ---------- render: today ----------
   function el(html){ var d=document.createElement("div"); d.innerHTML=html.trim(); return d.firstChild; }
   function esc(s){ return (s||"").replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];}); }
-  function extUrl(u){ u=(u||"").trim(); if(!u) return ""; if(!/^https?:\/\//i.test(u)) u="https://"+u.replace(/^\/+/,""); return u; }
+  function extUrl(u){
+    u=(u||"").trim();
+    if(!u) return "";
+    if(/^https?:\/\//i.test(u)) return u;
+    // reject placeholders / non-URLs like "(verify)", "TBD", a bare name, etc.
+    if(/\s/.test(u) || !/[a-z0-9-]+\.[a-z]{2,}/i.test(u)) return "";
+    return "https://"+u.replace(/^\/+/,"");
+  }
 
   function renderToday(){
     var root=document.getElementById("view-today"); root.innerHTML="";
@@ -509,7 +516,8 @@
     chk.addEventListener("click", function(){ toggleDone(x.id); });
     card.appendChild(chk);
 
-    var liBtn = x.li ? '<a class="lk" href="'+esc(extUrl(x.li))+'" target="_blank" rel="noopener">Open LinkedIn</a>' : '';
+    var liUrl = extUrl(x.li);
+    var liBtn = liUrl ? '<a class="lk" href="'+esc(liUrl)+'" target="_blank" rel="noopener">Open LinkedIn</a>' : '';
     var emBtn = x.email ? '<a class="lk" href="mailto:'+esc(x.email)+'">Email '+esc(x.email)+'</a>' : '';
     var noteVal = esc(state.notes[x.id]||"");
 
