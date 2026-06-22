@@ -379,6 +379,7 @@
   // ---------- render: today ----------
   function el(html){ var d=document.createElement("div"); d.innerHTML=html.trim(); return d.firstChild; }
   function esc(s){ return (s||"").replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];}); }
+  function extUrl(u){ u=(u||"").trim(); if(!u) return ""; if(!/^https?:\/\//i.test(u)) u="https://"+u.replace(/^\/+/,""); return u; }
 
   function renderToday(){
     var root=document.getElementById("view-today"); root.innerHTML="";
@@ -506,7 +507,7 @@
     chk.addEventListener("click", function(){ toggleDone(x.id); });
     card.appendChild(chk);
 
-    var liBtn = x.li ? '<a class="lk" href="'+esc(x.li)+'" target="_blank" rel="noopener">Open LinkedIn</a>' : '';
+    var liBtn = x.li ? '<a class="lk" href="'+esc(extUrl(x.li))+'" target="_blank" rel="noopener">Open LinkedIn</a>' : '';
     var emBtn = x.email ? '<a class="lk" href="mailto:'+esc(x.email)+'">Email '+esc(x.email)+'</a>' : '';
     var noteVal = esc(state.notes[x.id]||"");
 
