@@ -1,9 +1,14 @@
 // Shared helpers for the OLLIN serverless API:
 // KV client, cookie helpers, HMAC-signed sessions, base64url + sha256 helpers.
-import { kv } from '@vercel/kv';
+import { createClient } from '@vercel/kv';
 import crypto from 'node:crypto';
 
-export { kv };
+// Build the KV client explicitly so it works whether the Upstash/Vercel
+// integration provides KV_REST_API_* or UPSTASH_REDIS_REST_* env vars.
+export const kv = createClient({
+  url: process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL,
+  token: process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN,
+});
 
 // KV keys (single-user app).
 export const KEYS = {
