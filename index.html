@@ -582,10 +582,19 @@
     var root=document.getElementById("view-accounts"); root.innerHTML="";
     root.appendChild(el('<div class="todaybar"><div class="date"><span class="lbl">Accounts</span><span class="d">Your active campaigns</span></div></div>'));
 
-    var addBtnRow=el('<div style="margin:18px 0; display:flex; gap:9px; flex-wrap:wrap"><button class="btn" id="addAcctBtn">+ Add account</button><button class="btn ghost" id="importBtn">&#8593; Import from Engine 7</button><button class="btn ghost" id="dedupeBtn">&#10683; Delete duplicates</button></div>');
+    var addBtnRow=el('<div style="margin:18px 0; display:flex; gap:9px; flex-wrap:wrap"><button class="btn" id="addAcctBtn">+ Add account</button><button class="btn ghost" id="importBtn">&#8593; Import from Engine 7</button><button class="btn ghost" id="dedupeBtn">&#10683; Delete duplicates</button><button class="btn danger" id="clearAllBtn">Clear all &amp; start over</button></div>');
     root.appendChild(addBtnRow);
     addBtnRow.querySelector("#addAcctBtn").addEventListener("click", function(){ showAcctForm(root); });
     addBtnRow.querySelector("#importBtn").addEventListener("click", function(){ showImportForm(root); });
+    addBtnRow.querySelector("#clearAllBtn").addEventListener("click", function(){
+      if(!state.accounts.length){ toast("Nothing to clear"); return; }
+      if(!confirm("Clear ALL accounts, contacts, sent checkmarks and saved messages?\n\nThis cannot be undone. Your fingerprint login stays.")) return;
+      if(!confirm("Really wipe everything and start from scratch?")) return;
+      state.accounts=[]; state.done={}; state.notes={}; state.activeId=null; state.seeded=true;
+      persistAccounts();
+      render();
+      toast("All cleared — start fresh");
+    });
     addBtnRow.querySelector("#dedupeBtn").addEventListener("click", function(){
       var c=countDuplicates();
       if(!c.accounts && !c.threads){ toast("No duplicates found"); return; }
