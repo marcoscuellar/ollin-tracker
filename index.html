@@ -258,7 +258,7 @@
   var PERSONA_ENTRY = { "Champion":1, "Technical Evaluator":3, "Economic Buyer":5, "Additional":8, "Blocker":0 };
   var PERSONAS = ["Champion","Technical Evaluator","Economic Buyer","Additional","Blocker"];
 
-  var state = { accounts:[], done:{}, notes:{}, activeId:null, view:"today", seeded:false };
+  var state = { accounts:[], done:{}, notes:{}, activeId:null, view:"today", seeded:false, sheetUrl:"" };
   var MODE = { api:false }; // api=true once the Vercel /api + KV backend is detected
   var ALL = "__all__"; // sentinel activeId meaning "show every account combined"
 
@@ -309,6 +309,7 @@
     var n = await sGet("tracker:notes");
     var act = await sGet("tracker:active");
     var seeded = await sGet("tracker:seeded");
+    state.sheetUrl = (await sGet("tracker:sheetUrl")) || "";
     if(a){ try{ state.accounts = JSON.parse(a); }catch(e){} }
     if(d){ try{ state.done = JSON.parse(d); }catch(e){} }
     if(n){ try{ state.notes = JSON.parse(n); }catch(e){} }
@@ -330,12 +331,13 @@
     sSet("tracker:done", JSON.stringify(state.done));
     sSet("tracker:notes", JSON.stringify(state.notes));
     sSet("tracker:seeded", state.seeded?"1":"");
+    sSet("tracker:sheetUrl", state.sheetUrl||"");
   }
   function apiSave(){
     if(saveTimer) clearTimeout(saveTimer);
     saveTimer=setTimeout(function(){
       fetch("/api/entries",{method:"POST",headers:{"Content-Type":"application/json"},credentials:"same-origin",
-        body:JSON.stringify({accounts:state.accounts,done:state.done,notes:state.notes,active:state.activeId,seeded:!!state.seeded})})
+        body:JSON.stringify({accounts:state.accounts,done:state.done,notes:state.notes,active:state.activeId,seeded:!!state.seeded,sheetUrl:state.sheetUrl||""})})
         .then(function(r){ if(!r.ok) throw new Error("save"); })
         .catch(function(){ toast("Save failed — check connection"); });
     },300);
@@ -582,12 +584,13 @@
     var root=document.getElementById("view-accounts"); root.innerHTML="";
     root.appendChild(el('<div class="todaybar"><div class="date"><span class="lbl">Accounts</span><span class="d">Your active campaigns</span></div></div>'));
 
-    var addBtnRow=el('<div style="margin:18px 0; display:flex; gap:9px; flex-wrap:wrap"><button class="btn" id="addAcctBtn">+ Add account</button><button class="btn ghost" id="importBtn">&#8593; Import from Engine 7</button><button class="btn ghost" id="exportBtn">&#8595; Export backup</button><button class="btn ghost" id="restoreBtn">&#8593; Restore backup</button><button class="btn ghost" id="dedupeBtn">&#10683; Delete duplicates</button><button class="btn danger" id="clearAllBtn">Clear all &amp; start over</button></div>');
+    var addBtnRow=el('<div style="margin:18px 0; display:flex; gap:9px; flex-wrap:wrap"><button class="btn" id="addAcctBtn">+ Add account</button><button class="btn ghost" id="sheetBtn">&#8862; Google Sheet</button><button class="btn ghost" id="importBtn">&#8593; Paste CSV</button><button class="btn ghost" id="exportBtn">&#8595; Export backup</button><button class="btn ghost" id="restoreBtn">&#8593; Restore backup</button><button class="btn ghost" id="dedupeBtn">&#10683; Delete duplicates</button><button class="btn danger" id="clearAllBtn">Clear all &amp; start over</button></div>');
     root.appendChild(addBtnRow);
     var restoreInput=el('<input type="file" accept="application/json,.json" style="display:none">');
     addBtnRow.appendChild(restoreInput);
     addBtnRow.querySelector("#addAcctBtn").addEventListener("click", function(){ showAcctForm(root); });
     addBtnRow.querySelector("#importBtn").addEventListener("click", function(){ showImportForm(root); });
+    addBtnRow.querySelector("#sheetBtn").addEventListener("click", function(){ showSheetForm(root); });
     addBtnRow.querySelector("#exportBtn").addEventListener("click", function(){
       if(!state.accounts.length){ toast("Nothing to back up"); return; }
       var data={ app:"ollin-tracker", version:1, exportedAt:new Date().toISOString(), accounts:state.accounts, done:state.done, notes:state.notes };
@@ -851,6 +854,90 @@
     return {ok:true, count:imported, accounts:Object.keys(byCompany).length};
   }
 
+  // ---------- shared upsert import (used by Google Sheet sync) ----------
+  function withSubjG(subj, body){ subj=(subj||"").trim(); body=(body||"").trim(); if(!body && !subj) return ""; return subj ? ("Subject: "+subj+"\n\n"+body) : body; }
+  function importRows(rows, upsert){
+    if(!rows || rows.length<2) return {ok:false,msg:"No data rows found (need a header row + at least one contact)"};
+    var cm=colMap(rows[0]);
+    if(cm.name<0 && cm.first<0) return {ok:false,msg:"No Name column found — check the header row"};
+    var added=0, updated=0, lastAcctId=null;
+    for(var i=1;i<rows.length;i++){
+      var r=rows[i];
+      var get=function(idx){ return idx>=0 && idx<r.length ? (r[idx]||"").trim() : ""; };
+      var name = cm.name>=0 ? get(cm.name) : (get(cm.first)+" "+get(cm.last)).trim();
+      if(!name) continue;
+      var company = get(cm.company) || "Imported account";
+      var persona = personaFrom(get(cm.thread), get(cm.status));
+      var fields = {
+        name:name, title:get(cm.title), persona:persona,
+        entryDay: persona==="Blocker"?0:dayFrom(get(cm.seq), persona),
+        channel:channelFrom(get(cm.chan)), linkedin:get(cm.li), email:get(cm.email), angle:get(cm.angle)
+      };
+      var msgs = { 0:get(cm.t1), 1:withSubjG(get(cm.t2subj),get(cm.t2)), 2:get(cm.t3), 3:withSubjG(get(cm.t4subj),get(cm.t4)), 4:get(cm.t5) };
+      var acct = state.accounts.find(function(a){ return normCompany(a.company)===normCompany(company); });
+      if(!acct){ acct={ id:"a"+Date.now()+"_"+i+"_"+Math.floor(Math.random()*999), company:company, start:todayStr(), threads:[] }; state.accounts.push(acct); }
+      acct.threads=acct.threads||[];
+      var thread=null;
+      if(upsert){ var key=normContact(fields); if(key) thread=acct.threads.find(function(t){ return normContact(t)===key; }); }
+      if(thread){
+        thread.name=fields.name; thread.title=fields.title; thread.persona=fields.persona; thread.entryDay=fields.entryDay;
+        thread.channel=fields.channel; thread.linkedin=fields.linkedin; thread.email=fields.email; thread.angle=fields.angle;
+        updated++;
+      } else {
+        thread={ id:"t"+Date.now()+"_"+i+"_"+Math.floor(Math.random()*999) };
+        for(var f in fields) thread[f]=fields[f];
+        acct.threads.push(thread); added++;
+      }
+      for(var k=0;k<5;k++){ var v=(msgs[k]||"").trim(); if(v) state.notes[acct.id+"|"+thread.id+"|"+k]=v; }
+      lastAcctId=acct.id;
+    }
+    if(lastAcctId) state.activeId=lastAcctId;
+    return {ok:true, added:added, updated:updated};
+  }
+
+  // turn any Google Sheets link into a CSV export URL
+  function sheetCsvUrl(u){
+    u=(u||"").trim();
+    if(/output=csv/i.test(u)) return u;
+    var mE=u.match(/\/spreadsheets\/d\/e\/([^/]+)\/pub/);
+    if(mE){ var g=(u.match(/[?&]gid=(\d+)/)||[])[1]; return "https://docs.google.com/spreadsheets/d/e/"+mE[1]+"/pub?output=csv"+(g?("&gid="+g):""); }
+    var mId=u.match(/\/spreadsheets\/d\/([a-zA-Z0-9_-]+)/);
+    if(mId){ var g2=(u.match(/[#&?]gid=(\d+)/)||[])[1]; return "https://docs.google.com/spreadsheets/d/"+mId[1]+"/export?format=csv"+(g2?("&gid="+g2):""); }
+    return u;
+  }
+
+  function showSheetForm(root){
+    var f=el(
+      '<div class="form">'+
+        '<label class="full"><span class="lbl">Google Sheet link</span><input id="sh-url" placeholder="https://docs.google.com/spreadsheets/d/…"></label>'+
+        '<div style="font-size:12.5px; color:var(--ink-2); margin:8px 0 12px; line-height:1.55">'+
+          'Make the sheet readable: <b>Share &rarr; General access &rarr; Anyone with the link &rarr; Viewer</b>.<br>'+
+          'Header columns it reads (any it can find): <span class="mono" style="font-size:11.5px">Name · Title · Company · Persona · Sequence Day · First Touch Channel · LinkedIn URL · Email · Outreach Angle · Touch 1 Copy · Touch 2 Subject · Touch 2 Copy · Touch 3 Copy · Touch 4 Subject · Touch 4 Copy · Touch 5 Copy</span>.<br>'+
+          'Re-importing the same sheet <b>updates</b> existing contacts (matched by email) instead of duplicating them.'+
+        '</div>'+
+        '<div class="form-actions"><button class="btn ghost" id="sh-cancel">Cancel</button><button class="btn" id="sh-go">Import / Sync</button></div>'+
+      '</div>');
+    root.insertBefore(f, root.children[2]);
+    var inp=f.querySelector("#sh-url"); inp.value=state.sheetUrl||""; inp.focus();
+    f.querySelector("#sh-cancel").addEventListener("click", function(){ f.remove(); });
+    f.querySelector("#sh-go").addEventListener("click", function(){
+      var raw=inp.value.trim();
+      if(!raw){ toast("Paste your sheet link"); return; }
+      if(!MODE.api){ toast("Sheet sync needs the live site"); return; }
+      var btn=f.querySelector("#sh-go"); btn.disabled=true; btn.textContent="Importing…";
+      fetch("/api/sheet?url="+encodeURIComponent(sheetCsvUrl(raw)),{credentials:"same-origin"})
+        .then(function(r){ return r.ok ? r.text() : r.json().then(function(j){ throw new Error(j.error||"Could not fetch sheet"); }); })
+        .then(function(text){
+          var res=importRows(parseCSV(text), true);
+          if(!res.ok) throw new Error(res.msg);
+          state.sheetUrl=raw; state.seeded=true;
+          persistAccounts(); render();
+          toast("Synced: "+res.added+" added, "+res.updated+" updated");
+        })
+        .catch(function(e){ toast(e.message||"Import failed"); btn.disabled=false; btn.textContent="Import / Sync"; });
+    });
+  }
+
   function showImportForm(root){
     var f=el(
       '<div class="form">'+
@@ -1032,7 +1119,7 @@
       var r=await fetch("/api/entries",{credentials:"same-origin"});
       if(r.ok){
         var d=await r.json();
-        state.accounts=d.accounts||[]; state.done=d.done||{}; state.notes=d.notes||{}; state.seeded=!!d.seeded;
+        state.accounts=d.accounts||[]; state.done=d.done||{}; state.notes=d.notes||{}; state.seeded=!!d.seeded; state.sheetUrl=d.sheetUrl||"";
         state.activeId=((d.active===ALL && state.accounts.length) || (d.active && state.accounts.some(function(a){return a.id===d.active;})))?d.active:((state.accounts[0]&&state.accounts[0].id)||null);
         if(!state.seeded && state.accounts.length===0){ seed(); state.seeded=true; apiSave(); }
       }
