@@ -766,8 +766,13 @@
     return rows.filter(function(r){ return r.some(function(c){return (c||"").trim()!=="";}); });
   }
   function colMap(header){
-    var m={}; header.forEach(function(h,i){ m[(h||"").trim().toLowerCase()]=i; });
+    var m={}, lower=[];
+    header.forEach(function(h,i){ var k=(h||"").trim().toLowerCase(); m[k]=i; lower[i]=k; });
     function find(){ for(var a=0;a<arguments.length;a++){ if(arguments[a] in m) return m[arguments[a]]; } return -1; }
+    // findC: first column whose header contains ALL given substrings
+    function findC(){ var t=[].slice.call(arguments); for(var i=0;i<lower.length;i++){ var h=lower[i]; if(t.every(function(s){return h.indexOf(s)>-1;})) return i; } return -1; }
+    // pick: first index that is >= 0 (find/findC return -1 when not found)
+    function pick(){ for(var a=0;a<arguments.length;a++){ if(arguments[a]>=0) return arguments[a]; } return -1; }
     return {
       first:find("first name","firstname","first"),
       last:find("last name","lastname","last"),
@@ -781,13 +786,13 @@
       chan:find("first touch channel","channel","first channel"),
       angle:find("outreach angle","angle","why this person"),
       status:find("lead status","status"),
-      t1:find("touch 1 copy","touch 1","touch1 copy","linkedin 1","touch 1 message"),
-      t2subj:find("touch 2 subject","email 1 subject","touch2 subject"),
-      t2:find("touch 2 copy","touch 2","touch2 copy","email 1 body","touch 2 message"),
-      t3:find("touch 3 copy","touch 3","touch3 copy","linkedin 2","touch 3 message"),
-      t4subj:find("touch 4 subject","email 2 subject","touch4 subject"),
-      t4:find("touch 4 copy","touch 4","touch4 copy","email 2 body","touch 4 message"),
-      t5:find("touch 5 copy","touch 5","touch5 copy","call script","touch 5 message")
+      t1:pick(find("touch 1 copy","touch 1","touch1 copy","linkedin 1","touch 1 message"), findC("outreach 1"), findC("linkedin","day 1")),
+      t2subj:pick(find("touch 2 subject","email 1 subject","touch2 subject"), findC("email","subject")),
+      t2:pick(find("touch 2 copy","touch 2","touch2 copy","email 1 body","touch 2 message"), findC("outreach 2","body"), findC("email","body")),
+      t3:pick(find("touch 3 copy","touch 3","touch3 copy","linkedin 2","touch 3 message"), findC("outreach 3","linkedin"), findC("linkedin 2")),
+      t4subj:pick(find("touch 4 subject","email 2 subject","touch4 subject"), findC("email 2","subject")),
+      t4:pick(find("touch 4 copy","touch 4","touch4 copy","email 2 body","touch 4 message"), findC("email 2","body")),
+      t5:pick(find("touch 5 copy","touch 5","touch5 copy","call script","touch 5 message"), findC("call/vm"), findC("call"))
     };
   }
   function personaFrom(thread, status){
@@ -954,9 +959,11 @@
     f.querySelector("#imp-save").addEventListener("click", function(){
       var txt=f.querySelector("#imp-text").value.trim();
       if(!txt){ toast("Paste a CSV first"); return; }
-      var res=importEngine7(txt);
+      var res=importRows(parseCSV(txt), true);
       if(!res.ok){ toast(res.msg); return; }
-      Promise.all([persistAccounts(), persistNotes()]).then(function(){ render(); toast("Imported "+res.count+" contacts"); });
+      state.seeded=true;
+      persistAccounts(); render();
+      toast("Imported: "+res.added+" added, "+res.updated+" updated");
     });
   }
 
