@@ -112,6 +112,7 @@
   .touchno{font-family:"Geist Mono",monospace; font-size:11px; color:rgba(255,255,255,.55); letter-spacing:.06em; font-weight:500}
   .overtag{font-family:"Geist Mono",monospace; font-size:10px; letter-spacing:.08em; text-transform:uppercase; color:var(--gold-ink); background:var(--gold); border-radius:20px; padding:3px 8px; font-weight:700}
   .persona{font-family:"Geist Mono",monospace; font-size:10.5px; letter-spacing:.07em; text-transform:uppercase; color:var(--gold); font-weight:700}
+  .cmpny{font-family:"Geist Mono",monospace; font-size:10px; letter-spacing:.08em; text-transform:uppercase; color:var(--gold-ink); background:var(--gold); padding:3px 9px; border-radius:20px; font-weight:700}
   .angle{font-size:14.5px; color:rgba(255,255,255,.86); margin:7px 0 0; line-height:1.5}
   .card-actions{display:flex; gap:9px; margin-top:13px; flex-wrap:wrap}
   .lk{font-family:"Geist Mono",monospace; font-size:11px; letter-spacing:.05em; text-transform:uppercase; color:#fff; text-decoration:none; border:1.5px solid rgba(255,255,255,.42); border-radius:var(--r-sm); padding:7px 11px; background:transparent; cursor:pointer; font-weight:600; transition:.14s}
@@ -259,6 +260,7 @@
 
   var state = { accounts:[], done:{}, notes:{}, activeId:null, view:"today", seeded:false };
   var MODE = { api:false }; // api=true once the Vercel /api + KV backend is detected
+  var ALL = "__all__"; // sentinel activeId meaning "show every account combined"
 
   // ---------- date helpers (local, no tz drift) ----------
   function todayStr(){ var d=new Date(); return iso(d); }
@@ -282,7 +284,7 @@
         d = shiftWeekend(d);
         out.push({
           id: acct.id+"|"+t.id+"|"+i,
-          acctId: acct.id, threadId:t.id,
+          acctId: acct.id, threadId:t.id, company:acct.company,
           who:t.name, title:t.title, persona:t.persona,
           li:t.linkedin, email:t.email, angle:t.angle,
           ch:c.ch, chLabel:c.label, touchNo:i+1, date:iso(d)
@@ -292,6 +294,13 @@
     return out;
   }
   function activeAcct(){ return state.accounts.find(function(a){return a.id===state.activeId;}); }
+  function allTouches(){ var out=[]; state.accounts.forEach(function(a){ out=out.concat(buildTouches(a)); }); return out; }
+  function byDateThenCompany(a,b){
+    if(a.date!==b.date) return a.date<b.date?-1:1;
+    var ca=a.company||"", cb=b.company||"";
+    if(ca!==cb) return ca<cb?-1:1;
+    return a.touchNo-b.touchNo;
+  }
 
   // ---------- persistence ----------
   async function load(){
@@ -309,7 +318,7 @@
       state.seeded = true;
       localSave();
     }
-    if(act && state.accounts.some(function(x){return x.id===act;})) state.activeId = act;
+    if(act===ALL || (act && state.accounts.some(function(x){return x.id===act;}))) state.activeId = act;
     if(!state.activeId && state.accounts.length) state.activeId = state.accounts[0].id;
   }
 
@@ -358,6 +367,9 @@
   function renderSelect(){
     var sel=document.getElementById("acctSelect");
     sel.innerHTML="";
+    if(state.accounts.length){
+      var oAll=document.createElement("option"); oAll.value=ALL; oAll.textContent="★ All accounts"; if(state.activeId===ALL)oAll.selected=true; sel.appendChild(oAll);
+    }
     state.accounts.forEach(function(a){
       var o=document.createElement("option"); o.value=a.id; o.textContent=a.company; if(a.id===state.activeId)o.selected=true; sel.appendChild(o);
     });
@@ -370,9 +382,10 @@
 
   function renderToday(){
     var root=document.getElementById("view-today"); root.innerHTML="";
+    var allMode = state.activeId===ALL;
     var acct=activeAcct();
-    if(!acct){ root.appendChild(el('<div class="empty"><span class="lbl">No account selected</span>Add your first account in the Accounts tab to start tracking touches.</div>')); return; }
-    var touches=buildTouches(acct);
+    if(!allMode && !acct){ root.appendChild(el('<div class="empty"><span class="lbl">No account selected</span>Add your first account in the Accounts tab to start tracking touches.</div>')); return; }
+    var touches = allMode ? allTouches() : buildTouches(acct);
     var today=todayStr();
     var due=touches.filter(function(x){return x.date===today && !state.done[x.id];});
     var over=touches.filter(function(x){return x.date<today && !state.done[x.id];});
@@ -384,7 +397,7 @@
     var clear = remaining===0;
     var bar=el(
       '<div class="todaybar">'+
-        '<div class="date"><span class="lbl">Today</span><span class="d">'+fmtLong(today)+'</span></div>'+
+        '<div class="date"><span class="lbl">'+(allMode?"Today · All accounts":"Today")+'</span><span class="d">'+fmtLong(today)+'</span></div>'+
         '<div class="count '+(clear?"clear":"")+'">'+
           '<div class="big"><span class="rem">'+remaining+'</span><span class="tot"> / '+(totalToday+over.length)+'</span></div>'+
           '<span class="lbl">'+(clear?"All sent — clear":"To send")+'</span>'+
@@ -392,33 +405,34 @@
       '</div>');
     root.appendChild(bar);
 
-    // timeline
-    root.appendChild(renderTimeline(acct, touches, today));
+    // timeline (per-account only)
+    if(!allMode) root.appendChild(renderTimeline(acct, touches, today));
 
     // overdue
     if(over.length){
       var ob=el('<section class="block"><div class="block-head"><span class="lbl" style="color:var(--ox)">Overdue — carried forward</span><span class="line"></span></div></section>');
-      over.sort(function(a,b){return a.date<b.date?-1:1;}).forEach(function(x){ ob.appendChild(touchCard(x,true)); });
+      over.sort(byDateThenCompany).forEach(function(x){ ob.appendChild(touchCard(x,true,allMode)); });
       root.appendChild(ob);
     }
 
     // due today
     var db=el('<section class="block"><div class="block-head"><span class="lbl">Due today</span><span class="line"></span></div></section>');
-    if(due.length){ due.forEach(function(x){ db.appendChild(touchCard(x,false)); }); }
+    if(due.length){ due.sort(byDateThenCompany).forEach(function(x){ db.appendChild(touchCard(x,false,allMode)); }); }
     else if(!over.length){ db.appendChild(el('<div class="empty"><span class="lbl">Nothing due today</span>You\'re clear. Check Upcoming to see what\'s next, or add an account.</div>')); }
     else { db.appendChild(el('<div class="empty"><span class="lbl">Nothing new today</span>Clear the overdue items above and you\'re done.</div>')); }
-    if(doneToday.length){ doneToday.forEach(function(x){ db.appendChild(touchCard(x,false)); }); }
+    if(doneToday.length){ doneToday.forEach(function(x){ db.appendChild(touchCard(x,false,allMode)); }); }
     root.appendChild(db);
 
-    // held (blockers)
-    var blockers=(acct.threads||[]).filter(function(t){return t.persona==="Blocker";});
-    if(blockers.length){
-      var hb=el('<section class="block"><div class="block-head"><span class="lbl">Held — reassurance only, do not pitch</span><span class="line"></span></div></section>');
-      blockers.forEach(function(t){
-        hb.appendChild(el('<div class="held"><div class="htop"><span class="who">'+esc(t.name)+'</span><span class="at">'+esc(t.title)+'</span><span class="persona">Blocker</span></div><div class="angle">'+esc(t.angle||"Risk-removal / reassurance angle only. Do not enter into the sequence.")+'</div></div>'));
+    // held (blockers) — across all accounts in all mode
+    var blockerAccts = allMode ? state.accounts : [acct];
+    var hb=null;
+    blockerAccts.forEach(function(a){
+      (a.threads||[]).filter(function(t){return t.persona==="Blocker";}).forEach(function(t){
+        if(!hb) hb=el('<section class="block"><div class="block-head"><span class="lbl">Held — reassurance only, do not pitch</span><span class="line"></span></div></section>');
+        hb.appendChild(el('<div class="held"><div class="htop">'+(allMode?'<span class="cmpny">'+esc(a.company)+'</span>':'')+'<span class="who">'+esc(t.name)+'</span><span class="at">'+esc(t.title)+'</span><span class="persona">Blocker</span></div><div class="angle">'+esc(t.angle||"Risk-removal / reassurance angle only. Do not enter into the sequence.")+'</div></div>'));
       });
-      root.appendChild(hb);
-    }
+    });
+    if(hb) root.appendChild(hb);
   }
 
   function renderTimeline(acct, touches, today){
@@ -485,7 +499,7 @@
   }
   function shortPersona(p){ return {"Champion":"Champ","Technical Evaluator":"Tech","Economic Buyer":"Buyer","Additional":"Add\'l","Blocker":"Block"}[p]||p; }
 
-  function touchCard(x, isOver){
+  function touchCard(x, isOver, showCompany){
     var done=!!state.done[x.id];
     var card=el('<div class="card '+(isOver?"over":"")+' '+(done?"done":"")+'"></div>');
     var chk=el('<button class="check '+(done?"on":"")+'" aria-label="Mark sent"><svg viewBox="0 0 24 24" fill="none" stroke-width="3"><path d="M5 12l5 5L20 7"/></svg></button>');
@@ -499,6 +513,7 @@
     var body=el(
       '<div class="card-body">'+
         '<div class="card-top">'+
+          ((showCompany && x.company)?'<span class="cmpny">'+esc(x.company)+'</span>':'')+
           '<span class="who">'+esc(x.who)+'</span>'+
           '<span class="at">'+esc(x.title)+'</span>'+
           '<span class="chan '+x.ch+'">'+x.chLabel+'</span>'+
@@ -538,24 +553,25 @@
   // ---------- render: upcoming ----------
   function renderUpcoming(){
     var root=document.getElementById("view-upcoming"); root.innerHTML="";
+    var allMode = state.activeId===ALL;
     var acct=activeAcct();
-    if(!acct){ root.appendChild(el('<div class="empty"><span class="lbl">No account</span>Add an account first.</div>')); return; }
-    var touches=buildTouches(acct);
+    if(!allMode && !acct){ root.appendChild(el('<div class="empty"><span class="lbl">No account</span>Add an account first.</div>')); return; }
+    var touches = allMode ? allTouches() : buildTouches(acct);
     var today=todayStr();
     var horizon=iso(addDays(today,14));
     var up=touches.filter(function(x){return x.date>today && x.date<=horizon && !state.done[x.id];});
-    up.sort(function(a,b){return a.date<b.date?-1:(a.date>b.date?1:a.touchNo-b.touchNo);});
+    up.sort(byDateThenCompany);
 
-    root.appendChild(el('<div class="todaybar"><div class="date"><span class="lbl">Upcoming</span><span class="d">Next 14 days</span></div><div class="count"><div class="big"><span class="rem" style="color:var(--ink)">'+up.length+'</span></div><span class="lbl">scheduled touches</span></div></div>'));
+    root.appendChild(el('<div class="todaybar"><div class="date"><span class="lbl">'+(allMode?"Upcoming · All accounts":"Upcoming")+'</span><span class="d">Next 14 days</span></div><div class="count"><div class="big"><span class="rem" style="color:var(--ink)">'+up.length+'</span></div><span class="lbl">scheduled touches</span></div></div>'));
 
-    if(!up.length){ root.appendChild(el('<div class="empty" style="margin-top:20px"><span class="lbl">Nothing scheduled</span>No upcoming touches in the next two weeks for this account.</div>')); return; }
+    if(!up.length){ root.appendChild(el('<div class="empty" style="margin-top:20px"><span class="lbl">Nothing scheduled</span>No upcoming touches in the next two weeks'+(allMode?"":" for this account")+'.</div>')); return; }
 
     var byDay={};
     up.forEach(function(x){ (byDay[x.date]=byDay[x.date]||[]).push(x); });
     var wrap=el('<section class="block day-group"></section>');
     Object.keys(byDay).sort().forEach(function(d){
       wrap.appendChild(el('<div class="day-lbl">'+fmtLong(d)+' · '+(daysBetween(today,d))+'d out</div>'));
-      byDay[d].forEach(function(x){ wrap.appendChild(touchCard(x,false)); });
+      byDay[d].forEach(function(x){ wrap.appendChild(touchCard(x,false,allMode)); });
     });
     root.appendChild(wrap);
   }
@@ -956,7 +972,7 @@
       if(r.ok){
         var d=await r.json();
         state.accounts=d.accounts||[]; state.done=d.done||{}; state.notes=d.notes||{}; state.seeded=!!d.seeded;
-        state.activeId=(d.active && state.accounts.some(function(a){return a.id===d.active;}))?d.active:((state.accounts[0]&&state.accounts[0].id)||null);
+        state.activeId=((d.active===ALL && state.accounts.length) || (d.active && state.accounts.some(function(a){return a.id===d.active;})))?d.active:((state.accounts[0]&&state.accounts[0].id)||null);
         if(!state.seeded && state.accounts.length===0){ seed(); state.seeded=true; apiSave(); }
       }
     }catch(e){}
