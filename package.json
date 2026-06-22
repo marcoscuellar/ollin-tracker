@@ -1,0 +1,14 @@
+{
+  "name": "ollin-tracker",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "OLLIN Tracker — outreach cadence tracker with passkey login and Vercel KV storage.",
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@simplewebauthn/server": "^13.0.0",
+    "@vercel/kv": "^3.0.0"
+  }
+}

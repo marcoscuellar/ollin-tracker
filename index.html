@@ -165,9 +165,30 @@
     .todaybar .date .d{font-size:25px}
   }
   @media (prefers-reduced-motion:reduce){*{transition:none !important}}
+
+  /* header mini buttons (See all / Lock) */
+  .acct-sel .mini{font-family:"Geist Mono",monospace; font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; font-weight:700; color:var(--green); background:var(--green-soft); border:1.5px solid var(--hair-strong); border-radius:var(--r-sm); padding:9px 11px; cursor:pointer; transition:.14s; white-space:nowrap}
+  .acct-sel .mini:hover{border-color:var(--green); background:var(--green); color:#fff}
+
+  /* lock screen */
+  .lock{position:fixed; inset:0; z-index:80; background:linear-gradient(160deg,#13271C,#0c1a12); display:flex; align-items:center; justify-content:center; padding:24px}
+  .lock-card{background:#fff; border-radius:16px; box-shadow:var(--sh-lg); max-width:380px; width:100%; padding:34px 28px; text-align:center}
+  .lock-card .mark{font-family:"Geist",sans-serif; font-weight:800; letter-spacing:.04em; font-size:24px; color:var(--green); text-transform:uppercase}
+  .lock-card .sub{font-family:"Geist Mono",monospace; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3); margin:6px 0 22px}
+  .lock-card p{color:var(--ink-2); font-size:14px; line-height:1.5; margin:0 0 20px}
+  .lock-card .btn{width:100%; justify-content:center; padding:14px; font-size:14px; display:block}
+  .lock-ico{width:54px; height:54px; margin:0 auto 16px; border-radius:50%; background:var(--green-soft); display:flex; align-items:center; justify-content:center}
+  .lock-ico svg{width:28px; height:28px; stroke:var(--green); fill:none; stroke-width:2}
+  .lock-alt{margin-top:18px; font-size:12.5px; color:var(--ink-2)}
+  .lock-alt a{color:var(--green-mid); font-weight:600; cursor:pointer; text-decoration:underline}
+  .lock-rec{margin-top:16px; display:none}
+  .lock-rec.show{display:block}
+  .lock-rec input{width:100%; text-align:center; font-family:"Geist Mono",monospace; letter-spacing:.12em; margin-bottom:10px}
+  .lock-err{color:var(--ox); font-size:13px; margin-top:14px; min-height:16px; font-weight:500}
+  .reccode{font-family:"Geist Mono",monospace; font-size:18px; letter-spacing:.1em; color:var(--green); background:var(--green-soft); border-radius:var(--r-sm); padding:14px; margin:14px 0; word-break:break-all; font-weight:600}
 </style>
 
-<header>
+<header class="hide">
   <div class="hbar">
     <div class="brand">
       <span class="mark">OLLIN</span><span class="sep">/</span><span class="sub">Tracker</span>
@@ -175,6 +196,8 @@
     <div class="acct-sel">
       <span class="lbl">Account</span>
       <select id="acctSelect" aria-label="Active account"></select>
+      <button class="mini" id="seeAllBtn" title="See all accounts">See all</button>
+      <button class="mini hide" id="lockBtn" title="Lock app">Lock</button>
     </div>
   </div>
   <nav role="tablist">
@@ -184,7 +207,7 @@
   </nav>
 </header>
 
-<div class="wrap">
+<div class="wrap hide">
   <div id="view-today"></div>
   <div id="view-upcoming" class="hide"></div>
   <div id="view-accounts" class="hide"></div>
@@ -192,6 +215,17 @@
 
 <div class="toast" id="toast"></div>
 
+<div class="lock hide" id="lockScreen">
+  <div class="lock-card">
+    <div class="lock-ico"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></div>
+    <div class="mark">OLLIN</div>
+    <div class="sub">Tracker</div>
+    <div id="lockBody"></div>
+    <div class="lock-err" id="lockErr"></div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/@simplewebauthn/browser@13/dist/bundle/index.umd.min.js"></script>
 <script>
 (function(){
   "use strict";
@@ -223,7 +257,8 @@
   var PERSONA_ENTRY = { "Champion":1, "Technical Evaluator":3, "Economic Buyer":5, "Additional":8, "Blocker":0 };
   var PERSONAS = ["Champion","Technical Evaluator","Economic Buyer","Additional","Blocker"];
 
-  var state = { accounts:[], done:{}, notes:{}, activeId:null, view:"today" };
+  var state = { accounts:[], done:{}, notes:{}, activeId:null, view:"today", seeded:false };
+  var MODE = { api:false }; // api=true once the Vercel /api + KV backend is detected
 
   // ---------- date helpers (local, no tz drift) ----------
   function todayStr(){ var d=new Date(); return iso(d); }
@@ -268,17 +303,39 @@
     if(a){ try{ state.accounts = JSON.parse(a); }catch(e){} }
     if(d){ try{ state.done = JSON.parse(d); }catch(e){} }
     if(n){ try{ state.notes = JSON.parse(n); }catch(e){} }
-    if(!seeded && (!state.accounts || state.accounts.length===0)){
+    state.seeded = !!seeded;
+    if(!state.seeded && (!state.accounts || state.accounts.length===0)){
       seed();
-      await sSet("tracker:seeded","1");
-      await persistAccounts();
+      state.seeded = true;
+      localSave();
     }
     if(act && state.accounts.some(function(x){return x.id===act;})) state.activeId = act;
     if(!state.activeId && state.accounts.length) state.activeId = state.accounts[0].id;
   }
-  async function persistAccounts(){ await sSet("tracker:accounts", JSON.stringify(state.accounts)); await sSet("tracker:active", state.activeId||""); }
-  async function persistDone(){ await sSet("tracker:done", JSON.stringify(state.done)); }
-  async function persistNotes(){ await sSet("tracker:notes", JSON.stringify(state.notes)); }
+
+  // ---------- save layer (local keys OR Vercel KV via /api/entries) ----------
+  var saveTimer=null;
+  function localSave(){
+    sSet("tracker:accounts", JSON.stringify(state.accounts));
+    sSet("tracker:active", state.activeId||"");
+    sSet("tracker:done", JSON.stringify(state.done));
+    sSet("tracker:notes", JSON.stringify(state.notes));
+    sSet("tracker:seeded", state.seeded?"1":"");
+  }
+  function apiSave(){
+    if(saveTimer) clearTimeout(saveTimer);
+    saveTimer=setTimeout(function(){
+      fetch("/api/entries",{method:"POST",headers:{"Content-Type":"application/json"},credentials:"same-origin",
+        body:JSON.stringify({accounts:state.accounts,done:state.done,notes:state.notes,active:state.activeId,seeded:!!state.seeded})})
+        .then(function(r){ if(!r.ok) throw new Error("save"); })
+        .catch(function(){ toast("Save failed — check connection"); });
+    },300);
+  }
+  function scheduleSave(){ if(MODE.api) apiSave(); else localSave(); }
+  // optimistic: update UI now, persist in the background
+  function persistAccounts(){ scheduleSave(); return Promise.resolve(); }
+  function persistDone(){ scheduleSave(); return Promise.resolve(); }
+  function persistNotes(){ scheduleSave(); return Promise.resolve(); }
 
   function seed(){
     var t = todayStr();
@@ -508,10 +565,20 @@
     var root=document.getElementById("view-accounts"); root.innerHTML="";
     root.appendChild(el('<div class="todaybar"><div class="date"><span class="lbl">Accounts</span><span class="d">Your active campaigns</span></div></div>'));
 
-    var addBtnRow=el('<div style="margin:18px 0; display:flex; gap:9px; flex-wrap:wrap"><button class="btn" id="addAcctBtn">+ Add account</button><button class="btn ghost" id="importBtn">&#8593; Import from Engine 7</button></div>');
+    var addBtnRow=el('<div style="margin:18px 0; display:flex; gap:9px; flex-wrap:wrap"><button class="btn" id="addAcctBtn">+ Add account</button><button class="btn ghost" id="importBtn">&#8593; Import from Engine 7</button><button class="btn ghost" id="dedupeBtn">&#10683; Delete duplicates</button></div>');
     root.appendChild(addBtnRow);
     addBtnRow.querySelector("#addAcctBtn").addEventListener("click", function(){ showAcctForm(root); });
     addBtnRow.querySelector("#importBtn").addEventListener("click", function(){ showImportForm(root); });
+    addBtnRow.querySelector("#dedupeBtn").addEventListener("click", function(){
+      var c=countDuplicates();
+      if(!c.accounts && !c.threads){ toast("No duplicates found"); return; }
+      var msg="Found "+c.accounts+" duplicate account"+(c.accounts===1?"":"s")+" and "+c.threads+" duplicate contact"+(c.threads===1?"":"s")+".\n\nMerge and remove them? Your sent checkmarks and saved messages are kept.";
+      if(!confirm(msg)) return;
+      var r=runDedupe();
+      persistAccounts();
+      render();
+      toast("Removed "+r.accounts+" account"+(r.accounts===1?"":"s")+", "+r.threads+" contact"+(r.threads===1?"":"s"));
+    });
 
     if(!state.accounts.length){ root.appendChild(el('<div class="empty"><span class="lbl">No accounts yet</span>Add your first Wave 1 account, then add the contacts Engine 6 gave you.</div>')); return; }
 
@@ -738,6 +805,178 @@
     persistAccounts().then(render);
   }
 
+  // ---------- duplicate detection / cleanup ----------
+  function normCompany(s){
+    return (s||"").toLowerCase().trim()
+      .replace(/[.,/&]/g," ")
+      .replace(/\b(inc|llc|ltd|limited|corp|corporation|co|company|gmbh|sa|sas|srl|plc|the)\b/g," ")
+      .replace(/\s+/g," ").trim();
+  }
+  function normContact(t){
+    var e=(t.email||"").toLowerCase().trim();
+    if(e) return "e:"+e;
+    var li=(t.linkedin||"").toLowerCase().trim().replace(/\/+$/,"");
+    if(li) return "l:"+li;
+    var n=(t.name||"").toLowerCase().replace(/\s+/g," ").trim();
+    return n ? "n:"+n : "";
+  }
+  function migrateKey(map, from, to){
+    if(from===to) return;
+    if(map[from]!=null){ if(map[to]==null) map[to]=map[from]; delete map[from]; }
+  }
+  function dedupeThreads(acct){
+    var seen={}, kept=[], removed=0;
+    (acct.threads||[]).forEach(function(t){
+      var k=normContact(t);
+      if(!k){ kept.push(t); return; }
+      if(seen[k]){
+        var keep=seen[k];
+        ["title","email","linkedin","angle"].forEach(function(f){ if(!((keep[f]||"").trim()) && (t[f]||"").trim()) keep[f]=t[f]; });
+        for(var c=0;c<5;c++){
+          migrateKey(state.done, acct.id+"|"+t.id+"|"+c, acct.id+"|"+keep.id+"|"+c);
+          migrateKey(state.notes, acct.id+"|"+t.id+"|"+c, acct.id+"|"+keep.id+"|"+c);
+        }
+        removed++;
+      } else { seen[k]=t; kept.push(t); }
+    });
+    acct.threads=kept;
+    return removed;
+  }
+  function countDuplicates(){
+    var groups={}, dupAccts=0, dupThreads=0;
+    state.accounts.forEach(function(a){ var k=normCompany(a.company)||("id:"+a.id); (groups[k]=groups[k]||[]).push(a); });
+    Object.keys(groups).forEach(function(k){
+      dupAccts += groups[k].length-1;
+      var seen={};
+      groups[k].forEach(function(a){ (a.threads||[]).forEach(function(t){ var ck=normContact(t); if(!ck) return; if(seen[ck]) dupThreads++; else seen[ck]=1; }); });
+    });
+    return { accounts:dupAccts, threads:dupThreads };
+  }
+  function runDedupe(){
+    var groups={};
+    state.accounts.forEach(function(a){ var k=normCompany(a.company)||("id:"+a.id); (groups[k]=groups[k]||[]).push(a); });
+    var newAccounts=[], removedAccts=0, removedThreads=0;
+    Object.keys(groups).forEach(function(k){
+      var list=groups[k].slice().sort(function(a,b){ return (a.start||"").localeCompare(b.start||""); });
+      var keep=list[0]; keep.threads=keep.threads||[];
+      for(var i=1;i<list.length;i++){
+        var b=list[i];
+        (b.threads||[]).forEach(function(t){
+          for(var c=0;c<5;c++){
+            migrateKey(state.done, b.id+"|"+t.id+"|"+c, keep.id+"|"+t.id+"|"+c);
+            migrateKey(state.notes, b.id+"|"+t.id+"|"+c, keep.id+"|"+t.id+"|"+c);
+          }
+          keep.threads.push(t);
+        });
+        removedAccts++;
+      }
+      removedThreads += dedupeThreads(keep);
+      newAccounts.push(keep);
+    });
+    state.accounts=newAccounts;
+    if(!state.accounts.some(function(a){return a.id===state.activeId;})) state.activeId=state.accounts.length?state.accounts[0].id:null;
+    return { accounts:removedAccts, threads:removedThreads };
+  }
+
+  // ---------- auth / lock screen (passkeys via WebAuthn + Vercel KV) ----------
+  function WA(){ return window.SimpleWebAuthnBrowser; }
+  function lockErr(m){ var e=document.getElementById("lockErr"); if(e) e.textContent=m||""; }
+  function lockBody(html){ document.getElementById("lockBody").innerHTML=html; }
+  function showApp(show){
+    document.querySelector("header").classList.toggle("hide", !show);
+    document.querySelector(".wrap").classList.toggle("hide", !show);
+    document.getElementById("lockScreen").classList.toggle("hide", show);
+    document.getElementById("lockBtn").classList.toggle("hide", !(show && MODE.api));
+  }
+  function renderRegister(){
+    lockErr("");
+    lockBody('<p>Set up this device with your fingerprint or Face ID. No password needed.</p><button class="btn" id="doRegister">Set up fingerprint</button>');
+    document.getElementById("doRegister").addEventListener("click", function(){ doRegister(); });
+  }
+  function renderUnlock(){
+    lockErr("");
+    lockBody(
+      '<p>Unlock with your fingerprint or Face ID.</p>'+
+      '<button class="btn" id="doUnlock">Unlock with fingerprint</button>'+
+      '<div class="lock-alt">New device? <a id="showRec">Use recovery code</a></div>'+
+      '<div class="lock-rec" id="recBox">'+
+        '<input id="recInput" placeholder="XXXXX-XXXXX-XXXXX-XXXXX" autocomplete="off" autocapitalize="characters">'+
+        '<button class="btn ghost" id="doRegisterRec">Add this device</button>'+
+      '</div>'
+    );
+    document.getElementById("doUnlock").addEventListener("click", function(){ doUnlock(); });
+    document.getElementById("showRec").addEventListener("click", function(){ document.getElementById("recBox").classList.toggle("show"); });
+    document.getElementById("doRegisterRec").addEventListener("click", function(){ doRegister(document.getElementById("recInput").value.trim()); });
+  }
+  function renderRecoveryReveal(code){
+    lockErr("");
+    lockBody(
+      '<p>Save this recovery code somewhere safe. It is the <b>only</b> way to add another device later. You will not see it again.</p>'+
+      '<div class="reccode">'+esc(code)+'</div>'+
+      '<button class="btn" id="recDone">I’ve saved it — continue</button>'
+    );
+    document.getElementById("recDone").addEventListener("click", function(){ showApp(true); render(); });
+  }
+  async function doRegister(recoveryCode){
+    lockErr("");
+    if(!WA()){ lockErr("Security library failed to load."); return; }
+    try{
+      var optRes=await fetch("/api/auth?action=register-options",{credentials:"same-origin"});
+      if(!optRes.ok) throw new Error("Could not start setup");
+      var options=await optRes.json();
+      var attResp=await WA().startRegistration({ optionsJSON: options });
+      var body={ attResp:attResp };
+      if(typeof recoveryCode==="string" && recoveryCode) body.recoveryCode=recoveryCode;
+      var verRes=await fetch("/api/auth?action=register-verify",{method:"POST",headers:{"Content-Type":"application/json"},credentials:"same-origin",body:JSON.stringify(body)});
+      var ver=await verRes.json();
+      if(!verRes.ok || !ver.verified) throw new Error(ver.error||"Setup failed");
+      await afterAuthLoad();
+      if(ver.recoveryCode) renderRecoveryReveal(ver.recoveryCode);
+      else { showApp(true); render(); }
+    }catch(e){ lockErr((e&&e.message)||"Setup failed"); }
+  }
+  async function doUnlock(){
+    lockErr("");
+    if(!WA()){ lockErr("Security library failed to load."); return; }
+    try{
+      var optRes=await fetch("/api/auth?action=login-options",{credentials:"same-origin"});
+      if(!optRes.ok) throw new Error("Could not start login");
+      var options=await optRes.json();
+      var authResp=await WA().startAuthentication({ optionsJSON: options });
+      var verRes=await fetch("/api/auth?action=login-verify",{method:"POST",headers:{"Content-Type":"application/json"},credentials:"same-origin",body:JSON.stringify({authResp:authResp})});
+      var ver=await verRes.json();
+      if(!verRes.ok || !ver.verified) throw new Error(ver.error||"Login failed");
+      await afterAuthLoad();
+      showApp(true); render();
+    }catch(e){ lockErr((e&&e.message)||"Login failed"); }
+  }
+  async function afterAuthLoad(){
+    try{
+      var r=await fetch("/api/entries",{credentials:"same-origin"});
+      if(r.ok){
+        var d=await r.json();
+        state.accounts=d.accounts||[]; state.done=d.done||{}; state.notes=d.notes||{}; state.seeded=!!d.seeded;
+        state.activeId=(d.active && state.accounts.some(function(a){return a.id===d.active;}))?d.active:((state.accounts[0]&&state.accounts[0].id)||null);
+        if(!state.seeded && state.accounts.length===0){ seed(); state.seeded=true; apiSave(); }
+      }
+    }catch(e){}
+  }
+  async function logout(){
+    try{ await fetch("/api/auth?action=logout",{method:"POST",credentials:"same-origin"}); }catch(e){}
+    showApp(false); renderUnlock();
+  }
+  async function boot(){
+    var st=null;
+    try{ var r=await fetch("/api/auth?action=status",{credentials:"same-origin"}); if(r.ok) st=await r.json(); }catch(e){}
+    if(!st){ // no backend reachable — fall back to local (localStorage / in-memory)
+      MODE.api=false; await load(); showApp(true); render(); return;
+    }
+    MODE.api=true;
+    if(st.authenticated){ await afterAuthLoad(); showApp(true); render(); return; }
+    showApp(false);
+    if(st.registered) renderUnlock(); else renderRegister();
+  }
+
   // ---------- render dispatcher ----------
   function render(){
     renderSelect();
@@ -750,9 +989,11 @@
 
   // ---------- events ----------
   document.querySelectorAll(".tab").forEach(function(b){ b.addEventListener("click", function(){ state.view=b.dataset.view; render(); }); });
-  document.getElementById("acctSelect").addEventListener("change", function(e){ state.activeId=e.target.value; sSet("tracker:active", state.activeId); render(); });
+  document.getElementById("acctSelect").addEventListener("change", function(e){ state.activeId=e.target.value; scheduleSave(); render(); });
+  document.getElementById("seeAllBtn").addEventListener("click", function(){ state.view="accounts"; render(); window.scrollTo({top:0,behavior:"smooth"}); });
+  document.getElementById("lockBtn").addEventListener("click", function(){ logout(); });
 
   // ---------- boot ----------
-  load().then(render);
+  boot();
 })();
 </script>
