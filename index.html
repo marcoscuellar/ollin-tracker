@@ -187,6 +187,21 @@
   .lock-rec input{width:100%; text-align:center; font-family:"Geist Mono",monospace; letter-spacing:.12em; margin-bottom:10px}
   .lock-err{color:var(--ox); font-size:13px; margin-top:14px; min-height:16px; font-weight:500}
   .reccode{font-family:"Geist Mono",monospace; font-size:18px; letter-spacing:.1em; color:var(--green); background:var(--green-soft); border-radius:var(--r-sm); padding:14px; margin:14px 0; word-break:break-all; font-weight:600}
+
+  /* daily goal (ADHD-friendly: progress, chunking, calm) */
+  .goal{background:var(--surface); border:2px solid var(--hair); border-radius:var(--r); padding:16px 18px; margin:16px 0 4px; box-shadow:var(--sh)}
+  .goal.hit{border-color:var(--green); background:var(--green-soft)}
+  .goal-top{display:flex; align-items:center; gap:10px; margin-bottom:6px}
+  .goal-streak{margin-left:auto; font-family:"Geist Mono",monospace; font-size:11px; letter-spacing:.06em; text-transform:uppercase; font-weight:700; color:var(--green-mid)}
+  .goal-edit{background:none; border:none; cursor:pointer; color:var(--ink-3); font-family:"Geist Mono",monospace; font-size:11px; letter-spacing:.06em; text-transform:uppercase; font-weight:600}
+  .goal-edit:hover{color:var(--green)}
+  .goal-num{font-family:"Geist",sans-serif; font-weight:800; letter-spacing:-.02em; margin-bottom:10px; line-height:1}
+  .goal-num .gdone{font-size:38px; color:var(--green)}
+  .goal-num .ggoal{font-size:18px; color:var(--ink-3); font-weight:600}
+  .goal-track{height:12px; background:var(--hair); border-radius:7px; overflow:hidden}
+  .goal-fill{height:100%; background:var(--green); border-radius:7px; transition:width .35s ease}
+  .goal.hit .goal-fill{background:var(--green-mid)}
+  .goal-msg{margin-top:9px; font-family:"Geist Mono",monospace; font-size:12px; color:var(--ink-2); font-weight:600}
 </style>
 
 <header class="hide">
@@ -258,7 +273,7 @@
   var PERSONA_ENTRY = { "Champion":1, "Technical Evaluator":3, "Economic Buyer":5, "Additional":8, "Blocker":0 };
   var PERSONAS = ["Champion","Technical Evaluator","Economic Buyer","Additional","Blocker"];
 
-  var state = { accounts:[], done:{}, notes:{}, activeId:null, view:"today", seeded:false, sheetUrl:"" };
+  var state = { accounts:[], done:{}, notes:{}, activeId:null, view:"today", seeded:false, sheetUrl:"", dailyGoal:50 };
   var MODE = { api:false }; // api=true once the Vercel /api + KV backend is detected
   var ALL = "__all__"; // sentinel activeId meaning "show every account combined"
 
@@ -310,6 +325,7 @@
     var act = await sGet("tracker:active");
     var seeded = await sGet("tracker:seeded");
     state.sheetUrl = (await sGet("tracker:sheetUrl")) || "";
+    state.dailyGoal = parseInt(await sGet("tracker:dailyGoal"), 10) || 50;
     if(a){ try{ state.accounts = JSON.parse(a); }catch(e){} }
     if(d){ try{ state.done = JSON.parse(d); }catch(e){} }
     if(n){ try{ state.notes = JSON.parse(n); }catch(e){} }
@@ -332,12 +348,13 @@
     sSet("tracker:notes", JSON.stringify(state.notes));
     sSet("tracker:seeded", state.seeded?"1":"");
     sSet("tracker:sheetUrl", state.sheetUrl||"");
+    sSet("tracker:dailyGoal", String(state.dailyGoal||50));
   }
   function apiSave(){
     if(saveTimer) clearTimeout(saveTimer);
     saveTimer=setTimeout(function(){
       fetch("/api/entries",{method:"POST",headers:{"Content-Type":"application/json"},credentials:"same-origin",
-        body:JSON.stringify({accounts:state.accounts,done:state.done,notes:state.notes,active:state.activeId,seeded:!!state.seeded,sheetUrl:state.sheetUrl||""})})
+        body:JSON.stringify({accounts:state.accounts,done:state.done,notes:state.notes,active:state.activeId,seeded:!!state.seeded,sheetUrl:state.sheetUrl||"",dailyGoal:state.dailyGoal||50})})
         .then(function(r){ if(!r.ok) throw new Error("save"); })
         .catch(function(){ toast("Save failed — check connection"); });
     },300);
@@ -414,6 +431,9 @@
         '</div>'+
       '</div>');
     root.appendChild(bar);
+
+    // daily goal (global — counts every touch sent today, across all accounts)
+    root.appendChild(goalBanner());
 
     // timeline (per-account only)
     if(!allMode) root.appendChild(renderTimeline(acct, touches, today));
@@ -555,9 +575,45 @@
     else { toast("Copy unavailable"); }
   }
 
+  // ---------- daily goal ----------
+  function sentOnDate(ds){ var n=0; for(var k in state.done){ if(state.done[k]===ds) n++; } return n; }
+  function sentToday(){ return sentOnDate(todayStr()); }
+  function goalStreak(goal){
+    var s=0, todayMet=sentOnDate(todayStr())>=goal;
+    for(var i=(todayMet?0:1); i<400; i++){ var ds=iso(addDays(todayStr(),-i)); if(sentOnDate(ds)>=goal) s++; else break; }
+    return s;
+  }
+  function goalMsg(done, goal){
+    var left=goal-done;
+    if(done===0) return "Start with one.";
+    if(left<=0) return "Done for today ✓  Anything extra is bonus.";
+    if(left<=5) return "Almost there — "+left+" to go.";
+    return left+" to go — nice pace.";
+  }
+  function goalBanner(){
+    var goal=state.dailyGoal||50, done=sentToday();
+    var pct=goal?Math.max(0,Math.min(100,Math.round(done/goal*100))):0;
+    var streak=goalStreak(goal), hit=done>=goal;
+    var b=el('<div class="goal '+(hit?"hit":"")+'">'+
+      '<div class="goal-top"><span class="lbl">Today’s outreach goal</span>'+
+        (streak>0?'<span class="goal-streak">🔥 '+streak+' day'+(streak===1?"":"s")+'</span>':'')+
+        '<button class="goal-edit" id="goalEdit">Goal '+goal+' ✎</button></div>'+
+      '<div class="goal-num"><span class="gdone">'+done+'</span><span class="ggoal"> / '+goal+' sent</span></div>'+
+      '<div class="goal-track"><div class="goal-fill" style="width:'+pct+'%"></div></div>'+
+      '<div class="goal-msg">'+esc(goalMsg(done,goal))+'</div></div>');
+    b.querySelector("#goalEdit").addEventListener("click", function(){
+      var v=prompt("How many outreaches per day?", goal); if(v===null) return;
+      var n=parseInt(v,10); if(!n||n<1){ toast("Enter a number like 50"); return; }
+      state.dailyGoal=n; scheduleSave(); render();
+    });
+    return b;
+  }
+
   function toggleDone(id){
-    if(state.done[id]) delete state.done[id]; else state.done[id]=todayStr();
+    var wasDone=!!state.done[id];
+    if(wasDone) delete state.done[id]; else state.done[id]=todayStr();
     persistDone();
+    if(!wasDone){ var g=state.dailyGoal||50; if(sentToday()===g) toast("🎯 Goal reached — "+g+" today"); }
     render();
   }
 
@@ -1136,7 +1192,7 @@
       var r=await fetch("/api/entries",{credentials:"same-origin"});
       if(r.ok){
         var d=await r.json();
-        state.accounts=d.accounts||[]; state.done=d.done||{}; state.notes=d.notes||{}; state.seeded=!!d.seeded; state.sheetUrl=d.sheetUrl||"";
+        state.accounts=d.accounts||[]; state.done=d.done||{}; state.notes=d.notes||{}; state.seeded=!!d.seeded; state.sheetUrl=d.sheetUrl||""; state.dailyGoal=parseInt(d.dailyGoal,10)||50;
         state.activeId=((d.active===ALL && state.accounts.length) || (d.active && state.accounts.some(function(a){return a.id===d.active;})))?d.active:((state.accounts[0]&&state.accounts[0].id)||null);
         if(!state.seeded && state.accounts.length===0){ seed(); state.seeded=true; apiSave(); }
       }

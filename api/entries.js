@@ -1,7 +1,7 @@
 // Session-gated read/write of the single tracker blob in Vercel KV.
 import { kv, KEYS, readJson, send, requireSession } from './_lib.js';
 
-const EMPTY = { accounts: [], done: {}, notes: {}, active: null, seeded: false, sheetUrl: '' };
+const EMPTY = { accounts: [], done: {}, notes: {}, active: null, seeded: false, sheetUrl: '', dailyGoal: 50 };
 
 export default async function handler(req, res) {
   if (!requireSession(req)) return send(res, 401, { error: 'unauthorized' });
