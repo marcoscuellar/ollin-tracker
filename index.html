@@ -188,20 +188,40 @@
   .lock-err{color:var(--ox); font-size:13px; margin-top:14px; min-height:16px; font-weight:500}
   .reccode{font-family:"Geist Mono",monospace; font-size:18px; letter-spacing:.1em; color:var(--green); background:var(--green-soft); border-radius:var(--r-sm); padding:14px; margin:14px 0; word-break:break-all; font-weight:600}
 
-  /* daily goal (ADHD-friendly: progress, chunking, calm) */
-  .goal{background:var(--surface); border:2px solid var(--hair); border-radius:var(--r); padding:16px 18px; margin:16px 0 4px; box-shadow:var(--sh)}
-  .goal.hit{border-color:var(--green); background:var(--green-soft)}
-  .goal-top{display:flex; align-items:center; gap:10px; margin-bottom:6px}
-  .goal-streak{margin-left:auto; font-family:"Geist Mono",monospace; font-size:11px; letter-spacing:.06em; text-transform:uppercase; font-weight:700; color:var(--green-mid)}
-  .goal-edit{background:none; border:none; cursor:pointer; color:var(--ink-3); font-family:"Geist Mono",monospace; font-size:11px; letter-spacing:.06em; text-transform:uppercase; font-weight:600}
+  /* today's mission — momentum over metrics, calm and architectural */
+  .mission{background:var(--surface); border:1.5px solid var(--hair-strong); border-radius:var(--r); padding:22px 22px 20px; margin:16px 0 4px; box-shadow:var(--sh)}
+  .mission.done{border-color:var(--green)}
+  .mission-head{display:flex; align-items:baseline; gap:10px; margin-bottom:14px}
+  .goal-edit{margin-left:auto; background:none; border:none; cursor:pointer; color:var(--ink-3); font-family:"Geist Mono",monospace; font-size:11px; letter-spacing:.08em; text-transform:uppercase; font-weight:600}
   .goal-edit:hover{color:var(--green)}
-  .goal-num{font-family:"Geist",sans-serif; font-weight:800; letter-spacing:-.02em; margin-bottom:10px; line-height:1}
-  .goal-num .gdone{font-size:38px; color:var(--green)}
-  .goal-num .ggoal{font-size:18px; color:var(--ink-3); font-weight:600}
-  .goal-track{height:12px; background:var(--hair); border-radius:7px; overflow:hidden}
-  .goal-fill{height:100%; background:var(--green); border-radius:7px; transition:width .35s ease}
-  .goal.hit .goal-fill{background:var(--green-mid)}
-  .goal-msg{margin-top:9px; font-family:"Geist Mono",monospace; font-size:12px; color:var(--ink-2); font-weight:600}
+  .mission-count{font-family:"Geist",sans-serif; font-weight:800; letter-spacing:-.03em; line-height:1; margin-bottom:12px}
+  .mission-count .mc-done{font-size:44px; color:var(--green)}
+  .mission-count .mc-goal{font-size:20px; color:var(--ink-3); font-weight:600}
+  .goal-track{height:6px; background:var(--hair); border-radius:4px; overflow:hidden}
+  .goal-fill{height:100%; background:var(--green); border-radius:4px; transition:width .4s ease}
+  .mission.done .goal-fill{background:var(--green-mid)}
+  .mission-status{margin-top:10px; font-family:"Geist Mono",monospace; font-size:12px; letter-spacing:.02em; color:var(--ink-2); font-weight:500}
+  .mission-grid{display:flex; gap:40px; margin-top:20px; padding-top:18px; border-top:1.5px solid var(--hair); flex-wrap:wrap}
+  .mission-grid .lbl{display:block; margin-bottom:9px}
+  .mo-bar{display:flex; gap:5px; margin-bottom:8px}
+  .mo-seg{width:26px; height:6px; border-radius:3px; background:var(--hair)}
+  .mo-seg.on{background:var(--green)}
+  .mo-label{font-family:"Geist",sans-serif; font-size:15px; font-weight:700; color:var(--ink); letter-spacing:-.01em}
+  .exp-line{font-size:14px; color:var(--ink-2); font-weight:500; line-height:1.55}
+
+  /* re-entry — begin exactly where you left off */
+  .reentry{background:var(--green); color:#fff; border-radius:var(--r); padding:22px 22px 20px; margin:18px 0 4px; box-shadow:var(--sh-lg)}
+  .reentry .lbl{color:rgba(255,255,255,.6); display:block; margin-bottom:10px}
+  .reentry-note{font-family:"Geist",sans-serif; font-size:20px; font-weight:600; line-height:1.4; letter-spacing:-.01em; color:#fff; margin-bottom:16px; white-space:pre-wrap}
+  .reentry .btn.ghost{background:transparent; color:#fff; border:1.5px solid rgba(255,255,255,.42)}
+  .reentry .btn.ghost:hover{border-color:#fff; background:rgba(255,255,255,.12)}
+
+  /* handoff — the signature end-of-session note */
+  .handoff{position:fixed; inset:0; z-index:85; background:rgba(19,39,28,.55); backdrop-filter:blur(6px); display:flex; align-items:center; justify-content:center; padding:24px}
+  .handoff-card{background:var(--surface); border-radius:16px; box-shadow:var(--sh-lg); max-width:440px; width:100%; padding:32px 30px}
+  .handoff-q{font-family:"Geist",sans-serif; font-size:24px; font-weight:700; letter-spacing:-.02em; color:var(--ink); margin:8px 0 18px; line-height:1.25}
+  .handoff-card textarea{width:100%; resize:vertical; font-size:15px; line-height:1.5}
+  .handoff-actions{display:flex; gap:9px; justify-content:flex-end; margin-top:18px}
 </style>
 
 <header class="hide">
@@ -241,6 +261,18 @@
   </div>
 </div>
 
+<div class="handoff hide" id="handoffScreen">
+  <div class="handoff-card">
+    <span class="lbl">Before you go</span>
+    <h2 class="handoff-q">What should tomorrow-you know?</h2>
+    <textarea id="handoffText" rows="3" placeholder="Waiting for Brad to respond. Mention supply chain next time."></textarea>
+    <div class="handoff-actions">
+      <button class="btn ghost" id="handoffCancel">Not now</button>
+      <button class="btn" id="handoffSave">Leave it here</button>
+    </div>
+  </div>
+</div>
+
 <script src="https://unpkg.com/@simplewebauthn/browser@13/dist/bundle/index.umd.min.js"></script>
 <script>
 (function(){
@@ -273,7 +305,7 @@
   var PERSONA_ENTRY = { "Champion":1, "Technical Evaluator":3, "Economic Buyer":5, "Additional":8, "Blocker":0 };
   var PERSONAS = ["Champion","Technical Evaluator","Economic Buyer","Additional","Blocker"];
 
-  var state = { accounts:[], done:{}, notes:{}, activeId:null, view:"today", seeded:false, sheetUrl:"", dailyGoal:50 };
+  var state = { accounts:[], done:{}, notes:{}, activeId:null, view:"today", seeded:false, sheetUrl:"", dailyGoal:50, handoffNote:"" };
   var MODE = { api:false }; // api=true once the Vercel /api + KV backend is detected
   var ALL = "__all__"; // sentinel activeId meaning "show every account combined"
 
@@ -326,6 +358,7 @@
     var seeded = await sGet("tracker:seeded");
     state.sheetUrl = (await sGet("tracker:sheetUrl")) || "";
     state.dailyGoal = parseInt(await sGet("tracker:dailyGoal"), 10) || 50;
+    state.handoffNote = (await sGet("tracker:handoffNote")) || "";
     if(a){ try{ state.accounts = JSON.parse(a); }catch(e){} }
     if(d){ try{ state.done = JSON.parse(d); }catch(e){} }
     if(n){ try{ state.notes = JSON.parse(n); }catch(e){} }
@@ -349,12 +382,13 @@
     sSet("tracker:seeded", state.seeded?"1":"");
     sSet("tracker:sheetUrl", state.sheetUrl||"");
     sSet("tracker:dailyGoal", String(state.dailyGoal||50));
+    sSet("tracker:handoffNote", state.handoffNote||"");
   }
   function apiSave(){
     if(saveTimer) clearTimeout(saveTimer);
     saveTimer=setTimeout(function(){
       fetch("/api/entries",{method:"POST",headers:{"Content-Type":"application/json"},credentials:"same-origin",
-        body:JSON.stringify({accounts:state.accounts,done:state.done,notes:state.notes,active:state.activeId,seeded:!!state.seeded,sheetUrl:state.sheetUrl||"",dailyGoal:state.dailyGoal||50})})
+        body:JSON.stringify({accounts:state.accounts,done:state.done,notes:state.notes,active:state.activeId,seeded:!!state.seeded,sheetUrl:state.sheetUrl||"",dailyGoal:state.dailyGoal||50,handoffNote:state.handoffNote||""})})
         .then(function(r){ if(!r.ok) throw new Error("save"); })
         .catch(function(){ toast("Save failed — check connection"); });
     },300);
@@ -430,10 +464,12 @@
           '<span class="lbl">'+(clear?"All sent — clear":"To send")+'</span>'+
         '</div>'+
       '</div>');
+    // re-entry: restore the note you left, before anything else
+    var re=reentryPanel(); if(re) root.appendChild(re);
     root.appendChild(bar);
 
-    // daily goal (global — counts every touch sent today, across all accounts)
-    root.appendChild(goalBanner());
+    // today's mission (global — counts every touch sent today, across all accounts)
+    root.appendChild(missionPanel());
 
     // timeline (per-account only)
     if(!allMode) root.appendChild(renderTimeline(acct, touches, today));
@@ -575,45 +611,68 @@
     else { toast("Copy unavailable"); }
   }
 
-  // ---------- daily goal ----------
+  // ---------- momentum + today's mission ----------
   function sentOnDate(ds){ var n=0; for(var k in state.done){ if(state.done[k]===ds) n++; } return n; }
   function sentToday(){ return sentOnDate(todayStr()); }
-  function goalStreak(goal){
-    var s=0, todayMet=sentOnDate(todayStr())>=goal;
-    for(var i=(todayMet?0:1); i<400; i++){ var ds=iso(addDays(todayStr(),-i)); if(sentOnDate(ds)>=goal) s++; else break; }
-    return s;
+  var MOMENTUM=["Cold","Starting","Warm","Flow","Locked in"];
+  function momentumLevel(){
+    var goal=state.dailyGoal||50, t=sentToday();
+    var d1=sentOnDate(iso(addDays(todayStr(),-1))), d2=sentOnDate(iso(addDays(todayStr(),-2)));
+    var frac=goal? t/goal : 0, active=(t>0?1:0)+(d1>0?1:0)+(d2>0?1:0);
+    var lvl = (t+d1+d2)===0 ? 0 : (frac<0.25?1 : frac<0.6?2 : frac<1?3 : 4);
+    if(lvl>0 && lvl<4 && active>=3 && frac>=0.5) lvl++;
+    return Math.min(4,lvl);
   }
-  function goalMsg(done, goal){
-    var left=goal-done;
-    if(done===0) return "Start with one.";
-    if(left<=0) return "Done for today ✓  Anything extra is bonus.";
-    if(left<=5) return "Almost there — "+left+" to go.";
-    return left+" to go — nice pace.";
+  function missionProjection(goal){
+    return { rLo:Math.max(1,Math.round(goal*0.12)), rHi:Math.max(2,Math.round(goal*0.16)), convos:Math.max(1,Math.round(goal*0.04)), opps:Math.max(1,Math.round(goal*0.02)) };
   }
-  function goalBanner(){
+  function missionPanel(){
     var goal=state.dailyGoal||50, done=sentToday();
     var pct=goal?Math.max(0,Math.min(100,Math.round(done/goal*100))):0;
-    var streak=goalStreak(goal), hit=done>=goal;
-    var b=el('<div class="goal '+(hit?"hit":"")+'">'+
-      '<div class="goal-top"><span class="lbl">Today’s outreach goal</span>'+
-        (streak>0?'<span class="goal-streak">🔥 '+streak+' day'+(streak===1?"":"s")+'</span>':'')+
-        '<button class="goal-edit" id="goalEdit">Goal '+goal+' ✎</button></div>'+
-      '<div class="goal-num"><span class="gdone">'+done+'</span><span class="ggoal"> / '+goal+' sent</span></div>'+
+    var lvl=momentumLevel(), left=goal-done, p=missionProjection(goal);
+    var status = left<=0 ? "Complete for today." : (done===0 ? "Begin when ready." : left+" remaining.");
+    var seg=""; for(var i=0;i<5;i++){ seg+='<span class="mo-seg'+(i<=lvl?" on":"")+'"></span>'; }
+    var b=el('<section class="mission'+(left<=0?" done":"")+'">'+
+      '<div class="mission-head"><span class="lbl">Today’s mission</span>'+
+        '<button class="goal-edit" id="goalEdit">'+goal+' outreach</button></div>'+
+      '<div class="mission-count"><span class="mc-done">'+done+'</span><span class="mc-goal"> / '+goal+'</span></div>'+
       '<div class="goal-track"><div class="goal-fill" style="width:'+pct+'%"></div></div>'+
-      '<div class="goal-msg">'+esc(goalMsg(done,goal))+'</div></div>');
+      '<div class="mission-status">'+esc(status)+'</div>'+
+      '<div class="mission-grid">'+
+        '<div class="mo"><span class="lbl">Momentum</span><div class="mo-bar">'+seg+'</div><div class="mo-label">'+MOMENTUM[lvl]+'</div></div>'+
+        '<div class="exp"><span class="lbl">Expected</span><div class="exp-line">'+p.rLo+'–'+p.rHi+' replies</div><div class="exp-line">'+p.convos+' conversation'+(p.convos===1?"":"s")+'</div><div class="exp-line">'+p.opps+' opportunity</div></div>'+
+      '</div>'+
+    '</section>');
     b.querySelector("#goalEdit").addEventListener("click", function(){
-      var v=prompt("How many outreaches per day?", goal); if(v===null) return;
-      var n=parseInt(v,10); if(!n||n<1){ toast("Enter a number like 50"); return; }
+      var v=prompt("Outreach target per day", goal); if(v===null) return;
+      var n=parseInt(v,10); if(!n||n<1){ toast("Enter a number, e.g. 50"); return; }
       state.dailyGoal=n; scheduleSave(); render();
     });
     return b;
   }
 
+  // ---------- re-entry: the note tomorrow-you left ----------
+  var reentrySeen=false;
+  function reentryPanel(){
+    if(reentrySeen || !(state.handoffNote||"").trim()) return null;
+    var p=el('<section class="reentry">'+
+      '<span class="lbl">Where you left off</span>'+
+      '<div class="reentry-note">'+esc(state.handoffNote)+'</div>'+
+      '<button class="btn ghost" id="reentryResume">Resume</button>'+
+    '</section>');
+    p.querySelector("#reentryResume").addEventListener("click", function(){ reentrySeen=true; render(); });
+    return p;
+  }
+
+  var REINFORCE=["Thread updated.","Momentum building.","One less thing to remember.","Future you will appreciate that.","Noted — we've got it."];
   function toggleDone(id){
     var wasDone=!!state.done[id];
     if(wasDone) delete state.done[id]; else state.done[id]=todayStr();
     persistDone();
-    if(!wasDone){ var g=state.dailyGoal||50; if(sentToday()===g) toast("🎯 Goal reached — "+g+" today"); }
+    if(!wasDone){
+      var g=state.dailyGoal||50, t=sentToday();
+      toast(t===g ? "Mission complete for today." : REINFORCE[t % REINFORCE.length]);
+    }
     render();
   }
 
@@ -1192,7 +1251,7 @@
       var r=await fetch("/api/entries",{credentials:"same-origin"});
       if(r.ok){
         var d=await r.json();
-        state.accounts=d.accounts||[]; state.done=d.done||{}; state.notes=d.notes||{}; state.seeded=!!d.seeded; state.sheetUrl=d.sheetUrl||""; state.dailyGoal=parseInt(d.dailyGoal,10)||50;
+        state.accounts=d.accounts||[]; state.done=d.done||{}; state.notes=d.notes||{}; state.seeded=!!d.seeded; state.sheetUrl=d.sheetUrl||""; state.dailyGoal=parseInt(d.dailyGoal,10)||50; state.handoffNote=d.handoffNote||"";
         state.activeId=((d.active===ALL && state.accounts.length) || (d.active && state.accounts.some(function(a){return a.id===d.active;})))?d.active:((state.accounts[0]&&state.accounts[0].id)||null);
         if(!state.seeded && state.accounts.length===0){ seed(); state.seeded=true; apiSave(); }
       }
@@ -1202,6 +1261,13 @@
     try{ await fetch("/api/auth?action=logout",{method:"POST",credentials:"same-origin"}); }catch(e){}
     showApp(false); renderUnlock();
   }
+  // The signature Ollin interaction: leave a note for tomorrow-you, then lock.
+  function showHandoff(){
+    var ta=document.getElementById("handoffText"); ta.value=state.handoffNote||"";
+    document.getElementById("handoffScreen").classList.remove("hide");
+    setTimeout(function(){ ta.focus(); },50);
+  }
+  function hideHandoff(){ document.getElementById("handoffScreen").classList.add("hide"); }
   async function boot(){
     var st=null;
     try{ var r=await fetch("/api/auth?action=status",{credentials:"same-origin"}); if(r.ok) st=await r.json(); }catch(e){}
@@ -1228,7 +1294,13 @@
   document.querySelectorAll(".tab").forEach(function(b){ b.addEventListener("click", function(){ state.view=b.dataset.view; render(); }); });
   document.getElementById("acctSelect").addEventListener("change", function(e){ state.activeId=e.target.value; scheduleSave(); render(); });
   document.getElementById("seeAllBtn").addEventListener("click", function(){ state.view="accounts"; render(); window.scrollTo({top:0,behavior:"smooth"}); });
-  document.getElementById("lockBtn").addEventListener("click", function(){ logout(); });
+  document.getElementById("lockBtn").addEventListener("click", function(){ showHandoff(); });
+  document.getElementById("handoffCancel").addEventListener("click", function(){ hideHandoff(); logout(); });
+  document.getElementById("handoffSave").addEventListener("click", function(){
+    state.handoffNote=document.getElementById("handoffText").value.trim();
+    reentrySeen=false; scheduleSave(); hideHandoff();
+    toast("Leave it here. We'll hold onto it."); logout();
+  });
 
   // ---------- boot ----------
   boot();
