@@ -733,15 +733,20 @@
     showApp(false); renderUnlock();
   }
   async function boot(){
-    var st=null;
-    try{ var r=await fetch("/api/auth?action=status",{credentials:"same-origin"}); if(r.ok) st=await r.json(); }catch(e){}
-    if(!st){ // no backend reachable — fall back to local (localStorage / in-memory)
-      MODE.api=false; await load(); showApp(true); render(); return;
-    }
-    MODE.api=true;
-    if(st.authenticated){ await afterAuthLoad(); showApp(true); render(); return; }
-    showApp(false);
-    if(st.registered) renderUnlock(); else renderRegister();
+    // Sign-in temporarily disabled — load straight from KV, no lock screen.
+    var live=false;
+    try{
+      var r=await fetch("/api/entries",{credentials:"same-origin"});
+      if(r.ok){
+        var d=await r.json();
+        state.accounts=d.accounts||[]; state.done=d.done||{}; state.notes=d.notes||{};
+        state.seeded=!!d.seeded; state.sheetUrl=d.sheetUrl||""; state.dailyGoal=parseInt(d.dailyGoal,10)||50;
+        state.handoffNote=d.handoffNote||""; state.extra=d.extra||{};
+        MODE.api=true; live=true;
+      }
+    }catch(e){}
+    if(!live){ MODE.api=false; await load(); }
+    showApp(true); render();
   }
 
   // ================= ANYWAY UI (wired to existing accounts/threads/KV) =================

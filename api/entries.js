@@ -4,7 +4,8 @@ import { kv, KEYS, readJson, send, requireSession } from './_lib.js';
 const EMPTY = { accounts: [], done: {}, notes: {}, active: null, seeded: false, sheetUrl: '', dailyGoal: 50, handoffNote: '', extra: {} };
 
 export default async function handler(req, res) {
-  if (!requireSession(req)) return send(res, 401, { error: 'unauthorized' });
+  // Sign-in temporarily disabled — session gate off.
+  // if (!requireSession(req)) return send(res, 401, { error: 'unauthorized' });
 
   if (req.method === 'GET') {
     const data = await kv.get(KEYS.entries);
