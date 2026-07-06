@@ -183,6 +183,16 @@
   .imp-file-row .btn{width:auto;padding:11px 16px;}
   .imp-file-name{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.04em;color:var(--grey);}
   .form.drag{outline:2px dashed var(--gold);outline-offset:3px;}
+  .uploadzone{border:1.5px dashed var(--hairline);background:var(--cream);padding:26px 18px;text-align:center;cursor:pointer;transition:border-color .15s,background .15s;margin-bottom:12px;}
+  .uploadzone:hover{border-color:var(--gold);}
+  .uploadzone.drag{border-color:var(--gold);background:#FBF3E2;}
+  .uz-plus{font-family:'Archivo Black',sans-serif;font-size:26px;color:var(--gold);line-height:1;}
+  .uz-title{font-family:'Archivo Black',sans-serif;font-size:16px;text-transform:uppercase;letter-spacing:-.01em;margin-top:8px;}
+  .uz-sub{font-size:12.5px;color:var(--grey);margin-top:5px;}
+  .mini-add{margin-top:14px;border-top:.5px solid var(--hairline);padding-top:6px;}
+  .mini-add>summary{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--grey);cursor:pointer;list-style:none;padding:6px 0;}
+  .mini-add>summary::-webkit-details-marker{display:none;}
+  .mini-add>summary:hover{color:var(--ink);}
   .mono{font-family:'JetBrains Mono',monospace;}
   .lbl{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--grey);}
   /* ANY / WAY. stacked lockup (lock screen) */
@@ -622,36 +632,6 @@
       rd.readAsText(file);
     }
   }
-  function showImportForm(root){
-    var f=el(
-      '<div class="form">'+
-        '<div class="imp-file-row"><input type="file" id="imp-file" accept=".csv,.xlsx,.xls" style="display:none"><button type="button" class="btn" id="imp-file-btn">Upload CSV or Excel file</button><span class="imp-file-name" id="imp-file-name">or drop a file here \u00b7 or paste below</span></div>'+
-        '<label class="full"><span class="lbl">\u2026or paste your contacts (include the header row)</span>'+
-        '<textarea id="imp-text" style="height:130px; font-family:\'JetBrains Mono\',monospace; font-size:12.5px" placeholder="Name,Title,Company,LinkedIn URL,Email&#10;Maya Chen,VP Merchandising,Arcadia,linkedin.com/in/mayachen,maya@arcadia.io&#10;Luis Ortega,Sr Manager DTC,Arcadia,linkedin.com/in/luisortega,luis@arcadia.io"></textarea></label>'+
-        '<div style="font-size:12.5px; color:var(--grey); margin:2px 0 12px; line-height:1.55"><b>Required:</b> Name and Company (Company = the client each person belongs to). <b>Optional:</b> Title, LinkedIn URL, Email, and per-step message columns (Touch 1\u20135) to pre-fill scripts. Everyone starts the cadence today.</div>'+
-        '<div class="form-actions"><button class="btn ghost" id="imp-cancel">Cancel</button><button class="btn" id="imp-save">Import contacts</button></div>'+
-      '</div>');
-    root.appendChild(f);
-    f.querySelector("#imp-cancel").addEventListener("click", function(){ f.remove(); });
-    f.querySelector("#imp-file-btn").addEventListener("click", function(){ f.querySelector("#imp-file").click(); });
-    f.querySelector("#imp-file").addEventListener("change", function(e){
-      var file=e.target.files&&e.target.files[0];
-      if(file){ f.querySelector("#imp-file-name").textContent=file.name; handleImportFile(file); }
-    });
-    f.addEventListener("dragover", function(e){ e.preventDefault(); f.classList.add("drag"); });
-    f.addEventListener("dragleave", function(e){ if(e.target===f) f.classList.remove("drag"); });
-    f.addEventListener("drop", function(e){
-      e.preventDefault(); f.classList.remove("drag");
-      var file=e.dataTransfer&&e.dataTransfer.files&&e.dataTransfer.files[0];
-      if(file){ f.querySelector("#imp-file-name").textContent=file.name; handleImportFile(file); }
-    });
-    f.querySelector("#imp-save").addEventListener("click", function(){
-      var txt=f.querySelector("#imp-text").value.trim();
-      if(!txt){ toast("Paste a CSV, or use Upload above"); return; }
-      applyImportRows(parseCSV(txt));
-    });
-  }
-
   function deleteAcct(id){
     state.accounts=state.accounts.filter(function(a){return a.id!==id;});
     if(state.activeId===id) state.activeId = state.accounts.length?state.accounts[0].id:null;
@@ -1119,19 +1099,33 @@
     // ADD CONTACTS
     var accts={}; state.accounts.forEach(function(a){ accts[a.company]=1; });
     var opts=Object.keys(accts).map(function(x){ return '<option value="'+esc(x)+'">'; }).join("");
-    var add=el('<details class="section" id="addSection"><summary><span class="sum-title">+ Add contacts</span><span class="sum-count">account &rarr; people</span></summary>'+
-      '<div class="form-full"><input id="acctInput" list="acctList" placeholder="Account (e.g., Skechers)"><datalist id="acctList">'+opts+'</datalist></div>'+
-      '<div class="form-full"><textarea id="bulkInput" rows="5" placeholder="One person per line:&#10;Jane Smith, VP Merchandising&#10;Luis Ortega, Sr Manager DTC"></textarea></div>'+
-      '<p class="hint">Name, Title — one per line. Each person starts the cadence today.</p>'+
-      '<button class="btn-primary" id="addBtn" type="button">Add to cadence</button>'+
-      '<div class="upload-note"><p class="eyebrow">Or upload a list</p>'+
-        '<p class="upload-fields"><b>Required:</b> Name · Company <span class="upload-dim">(Company = the client)</span><br><b>Recommended optional:</b> Name · Company · Title · LinkedIn URL · Email · Touch 1–5 messages <span class="upload-dim">— no messages? ANYWAY AI writes them for you (use them or not).</span></p></div>'+
-      '<div class="btn-row"><button class="btn-mini" id="csvBtn">Paste CSV</button><button class="btn-mini" id="sheetBtn">Google Sheet</button></div>'+
+    var add=el('<details class="section" id="addSection"><summary><span class="sum-title">+ Add contacts</span><span class="sum-count">upload a file</span></summary>'+
+      // PRIMARY — prominent drag-or-click upload
+      '<div class="uploadzone" id="uploadZone">'+
+        '<div class="uz-plus">+</div>'+
+        '<div class="uz-title">Add file</div>'+
+        '<div class="uz-sub">Drop a CSV or Excel file here, or click to browse</div>'+
+        '<input type="file" id="addFileInput" accept=".csv,.xlsx,.xls" hidden>'+
+      '</div>'+
+      '<p class="upload-fields"><b>Required:</b> Name · Company <span class="upload-dim">(Company = the client)</span><br><b>Optional:</b> Title · LinkedIn URL · Email · Touch 1–5 messages <span class="upload-dim">— no messages? ANYWAY AI writes them for you (use them or not).</span></p>'+
+      '<div class="btn-row"><button class="btn-mini" id="sheetBtn">Import from Google Sheet</button></div>'+
+      // SECONDARY — type a few by hand
+      '<details class="mini-add"><summary>Or add a few by hand</summary>'+
+        '<div class="form-full" style="margin-top:12px"><input id="acctInput" list="acctList" placeholder="Account (e.g., Skechers)"><datalist id="acctList">'+opts+'</datalist></div>'+
+        '<div class="form-full"><textarea id="bulkInput" rows="4" placeholder="One person per line:&#10;Jane Smith, VP Merchandising&#10;Luis Ortega, Sr Manager DTC"></textarea></div>'+
+        '<p class="hint">Name, Title — one per line. Each person starts the cadence today.</p>'+
+        '<button class="btn-primary" id="addBtn" type="button">Add to cadence</button>'+
+      '</details>'+
       '<div id="importHost"></div></details>');
+    var fi=add.querySelector("#addFileInput"), uz=add.querySelector("#uploadZone");
+    uz.addEventListener("click", function(){ fi.click(); });
+    fi.addEventListener("change", function(e){ var file=e.target.files&&e.target.files[0]; if(file) handleImportFile(file); fi.value=""; });
+    uz.addEventListener("dragover", function(e){ e.preventDefault(); uz.classList.add("drag"); });
+    uz.addEventListener("dragleave", function(e){ uz.classList.remove("drag"); });
+    uz.addEventListener("drop", function(e){ e.preventDefault(); uz.classList.remove("drag"); var file=e.dataTransfer&&e.dataTransfer.files&&e.dataTransfer.files[0]; if(file) handleImportFile(file); });
     add.querySelector("#addBtn").addEventListener("click", function(){
       if(addQuick(add.querySelector("#acctInput").value, add.querySelector("#bulkInput").value)) add.open=true;
     });
-    add.querySelector("#csvBtn").addEventListener("click", function(){ showImportForm(add.querySelector("#importHost")); });
     add.querySelector("#sheetBtn").addEventListener("click", function(){ showSheetForm(add.querySelector("#importHost")); });
     m.appendChild(add);
 
