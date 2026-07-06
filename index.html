@@ -1,382 +1,191 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>CONT. — We got you.</title>
+<title>ANYWAY. — Tracker</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#FFFFFF; --surface:#FFFFFF; --hair:#EAEFEB; --hair-strong:#D5DED7;
-    --ink:#16241D; --ink-2:#566860; --ink-3:#8E9C94;
-    /* deep-green accent system (COS) — kept under legacy var names so logic is unchanged */
-    --green:#13271C; --green-mid:#2E5E47; --green-soft:#E7EFEA;
-    --amber:#13271C; --amber-soft:#E7EFEA;        /* primary accent = deep forest green #13271C */
-    --gold:#E9C46A; --gold-deep:#D9AE45; --gold-ink:#3A2C06;
-    --ox:#A63124; --ox-soft:#FBEAE7;
-    --beige:#F6EFD9;
-    --li:#13271C; --em:#2E5E47; --call:#9A7A1E;
-    --r:12px; --r-sm:6px;
-    --sh:0 1px 3px rgba(19,39,28,.10), 0 6px 18px rgba(19,39,28,.10);
-    --sh-lg:0 4px 10px rgba(19,39,28,.16), 0 16px 38px rgba(19,39,28,.18);
-    --sh-btn:0 2px 6px rgba(19,39,28,.16);
+    --ink:#111110; --cream:#F6F4EE; --gold:#D4A419; --grey:#6E6A61;
+    --hairline:rgba(17,17,16,.28); --panel:#F1EEE5;
+    /* vertical accents (reserved for future) */
+    --cobalt:#3B77C2; --magenta:#B8438A; --verde:#3E9B4F;
   }
-  *{box-sizing:border-box}
-  html,body{margin:0;padding:0}
-  body{
-    font-family:"Geist",system-ui,-apple-system,sans-serif;
-    background:var(--bg); color:var(--ink);
-    -webkit-font-smoothing:antialiased; line-height:1.45;
-    font-size:16px;
-  }
-  .mono{font-family:"Geist Mono",ui-monospace,monospace}
-  .lbl{font-family:"Geist Mono",monospace; font-size:11px; letter-spacing:.13em; text-transform:uppercase; color:var(--ink-3); font-weight:500}
-  .wrap{max-width:900px; margin:0 auto; padding:0 20px 96px}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{background:var(--cream);color:var(--ink);}
+  body{font-family:'Inter',system-ui,sans-serif;-webkit-font-smoothing:antialiased;min-height:100vh;font-size:16px;}
+  .hide{display:none !important;}
+  button{-webkit-tap-highlight-color:transparent;font-family:inherit;}
+  :focus-visible{outline:2px solid var(--gold);outline-offset:2px;}
+  input,textarea{border-radius:0;}
 
-  /* header */
-  header{position:sticky; top:0; z-index:30; background:rgba(255,255,255,.92); backdrop-filter:saturate(1.4) blur(8px); box-shadow:0 1px 0 var(--hair), 0 6px 20px rgba(22,36,29,.04); }
-  .hbar{max-width:900px; margin:0 auto; padding:16px 20px 13px; display:flex; align-items:center; gap:14px}
-  .brand{display:flex; align-items:baseline; gap:11px}
-  .brand .mark{font-family:"Geist",sans-serif; font-weight:800; letter-spacing:-.01em; font-size:20px; color:var(--ink); text-transform:uppercase}
-  .brand .sep{color:var(--hair-strong); font-weight:300}
-  .brand .sub{font-family:"Geist Mono",monospace; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-2); font-weight:500}
-  .tagline{font-family:"Geist",sans-serif; text-transform:none; letter-spacing:0; font-weight:500}
-  .acct-sel{margin-left:auto; display:flex; align-items:center; gap:9px}
-  select,input,textarea{font-family:inherit; font-size:15px; color:var(--ink); background:var(--surface); border:1.5px solid var(--hair-strong); border-radius:var(--r-sm); padding:10px 12px}
-  select{padding-right:30px; cursor:pointer; -webkit-appearance:none; appearance:none; font-weight:500;
-    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%2313271C' stroke-width='2.2'><path d='M6 9l6 6 6-6'/></svg>");
-    background-repeat:no-repeat; background-position:right 10px center}
-  :focus-visible{outline:2.5px solid var(--green); outline-offset:2px}
+  .app{max-width:560px;margin:0 auto;padding:0 20px 90px;}
 
-  nav{display:flex; gap:4px; max-width:900px; margin:0 auto; padding:0 20px}
-  .tab{font-family:"Geist",sans-serif; font-size:13px; letter-spacing:.02em; text-transform:uppercase; color:var(--ink-2); font-weight:700;
-    background:none; border:none; border-bottom:3px solid transparent; padding:13px 14px; cursor:pointer}
-  .tab[aria-selected="true"]{color:var(--green); border-bottom-color:var(--green)}
-  .tab:hover{color:var(--ink)}
+  .top{display:flex;justify-content:space-between;align-items:center;padding:20px 0;border-bottom:.5px solid var(--hairline);}
+  .mark{font-family:'Archivo Black',sans-serif;font-size:20px;letter-spacing:-.01em;}
+  .mark span{color:var(--gold);}
+  .top-right{display:flex;align-items:center;gap:14px;}
+  .date{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--grey);}
+  .lockbtn{background:none;border:.5px solid var(--hairline);color:var(--grey);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:6px 9px;cursor:pointer;}
+  .lockbtn:hover{border-color:var(--ink);color:var(--ink);}
+  .eyebrow{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--grey);}
 
-  /* today bar */
-  .todaybar{display:flex; align-items:flex-end; gap:18px; padding:30px 0 22px; flex-wrap:wrap}
-  .todaybar .date .lbl{display:block; margin-bottom:5px}
-  .todaybar .date .d{font-size:30px; font-weight:700; letter-spacing:-.02em; color:var(--ink)}
-  .count{margin-left:auto; text-align:right}
-  .count .big{font-family:"Geist",sans-serif; font-size:56px; font-weight:800; letter-spacing:-.03em; line-height:.9}
-  .count .big .rem{color:var(--green)}
-  .count .big .tot{color:var(--ink-3); font-weight:600; font-size:34px}
-  .count .lbl{margin-top:8px; display:block}
-  .count.clear .big .rem{color:var(--green-mid)}
+  .score{display:flex;justify-content:space-between;align-items:center;padding:22px 0 18px;border-bottom:.5px solid var(--hairline);}
+  .score-left{display:flex;align-items:center;gap:16px;}
+  .big-num{font-family:'Archivo Black',sans-serif;font-size:44px;line-height:1;}
+  .big-num.done{color:var(--gold);}
+  .score-sub{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--grey);margin-top:4px;}
+  .score-sub button{background:none;border:none;color:var(--grey);text-decoration:underline;cursor:pointer;font:inherit;letter-spacing:inherit;text-transform:inherit;}
+  .score-sub button:hover{color:var(--ink);}
+  .mini-square{width:26px;height:26px;border:2px solid var(--ink);transition:all .3s ease;}
+  .mini-square.done{background:var(--gold);border-color:var(--gold);transform:rotate(90deg);}
+  .streak-num{font-family:'Archivo Black',sans-serif;font-size:16px;text-align:right;}
+  .streak-num i{font-style:normal;color:var(--gold);}
 
-  /* timeline */
-  .tl{margin:14px 0 6px; padding:22px; background:var(--surface); border-radius:var(--r); box-shadow:var(--sh); overflow-x:auto}
-  .tl-head{display:flex; justify-content:space-between; align-items:center; margin-bottom:16px}
-  .tl-grid{position:relative; min-width:520px}
-  .tl-days{display:flex; padding-left:128px; margin-bottom:8px}
-  .tl-day{flex:1; text-align:center; min-width:30px}
-  .tl-day .dn{font-family:"Geist Mono",monospace; font-size:10.5px; color:var(--ink-3); font-weight:500}
-  .tl-day.today .dn{color:var(--green); font-weight:600}
-  .tl-lane{display:flex; align-items:center; height:34px; position:relative}
-  .tl-name{width:128px; flex:none; padding-right:12px; font-size:13px; font-weight:600; color:var(--ink-2); white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
-  .tl-track{flex:1; display:flex; position:relative; height:100%}
-  .tl-cell{flex:1; min-width:30px; display:flex; align-items:center; justify-content:center; position:relative}
-  .tl-cell::before{content:""; position:absolute; left:0; right:0; top:50%; height:2px; background:var(--hair)}
-  .dot{width:13px; height:13px; border-radius:50%; position:relative; z-index:2; border:2px solid; box-shadow:0 1px 2px rgba(22,36,29,.12)}
-  .dot.done{background:var(--green); border-color:var(--green)}
-  .dot.todo{background:var(--surface)}
-  .dot.over{background:var(--ox-soft); border-color:var(--ox)}
-  .dot.li{border-color:var(--li)} .dot.li.todo{background:var(--surface)}
-  .dot.em{border-color:var(--em)} .dot.call{border-color:var(--call)}
-  .todayline{position:absolute; top:-5px; bottom:-5px; width:2.5px; background:var(--green); z-index:1; opacity:.5; border-radius:2px}
-  .tl-legend{display:flex; gap:18px; flex-wrap:wrap; margin-top:16px; padding-top:14px; border-top:2px solid var(--hair)}
-  .tl-legend span{display:inline-flex; align-items:center; gap:7px; font-size:12px; color:var(--ink-2); font-weight:500}
+  .warm{padding:26px 0 0;}
+  .warm-title{font-family:'Archivo Black',sans-serif;font-size:16px;text-transform:uppercase;color:var(--gold);}
+  .warm-sub{font-size:13px;color:var(--grey);margin:2px 0 12px;}
+  .wcard{border:1.5px solid var(--gold);margin-bottom:10px;background:var(--cream);padding:13px 14px;}
+  .wname{font-weight:600;font-size:15px;}
+  .wmeta{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--grey);margin:3px 0 10px;}
+  .wactions{display:flex;gap:8px;flex-wrap:wrap;}
+  .wbtn{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;border:.5px solid var(--ink);background:none;padding:8px 12px;cursor:pointer;color:var(--ink);}
+  .wbtn.gold{background:var(--gold);border-color:var(--gold);}
+  .wbtn:hover{background:var(--ink);color:var(--cream);}
+  .wbtn.quiet{border-color:var(--hairline);color:var(--grey);}
+  .wbtn.quiet:hover{background:none;color:var(--ink);border-color:var(--ink);}
 
-  section.block{margin-top:32px}
-  .block-head{display:flex; align-items:center; gap:12px; margin-bottom:14px}
-  .block-head .line{flex:1; height:2px; background:var(--hair)}
+  .queue{padding:28px 0 6px;}
+  .queue-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px;}
+  .queue-title{font-family:'Archivo Black',sans-serif;font-size:22px;text-transform:uppercase;}
+  .queue-sub{font-size:13.5px;color:var(--grey);margin:4px 0 18px;}
+  .qcard{border:.5px solid var(--hairline);margin-bottom:10px;background:var(--cream);}
+  .qcard.overdue{border-left:3px solid var(--gold);}
+  .qmain{display:flex;justify-content:space-between;align-items:center;padding:14px 14px;gap:10px;}
+  .qwho{min-width:0;}
+  .qname{font-weight:600;font-size:15px;}
+  .qmeta{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--grey);margin-top:3px;}
+  .qactions{display:flex;gap:8px;flex-shrink:0;align-items:center;}
+  .chip{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;border:.5px solid var(--ink);padding:4px 8px;white-space:nowrap;}
+  .chip.step-ch{background:var(--ink);color:var(--cream);}
+  .btn-done{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;background:var(--ink);color:var(--cream);border:.5px solid var(--ink);padding:10px 14px;cursor:pointer;transition:background .15s,color .15s;}
+  .btn-done:hover{background:var(--gold);border-color:var(--gold);color:var(--ink);}
+  .btn-script,.btn-replied{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;background:none;border:.5px solid var(--hairline);padding:10px 10px;cursor:pointer;color:var(--grey);}
+  .btn-script:hover,.btn-replied:hover{color:var(--ink);border-color:var(--ink);}
+  .btn-replied:hover{color:var(--gold);border-color:var(--gold);}
+  .script{display:none;border-top:.5px solid var(--hairline);padding:14px;background:var(--panel);}
+  .script.open{display:block;}
+  .script .eyebrow{margin-bottom:8px;}
+  .script textarea{width:100%;background:var(--cream);border:.5px solid var(--hairline);font-family:'Inter',sans-serif;font-size:13.5px;line-height:1.55;padding:10px;min-height:96px;resize:vertical;color:var(--ink);}
+  .script-actions{display:flex;gap:8px;margin-top:8px;}
+  .script-actions button{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;border:.5px solid var(--hairline);background:none;padding:7px 12px;cursor:pointer;color:var(--grey);}
+  .script-actions button:hover{color:var(--ink);border-color:var(--ink);}
+  .clear-msg{text-align:center;padding:30px 10px;}
+  .clear-msg .big{font-family:'Archivo Black',sans-serif;font-size:20px;text-transform:uppercase;}
+  .clear-msg .big span{color:var(--gold);}
+  .clear-msg p{color:var(--grey);font-size:13.5px;margin-top:6px;}
 
-  /* touch card — dark green, white type */
-  .card{background:var(--green); color:#fff; border-radius:var(--r); box-shadow:var(--sh-lg); padding:18px; margin-bottom:13px; display:flex; gap:15px; align-items:flex-start; transition:box-shadow .16s, transform .16s}
-  .card:hover{box-shadow:0 4px 12px rgba(22,36,29,.20), 0 20px 44px rgba(22,36,29,.24); transform:translateY(-2px)}
-  .card.over{box-shadow:var(--sh-lg), inset 5px 0 0 var(--gold)}
-  .card.done{opacity:.5}
-  .card.done:hover{transform:none}
-  .check{flex:none; width:26px; height:26px; border:2.5px solid rgba(255,255,255,.55); border-radius:50%; background:transparent; cursor:pointer; display:flex; align-items:center; justify-content:center; margin-top:1px; padding:0; transition:.14s}
-  .check:hover{border-color:#fff}
-  .check.on{background:#fff; border-color:#fff}
-  .check svg{width:14px; height:14px; stroke:var(--green); display:none}
-  .check.on svg{display:block}
-  .card-body{flex:1; min-width:0}
-  .card-top{display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:5px}
-  .who{font-size:18px; font-weight:700; letter-spacing:-.01em; color:#fff}
-  .at{color:rgba(255,255,255,.64); font-size:14px; font-weight:500}
-  .chan{font-family:"Geist Mono",monospace; font-size:10px; letter-spacing:.1em; text-transform:uppercase; padding:3px 9px; border-radius:20px; font-weight:700; background:#fff}
-  .chan.li{color:var(--li)}
-  .chan.em{color:var(--em)}
-  .chan.call{color:var(--call)}
-  .touchno{font-family:"Geist Mono",monospace; font-size:11px; color:rgba(255,255,255,.55); letter-spacing:.06em; font-weight:500}
-  .overtag{font-family:"Geist Mono",monospace; font-size:10px; letter-spacing:.08em; text-transform:uppercase; color:var(--gold-ink); background:var(--gold); border-radius:20px; padding:3px 8px; font-weight:700}
-  .persona{font-family:"Geist Mono",monospace; font-size:10.5px; letter-spacing:.07em; text-transform:uppercase; color:var(--gold); font-weight:700}
-  .cmpny{font-family:"Geist Mono",monospace; font-size:10px; letter-spacing:.08em; text-transform:uppercase; color:var(--gold-ink); background:var(--gold); padding:3px 9px; border-radius:20px; font-weight:700}
-  .angle{font-size:14.5px; color:rgba(255,255,255,.86); margin:7px 0 0; line-height:1.5}
-  .card-actions{display:flex; gap:9px; margin-top:13px; flex-wrap:wrap}
-  .lk{font-family:"Geist Mono",monospace; font-size:11px; letter-spacing:.05em; text-transform:uppercase; color:#fff; text-decoration:none; border:1.5px solid rgba(255,255,255,.42); border-radius:var(--r-sm); padding:7px 11px; background:transparent; cursor:pointer; font-weight:600; transition:.14s}
-  .lk:hover{border-color:#fff; background:rgba(255,255,255,.14)}
-  .note{margin-top:13px}
-  .note textarea{width:100%; min-height:0; height:42px; resize:vertical; font-size:14px; color:var(--ink); background:#fff; border-color:transparent; line-height:1.45}
-  .copybtn{margin-top:7px}
+  details.section{border-top:.5px solid var(--hairline);margin-top:26px;}
+  details.section summary{list-style:none;cursor:pointer;padding:16px 0;display:flex;justify-content:space-between;align-items:center;}
+  details.section summary::-webkit-details-marker{display:none;}
+  .sum-title{font-family:'Archivo Black',sans-serif;font-size:14px;text-transform:uppercase;letter-spacing:.02em;}
+  .sum-count{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--grey);letter-spacing:.1em;}
 
-  .day-group .day-lbl{font-family:"Geist Mono",monospace; font-size:12px; letter-spacing:.07em; text-transform:uppercase; color:var(--green); font-weight:600; margin:22px 0 11px}
+  .form-full{margin-bottom:8px;}
+  .form-full input,.form-full textarea{width:100%;background:var(--cream);border:.5px solid var(--hairline);font-family:'Inter',sans-serif;font-size:14px;padding:11px 12px;color:var(--ink);}
+  .hint{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.06em;color:var(--grey);margin:4px 0 10px;line-height:1.5;}
+  .btn-primary{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;background:var(--ink);color:var(--cream);border:.5px solid var(--ink);padding:12px 20px;cursor:pointer;width:100%;}
+  .btn-primary:hover{background:var(--gold);border-color:var(--gold);color:var(--ink);}
+  .btn-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;}
+  .btn-mini{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;background:none;border:.5px solid var(--hairline);color:var(--grey);padding:9px 12px;cursor:pointer;}
+  .btn-mini:hover{border-color:var(--ink);color:var(--ink);}
+  .btn-mini.danger:hover{border-color:var(--gold);color:var(--gold);}
 
-  /* empty / held */
-  .empty{background:var(--surface); border:2px dashed var(--hair-strong); border-radius:var(--r); padding:34px 22px; text-align:center; color:var(--ink-2); font-weight:500}
-  .empty .lbl{margin-bottom:9px; display:block}
-  .held{background:var(--beige); border-radius:var(--r); box-shadow:0 1px 2px rgba(120,90,10,.08); padding:16px 17px; margin-bottom:11px}
-  .held .htop{display:flex; gap:10px; align-items:center; margin-bottom:5px}
+  .acct{margin-bottom:16px;}
+  .acct-name{font-family:'Archivo Black',sans-serif;font-size:13px;text-transform:uppercase;padding:8px 0 4px;display:flex;justify-content:space-between;align-items:baseline;}
+  .acct-roll{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--grey);padding-bottom:8px;border-bottom:.5px solid var(--hairline);}
+  .acct-roll b{color:var(--gold);font-weight:500;}
+  .contact-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:.5px solid var(--hairline);font-size:13.5px;gap:8px;}
+  .contact-row .nm{font-weight:500;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .contact-row .st{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--grey);white-space:nowrap;}
+  .contact-row .st.gold{color:var(--gold);font-weight:500;}
+  .tiny-x{background:none;border:none;color:var(--grey);cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:12px;padding:2px 6px;}
+  .tiny-x:hover{color:var(--ink);}
 
-  /* accounts panel */
-  .acct-card{background:var(--surface); border-radius:var(--r); box-shadow:var(--sh); padding:20px; margin-bottom:16px}
-  .acct-card h3{margin:0; font-size:21px; font-weight:700; letter-spacing:-.01em}
-  .acct-meta{display:flex; gap:16px; align-items:center; margin:6px 0 14px}
-  .thread-row{display:grid; grid-template-columns:1fr auto auto auto; gap:12px; align-items:center; padding:12px 0; border-top:2px solid var(--hair); font-size:14px}
-  .thread-row .tname{font-weight:700}
-  .thread-row .tmeta{color:var(--ink-3); font-size:13px; font-weight:500}
-  .btn{font-family:"Geist",sans-serif; font-size:13px; letter-spacing:.02em; text-transform:uppercase; border:none; background:var(--gold); color:var(--gold-ink); border-radius:var(--r-sm); padding:12px 18px; cursor:pointer; font-weight:700; box-shadow:var(--sh-btn); transition:.14s}
-  .btn:hover{background:var(--gold-deep); transform:translateY(-1px)}
-  .btn.ghost{background:var(--surface); color:var(--green); border:2px solid var(--hair-strong); box-shadow:none; font-weight:700}
-  .btn.ghost:hover{border-color:var(--green); background:var(--green-soft); transform:none}
-  .btn.danger{background:var(--surface); color:var(--ox); border:2px solid var(--ox); box-shadow:none}
-  .btn.amber{background:var(--green); color:#fff}
-  .btn.sm{padding:7px 11px; font-size:11px}
+  .cadence-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap;padding:6px 0 14px;}
+  .cad-step{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;border:.5px solid var(--hairline);padding:6px 9px;}
+  .cad-arrow{color:var(--grey);font-size:11px;}
 
-  .form{background:var(--surface); border-radius:var(--r); box-shadow:var(--sh-lg); padding:20px; margin-bottom:16px}
-  .form .grid{display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px}
-  .form label{display:block}
-  .form label .lbl{display:block; margin-bottom:5px}
-  .form input,.form select,.form textarea{width:100%}
-  .full{grid-column:1 / -1}
-  .form-actions{display:flex; gap:9px; justify-content:flex-end}
+  .day-row{display:flex;gap:5px;padding:14px 0 4px;}
+  .day-sq{flex:1;aspect-ratio:1/1;max-width:30px;border:1.5px solid var(--hairline);position:relative;}
+  .day-sq.hit{background:var(--gold);border-color:var(--gold);}
+  .day-sq.partial{background:linear-gradient(to top,var(--gold) 45%,transparent 45%);border-color:var(--gold);}
+  .day-sq.today-marker::after{content:"";position:absolute;left:0;right:0;bottom:-7px;height:2px;background:var(--ink);}
 
-  .hide{display:none !important}
-  .delx{background:none; border:none; color:var(--ink-3); cursor:pointer; font-family:"Geist Mono",monospace; font-size:12px; font-weight:500}
-  .delx:hover{color:var(--ox)}
-  .toast{position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(20px); background:var(--green); color:#fff; font-family:"Geist Mono",monospace; font-size:12px; letter-spacing:.05em; text-transform:uppercase; padding:12px 20px; border-radius:var(--r-sm); box-shadow:var(--sh-lg); opacity:0; transition:.2s; pointer-events:none; z-index:60; font-weight:600}
-  .toast.show{opacity:1; transform:translateX(-50%) translateY(0)}
+  .foot{text-align:center;margin-top:40px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--grey);}
+  .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:20px;background:var(--ink);color:var(--cream);font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;padding:10px 18px;opacity:0;pointer-events:none;transition:opacity .25s;text-transform:uppercase;z-index:90;}
+  .toast.show{opacity:1;}
 
-  @media (max-width:640px){
-    .form .grid{grid-template-columns:1fr}
-    .thread-row{grid-template-columns:1fr; gap:4px}
-    .count{margin-left:0}
-    .count .big{font-size:46px}
-    .todaybar .date .d{font-size:25px}
-  }
-  @media (prefers-reduced-motion:reduce){*{transition:none !important}}
+  /* lock screen (passkey) — ANYWAY styling */
+  .lock{position:fixed;inset:0;z-index:80;background:var(--cream);display:flex;align-items:center;justify-content:center;padding:24px;}
+  .lock-card{max-width:400px;width:100%;text-align:center;border:.5px solid var(--hairline);padding:40px 30px;background:var(--cream);}
+  .lock .mark{font-family:'Archivo Black',sans-serif;font-size:34px;}
+  .lock .sub{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--grey);margin:8px 0 26px;}
+  .lock-card p{color:var(--grey);font-size:14px;line-height:1.55;margin:0 0 20px;}
+  .lock-ico{display:none;}
+  .btn{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.14em;text-transform:uppercase;background:var(--ink);color:var(--cream);border:.5px solid var(--ink);padding:14px 20px;cursor:pointer;width:100%;display:block;}
+  .btn:hover{background:var(--gold);border-color:var(--gold);color:var(--ink);}
+  .btn.ghost{background:none;color:var(--ink);border:.5px solid var(--hairline);}
+  .btn.ghost:hover{background:none;border-color:var(--ink);color:var(--ink);}
+  .lock-alt{margin-top:18px;font-size:12.5px;color:var(--grey);}
+  .lock-alt a{color:var(--gold);font-weight:600;cursor:pointer;text-decoration:underline;}
+  .lock-rec{margin-top:16px;display:none;}
+  .lock-rec.show{display:block;}
+  .lock-rec input{width:100%;text-align:center;font-family:'JetBrains Mono',monospace;letter-spacing:.12em;margin-bottom:10px;background:var(--cream);border:.5px solid var(--hairline);padding:11px;color:var(--ink);}
+  .lock-err{color:#A5341F;font-size:13px;margin-top:14px;min-height:16px;font-weight:500;}
+  .reccode{font-family:'JetBrains Mono',monospace;font-size:18px;letter-spacing:.1em;color:var(--ink);background:var(--panel);border:.5px solid var(--hairline);padding:14px;margin:14px 0;word-break:break-all;font-weight:500;}
 
-  /* header mini buttons (See all / Lock) */
-  .acct-sel .mini{font-family:"Geist Mono",monospace; font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; font-weight:700; color:var(--green); background:var(--green-soft); border:1.5px solid var(--hair-strong); border-radius:var(--r-sm); padding:9px 11px; cursor:pointer; transition:.14s; white-space:nowrap}
-  .acct-sel .mini:hover{border-color:var(--green); background:var(--green); color:#fff}
+  /* import / manage forms (existing import logic, ANYWAY skin) */
+  .form{border:.5px solid var(--hairline);padding:16px;margin:12px 0;background:var(--cream);}
+  .form .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;}
+  .form label{display:block;}
+  .form .lbl{display:block;margin-bottom:5px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--grey);}
+  .form input,.form select,.form textarea{width:100%;background:var(--cream);border:.5px solid var(--hairline);font-family:'Inter',sans-serif;font-size:14px;padding:10px 11px;color:var(--ink);}
+  .form .full{grid-column:1 / -1;}
+  .form-actions{display:flex;gap:9px;justify-content:flex-end;margin-top:6px;}
+  .form-actions .btn{width:auto;padding:11px 16px;}
+  .mono{font-family:'JetBrains Mono',monospace;}
+  .lbl{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--grey);}
+  /* ANY / WAY. stacked lockup (lock screen) */
+  .logo-lockup{margin-bottom:26px;}
+  .ll-any,.ll-way{font-family:'Archivo Black',sans-serif;font-size:54px;line-height:.92;letter-spacing:-.02em;color:var(--ink);}
+  .ll-way{display:flex;align-items:flex-end;justify-content:center;gap:9px;}
+  .ll-dot{width:.30em;height:.30em;background:var(--gold);display:inline-block;margin-bottom:.14em;}
+  .ll-rule{width:34px;height:3px;background:var(--ink);margin:18px auto 12px;}
+  .ll-tag{font-family:'Inter',sans-serif;font-size:18px;color:var(--ink);font-weight:500;}
+  .ll-domain{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.16em;color:var(--grey);margin-top:26px;}
+  @media (prefers-reduced-motion:reduce){.mini-square,.toast{transition:none;}}
+  @media (max-width:430px){.qmain{flex-wrap:wrap;}.qactions{width:100%;justify-content:flex-end;}}
 
-  /* lock screen */
-  .lock{position:fixed; inset:0; z-index:80; background:linear-gradient(160deg,#13271C,#0c1a12); display:flex; align-items:center; justify-content:center; padding:24px}
-  .lock-card{background:#fff; border-radius:16px; box-shadow:var(--sh-lg); max-width:380px; width:100%; padding:34px 28px; text-align:center}
-  .lock-card .mark{font-family:"Geist",sans-serif; font-weight:800; letter-spacing:-.01em; font-size:26px; color:var(--ink); text-transform:uppercase}
-  .lock-card .sub{font-family:"Geist Mono",monospace; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3); margin:6px 0 22px}
-  .lock-card p{color:var(--ink-2); font-size:14px; line-height:1.5; margin:0 0 20px}
-  .lock-card .btn{width:100%; justify-content:center; padding:14px; font-size:14px; display:block}
-  .lock-ico{width:54px; height:54px; margin:0 auto 16px; border-radius:50%; background:var(--green-soft); display:flex; align-items:center; justify-content:center}
-  .lock-ico svg{width:28px; height:28px; stroke:var(--green); fill:none; stroke-width:2}
-  .lock-alt{margin-top:18px; font-size:12.5px; color:var(--ink-2)}
-  .lock-alt a{color:var(--green-mid); font-weight:600; cursor:pointer; text-decoration:underline}
-  .lock-rec{margin-top:16px; display:none}
-  .lock-rec.show{display:block}
-  .lock-rec input{width:100%; text-align:center; font-family:"Geist Mono",monospace; letter-spacing:.12em; margin-bottom:10px}
-  .lock-err{color:var(--ox); font-size:13px; margin-top:14px; min-height:16px; font-weight:500}
-  .reccode{font-family:"Geist Mono",monospace; font-size:18px; letter-spacing:.1em; color:var(--green); background:var(--green-soft); border-radius:var(--r-sm); padding:14px; margin:14px 0; word-break:break-all; font-weight:600}
-
-  /* today's mission — momentum over metrics, calm and architectural */
-  .mission{background:var(--surface); border:1.5px solid var(--hair-strong); border-radius:var(--r); padding:22px 22px 20px; margin:16px 0 4px; box-shadow:var(--sh)}
-  .mission.done{border-color:var(--green)}
-  .mission-head{display:flex; align-items:baseline; gap:10px; margin-bottom:14px}
-  .goal-edit{margin-left:auto; background:none; border:none; cursor:pointer; color:var(--ink-3); font-family:"Geist Mono",monospace; font-size:11px; letter-spacing:.08em; text-transform:uppercase; font-weight:600}
-  .goal-edit:hover{color:var(--green)}
-  .mission-count{font-family:"Geist",sans-serif; font-weight:800; letter-spacing:-.03em; line-height:1; margin-bottom:12px}
-  .mission-count .mc-done{font-size:44px; color:var(--green)}
-  .mission-count .mc-goal{font-size:20px; color:var(--ink-3); font-weight:600}
-  .goal-track{height:6px; background:var(--hair); border-radius:4px; overflow:hidden}
-  .goal-fill{height:100%; background:var(--green); border-radius:4px; transition:width .4s ease}
-  .mission.done .goal-fill{background:var(--green-mid)}
-  .mission-status{margin-top:10px; font-family:"Geist Mono",monospace; font-size:12px; letter-spacing:.02em; color:var(--ink-2); font-weight:500}
-  .mission-grid{display:flex; gap:40px; margin-top:20px; padding-top:18px; border-top:1.5px solid var(--hair); flex-wrap:wrap}
-  .mission-grid .lbl{display:block; margin-bottom:9px}
-  .mo-bar{display:flex; gap:5px; margin-bottom:8px}
-  .mo-seg{width:26px; height:6px; border-radius:3px; background:var(--hair)}
-  .mo-seg.on{background:var(--green)}
-  .mo-label{font-family:"Geist",sans-serif; font-size:15px; font-weight:700; color:var(--ink); letter-spacing:-.01em}
-  .exp-line{font-size:14px; color:var(--ink-2); font-weight:500; line-height:1.55}
-
-  /* re-entry — begin exactly where you left off */
-  .reentry{background:var(--green); color:#fff; border-radius:var(--r); padding:22px 22px 20px; margin:18px 0 4px; box-shadow:var(--sh-lg)}
-  .reentry .lbl{color:rgba(255,255,255,.6); display:block; margin-bottom:10px}
-  .reentry-note{font-family:"Geist",sans-serif; font-size:20px; font-weight:600; line-height:1.4; letter-spacing:-.01em; color:#fff; margin-bottom:16px; white-space:pre-wrap}
-  .reentry .btn.ghost{background:transparent; color:#fff; border:1.5px solid rgba(255,255,255,.42)}
-  .reentry .btn.ghost:hover{border-color:#fff; background:rgba(255,255,255,.12)}
-
-  /* handoff — the signature end-of-session note */
-  .handoff{position:fixed; inset:0; z-index:85; background:rgba(19,39,28,.55); backdrop-filter:blur(6px); display:flex; align-items:center; justify-content:center; padding:24px}
-  .handoff-card{background:var(--surface); border-radius:16px; box-shadow:var(--sh-lg); max-width:440px; width:100%; padding:32px 30px}
-  .handoff-q{font-family:"Geist",sans-serif; font-size:24px; font-weight:700; letter-spacing:-.02em; color:var(--ink); margin:8px 0 18px; line-height:1.25}
-  .handoff-card textarea{width:100%; resize:vertical; font-size:15px; line-height:1.5}
-  .handoff-actions{display:flex; gap:9px; justify-content:flex-end; margin-top:18px}
-
-  /* icons */
-  .ico{width:18px; height:18px; display:inline-block; vertical-align:middle; flex:none}
-
-  /* clickable contact name */
-  .who-link{background:none; border:none; padding:0; margin:0; cursor:pointer; text-align:left; color:inherit; font:inherit}
-  .card-top .who-link{font-size:18px; font-weight:700; letter-spacing:-.01em; color:#fff}
-  .card .who-link:hover{opacity:.82; text-decoration:underline}
-  .thread-row .tname.who-link{font-size:14px; font-weight:700; color:var(--ink)}
-  .thread-row .tname.who-link:hover{color:var(--green); text-decoration:underline}
-
-  /* heat indicator */
-  .heat{display:inline-flex; align-items:center; gap:6px; font-family:"Geist Mono",monospace; font-size:10px; letter-spacing:.08em; text-transform:uppercase; font-weight:700; padding:3px 9px; border-radius:20px; border:1.5px solid var(--hair-strong); color:var(--ink-2)}
-  .heat .ico{width:12px; height:12px}
-  .card .heat{border-color:rgba(255,255,255,.25); color:rgba(255,255,255,.72)}
-  .heat-cold{color:var(--ink-3)}
-  .heat-warm{color:var(--green-mid)}
-  .heat-active{color:#fff; background:var(--green-mid); border-color:var(--green-mid)}
-  .card .heat-active{background:rgba(255,255,255,.16); color:#fff; border-color:transparent}
-  .heat-champ,.heat-opp{color:var(--gold-ink); background:var(--gold); border-color:var(--gold)}
-
-  /* thread view */
-  .thread-view{position:fixed; inset:0; z-index:70; background:var(--bg); overflow-y:auto; padding:0 20px 96px}
-  .thread-view .lbl{display:block}
-  .th-head{max-width:760px; margin:0 auto; padding:16px 0 4px; position:sticky; top:0; background:var(--bg); z-index:2}
-  .th-back{display:inline-flex; align-items:center; gap:7px; background:none; border:none; cursor:pointer; color:var(--ink-2); font-family:"Geist Mono",monospace; font-size:12px; letter-spacing:.06em; text-transform:uppercase; font-weight:600; padding:8px 0}
-  .th-back:hover{color:var(--green)}
-  .th-back .ico{width:16px; height:16px}
-  .th-hero{max-width:760px; margin:0 auto; padding:12px 0 22px; border-bottom:1.5px solid var(--hair)}
-  .th-who{font-family:"Geist",sans-serif; font-size:34px; font-weight:800; letter-spacing:-.03em; color:var(--ink); line-height:1.05}
-  .th-meta{color:var(--ink-2); font-size:15px; font-weight:500; margin-top:7px}
-  .th-tags{display:flex; align-items:center; gap:10px; margin-top:15px; flex-wrap:wrap}
-  .th-rec{max-width:760px; margin:22px auto 0; background:var(--green); color:#fff; border-radius:var(--r); padding:22px; box-shadow:var(--sh-lg)}
-  .th-rec .lbl{color:rgba(255,255,255,.6)}
-  .th-rec-title{font-family:"Geist",sans-serif; font-size:24px; font-weight:700; letter-spacing:-.02em; margin:8px 0}
-  .th-rec-why{color:rgba(255,255,255,.82); font-size:14.5px; line-height:1.5}
-  .th-rec-effort{display:flex; align-items:center; gap:7px; color:rgba(255,255,255,.6); font-family:"Geist Mono",monospace; font-size:12px; margin-top:13px}
-  .th-rec-effort .ico{width:15px; height:15px}
-  .th-rec-actions{display:flex; gap:9px; margin-top:16px; flex-wrap:wrap}
-  .th-rec-actions .btn{display:inline-flex; align-items:center; gap:7px; text-decoration:none}
-  .th-rec-actions .btn .ico{width:16px; height:16px}
-  .th-rec-actions .btn.ghost{background:transparent; color:#fff; border:1.5px solid rgba(255,255,255,.42); box-shadow:none}
-  .th-rec-actions .btn.ghost:hover{border-color:#fff; background:rgba(255,255,255,.12)}
-  .th-actions{max-width:760px; margin:24px auto 0}
-  .th-actions-row{display:flex; gap:10px; flex-wrap:wrap; margin-top:11px}
-  .th-act{display:inline-flex; align-items:center; gap:8px; padding:11px 14px; border:1.5px solid var(--hair-strong); border-radius:var(--r-sm); color:var(--ink); font-size:13px; font-weight:600; text-decoration:none; background:var(--surface); transition:.14s}
-  .th-act:hover{border-color:var(--green); color:var(--green)}
-  .th-act .ico{width:17px; height:17px; color:var(--ink-2)}
-  .th-act:hover .ico{color:var(--green)}
-  .th-timeline{max-width:760px; margin:30px auto 0}
-  .th-timeline > .lbl{margin-bottom:16px}
-  .th-chap{display:flex; gap:16px; padding-bottom:24px; position:relative}
-  .th-chap::before{content:""; position:absolute; left:17px; top:36px; bottom:0; width:2px; background:var(--hair)}
-  .th-chap:last-child::before{display:none}
-  .th-chap-ico{flex:none; width:36px; height:36px; border-radius:50%; border:1.5px solid var(--hair-strong); display:flex; align-items:center; justify-content:center; color:var(--ink-3); background:var(--surface); z-index:1}
-  .th-chap-ico .ico{width:17px; height:17px}
-  .th-chap.done .th-chap-ico{border-color:var(--green); color:#fff; background:var(--green)}
-  .th-chap.over .th-chap-ico{border-color:var(--ox); color:var(--ox)}
-  .th-chap-body{flex:1; min-width:0; padding-top:6px}
-  .th-chap-top{display:flex; align-items:baseline; gap:10px; flex-wrap:wrap}
-  .th-chap-title{font-weight:700; font-size:15px; color:var(--ink)}
-  .th-chap-date{font-family:"Geist Mono",monospace; font-size:12px; color:var(--ink-3); margin-left:auto}
-  .th-chap-status{font-family:"Geist Mono",monospace; font-size:11px; letter-spacing:.05em; text-transform:uppercase; color:var(--ink-2); margin:4px 0 10px; font-weight:600}
-  .th-chap.over .th-chap-status{color:var(--ox)}
-  .th-chap.done .th-chap-status{color:var(--green-mid)}
-  .th-chap-msg{width:100%; min-height:46px; resize:vertical; font-size:14px; line-height:1.5}
-  .th-chap-actions{display:flex; gap:8px; margin-top:9px}
-  .th-chap-actions .lk{color:var(--green); border-color:var(--hair-strong)}
-  .th-chap-actions .lk:hover{border-color:var(--green); background:var(--green-soft)}
-  @media(max-width:640px){ .th-who{font-size:27px} }
-
-  /* line-art timeline nodes */
-  .tl-node{width:22px; height:22px; border-radius:50%; border:1.5px solid var(--hair-strong); display:flex; align-items:center; justify-content:center; background:var(--surface); color:var(--ink-3); position:relative; z-index:2; box-shadow:0 1px 2px rgba(22,36,29,.06)}
-  .tl-node .ico{width:12px; height:12px}
-  .tl-node.todo.li{color:var(--li)} .tl-node.todo.em{color:var(--em)} .tl-node.todo.call{color:var(--call)}
-  .tl-node.done{background:var(--green); border-color:var(--green); color:#fff}
-  .tl-node.over{background:var(--ox-soft); border-color:var(--ox); color:var(--ox)}
-  .tl-legend .tl-node.lg{width:18px; height:18px; box-shadow:none}
-  .tl-legend .tl-node.lg .ico{width:11px; height:11px}
-
-  /* rescue mode — welcome back */
-  .welcome{position:fixed; inset:0; z-index:78; background:var(--bg); overflow-y:auto; padding:44px 20px 80px; display:flex; justify-content:center}
-  .wb-card{max-width:560px; width:100%}
-  .wb-head{margin-bottom:26px}
-  .wb-title{font-family:"Geist",sans-serif; font-size:34px; font-weight:800; letter-spacing:-.03em; color:var(--ink); margin:9px 0 0; line-height:1.1}
-  .wb-note{background:var(--green); color:#fff; border-radius:var(--r); padding:20px 22px; margin-bottom:24px; box-shadow:var(--sh-lg)}
-  .wb-note .lbl{color:rgba(255,255,255,.6)}
-  .wb-note-body{font-family:"Geist",sans-serif; font-size:19px; font-weight:600; line-height:1.4; margin-top:10px; white-space:pre-wrap}
-  .wb-threads{margin-bottom:24px}
-  .wb-threads > .lbl{display:block; margin-bottom:12px}
-  .wb-thread{display:flex; align-items:center; gap:14px; width:100%; text-align:left; background:var(--surface); border:1.5px solid var(--hair-strong); border-radius:var(--r); padding:16px 18px; margin-bottom:10px; cursor:pointer; transition:.14s; font:inherit; color:inherit}
-  .wb-thread:hover{border-color:var(--green); box-shadow:var(--sh)}
-  .wb-thread-main{flex:1; min-width:0}
-  .wb-thread-who{font-family:"Geist",sans-serif; font-size:17px; font-weight:700; letter-spacing:-.01em; color:var(--ink)}
-  .wb-thread-meta{font-size:13px; color:var(--ink-3); font-weight:500; margin-top:2px}
-  .wb-thread-why{font-size:13.5px; color:var(--ink-2); font-weight:500; margin-top:7px}
-  .wb-thread-go{display:flex; flex-direction:column; align-items:flex-end; gap:10px; flex:none}
-  .wb-resume{display:inline-flex; align-items:center; gap:5px; font-family:"Geist Mono",monospace; font-size:11px; letter-spacing:.06em; text-transform:uppercase; font-weight:700; color:var(--green)}
-  .wb-resume .ico{width:14px; height:14px}
-  .wb-enter{width:100%; justify-content:center; padding:14px; font-size:14px; display:block}
 </style>
 
-<header class="hide">
-  <div class="hbar">
-    <div class="brand">
-      <span class="mark">CONT.</span><span class="sub tagline">We got you.</span>
-    </div>
-    <div class="acct-sel">
-      <span class="lbl">Account</span>
-      <select id="acctSelect" aria-label="Active account"></select>
-      <button class="mini" id="seeAllBtn" title="See all accounts">See all</button>
-      <button class="mini hide" id="lockBtn" title="Lock app">Lock</button>
-    </div>
-  </div>
-  <nav role="tablist">
-    <button class="tab" role="tab" data-view="today" aria-selected="true">Today</button>
-    <button class="tab" role="tab" data-view="upcoming" aria-selected="false">Upcoming</button>
-    <button class="tab" role="tab" data-view="accounts" aria-selected="false">Accounts</button>
-  </nav>
-</header>
-
-<div class="wrap hide">
-  <div id="view-today"></div>
-  <div id="view-upcoming" class="hide"></div>
-  <div id="view-accounts" class="hide"></div>
-</div>
-
-<div class="toast" id="toast"></div>
+<div class="app hide" id="appMain"></div>
 
 <div class="lock hide" id="lockScreen">
   <div class="lock-card">
-    <div class="lock-ico"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></div>
-    <div class="mark">CONT.</div>
-    <div class="sub tagline">We got you.</div>
+    <div class="logo-lockup">
+      <div class="ll-any">ANY</div>
+      <div class="ll-way">WAY<span class="ll-dot"></span></div>
+      <div class="ll-rule"></div>
+      <div class="ll-tag">We got you.</div>
+    </div>
     <div id="lockBody"></div>
     <div class="lock-err" id="lockErr"></div>
+    <div class="ll-domain">ANYWAYIDID.COM</div>
   </div>
 </div>
 
-<div class="handoff hide" id="handoffScreen">
-  <div class="handoff-card">
-    <span class="lbl">Before you go</span>
-    <h2 class="handoff-q">What should tomorrow-you know?</h2>
-    <textarea id="handoffText" rows="3" placeholder="Waiting for Brad to respond. Mention supply chain next time."></textarea>
-    <div class="handoff-actions">
-      <button class="btn ghost" id="handoffCancel">Not now</button>
-      <button class="btn" id="handoffSave">Leave it here</button>
-    </div>
-  </div>
-</div>
-
-<div class="thread-view hide" id="threadView"></div>
-
-<div class="welcome hide" id="welcomeScreen"></div>
+<div class="toast" id="toast"></div>
 
 <script src="https://unpkg.com/@simplewebauthn/browser@13/dist/bundle/index.umd.min.js"></script>
 <script>
@@ -401,16 +210,16 @@
 
   // ---------- model ----------
   var CADENCE = [
-    {off:0, ch:"li",   label:"LinkedIn"},
-    {off:2, ch:"em",   label:"Email"},
-    {off:4, ch:"li",   label:"LinkedIn"},
-    {off:7, ch:"em",   label:"Email"},
-    {off:9, ch:"call", label:"Call / VM"}
+    {off:0,  ch:"li",   label:"LinkedIn"},
+    {off:3,  ch:"em",   label:"Email"},
+    {off:6,  ch:"li",   label:"LinkedIn"},
+    {off:9,  ch:"em",   label:"Email"},
+    {off:12, ch:"call", label:"Call"}
   ];
   var PERSONA_ENTRY = { "Champion":1, "Technical Evaluator":3, "Economic Buyer":5, "Additional":8, "Blocker":0 };
   var PERSONAS = ["Champion","Technical Evaluator","Economic Buyer","Additional","Blocker"];
 
-  var state = { accounts:[], done:{}, notes:{}, activeId:null, view:"today", seeded:false, sheetUrl:"", dailyGoal:50, handoffNote:"" };
+  var state = { accounts:[], done:{}, notes:{}, activeId:null, view:"today", seeded:false, sheetUrl:"", dailyGoal:50, handoffNote:"", extra:{} };
   var MODE = { api:false }; // api=true once the Vercel /api + KV backend is detected
   var ALL = "__all__"; // sentinel activeId meaning "show every account combined"
 
@@ -464,6 +273,7 @@
     state.sheetUrl = (await sGet("tracker:sheetUrl")) || "";
     state.dailyGoal = parseInt(await sGet("tracker:dailyGoal"), 10) || 50;
     state.handoffNote = (await sGet("tracker:handoffNote")) || "";
+    try{ state.extra = JSON.parse(await sGet("tracker:extra")) || {}; }catch(e){ state.extra = {}; }
     if(a){ try{ state.accounts = JSON.parse(a); }catch(e){} }
     if(d){ try{ state.done = JSON.parse(d); }catch(e){} }
     if(n){ try{ state.notes = JSON.parse(n); }catch(e){} }
@@ -488,12 +298,13 @@
     sSet("tracker:sheetUrl", state.sheetUrl||"");
     sSet("tracker:dailyGoal", String(state.dailyGoal||50));
     sSet("tracker:handoffNote", state.handoffNote||"");
+    sSet("tracker:extra", JSON.stringify(state.extra||{}));
   }
   function apiSave(){
     if(saveTimer) clearTimeout(saveTimer);
     saveTimer=setTimeout(function(){
       fetch("/api/entries",{method:"POST",headers:{"Content-Type":"application/json"},credentials:"same-origin",
-        body:JSON.stringify({accounts:state.accounts,done:state.done,notes:state.notes,active:state.activeId,seeded:!!state.seeded,sheetUrl:state.sheetUrl||"",dailyGoal:state.dailyGoal||50,handoffNote:state.handoffNote||""})})
+        body:JSON.stringify({accounts:state.accounts,done:state.done,notes:state.notes,active:state.activeId,seeded:!!state.seeded,sheetUrl:state.sheetUrl||"",dailyGoal:state.dailyGoal||50,handoffNote:state.handoffNote||"",extra:state.extra||{}})})
         .then(function(r){ if(!r.ok) throw new Error("save"); })
         .catch(function(){ toast("Save failed — check connection"); });
     },300);
@@ -520,21 +331,6 @@
   // ---------- toast ----------
   var toastT;
   function toast(msg){ var el=document.getElementById("toast"); el.textContent=msg; el.classList.add("show"); clearTimeout(toastT); toastT=setTimeout(function(){el.classList.remove("show");},1600); }
-
-  // ---------- render: account select ----------
-  function renderSelect(){
-    var sel=document.getElementById("acctSelect");
-    sel.innerHTML="";
-    if(state.accounts.length){
-      var oAll=document.createElement("option"); oAll.value=ALL; oAll.textContent="★ All accounts"; if(state.activeId===ALL)oAll.selected=true; sel.appendChild(oAll);
-    }
-    state.accounts.forEach(function(a){
-      var o=document.createElement("option"); o.value=a.id; o.textContent=a.company; if(a.id===state.activeId)o.selected=true; sel.appendChild(o);
-    });
-    if(!state.accounts.length){ var o=document.createElement("option"); o.textContent="No accounts yet"; sel.appendChild(o); }
-  }
-
-  // ---------- render: today ----------
   function el(html){ var d=document.createElement("div"); d.innerHTML=html.trim(); return d.firstChild; }
   function esc(s){ return (s||"").replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];}); }
   function extUrl(u){
@@ -545,624 +341,11 @@
     if(/\s/.test(u) || !/[a-z0-9-]+\.[a-z]{2,}/i.test(u)) return "";
     return "https://"+u.replace(/^\/+/,"");
   }
-
-  function renderToday(){
-    var root=document.getElementById("view-today"); root.innerHTML="";
-    var allMode = state.activeId===ALL;
-    var acct=activeAcct();
-    if(!allMode && !acct){ root.appendChild(el('<div class="empty"><span class="lbl">No account selected</span>Add your first account in the Accounts tab to start tracking touches.</div>')); return; }
-    var touches = allMode ? allTouches() : buildTouches(acct);
-    var today=todayStr();
-    var due=touches.filter(function(x){return x.date===today && !state.done[x.id];});
-    var over=touches.filter(function(x){return x.date<today && !state.done[x.id];});
-    var doneToday=touches.filter(function(x){return x.date===today && state.done[x.id];});
-    var totalToday=due.length+doneToday.length;
-    var remaining=due.length+over.length;
-
-    // today bar
-    var clear = remaining===0;
-    var bar=el(
-      '<div class="todaybar">'+
-        '<div class="date"><span class="lbl">'+(allMode?"Today · All accounts":"Today")+'</span><span class="d">'+fmtLong(today)+'</span></div>'+
-        '<div class="count '+(clear?"clear":"")+'">'+
-          '<div class="big"><span class="rem">'+remaining+'</span><span class="tot"> / '+(totalToday+over.length)+'</span></div>'+
-          '<span class="lbl">'+(clear?"All sent — clear":"To send")+'</span>'+
-        '</div>'+
-      '</div>');
-    // re-entry: restore the note you left, before anything else
-    var re=reentryPanel(); if(re) root.appendChild(re);
-    root.appendChild(bar);
-
-    // today's mission (global — counts every touch sent today, across all accounts)
-    root.appendChild(missionPanel());
-
-    // timeline (per-account only)
-    if(!allMode) root.appendChild(renderTimeline(acct, touches, today));
-
-    // overdue
-    if(over.length){
-      var ob=el('<section class="block"><div class="block-head"><span class="lbl" style="color:var(--ox)">Overdue — carried forward</span><span class="line"></span></div></section>');
-      over.sort(byDateThenCompany).forEach(function(x){ ob.appendChild(touchCard(x,true,allMode)); });
-      root.appendChild(ob);
-    }
-
-    // due today
-    var db=el('<section class="block"><div class="block-head"><span class="lbl">Due today</span><span class="line"></span></div></section>');
-    if(due.length){ due.sort(byDateThenCompany).forEach(function(x){ db.appendChild(touchCard(x,false,allMode)); }); }
-    else if(!over.length){ db.appendChild(el('<div class="empty"><span class="lbl">Nothing due today</span>You\'re clear. Check Upcoming to see what\'s next, or add an account.</div>')); }
-    else { db.appendChild(el('<div class="empty"><span class="lbl">Nothing new today</span>Clear the overdue items above and you\'re done.</div>')); }
-    if(doneToday.length){ doneToday.forEach(function(x){ db.appendChild(touchCard(x,false,allMode)); }); }
-    root.appendChild(db);
-
-    // held (blockers) — across all accounts in all mode
-    var blockerAccts = allMode ? state.accounts : [acct];
-    var hb=null;
-    blockerAccts.forEach(function(a){
-      (a.threads||[]).filter(function(t){return t.persona==="Blocker";}).forEach(function(t){
-        if(!hb) hb=el('<section class="block"><div class="block-head"><span class="lbl">Held — reassurance only, do not pitch</span><span class="line"></span></div></section>');
-        hb.appendChild(el('<div class="held"><div class="htop">'+(allMode?'<span class="cmpny">'+esc(a.company)+'</span>':'')+'<span class="who">'+esc(t.name)+'</span><span class="at">'+esc(t.title)+'</span><span class="persona">Blocker</span></div><div class="angle">'+esc(t.angle||"Risk-removal / reassurance angle only. Do not enter into the sequence.")+'</div></div>'));
-      });
-    });
-    if(hb) root.appendChild(hb);
-  }
-
-  function renderTimeline(acct, touches, today){
-    var threads=(acct.threads||[]).filter(function(t){return t.persona!=="Blocker";});
-    if(!threads.length) return el('<div></div>');
-    // window: from start to last touch
-    var maxOff=0;
-    threads.forEach(function(t){ var entry=t.entryDay||PERSONA_ENTRY[t.persona]||1; maxOff=Math.max(maxOff,(entry-1)+CADENCE[CADENCE.length-1].off); });
-    var span=maxOff+1;
-    var days=[]; for(var i=0;i<span;i++){ days.push(iso(addDays(acct.start,i))); }
-    var todayIdx=daysBetween(acct.start,today);
-
-    var box=el('<div class="tl"><div class="tl-head"><span class="lbl">Thread timeline</span><span class="lbl">'+threads.length+' threads</span></div><div class="tl-grid"></div></div>');
-    var grid=box.querySelector(".tl-grid");
-
-    // day header
-    var dayRow=el('<div class="tl-days"></div>');
-    days.forEach(function(ds,i){
-      var d=parse(ds);
-      dayRow.appendChild(el('<div class="tl-day '+(ds===today?"today":"")+'"><span class="dn">'+(d.getMonth()+1)+"/"+d.getDate()+'</span></div>'));
-    });
-    grid.appendChild(dayRow);
-
-    // today line
-    if(todayIdx>=0 && todayIdx<span){
-      var leftPct = 120 + ( (todayIdx+0.5) / span ) * 0; // placeholder; we position per-cell instead
-    }
-
-    threads.forEach(function(t){
-      var entry=t.entryDay||PERSONA_ENTRY[t.persona]||1;
-      var lane=el('<div class="tl-lane"><div class="tl-name" title="'+esc(t.name)+'">'+esc(t.name.split(" ")[0])+' · '+esc(shortPersona(t.persona))+'</div><div class="tl-track"></div></div>');
-      var track=lane.querySelector(".tl-track");
-      // map day->touch
-      var touchByDay={};
-      CADENCE.forEach(function(c,i){
-        var d=shiftWeekend(addDays(acct.start,(entry-1)+c.off));
-        var di=daysBetween(acct.start,iso(d));
-        touchByDay[di]={i:i,ch:c.ch,date:iso(d)};
-      });
-      for(var di=0; di<span; di++){
-        var cell=el('<div class="tl-cell"></div>');
-        if(touchByDay[di]){
-          var tb=touchByDay[di];
-          var tid=acct.id+"|"+t.id+"|"+tb.i;
-          var done=!!state.done[tid];
-          var over = !done && tb.date<today;
-          var st=done?"done":(over?"over":"todo");
-          var title="Touch "+(tb.i+1)+" — "+CADENCE[tb.i].label+" · "+fmtShort(tb.date)+(done?" · sent":over?" · overdue":"");
-          cell.appendChild(el('<div class="tl-node '+tb.ch+' '+st+'" title="'+esc(title)+'">'+(done?icon("check"):chIcon(tb.ch))+'</div>'));
-        }
-        if(di===todayIdx){ cell.appendChild(el('<div class="todayline"></div>')); }
-        track.appendChild(cell);
-      }
-      grid.appendChild(lane);
-    });
-
-    grid.appendChild(el('<div class="tl-legend">'+
-      '<span><span class="tl-node li todo lg">'+icon("li")+'</span>LinkedIn</span>'+
-      '<span><span class="tl-node em todo lg">'+icon("em")+'</span>Email</span>'+
-      '<span><span class="tl-node call todo lg">'+icon("call")+'</span>Call</span>'+
-      '<span><span class="tl-node done lg">'+icon("check")+'</span>Sent</span>'+
-      '<span><span class="tl-node over lg">'+icon("clock")+'</span>Overdue</span>'+
-    '</div>'));
-    return box;
-  }
-  function shortPersona(p){ return {"Champion":"Champ","Technical Evaluator":"Tech","Economic Buyer":"Buyer","Additional":"Add\'l","Blocker":"Block"}[p]||p; }
-
-  function touchCard(x, isOver, showCompany){
-    var done=!!state.done[x.id];
-    var card=el('<div class="card '+(isOver?"over":"")+' '+(done?"done":"")+'"></div>');
-    var chk=el('<button class="check '+(done?"on":"")+'" aria-label="Mark sent"><svg viewBox="0 0 24 24" fill="none" stroke-width="3"><path d="M5 12l5 5L20 7"/></svg></button>');
-    chk.addEventListener("click", function(){ toggleDone(x.id); });
-    card.appendChild(chk);
-
-    var liUrl = extUrl(x.li);
-    var liBtn = liUrl ? '<a class="lk" href="'+esc(liUrl)+'" target="_blank" rel="noopener">Open LinkedIn</a>' : '';
-    var emBtn = x.email ? '<a class="lk" href="mailto:'+esc(x.email)+'">Email '+esc(x.email)+'</a>' : '';
-    var noteVal = esc(state.notes[x.id]||"");
-    var _acct=state.accounts.find(function(a){return a.id===x.acctId;});
-    var _thr=_acct&&(_acct.threads||[]).find(function(t){return t.id===x.threadId;});
-
-    var body=el(
-      '<div class="card-body">'+
-        '<div class="card-top">'+
-          ((showCompany && x.company)?'<span class="cmpny">'+esc(x.company)+'</span>':'')+
-          '<button class="who who-link">'+esc(x.who)+'</button>'+
-          '<span class="at">'+esc(x.title)+'</span>'+
-          '<span class="chan '+x.ch+'">'+x.chLabel+'</span>'+
-          '<span class="touchno">Touch '+x.touchNo+'/5</span>'+
-          ((_acct&&_thr)?heatPill(_acct,_thr):'')+
-          (isOver?'<span class="overtag">overdue</span>':'')+
-        '</div>'+
-        '<div class="persona">'+esc(x.persona)+'</div>'+
-        '<div class="angle">'+esc(x.angle||"")+'</div>'+
-        '<div class="card-actions">'+liBtn+emBtn+
-          '<button class="lk copy-angle">Copy angle</button>'+
-        '</div>'+
-        '<div class="note"><textarea placeholder="Paste your Engine 7 message for this touch (optional)…">'+noteVal+'</textarea>'+
-          '<button class="lk copybtn copy-note">Copy message</button>'+
-        '</div>'+
-      '</div>');
-    // wire note
-    var ta=body.querySelector("textarea");
-    ta.addEventListener("change", function(){ state.notes[x.id]=ta.value; persistNotes(); });
-    body.querySelector(".copy-angle").addEventListener("click", function(){ copy(x.angle||""); });
-    body.querySelector(".copy-note").addEventListener("click", function(){ copy(ta.value||""); });
-    body.querySelector(".who-link").addEventListener("click", function(){ openThread(x.acctId, x.threadId); });
-    card.appendChild(body);
-    return card;
-  }
-
   function copy(txt){
     if(!txt){ toast("Nothing to copy"); return; }
     if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(txt).then(function(){toast("Copied");},function(){toast("Copy failed");}); }
     else { toast("Copy unavailable"); }
   }
-
-  // ---------- line-art icons (Feather/Lucide style) ----------
-  var ICONS={
-    li:'<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>',
-    em:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/>',
-    call:'<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.18 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/>',
-    reply:'<polyline points="9 17 4 12 9 7"/><path d="M20 18v-2a4 4 0 0 0-4-4H4"/>',
-    meeting:'<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>',
-    champion:'<circle cx="12" cy="8" r="5"/><path d="M8.2 12 7 22l5-3 5 3-1.2-10"/>',
-    placement:'<path d="M5 3v18"/><path d="M5 4s1-1 4-1 5 2 8 2 3-1 3-1v9s-1 1-3 1-5-2-8-2-4 1-4 1"/>',
-    search:'<circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>',
-    news:'<path d="M4 22a2 2 0 0 1-2-2V9a1 1 0 0 1 1-1h3"/><path d="M6 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H4"/><path d="M10 6h8M10 10h8M10 14h5"/>',
-    back:'<line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/>',
-    check:'<polyline points="20 6 9 17 4 12"/>',
-    activity:'<path d="M22 12h-4l-3 9L9 3l-3 9H2"/>',
-    clock:'<circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 14"/>'
-  };
-  function icon(name){ return '<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">'+(ICONS[name]||"")+'</svg>'; }
-  function chIcon(ch){ return icon(ch==="em"?"em":ch==="call"?"call":"li"); }
-
-  // ---------- relationship: heat + recommended action ----------
-  function threadTouches(acct, thread){ return buildTouches({id:acct.id, start:acct.start, threads:[thread]}); }
-  function heatOf(acct, thread){
-    if(thread.persona==="Blocker") return {key:"cold", label:"Held"};
-    var ts=threadTouches(acct, thread), today=todayStr();
-    var doneT=ts.filter(function(t){return state.done[t.id];});
-    var sent=doneT.length, total=ts.length;
-    var lastSent=""; doneT.forEach(function(t){ var d=state.done[t.id]; if(d>lastSent) lastSent=d; });
-    var recent = lastSent && daysBetween(lastSent, today)<=2;
-    if(total>0 && sent>=total) return {key:"opp", label:"Opportunity"};
-    if(thread.persona==="Champion") return {key:"champ", label:"Champion"};
-    if(sent>=2 && recent) return {key:"active", label:"Active"};
-    if(sent>=1) return {key:"warm", label:"Warming"};
-    return {key:"cold", label:"Cold"};
-  }
-  function heatPill(acct, thread){ var h=heatOf(acct, thread); return '<span class="heat heat-'+h.key+'">'+icon("activity")+h.label+'</span>'; }
-  function recommendation(acct, thread){
-    var ts=threadTouches(acct, thread).sort(function(a,b){return a.date<b.date?-1:1;});
-    var today=todayStr(), overdue=null, dueToday=null, upcoming=null;
-    ts.forEach(function(t){ if(state.done[t.id]) return;
-      if(t.date<today){ if(!overdue) overdue=t; }
-      else if(t.date===today){ if(!dueToday) dueToday=t; }
-      else { if(!upcoming) upcoming=t; }
-    });
-    var pick = overdue || dueToday || upcoming;
-    if(!pick) return {complete:true, label:"Sequence complete", why:"All "+ts.length+" touches sent. This relationship is warm — consider a direct ask.", touch:null};
-    var label = pick.ch==="li"?"Continue on LinkedIn" : pick.ch==="em"?"Send follow-up email" : "Call today";
-    var why = pick===overdue ? ("Overdue since "+fmtShort(pick.date)+" — worth clearing.") : (pick===dueToday ? "Scheduled for today." : ("Next step, "+fmtShort(pick.date)+"."));
-    why += "  Touch "+pick.touchNo+" of "+ts.length+".";
-    var effort = pick.ch==="li"?"about 45 seconds" : pick.ch==="em"?"about 2 minutes" : "about 5 minutes";
-    return {complete:false, label:label, why:why, effort:effort, touch:pick};
-  }
-
-  // ---------- thread view ----------
-  var threadRef=null;
-  function openThread(acctId, threadId){ threadRef={acctId:acctId, threadId:threadId}; renderThread(); }
-  function closeThread(){ threadRef=null; document.getElementById("threadView").classList.add("hide"); render(); }
-  function renderThread(){
-    if(!threadRef) return;
-    var v=document.getElementById("threadView");
-    var acct=state.accounts.find(function(a){return a.id===threadRef.acctId;});
-    var thread=acct && (acct.threads||[]).find(function(t){return t.id===threadRef.threadId;});
-    if(!acct || !thread){ closeThread(); return; }
-    v.innerHTML="";
-    var rec=recommendation(acct, thread), liUrl=extUrl(thread.linkedin);
-    var q=encodeURIComponent('"'+thread.name+'" '+acct.company);
-
-    var head=el('<div class="th-head"><button class="th-back" id="thBack">'+icon("back")+'Back</button></div>');
-    v.appendChild(head);
-    head.querySelector("#thBack").addEventListener("click", closeThread);
-
-    v.appendChild(el('<div class="th-hero"><div class="th-who">'+esc(thread.name)+'</div>'+
-      '<div class="th-meta">'+esc(thread.title||"")+(thread.title?" · ":"")+esc(acct.company)+'</div>'+
-      '<div class="th-tags"><span class="persona">'+esc(thread.persona)+'</span>'+heatPill(acct,thread)+'</div></div>'));
-
-    // recommended action
-    var recBox;
-    if(rec.complete){
-      recBox=el('<div class="th-rec"><span class="lbl">Recommended</span><div class="th-rec-title">'+esc(rec.label)+'</div><div class="th-rec-why">'+esc(rec.why)+'</div></div>');
-    } else {
-      var primary = (rec.touch.ch==="li" && liUrl) ? '<a class="btn" href="'+esc(liUrl)+'" target="_blank" rel="noopener">'+icon("li")+esc(rec.label)+'</a>'
-        : (rec.touch.ch==="em" && thread.email) ? '<a class="btn" href="mailto:'+esc(thread.email)+'">'+icon("em")+esc(rec.label)+'</a>'
-        : '<span class="btn" style="opacity:.5;cursor:default">'+esc(rec.label)+'</span>';
-      recBox=el('<div class="th-rec"><span class="lbl">Recommended</span>'+
-        '<div class="th-rec-title">'+esc(rec.label)+'</div>'+
-        '<div class="th-rec-why">'+esc(rec.why)+'</div>'+
-        '<div class="th-rec-effort">'+icon("clock")+'Estimated effort — '+esc(rec.effort)+'</div>'+
-        '<div class="th-rec-actions">'+primary+'<button class="btn ghost" id="thDone">'+icon("check")+(state.done[rec.touch.id]?"Sent":"Mark sent")+'</button></div></div>');
-    }
-    v.appendChild(recBox);
-    if(!rec.complete) recBox.querySelector("#thDone").addEventListener("click", function(){ toggleDone(rec.touch.id); renderThread(); });
-
-    // secondary actions
-    function act(iconName,label,href){ return '<a class="th-act" href="'+href+'" target="_blank" rel="noopener">'+icon(iconName)+'<span>'+label+'</span></a>'; }
-    var acts = liUrl ? act("li","LinkedIn",esc(liUrl)) : act("search","Find on LinkedIn","https://www.google.com/search?q="+encodeURIComponent(thread.name+" "+acct.company+" linkedin"));
-    if(thread.email) acts += act("em","Email","mailto:"+esc(thread.email));
-    acts += act("search","Research","https://www.google.com/search?q="+q);
-    acts += act("news","Company news","https://news.google.com/search?q="+encodeURIComponent(acct.company));
-    v.appendChild(el('<div class="th-actions"><span class="lbl">More</span><div class="th-actions-row">'+acts+'</div></div>'));
-
-    // timeline — the story of the relationship
-    var tl=el('<div class="th-timeline"><span class="lbl">Timeline</span></div>');
-    var ts=threadTouches(acct, thread).sort(function(a,b){return a.date<b.date?-1:1;}), today=todayStr();
-    ts.forEach(function(t){
-      var done=!!state.done[t.id], over=!done && t.date<today;
-      var status = done ? ("Sent "+fmtShort(state.done[t.id])) : over ? "Overdue" : (t.date===today ? "Due today" : "Upcoming");
-      var chap=el('<div class="th-chap '+(done?"done":over?"over":"")+'">'+
-        '<div class="th-chap-ico">'+chIcon(t.ch)+'</div>'+
-        '<div class="th-chap-body">'+
-          '<div class="th-chap-top"><span class="th-chap-title">Touch '+t.touchNo+' · '+t.chLabel+'</span><span class="th-chap-date">'+fmtLong(t.date)+'</span></div>'+
-          '<div class="th-chap-status">'+status+'</div>'+
-          '<textarea class="th-chap-msg" placeholder="Message for this touch…">'+esc(state.notes[t.id]||"")+'</textarea>'+
-          '<div class="th-chap-actions"><button class="lk th-copy">Copy message</button><button class="lk th-toggle">'+(done?"Mark not sent":"Mark sent")+'</button></div>'+
-        '</div></div>');
-      var ta=chap.querySelector(".th-chap-msg");
-      ta.addEventListener("change", function(){ state.notes[t.id]=ta.value; persistNotes(); });
-      chap.querySelector(".th-copy").addEventListener("click", function(){ copy(ta.value||""); });
-      chap.querySelector(".th-toggle").addEventListener("click", function(){ toggleDone(t.id); renderThread(); });
-      tl.appendChild(chap);
-    });
-    v.appendChild(tl);
-
-    v.classList.remove("hide"); v.scrollTop=0;
-  }
-
-  // ---------- rescue mode: the three threads most worth continuing ----------
-  function topThreads(n){
-    var today=todayStr(), list=[];
-    state.accounts.forEach(function(a){ (a.threads||[]).forEach(function(t){
-      if(t.persona==="Blocker") return;
-      var rec=recommendation(a,t), heat=heatOf(a,t), score, whyNow;
-      if(rec.complete){ score = heat.key==="opp"?58:22; whyNow="Sequence complete — ready for a direct ask."; }
-      else {
-        var tt=rec.touch;
-        if(tt.date<today){ var d=daysBetween(tt.date,today); score=100+d; whyNow="Waiting "+d+" day"+(d===1?"":"s")+" — "+rec.label.toLowerCase()+"."; }
-        else if(tt.date===today){ score=70; whyNow="Ready today — "+rec.label.toLowerCase()+"."; }
-        else { score=28; whyNow="Next up — "+rec.label.toLowerCase()+", "+fmtShort(tt.date)+"."; }
-        if(heat.key==="champ") score+=16; else if(heat.key==="opp") score+=24; else if(heat.key==="active") score+=8;
-      }
-      list.push({a:a,t:t,rec:rec,heat:heat,score:score,whyNow:whyNow});
-    }); });
-    list.sort(function(x,y){ return y.score-x.score; });
-    return list.slice(0,n);
-  }
-
-  var welcomeShown=false;
-  function maybeWelcome(){
-    if(welcomeShown) return; welcomeShown=true;
-    if(!(state.handoffNote||"").trim() && !state.accounts.length) return;
-    showWelcome();
-  }
-  function showWelcome(){
-    var w=document.getElementById("welcomeScreen"); w.innerHTML="";
-    var card=el('<div class="wb-card"></div>');
-    card.appendChild(el('<div class="wb-head"><span class="lbl">Welcome back</span><h1 class="wb-title">We kept your place.</h1></div>'));
-    if((state.handoffNote||"").trim()){
-      card.appendChild(el('<div class="wb-note"><span class="lbl">Where you left off</span><div class="wb-note-body">'+esc(state.handoffNote)+'</div></div>'));
-    }
-    var top=topThreads(3);
-    if(top.length){
-      var list=el('<div class="wb-threads"><span class="lbl">Continue where it matters</span></div>');
-      top.forEach(function(it){
-        var row=el('<button class="wb-thread">'+
-          '<div class="wb-thread-main"><div class="wb-thread-who">'+esc(it.t.name)+'</div>'+
-            '<div class="wb-thread-meta">'+esc(it.a.company)+(it.t.title?' · '+esc(it.t.title):'')+'</div>'+
-            '<div class="wb-thread-why">'+esc(it.whyNow)+'</div></div>'+
-          '<div class="wb-thread-go">'+heatPill(it.a,it.t)+'<span class="wb-resume">Resume '+icon("back").replace("<svg","<svg style=\"transform:scaleX(-1)\"")+'</span></div>'+
-        '</button>');
-        row.addEventListener("click", function(){ hideWelcome(); openThread(it.a.id, it.t.id); });
-        list.appendChild(row);
-      });
-      card.appendChild(list);
-    }
-    var enter=el('<button class="btn wb-enter">Enter</button>');
-    enter.addEventListener("click", function(){ hideWelcome(); });
-    card.appendChild(enter);
-    w.appendChild(card);
-    w.classList.remove("hide"); w.scrollTop=0;
-  }
-  function hideWelcome(){ reentrySeen=true; document.getElementById("welcomeScreen").classList.add("hide"); render(); }
-
-  // ---------- momentum + today's mission ----------
-  function sentOnDate(ds){ var n=0; for(var k in state.done){ if(state.done[k]===ds) n++; } return n; }
-  function sentToday(){ return sentOnDate(todayStr()); }
-  var MOMENTUM=["Cold","Starting","Warm","Flow","Locked in"];
-  function momentumLevel(){
-    var goal=state.dailyGoal||50, t=sentToday();
-    var d1=sentOnDate(iso(addDays(todayStr(),-1))), d2=sentOnDate(iso(addDays(todayStr(),-2)));
-    var frac=goal? t/goal : 0, active=(t>0?1:0)+(d1>0?1:0)+(d2>0?1:0);
-    var lvl = (t+d1+d2)===0 ? 0 : (frac<0.25?1 : frac<0.6?2 : frac<1?3 : 4);
-    if(lvl>0 && lvl<4 && active>=3 && frac>=0.5) lvl++;
-    return Math.min(4,lvl);
-  }
-  function missionProjection(goal){
-    return { rLo:Math.max(1,Math.round(goal*0.12)), rHi:Math.max(2,Math.round(goal*0.16)), convos:Math.max(1,Math.round(goal*0.04)), opps:Math.max(1,Math.round(goal*0.02)) };
-  }
-  function missionPanel(){
-    var goal=state.dailyGoal||50, done=sentToday();
-    var pct=goal?Math.max(0,Math.min(100,Math.round(done/goal*100))):0;
-    var lvl=momentumLevel(), left=goal-done, p=missionProjection(goal);
-    var status = left<=0 ? "Complete for today." : (done===0 ? "Begin when ready." : left+" remaining.");
-    var seg=""; for(var i=0;i<5;i++){ seg+='<span class="mo-seg'+(i<=lvl?" on":"")+'"></span>'; }
-    var b=el('<section class="mission'+(left<=0?" done":"")+'">'+
-      '<div class="mission-head"><span class="lbl">Today’s mission</span>'+
-        '<button class="goal-edit" id="goalEdit">'+goal+' outreach</button></div>'+
-      '<div class="mission-count"><span class="mc-done">'+done+'</span><span class="mc-goal"> / '+goal+'</span></div>'+
-      '<div class="goal-track"><div class="goal-fill" style="width:'+pct+'%"></div></div>'+
-      '<div class="mission-status">'+esc(status)+'</div>'+
-      '<div class="mission-grid">'+
-        '<div class="mo"><span class="lbl">Momentum</span><div class="mo-bar">'+seg+'</div><div class="mo-label">'+MOMENTUM[lvl]+'</div></div>'+
-        '<div class="exp"><span class="lbl">Expected</span><div class="exp-line">'+p.rLo+'–'+p.rHi+' replies</div><div class="exp-line">'+p.convos+' conversation'+(p.convos===1?"":"s")+'</div><div class="exp-line">'+p.opps+' opportunity</div></div>'+
-      '</div>'+
-    '</section>');
-    b.querySelector("#goalEdit").addEventListener("click", function(){
-      var v=prompt("Outreach target per day", goal); if(v===null) return;
-      var n=parseInt(v,10); if(!n||n<1){ toast("Enter a number, e.g. 50"); return; }
-      state.dailyGoal=n; scheduleSave(); render();
-    });
-    return b;
-  }
-
-  // ---------- re-entry: the note tomorrow-you left ----------
-  var reentrySeen=false;
-  function reentryPanel(){
-    if(reentrySeen || !(state.handoffNote||"").trim()) return null;
-    var p=el('<section class="reentry">'+
-      '<span class="lbl">Where you left off</span>'+
-      '<div class="reentry-note">'+esc(state.handoffNote)+'</div>'+
-      '<button class="btn ghost" id="reentryResume">Resume</button>'+
-    '</section>');
-    p.querySelector("#reentryResume").addEventListener("click", function(){ reentrySeen=true; render(); });
-    return p;
-  }
-
-  var REINFORCE=["Thread updated.","Momentum building.","One less thing to remember.","Future you will appreciate that.","Noted — we've got it."];
-  function toggleDone(id){
-    var wasDone=!!state.done[id];
-    if(wasDone) delete state.done[id]; else state.done[id]=todayStr();
-    persistDone();
-    if(!wasDone){
-      var g=state.dailyGoal||50, t=sentToday();
-      toast(t===g ? "Mission complete for today." : REINFORCE[t % REINFORCE.length]);
-    }
-    render();
-  }
-
-  // ---------- render: upcoming ----------
-  function renderUpcoming(){
-    var root=document.getElementById("view-upcoming"); root.innerHTML="";
-    var allMode = state.activeId===ALL;
-    var acct=activeAcct();
-    if(!allMode && !acct){ root.appendChild(el('<div class="empty"><span class="lbl">No account</span>Add an account first.</div>')); return; }
-    var touches = allMode ? allTouches() : buildTouches(acct);
-    var today=todayStr();
-    var horizon=iso(addDays(today,14));
-    var up=touches.filter(function(x){return x.date>today && x.date<=horizon && !state.done[x.id];});
-    up.sort(byDateThenCompany);
-
-    root.appendChild(el('<div class="todaybar"><div class="date"><span class="lbl">'+(allMode?"Upcoming · All accounts":"Upcoming")+'</span><span class="d">Next 14 days</span></div><div class="count"><div class="big"><span class="rem" style="color:var(--ink)">'+up.length+'</span></div><span class="lbl">scheduled touches</span></div></div>'));
-
-    if(!up.length){ root.appendChild(el('<div class="empty" style="margin-top:20px"><span class="lbl">Nothing scheduled</span>No upcoming touches in the next two weeks'+(allMode?"":" for this account")+'.</div>')); return; }
-
-    var byDay={};
-    up.forEach(function(x){ (byDay[x.date]=byDay[x.date]||[]).push(x); });
-    var wrap=el('<section class="block day-group"></section>');
-    Object.keys(byDay).sort().forEach(function(d){
-      wrap.appendChild(el('<div class="day-lbl">'+fmtLong(d)+' · '+(daysBetween(today,d))+'d out</div>'));
-      byDay[d].forEach(function(x){ wrap.appendChild(touchCard(x,false,allMode)); });
-    });
-    root.appendChild(wrap);
-  }
-
-  // ---------- render: accounts ----------
-  function renderAccounts(){
-    var root=document.getElementById("view-accounts"); root.innerHTML="";
-    root.appendChild(el('<div class="todaybar"><div class="date"><span class="lbl">Accounts</span><span class="d">Your active campaigns</span></div></div>'));
-
-    var addBtnRow=el('<div style="margin:18px 0; display:flex; gap:9px; flex-wrap:wrap"><button class="btn" id="addAcctBtn">+ Add account</button><button class="btn ghost" id="sheetBtn">&#8862; Google Sheet</button><button class="btn ghost" id="importBtn">&#8593; Paste CSV</button><button class="btn ghost" id="exportBtn">&#8595; Export backup</button><button class="btn ghost" id="restoreBtn">&#8593; Restore backup</button><button class="btn ghost" id="dedupeBtn">&#10683; Delete duplicates</button><button class="btn danger" id="clearAllBtn">Clear all &amp; start over</button></div>');
-    root.appendChild(addBtnRow);
-    var restoreInput=el('<input type="file" accept="application/json,.json" style="display:none">');
-    addBtnRow.appendChild(restoreInput);
-    addBtnRow.querySelector("#addAcctBtn").addEventListener("click", function(){ showAcctForm(root); });
-    addBtnRow.querySelector("#importBtn").addEventListener("click", function(){ showImportForm(root); });
-    addBtnRow.querySelector("#sheetBtn").addEventListener("click", function(){ showSheetForm(root); });
-    addBtnRow.querySelector("#exportBtn").addEventListener("click", function(){
-      if(!state.accounts.length){ toast("Nothing to back up"); return; }
-      var data={ app:"cont", version:1, exportedAt:new Date().toISOString(), accounts:state.accounts, done:state.done, notes:state.notes };
-      var blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
-      var url=URL.createObjectURL(blob);
-      var a=document.createElement("a"); a.href=url; a.download="cont-backup-"+todayStr()+".json";
-      document.body.appendChild(a); a.click(); a.remove();
-      setTimeout(function(){ URL.revokeObjectURL(url); },1000);
-      toast("Backup downloaded");
-    });
-    addBtnRow.querySelector("#restoreBtn").addEventListener("click", function(){ restoreInput.click(); });
-    restoreInput.addEventListener("change", function(){
-      var file=restoreInput.files&&restoreInput.files[0]; if(!file) return;
-      var reader=new FileReader();
-      reader.onload=function(){
-        var data; try{ data=JSON.parse(reader.result); }catch(e){ toast("Not a valid backup file"); restoreInput.value=""; return; }
-        if(!data || !Array.isArray(data.accounts)){ toast("Not a CONT. backup"); restoreInput.value=""; return; }
-        if(!confirm("Restore this backup? It will replace your current accounts, checkmarks and saved messages.")){ restoreInput.value=""; return; }
-        state.accounts=data.accounts||[]; state.done=data.done||{}; state.notes=data.notes||{}; state.seeded=true;
-        if(!state.accounts.some(function(a){return a.id===state.activeId;})) state.activeId=state.accounts.length?state.accounts[0].id:null;
-        persistAccounts(); render(); toast("Backup restored");
-        restoreInput.value="";
-      };
-      reader.readAsText(file);
-    });
-    addBtnRow.querySelector("#clearAllBtn").addEventListener("click", function(){
-      if(!state.accounts.length){ toast("Nothing to clear"); return; }
-      if(!confirm("Clear ALL accounts, contacts, sent checkmarks and saved messages?\n\nThis cannot be undone. Your fingerprint login stays.")) return;
-      if(!confirm("Really wipe everything and start from scratch?")) return;
-      state.accounts=[]; state.done={}; state.notes={}; state.activeId=null; state.seeded=true;
-      persistAccounts();
-      render();
-      toast("All cleared — start fresh");
-    });
-    addBtnRow.querySelector("#dedupeBtn").addEventListener("click", function(){
-      var c=countDuplicates();
-      if(!c.accounts && !c.threads){ toast("No duplicates found"); return; }
-      var msg="Found "+c.accounts+" duplicate account"+(c.accounts===1?"":"s")+" and "+c.threads+" duplicate contact"+(c.threads===1?"":"s")+".\n\nMerge and remove them? Your sent checkmarks and saved messages are kept.";
-      if(!confirm(msg)) return;
-      var r=runDedupe();
-      persistAccounts();
-      render();
-      toast("Removed "+r.accounts+" account"+(r.accounts===1?"":"s")+", "+r.threads+" contact"+(r.threads===1?"":"s"));
-    });
-
-    if(!state.accounts.length){ root.appendChild(el('<div class="empty"><span class="lbl">No accounts yet</span>Add your first Wave 1 account, then add the contacts Engine 6 gave you.</div>')); return; }
-
-    state.accounts.forEach(function(a){
-      var card=el('<div class="acct-card"></div>');
-      var head=el('<div style="display:flex;align-items:flex-start;gap:10px"><div style="flex:1"><h3>'+esc(a.company)+'</h3><div class="acct-meta"><span class="lbl">Start '+fmtLong(a.start)+'</span><span class="lbl">'+(a.threads||[]).length+' threads</span></div></div></div>');
-      var del=el('<button class="delx">Delete</button>');
-      del.addEventListener("click", function(){ if(confirm("Delete "+a.company+" and all its threads?")){ deleteAcct(a.id); } });
-      head.appendChild(del);
-      card.appendChild(head);
-
-      (a.threads||[]).forEach(function(t){
-        var entry=t.persona==="Blocker"?"held":("Day "+(t.entryDay||PERSONA_ENTRY[t.persona]||1));
-        var row=el('<div class="thread-row"><div><button class="tname who-link">'+esc(t.name)+'</button><div class="tmeta">'+esc(t.title)+'</div></div><span class="persona">'+esc(t.persona)+'</span><span class="lbl">'+entry+'</span></div>');
-        row.querySelector(".tname").addEventListener("click", function(){ openThread(a.id, t.id); });
-        var actions=el('<div style="display:flex; gap:12px; align-items:center; justify-content:flex-end"></div>');
-        var editb=el('<button class="delx" style="color:var(--green-mid)">Edit</button>');
-        editb.addEventListener("click", function(){ showThreadForm(card,a.id,t); });
-        var trx=el('<button class="delx">×</button>');
-        trx.addEventListener("click", function(){ deleteThread(a.id,t.id); });
-        actions.appendChild(editb); actions.appendChild(trx);
-        row.appendChild(actions);
-        card.appendChild(row);
-      });
-
-      var addThr=el('<div style="margin-top:12px"><button class="btn ghost sm">+ Add contact / thread</button></div>');
-      addThr.querySelector("button").addEventListener("click", function(){ showThreadForm(card,a.id); });
-      card.appendChild(addThr);
-      root.appendChild(card);
-    });
-  }
-
-  function showAcctForm(root){
-    var f=el(
-      '<div class="form">'+
-        '<div class="grid">'+
-          '<label class="full"><span class="lbl">Company name</span><input id="f-company" placeholder="e.g. Arcadia"></label>'+
-          '<label><span class="lbl">Campaign start (Day 1)</span><input id="f-start" type="date" value="'+todayStr()+'"></label>'+
-        '</div>'+
-        '<div class="form-actions"><button class="btn ghost" id="f-cancel">Cancel</button><button class="btn" id="f-save">Add account</button></div>'+
-      '</div>');
-    root.insertBefore(f, root.children[2]);
-    f.querySelector("#f-company").focus();
-    f.querySelector("#f-cancel").addEventListener("click", function(){ f.remove(); });
-    f.querySelector("#f-save").addEventListener("click", function(){
-      var c=f.querySelector("#f-company").value.trim();
-      var s=f.querySelector("#f-start").value || todayStr();
-      if(!c){ toast("Company name required"); return; }
-      var id="a"+Date.now();
-      state.accounts.push({id:id, company:c, start:s, threads:[]});
-      state.activeId=id;
-      persistAccounts().then(function(){ render(); toast("Account added"); });
-    });
-  }
-
-  function showThreadForm(card, acctId, thread){
-    var editing=!!thread;
-    // avoid stacking multiple open forms in the same card
-    card.querySelectorAll(".form").forEach(function(x){ x.remove(); });
-    var opts=PERSONAS.map(function(p){return '<option value="'+p+'">'+p+'</option>';}).join("");
-    var f=el(
-      '<div class="form">'+
-        '<div class="grid">'+
-          '<label><span class="lbl">Name</span><input id="t-name" placeholder="Full name"></label>'+
-          '<label><span class="lbl">Title</span><input id="t-title" placeholder="e.g. VP Engineering"></label>'+
-          '<label><span class="lbl">Persona</span><select id="t-persona">'+opts+'</select></label>'+
-          '<label><span class="lbl">Entry day (auto by persona)</span><input id="t-entry" type="number" min="1" value="1"></label>'+
-          '<label class="full"><span class="lbl">Angle — why this person cares</span><textarea id="t-angle" placeholder="Their specific reason to care, tied to a signal"></textarea></label>'+
-          '<label><span class="lbl">LinkedIn URL</span><input id="t-li" placeholder="https://linkedin.com/in/…"></label>'+
-          '<label><span class="lbl">Email</span><input id="t-email" placeholder="name@company.com"></label>'+
-        '</div>'+
-        '<div class="form-actions"><button class="btn ghost" id="t-cancel">Cancel</button><button class="btn" id="t-save">'+(editing?"Save changes":"Add contact")+'</button></div>'+
-      '</div>');
-    card.appendChild(f);
-    var pSel=f.querySelector("#t-persona"), entry=f.querySelector("#t-entry");
-    function syncEntry(){ var v=PERSONA_ENTRY[pSel.value]; entry.value = v===0? "" : v; entry.disabled = pSel.value==="Blocker"; }
-    pSel.addEventListener("change", syncEntry);
-    // prefill (edit) or defaults (add)
-    f.querySelector("#t-name").value  = editing ? (thread.name||"")  : "";
-    f.querySelector("#t-title").value = editing ? (thread.title||"") : "";
-    f.querySelector("#t-angle").value = editing ? (thread.angle||"") : "";
-    f.querySelector("#t-li").value    = editing ? (thread.linkedin||"") : "";
-    f.querySelector("#t-email").value = editing ? (thread.email||"") : "";
-    pSel.value = editing ? (thread.persona||PERSONAS[0]) : PERSONAS[0];
-    syncEntry();
-    if(editing && thread.persona!=="Blocker") entry.value = thread.entryDay || PERSONA_ENTRY[thread.persona] || 1;
-    f.querySelector("#t-name").focus();
-    f.querySelector("#t-cancel").addEventListener("click", function(){ f.remove(); });
-    f.querySelector("#t-save").addEventListener("click", function(){
-      var name=f.querySelector("#t-name").value.trim();
-      if(!name){ toast("Name required"); return; }
-      var vals={
-        name:name,
-        title:f.querySelector("#t-title").value.trim(),
-        persona:pSel.value,
-        entryDay: pSel.value==="Blocker"?0:(parseInt(entry.value,10)||PERSONA_ENTRY[pSel.value]||1),
-        linkedin:f.querySelector("#t-li").value.trim(),
-        email:f.querySelector("#t-email").value.trim(),
-        angle:f.querySelector("#t-angle").value.trim()
-      };
-      if(editing){
-        // mutate in place so the contact's id (and its sent/notes keys) stay valid
-        thread.name=vals.name; thread.title=vals.title; thread.persona=vals.persona;
-        thread.entryDay=vals.entryDay; thread.linkedin=vals.linkedin; thread.email=vals.email; thread.angle=vals.angle;
-        persistAccounts().then(function(){ render(); toast("Contact updated"); });
-      } else {
-        var acct=state.accounts.find(function(a){return a.id===acctId;});
-        acct.threads=acct.threads||[];
-        vals.id="t"+Date.now(); vals.channel=CADENCE[0].ch;
-        acct.threads.push(vals);
-        persistAccounts().then(function(){ render(); toast("Contact added"); });
-      }
-    });
-  }
-
   // ---------- Engine 7 CSV import ----------
   function parseCSV(text){
     var rows=[], row=[], cur="", q=false;
@@ -1464,16 +647,13 @@
     if(!state.accounts.some(function(a){return a.id===state.activeId;})) state.activeId=state.accounts.length?state.accounts[0].id:null;
     return { accounts:removedAccts, threads:removedThreads };
   }
-
   // ---------- auth / lock screen (passkeys via WebAuthn + Vercel KV) ----------
   function WA(){ return window.SimpleWebAuthnBrowser; }
   function lockErr(m){ var e=document.getElementById("lockErr"); if(e) e.textContent=m||""; }
   function lockBody(html){ document.getElementById("lockBody").innerHTML=html; }
   function showApp(show){
-    document.querySelector("header").classList.toggle("hide", !show);
-    document.querySelector(".wrap").classList.toggle("hide", !show);
+    document.getElementById("appMain").classList.toggle("hide", !show);
     document.getElementById("lockScreen").classList.toggle("hide", show);
-    document.getElementById("lockBtn").classList.toggle("hide", !(show && MODE.api));
   }
   function renderRegister(){
     lockErr("");
@@ -1534,7 +714,7 @@
       var ver=await verRes.json();
       if(!verRes.ok || !ver.verified) throw new Error(ver.error||"Login failed");
       await afterAuthLoad();
-      showApp(true); render(); maybeWelcome();
+      showApp(true); render();
     }catch(e){ lockErr((e&&e.message)||"Login failed"); }
   }
   async function afterAuthLoad(){
@@ -1542,7 +722,7 @@
       var r=await fetch("/api/entries",{credentials:"same-origin"});
       if(r.ok){
         var d=await r.json();
-        state.accounts=d.accounts||[]; state.done=d.done||{}; state.notes=d.notes||{}; state.seeded=!!d.seeded; state.sheetUrl=d.sheetUrl||""; state.dailyGoal=parseInt(d.dailyGoal,10)||50; state.handoffNote=d.handoffNote||"";
+        state.accounts=d.accounts||[]; state.done=d.done||{}; state.notes=d.notes||{}; state.seeded=!!d.seeded; state.sheetUrl=d.sheetUrl||""; state.dailyGoal=parseInt(d.dailyGoal,10)||50; state.handoffNote=d.handoffNote||""; state.extra=d.extra||{};
         state.activeId=((d.active===ALL && state.accounts.length) || (d.active && state.accounts.some(function(a){return a.id===d.active;})))?d.active:((state.accounts[0]&&state.accounts[0].id)||null);
         if(!state.seeded && state.accounts.length===0){ seed(); state.seeded=true; apiSave(); }
       }
@@ -1550,50 +730,283 @@
   }
   async function logout(){
     try{ await fetch("/api/auth?action=logout",{method:"POST",credentials:"same-origin"}); }catch(e){}
-    welcomeShown=false; showApp(false); renderUnlock();
+    showApp(false); renderUnlock();
   }
-  // The signature CONT. interaction: leave a note for tomorrow-you, then lock.
-  function showHandoff(){
-    var ta=document.getElementById("handoffText"); ta.value=state.handoffNote||"";
-    document.getElementById("handoffScreen").classList.remove("hide");
-    setTimeout(function(){ ta.focus(); },50);
-  }
-  function hideHandoff(){ document.getElementById("handoffScreen").classList.add("hide"); }
   async function boot(){
     var st=null;
     try{ var r=await fetch("/api/auth?action=status",{credentials:"same-origin"}); if(r.ok) st=await r.json(); }catch(e){}
     if(!st){ // no backend reachable — fall back to local (localStorage / in-memory)
-      MODE.api=false; await load(); showApp(true); render(); maybeWelcome(); return;
+      MODE.api=false; await load(); showApp(true); render(); return;
     }
     MODE.api=true;
-    if(st.authenticated){ await afterAuthLoad(); showApp(true); render(); maybeWelcome(); return; }
+    if(st.authenticated){ await afterAuthLoad(); showApp(true); render(); return; }
     showApp(false);
     if(st.registered) renderUnlock(); else renderRegister();
   }
 
-  // ---------- render dispatcher ----------
-  function render(){
-    renderSelect();
-    document.querySelectorAll(".tab").forEach(function(b){ b.setAttribute("aria-selected", b.dataset.view===state.view ? "true":"false"); });
-    ["today","upcoming","accounts"].forEach(function(v){ document.getElementById("view-"+v).classList.toggle("hide", v!==state.view); });
-    if(state.view==="today") renderToday();
-    else if(state.view==="upcoming") renderUpcoming();
-    else renderAccounts();
+  // ================= ANYWAY UI (wired to existing accounts/threads/KV) =================
+  var CH_LABEL = { li:"LinkedIn", em:"Email", call:"Call" };
+  var DOW=["SUN","MON","TUE","WED","THU","FRI","SAT"], MON=["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
+  var TEMPLATES = {
+    li: "Hi {first} — saw your work leading {account}'s team and wanted to connect. I work with mid-market brands on engineering and data hiring (onshore + nearshore). No pitch — just building my corner of the industry. — Marcos",
+    em: "Subject: {account} — quick one\n\nHi {first},\n\nReaching out because {account} keeps coming up in my world — I help teams like yours add engineering and data talent without the big-firm overhead, onshore or nearshore.\n\nWorth 15 minutes to compare notes? If not now, no sweat — I'll be around.\n\nMarcos",
+    call: "CALL NOTES — {first}, {title} @ {account}\n• Open: referenced my LinkedIn + email touches\n• One question: \"How is the team handling [engineering/data] hiring right now?\"\n• Listen > pitch. Goal = book 15 min.\n• No answer? Leave a 20-second voicemail and mark done anyway."
+  };
+  function firstName(n){ return (n||"").split(" ")[0] || "there"; }
+  function fillTemplate(tpl, c){
+    return (tpl||"").split("{first}").join(firstName(c.name)).split("{account}").join(c.account||"your company").split("{title}").join(c.title||"");
   }
 
-  // ---------- events ----------
-  document.querySelectorAll(".tab").forEach(function(b){ b.addEventListener("click", function(){ state.view=b.dataset.view; render(); }); });
-  document.getElementById("acctSelect").addEventListener("change", function(e){ state.activeId=e.target.value; scheduleSave(); render(); });
-  document.getElementById("seeAllBtn").addEventListener("click", function(){ state.view="accounts"; render(); window.scrollTo({top:0,behavior:"smooth"}); });
-  document.getElementById("lockBtn").addEventListener("click", function(){ showHandoff(); });
-  document.getElementById("handoffCancel").addEventListener("click", function(){ hideHandoff(); logout(); });
-  document.getElementById("handoffSave").addEventListener("click", function(){
-    state.handoffNote=document.getElementById("handoffText").value.trim();
-    reentrySeen=false; scheduleSave(); hideHandoff();
-    toast("Leave it here. We'll hold onto it."); logout();
-  });
+  // ---- daily total / goal / streak (derived from state.done + state.extra) ----
+  function goalVal(){ return state.dailyGoal || 10; }
+  function sentOnDate(ds){ var n=0; for(var k in state.done){ if(state.done[k]===ds) n++; } return n; }
+  function dayTotal(k){ state.extra=state.extra||{}; return sentOnDate(k) + (state.extra[k]||0); }
+  function sentToday(){ return dayTotal(todayStr()); }
+  function keyForOff(off){ return iso(addDays(todayStr(), -off)); }
+  function streakWithBend(){
+    var goal=goalVal(), streak=0, misses=0, off = dayTotal(todayStr())>=goal ? 0 : 1;
+    while(off<366){ if(dayTotal(keyForOff(off))>=goal){ streak++; misses=0; } else { misses++; if(misses>=2) break; } off++; }
+    return streak;
+  }
 
-  // ---------- boot ----------
+  // ---- adapter: flatten accounts/threads into cadence contacts ----
+  function asContacts(){
+    var out=[];
+    state.accounts.forEach(function(a){ (a.threads||[]).forEach(function(t){
+      if(t.persona==="Blocker") return; // held, not in cadence
+      var touches=buildTouches({id:a.id, start:a.start, threads:[t]});
+      var step=0; while(step<touches.length && state.done[touches[step].id]) step++;
+      out.push({ a:a, t:t, name:t.name, title:t.title, account:a.company, status:t.status||"active", step:step, touches:touches, complete:step>=touches.length });
+    }); });
+    return out;
+  }
+  function lastDoneDate(c){ var m=""; c.touches.forEach(function(x){ var d=state.done[x.id]; if(d && d>m) m=d; }); return m; }
+  function dueInfo(c){
+    if(c.complete || c.status!=="active") return null;
+    var cur=c.touches[c.step], due;
+    if(c.step===0) due=cur.date;                                   // first touch on schedule
+    else { var gap=CADENCE[c.step].off - CADENCE[c.step-1].off; due=iso(addDays(lastDoneDate(c), gap)); } // reschedule from last completion
+    return { ch:cur.ch, stepNum:c.step+1, touch:cur, overdueDays:daysBetween(due, todayStr()), dueKey:due };
+  }
+  function statusLabel(c){
+    if(c.status==="warm") return {txt:"replied — your move", gold:true};
+    if(c.status==="meeting") return {txt:"meeting booked", gold:true};
+    if(c.status==="lost") return {txt:"not interested", gold:false};
+    if(c.complete) return {txt:"cadence complete", gold:false};
+    var i=dueInfo(c);
+    if(i.overdueDays>=0) return {txt:"due: "+CH_LABEL[i.ch]+" today", gold:false};
+    return {txt:"next: "+CH_LABEL[i.ch]+" in "+(-i.overdueDays)+"d", gold:false};
+  }
+
+  // ---- actions ----
+  function completeTouch(c){
+    var info=dueInfo(c); if(!info) return;
+    var goal=goalVal(), was=dayTotal(todayStr())>=goal;
+    state.done[info.touch.id]=todayStr();
+    persistDone(); render();
+    var now=dayTotal(todayStr())>=goal;
+    if(now && !was) toast("GOAL HIT. ANYWAY.");
+    else if(c.step+1>=c.touches.length) toast(firstName(c.name)+": cadence complete");
+    else toast("+1 "+CH_LABEL[info.ch]);
+  }
+  function setStatus(c, status, msg){ c.t.status=status; persistAccounts(); render(); toast(msg); }
+  function logWarmTouch(c){
+    state.extra=state.extra||{}; var tk=todayStr(), goal=goalVal(), was=dayTotal(tk)>=goal;
+    state.extra[tk]=(state.extra[tk]||0)+1; scheduleSave(); render();
+    if(dayTotal(tk)>=goal && !was) toast("GOAL HIT. ANYWAY."); else toast("+1 reply touch");
+  }
+  function removeContact(c){ if(confirm("Remove "+c.name+"?")) deleteThread(c.a.id, c.t.id); }
+  function editGoal(){
+    var v=prompt("Daily touch goal:", goalVal()); if(v===null) return;
+    var n=parseInt(v,10); if(isNaN(n)||n<1||n>500){ toast("1–500 only"); return; }
+    state.dailyGoal=n; scheduleSave(); render(); toast("Goal: "+n);
+  }
+
+  // ---- add contacts (quick bulk-add into existing account model) ----
+  function addQuick(acctVal, bulkVal){
+    var acct=(acctVal||"").trim(), bulk=(bulkVal||"").trim();
+    if(!acct){ toast("Account name first"); return false; }
+    if(!bulk){ toast("Add at least one person"); return false; }
+    var a=state.accounts.find(function(x){ return normCompany(x.company)===normCompany(acct); });
+    if(!a){ a={ id:"a"+Date.now(), company:acct, start:todayStr(), threads:[] }; state.accounts.push(a); }
+    a.threads=a.threads||[];
+    var entry=Math.max(1, daysBetween(a.start, todayStr())+1); // day 1 = today
+    var added=0;
+    bulk.split("\n").forEach(function(line){
+      line=line.trim(); if(!line) return;
+      var p=line.split(","), name=(p[0]||"").trim(), title=p.slice(1).join(",").trim();
+      if(!name) return;
+      a.threads.push({ id:"t"+Date.now()+"_"+added+"_"+Math.floor(Math.random()*999), name:name, title:title, persona:"Additional", entryDay:entry, channel:"li", linkedin:"", email:"", angle:"", status:"active" });
+      added++;
+    });
+    if(!added){ toast("No valid lines"); return false; }
+    persistAccounts(); render(); toast(added+" added to cadence");
+    return true;
+  }
+
+  // ---- backup / restore / cleanup ----
+  function doExport(){
+    if(!state.accounts.length){ toast("Nothing to back up"); return; }
+    var data={ app:"anyway", version:1, exportedAt:new Date().toISOString(), accounts:state.accounts, done:state.done, notes:state.notes, extra:state.extra||{} };
+    var blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
+    var url=URL.createObjectURL(blob); var a=document.createElement("a"); a.href=url; a.download="anyway-backup-"+todayStr()+".json";
+    document.body.appendChild(a); a.click(); a.remove(); setTimeout(function(){ URL.revokeObjectURL(url); },1000); toast("Backup downloaded");
+  }
+  function doRestore(file){
+    var reader=new FileReader();
+    reader.onload=function(){
+      var data; try{ data=JSON.parse(reader.result); }catch(e){ toast("Not a valid backup"); return; }
+      if(!data || !Array.isArray(data.accounts)){ toast("Not an ANYWAY backup"); return; }
+      if(!confirm("Restore this backup? Replaces current accounts, touches and messages.")) return;
+      state.accounts=data.accounts||[]; state.done=data.done||{}; state.notes=data.notes||{}; state.extra=data.extra||{}; state.seeded=true;
+      persistAccounts(); render(); toast("Backup restored");
+    };
+    reader.readAsText(file);
+  }
+  function doDedupe(){
+    var c=countDuplicates();
+    if(!c.accounts && !c.threads){ toast("No duplicates found"); return; }
+    if(!confirm("Found "+c.accounts+" duplicate account(s) and "+c.threads+" duplicate contact(s). Merge them?")) return;
+    var r=runDedupe(); persistAccounts(); render(); toast("Removed "+r.accounts+" acct / "+r.threads+" contact");
+  }
+  function doClear(){
+    if(!state.accounts.length){ toast("Nothing to clear"); return; }
+    if(!confirm("Clear ALL accounts, contacts, touches and messages? Cannot be undone. Login stays.")) return;
+    if(!confirm("Really wipe everything and start over?")) return;
+    state.accounts=[]; state.done={}; state.notes={}; state.extra={}; state.activeId=null; state.seeded=true;
+    persistAccounts(); render(); toast("All cleared");
+  }
+
+  // ---- render ----
+  function render(){
+    var m=document.getElementById("appMain"); if(!m) return;
+    state.extra=state.extra||{};
+    m.innerHTML="";
+    var contacts=asContacts();
+    var tk=todayStr(), total=sentToday(), goal=goalVal(), done=total>=goal, now=new Date();
+
+    // TOP
+    var top=el('<div class="top"><div class="mark">ANYWAY<span>.</span></div><div class="top-right"><span class="date">'+DOW[now.getDay()]+" "+MON[now.getMonth()]+" "+now.getDate()+'</span><button class="lockbtn" id="lockBtn">Lock</button></div></div>');
+    top.querySelector("#lockBtn").addEventListener("click", function(){ logout(); });
+    m.appendChild(top);
+
+    // SCORE
+    var score=el('<div class="score"><div class="score-left"><div><div class="big-num'+(done?" done":"")+'">'+total+'</div><div class="score-sub">of <span>'+goal+'</span> touches · <button id="editGoal">change</button></div></div><div class="mini-square'+(done?" done":"")+'"></div></div><div><div class="streak-num"><i>'+streakWithBend()+'</i> day streak</div><div class="score-sub" style="text-align:right;">bends, doesn’t break</div></div></div>');
+    score.querySelector("#editGoal").addEventListener("click", editGoal);
+    m.appendChild(score);
+
+    // WARM
+    var warm=contacts.filter(function(c){ return c.status==="warm"; });
+    if(warm.length){
+      var ws=el('<section class="warm"><h2 class="warm-title">Warm — your move</h2><p class="warm-sub">They answered. This beats every cold touch on the list.</p><div id="warmList"></div></section>');
+      var wl=ws.querySelector("#warmList");
+      warm.forEach(function(c){
+        var card=el('<div class="wcard"><div class="wname">'+esc(c.name)+'</div><div class="wmeta">'+esc(c.title||"")+(c.title?" · ":"")+esc(c.account)+' · cadence paused</div><div class="wactions"><button class="wbtn gold" data-a="meeting">Meeting booked</button><button class="wbtn" data-a="touch">Log a reply touch</button><button class="wbtn quiet" data-a="lost">Not interested</button></div></div>');
+        card.querySelector('[data-a="meeting"]').addEventListener("click", function(){ setStatus(c,"meeting","Meeting booked. ANYWAY."); });
+        card.querySelector('[data-a="touch"]').addEventListener("click", function(){ logWarmTouch(c); });
+        card.querySelector('[data-a="lost"]').addEventListener("click", function(){ setStatus(c,"lost","Marked not interested"); });
+        wl.appendChild(card);
+      });
+      m.appendChild(ws);
+    }
+
+    // QUEUE
+    var due=[];
+    contacts.forEach(function(c){ var i=dueInfo(c); if(i && i.overdueDays>=0) due.push({c:c,i:i}); });
+    due.sort(function(x,y){ return y.i.overdueDays - x.i.overdueDays; });
+    var q=el('<section class="queue"><div class="queue-head"><h1 class="queue-title">Start here<span style="color:var(--gold)">.</span></h1><span class="sum-count">'+(due.length?due.length+" due":"")+'</span></div><p class="queue-sub">Everyone due for a touch today, most overdue first. Script, send, done.</p><div id="queueList"></div></section>');
+    var ql=q.querySelector("#queueList");
+    if(!due.length && !warm.length){
+      ql.appendChild(el('<div class="clear-msg"><p class="big">Queue clear<span>.</span></p><p>Nobody’s due. Add contacts below or take the win.</p></div>'));
+    }
+    due.forEach(function(item){
+      var c=item.c, i=item.i;
+      var over = i.overdueDays>0 ? " · "+i.overdueDays+"d overdue" : "";
+      var scriptVal = state.notes[i.touch.id] || fillTemplate(TEMPLATES[i.ch], c);
+      var card=el('<div class="qcard'+(i.overdueDays>0?" overdue":"")+'">'+
+        '<div class="qmain"><div class="qwho"><div class="qname">'+esc(c.name)+'</div><div class="qmeta">'+esc(c.title||"")+(c.title?" · ":"")+esc(c.account)+" · touch "+i.stepNum+"/"+c.touches.length+over+'</div></div>'+
+        '<div class="qactions"><span class="chip step-ch">'+CH_LABEL[i.ch]+'</span><button class="btn-replied" title="They answered — pause cadence">Replied</button><button class="btn-script">Script</button><button class="btn-done">Done</button></div></div>'+
+        '<div class="script"><p class="eyebrow">'+CH_LABEL[i.ch]+' script — use it or write your own</p><textarea>'+esc(scriptVal)+'</textarea><div class="script-actions"><button class="copy-btn">Copy</button></div></div>');
+      var scr=card.querySelector(".script"), ta=card.querySelector("textarea");
+      card.querySelector(".btn-script").addEventListener("click", function(){ scr.classList.toggle("open"); });
+      ta.addEventListener("change", function(){ state.notes[i.touch.id]=ta.value; persistNotes(); });
+      card.querySelector(".copy-btn").addEventListener("click", function(){ copy(ta.value||""); });
+      card.querySelector(".btn-done").addEventListener("click", function(){ completeTouch(c); });
+      card.querySelector(".btn-replied").addEventListener("click", function(){ setStatus(c,"warm", firstName(c.name)+" moved to WARM"); });
+      ql.appendChild(card);
+    });
+    m.appendChild(q);
+
+    // ADD CONTACTS
+    var accts={}; state.accounts.forEach(function(a){ accts[a.company]=1; });
+    var opts=Object.keys(accts).map(function(x){ return '<option value="'+esc(x)+'">'; }).join("");
+    var add=el('<details class="section" id="addSection"><summary><span class="sum-title">+ Add contacts</span><span class="sum-count">account &rarr; people</span></summary>'+
+      '<div class="form-full"><input id="acctInput" list="acctList" placeholder="Account (e.g., Skechers)"><datalist id="acctList">'+opts+'</datalist></div>'+
+      '<div class="form-full"><textarea id="bulkInput" rows="5" placeholder="One person per line:&#10;Jane Smith, VP Merchandising&#10;Luis Ortega, Sr Manager DTC"></textarea></div>'+
+      '<p class="hint">Name, Title — one per line. Each person starts the cadence today.</p>'+
+      '<button class="btn-primary" id="addBtn" type="button">Add to cadence</button>'+
+      '<div class="btn-row"><button class="btn-mini" id="csvBtn">Paste CSV</button><button class="btn-mini" id="sheetBtn">Google Sheet</button></div>'+
+      '<div id="importHost"></div></details>');
+    add.querySelector("#addBtn").addEventListener("click", function(){
+      if(addQuick(add.querySelector("#acctInput").value, add.querySelector("#bulkInput").value)) add.open=true;
+    });
+    add.querySelector("#csvBtn").addEventListener("click", function(){ showImportForm(add.querySelector("#importHost")); });
+    add.querySelector("#sheetBtn").addEventListener("click", function(){ showSheetForm(add.querySelector("#importHost")); });
+    m.appendChild(add);
+
+    // PIPELINE (grouped by account, with rollups)
+    var groups={}; contacts.forEach(function(c){ (groups[c.account]=groups[c.account]||[]).push(c); });
+    var totalC=contacts.length, acctN=Object.keys(groups).length;
+    var pipe=el('<details class="section"><summary><span class="sum-title">Pipeline</span><span class="sum-count">'+(totalC?totalC+" contacts · "+acctN+" accounts":"empty")+'</span></summary><div class="cadence-row" id="cadRow"></div><p class="hint" style="margin-top:0;">The cadence every contact runs. Replies pause it automatically.</p><div id="pipeList"></div></details>');
+    var cr=pipe.querySelector("#cadRow");
+    CADENCE.forEach(function(s,idx){
+      cr.appendChild(el('<span class="cad-step">Day '+(s.off+1)+" "+CH_LABEL[s.ch]+'</span>'));
+      if(idx<CADENCE.length-1) cr.appendChild(el('<span class="cad-arrow">→</span>'));
+    });
+    var pl=pipe.querySelector("#pipeList");
+    Object.keys(groups).sort().forEach(function(acct){
+      var list=groups[acct], warmN=0,meetN=0,lostN=0,activeN=0,compN=0;
+      list.forEach(function(c){ if(c.status==="warm")warmN++; else if(c.status==="meeting")meetN++; else if(c.status==="lost")lostN++; else if(c.complete)compN++; else activeN++; });
+      var wrap=el('<div class="acct"></div>');
+      wrap.appendChild(el('<div class="acct-name"><span>'+esc(acct)+'</span><span class="sum-count">'+list.length+' people</span></div>'));
+      var parts=[];
+      if(meetN) parts.push("<b>"+meetN+" meeting"+(meetN>1?"s":"")+"</b>");
+      if(warmN) parts.push("<b>"+warmN+" warm</b>");
+      if(activeN) parts.push(activeN+" in cadence");
+      if(compN) parts.push(compN+" complete");
+      if(lostN) parts.push(lostN+" out");
+      wrap.appendChild(el('<div class="acct-roll">'+(parts.join(" · ")||"nothing yet")+'</div>'));
+      list.forEach(function(c){
+        var s=statusLabel(c);
+        var row=el('<div class="contact-row"><span class="nm">'+esc(c.name)+(c.title?' <span style="color:var(--grey);font-weight:400;">· '+esc(c.title)+'</span>':"")+'</span><span style="display:flex;align-items:center;gap:6px;flex-shrink:0;"><span class="st'+(s.gold?" gold":"")+'">'+s.txt+'</span><button class="tiny-x" title="Remove">×</button></span></div>');
+        row.querySelector(".tiny-x").addEventListener("click", function(){ removeContact(c); });
+        wrap.appendChild(row);
+      });
+      pl.appendChild(wrap);
+    });
+    m.appendChild(pipe);
+
+    // LAST 14 DAYS
+    var fort=el('<details class="section"><summary><span class="sum-title">Last 14 days</span><span class="sum-count" id="fortCount"></span></summary><div class="day-row" id="dayRow"></div></details>');
+    var dr=fort.querySelector("#dayRow"), hit=0;
+    for(var i2=13;i2>=0;i2--){ var k=keyForOff(i2), t=dayTotal(k), cls="day-sq"; if(t>=goal){cls+=" hit";hit++;} else if(t>0)cls+=" partial"; if(i2===0)cls+=" today-marker"; var sq=el('<div class="'+cls+'"></div>'); sq.title=k+" — "+t+" touches"; dr.appendChild(sq); }
+    fort.querySelector("#fortCount").textContent=hit+" gold";
+    m.appendChild(fort);
+
+    // MANAGE + FOOT
+    var manage=el('<details class="section"><summary><span class="sum-title">Manage</span><span class="sum-count">backup · cleanup</span></summary><div class="btn-row"><button class="btn-mini" id="expBtn">Export backup</button><button class="btn-mini" id="resBtn">Restore</button><button class="btn-mini" id="dupBtn">Delete duplicates</button><button class="btn-mini danger" id="clrBtn">Clear all</button></div><input type="file" id="resFile" accept="application/json,.json" style="display:none"></details>');
+    manage.querySelector("#expBtn").addEventListener("click", doExport);
+    manage.querySelector("#dupBtn").addEventListener("click", doDedupe);
+    manage.querySelector("#clrBtn").addEventListener("click", doClear);
+    var rf=manage.querySelector("#resFile");
+    manage.querySelector("#resBtn").addEventListener("click", function(){ rf.click(); });
+    rf.addEventListener("change", function(){ if(rf.files&&rf.files[0]) doRestore(rf.files[0]); rf.value=""; });
+    m.appendChild(manage);
+
+    m.appendChild(el('<p class="foot">We got you.</p>'));
+  }
+
   boot();
+
 })();
 </script>
