@@ -1,6 +1,6 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>OLLIN Tracker</title>
+<title>CONT. — We got you.</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -35,10 +35,11 @@
   /* header */
   header{position:sticky; top:0; z-index:30; background:rgba(255,255,255,.92); backdrop-filter:saturate(1.4) blur(8px); box-shadow:0 1px 0 var(--hair), 0 6px 20px rgba(22,36,29,.04); }
   .hbar{max-width:900px; margin:0 auto; padding:16px 20px 13px; display:flex; align-items:center; gap:14px}
-  .brand{display:flex; align-items:baseline; gap:10px}
-  .brand .mark{font-family:"Geist",sans-serif; font-weight:800; letter-spacing:.02em; font-size:19px; color:var(--green); text-transform:uppercase}
+  .brand{display:flex; align-items:baseline; gap:11px}
+  .brand .mark{font-family:"Geist",sans-serif; font-weight:800; letter-spacing:-.01em; font-size:20px; color:var(--ink); text-transform:uppercase}
   .brand .sep{color:var(--hair-strong); font-weight:300}
   .brand .sub{font-family:"Geist Mono",monospace; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-2); font-weight:500}
+  .tagline{font-family:"Geist",sans-serif; text-transform:none; letter-spacing:0; font-weight:500}
   .acct-sel{margin-left:auto; display:flex; align-items:center; gap:9px}
   select,input,textarea{font-family:inherit; font-size:15px; color:var(--ink); background:var(--surface); border:1.5px solid var(--hair-strong); border-radius:var(--r-sm); padding:10px 12px}
   select{padding-right:30px; cursor:pointer; -webkit-appearance:none; appearance:none; font-weight:500;
@@ -174,7 +175,7 @@
   /* lock screen */
   .lock{position:fixed; inset:0; z-index:80; background:linear-gradient(160deg,#13271C,#0c1a12); display:flex; align-items:center; justify-content:center; padding:24px}
   .lock-card{background:#fff; border-radius:16px; box-shadow:var(--sh-lg); max-width:380px; width:100%; padding:34px 28px; text-align:center}
-  .lock-card .mark{font-family:"Geist",sans-serif; font-weight:800; letter-spacing:.04em; font-size:24px; color:var(--green); text-transform:uppercase}
+  .lock-card .mark{font-family:"Geist",sans-serif; font-weight:800; letter-spacing:-.01em; font-size:26px; color:var(--ink); text-transform:uppercase}
   .lock-card .sub{font-family:"Geist Mono",monospace; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3); margin:6px 0 22px}
   .lock-card p{color:var(--ink-2); font-size:14px; line-height:1.5; margin:0 0 20px}
   .lock-card .btn{width:100%; justify-content:center; padding:14px; font-size:14px; display:block}
@@ -297,7 +298,7 @@
 <header class="hide">
   <div class="hbar">
     <div class="brand">
-      <span class="mark">OLLIN</span><span class="sep">/</span><span class="sub">Tracker</span>
+      <span class="mark">CONT.</span><span class="sub tagline">We got you.</span>
     </div>
     <div class="acct-sel">
       <span class="lbl">Account</span>
@@ -324,8 +325,8 @@
 <div class="lock hide" id="lockScreen">
   <div class="lock-card">
     <div class="lock-ico"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></div>
-    <div class="mark">OLLIN</div>
-    <div class="sub">Tracker</div>
+    <div class="mark">CONT.</div>
+    <div class="sub tagline">We got you.</div>
     <div id="lockBody"></div>
     <div class="lock-err" id="lockErr"></div>
   </div>
@@ -916,10 +917,10 @@
     addBtnRow.querySelector("#sheetBtn").addEventListener("click", function(){ showSheetForm(root); });
     addBtnRow.querySelector("#exportBtn").addEventListener("click", function(){
       if(!state.accounts.length){ toast("Nothing to back up"); return; }
-      var data={ app:"ollin-tracker", version:1, exportedAt:new Date().toISOString(), accounts:state.accounts, done:state.done, notes:state.notes };
+      var data={ app:"cont", version:1, exportedAt:new Date().toISOString(), accounts:state.accounts, done:state.done, notes:state.notes };
       var blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
       var url=URL.createObjectURL(blob);
-      var a=document.createElement("a"); a.href=url; a.download="ollin-backup-"+todayStr()+".json";
+      var a=document.createElement("a"); a.href=url; a.download="cont-backup-"+todayStr()+".json";
       document.body.appendChild(a); a.click(); a.remove();
       setTimeout(function(){ URL.revokeObjectURL(url); },1000);
       toast("Backup downloaded");
@@ -930,7 +931,7 @@
       var reader=new FileReader();
       reader.onload=function(){
         var data; try{ data=JSON.parse(reader.result); }catch(e){ toast("Not a valid backup file"); restoreInput.value=""; return; }
-        if(!data || !Array.isArray(data.accounts)){ toast("Not an OLLIN backup"); restoreInput.value=""; return; }
+        if(!data || !Array.isArray(data.accounts)){ toast("Not a CONT. backup"); restoreInput.value=""; return; }
         if(!confirm("Restore this backup? It will replace your current accounts, checkmarks and saved messages.")){ restoreInput.value=""; return; }
         state.accounts=data.accounts||[]; state.done=data.done||{}; state.notes=data.notes||{}; state.seeded=true;
         if(!state.accounts.some(function(a){return a.id===state.activeId;})) state.activeId=state.accounts.length?state.accounts[0].id:null;
@@ -1462,7 +1463,7 @@
     try{ await fetch("/api/auth?action=logout",{method:"POST",credentials:"same-origin"}); }catch(e){}
     showApp(false); renderUnlock();
   }
-  // The signature Ollin interaction: leave a note for tomorrow-you, then lock.
+  // The signature CONT. interaction: leave a note for tomorrow-you, then lock.
   function showHandoff(){
     var ta=document.getElementById("handoffText"); ta.value=state.handoffNote||"";
     document.getElementById("handoffScreen").classList.remove("hide");
