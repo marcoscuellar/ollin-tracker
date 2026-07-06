@@ -40,7 +40,7 @@ export function getRP(req) {
   const proto = (req.headers['x-forwarded-proto'] || 'https').toString().split(',')[0];
   const rpID = host.split(':')[0];
   const origin = `${proto}://${host}`;
-  return { rpID, origin, rpName: 'OLLIN Tracker' };
+  return { rpID, origin, rpName: 'CONT.' };
 }
 
 // ---------- request body ----------
