@@ -1126,7 +1126,7 @@
       '<button class="btn-primary" id="addBtn" type="button">Add to cadence</button>'+
       '<div class="upload-note"><p class="eyebrow">Or upload a list</p>'+
         '<p class="upload-fields"><b>Required:</b> Name · Company <span class="upload-dim">(Company = the client)</span><br><b>Recommended optional:</b> Name · Company · Title · LinkedIn URL · Email · Touch 1–5 messages <span class="upload-dim">— no messages? ANYWAY AI writes them for you (use them or not).</span></p></div>'+
-      '<div class="btn-row"><button class="btn-mini" id="csvBtn">Paste CSV</button><button class="btn-mini" id="sheetBtn">Google Sheet</button></div>'+
+      '<div class="btn-row"><button class="btn-mini" id="csvBtn">Upload CSV / Excel</button><button class="btn-mini" id="sheetBtn">Google Sheet</button></div>'+
       '<div id="importHost"></div></details>');
     add.querySelector("#addBtn").addEventListener("click", function(){
       if(addQuick(add.querySelector("#acctInput").value, add.querySelector("#bulkInput").value)) add.open=true;
