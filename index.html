@@ -164,6 +164,11 @@
   .ll-rule{width:34px;height:3px;background:var(--ink);margin:18px auto 12px;}
   .ll-tag{font-family:'Inter',sans-serif;font-size:18px;color:var(--ink);font-weight:500;}
   .ll-domain{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.16em;color:var(--grey);margin-top:26px;}
+  .upload-note{border-top:.5px solid var(--hairline);margin-top:16px;padding-top:14px;}
+  .upload-note .eyebrow{margin-bottom:8px;}
+  .upload-fields{font-size:13px;color:var(--ink);line-height:1.7;}
+  .upload-fields b{font-weight:600;}
+  .upload-dim{color:var(--grey);}
   @media (prefers-reduced-motion:reduce){.mini-square,.toast{transition:none;}}
   @media (max-width:430px){.qmain{flex-wrap:wrap;}.qactions{width:100%;justify-content:flex-end;}}
 
@@ -950,6 +955,8 @@
       '<div class="form-full"><textarea id="bulkInput" rows="5" placeholder="One person per line:&#10;Jane Smith, VP Merchandising&#10;Luis Ortega, Sr Manager DTC"></textarea></div>'+
       '<p class="hint">Name, Title — one per line. Each person starts the cadence today.</p>'+
       '<button class="btn-primary" id="addBtn" type="button">Add to cadence</button>'+
+      '<div class="upload-note"><p class="eyebrow">Or upload a list</p>'+
+        '<p class="upload-fields"><b>Required:</b> Name · Company <span class="upload-dim">(Company = the client)</span><br><b>Optional:</b> Title · LinkedIn URL · Email · Touch 1–5 messages</p></div>'+
       '<div class="btn-row"><button class="btn-mini" id="csvBtn">Paste CSV</button><button class="btn-mini" id="sheetBtn">Google Sheet</button></div>'+
       '<div id="importHost"></div></details>');
     add.querySelector("#addBtn").addEventListener("click", function(){
