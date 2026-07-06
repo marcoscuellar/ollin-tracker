@@ -166,6 +166,8 @@
   .auth-lead{color:var(--grey);font-size:14px;line-height:1.55;margin:0 0 18px;}
   .auth-input{width:100%;background:var(--cream);border:.5px solid var(--hairline);font-family:'Inter',sans-serif;font-size:15px;padding:12px;color:var(--ink);margin-bottom:10px;text-align:left;}
   .auth-input::placeholder{color:var(--grey2);}
+  .verifybar{border:.5px solid var(--hairline);border-left:3px solid var(--gold);background:var(--cream);padding:10px 14px;margin-bottom:14px;font-size:12.5px;line-height:1.5;color:var(--grey);}
+  .verifybar a{color:var(--gold);font-weight:600;cursor:pointer;text-decoration:underline;}
   .reccode{font-family:'JetBrains Mono',monospace;font-size:18px;letter-spacing:.1em;color:var(--ink);background:var(--panel);border:.5px solid var(--hairline);padding:14px;margin:14px 0;word-break:break-all;font-weight:500;}
 
   /* import / manage forms (existing import logic, ANYWAY skin) */
@@ -733,7 +735,9 @@
     if(!state.accounts.some(function(a){return a.id===state.activeId;})) state.activeId=state.accounts.length?state.accounts[0].id:null;
     return { accounts:removedAccts, threads:removedThreads };
   }
-  // ---------- auth / lock screen (passkeys via WebAuthn + Vercel KV) ----------
+  // ---------- auth / lock screen (email + password + Vercel KV) ----------
+  var ACCOUNT=null; // { email, plan, verified } for the logged-in user
+  function cleanUrl(){ try{ history.replaceState(null,"",location.pathname); }catch(e){} }
   function lockErr(m){ var e=document.getElementById("lockErr"); if(e) e.textContent=m||""; }
   function lockBody(html){ document.getElementById("lockBody").innerHTML=html; }
   function showApp(show){
@@ -748,7 +752,8 @@
       '<input class="auth-input" id="authEmail" type="email" placeholder="you@work.com" autocomplete="email" autocapitalize="off" autocorrect="off">'+
       '<input class="auth-input" id="authPass" type="password" placeholder="Password'+(isSignup?" (8+ characters)":"")+'" autocomplete="'+(isSignup?"new-password":"current-password")+'">'+
       '<button class="btn" id="authGo">'+(isSignup?"Start free":"Log in")+'</button>'+
-      '<div class="lock-alt">'+(isSignup?'Already have an account? <a id="authSwap">Log in</a>':'New here? <a id="authSwap">Create an account</a>')+'</div>'
+      '<div class="lock-alt">'+(isSignup?'Already have an account? <a id="authSwap">Log in</a>':'New here? <a id="authSwap">Create an account</a>')+'</div>'+
+      (isSignup?'':'<div class="lock-alt"><a id="authForgot">Forgot password?</a></div>')
     );
     var em=document.getElementById("authEmail"), pw=document.getElementById("authPass");
     function submit(){ doAuth(mode, em.value, pw.value); }
@@ -756,7 +761,52 @@
     em.addEventListener("keydown", function(e){ if(e.key==="Enter") pw.focus(); });
     pw.addEventListener("keydown", function(e){ if(e.key==="Enter") submit(); });
     document.getElementById("authSwap").addEventListener("click", function(){ authForm(isSignup?"login":"signup"); });
+    var fg=document.getElementById("authForgot"); if(fg) fg.addEventListener("click", function(){ doForgot(em.value); });
     em.focus();
+  }
+  async function doForgot(email){
+    email=(email||"").trim();
+    if(!email){ lockErr("Enter your email above first, then tap Forgot password."); return; }
+    try{ await fetch("/api/auth?action=request-reset",{method:"POST",headers:{"Content-Type":"application/json"},credentials:"same-origin",body:JSON.stringify({email:email})}); }catch(e){}
+    lockErr(""); toast("If that email has an account, a reset link is on its way.");
+  }
+  function renderResetForm(token){
+    lockErr("");
+    lockBody(
+      '<p class="auth-lead">Set a new password for your account.</p>'+
+      '<input class="auth-input" id="rsPass" type="password" placeholder="New password (8+ characters)" autocomplete="new-password">'+
+      '<button class="btn" id="rsGo">Set password</button>'+
+      '<div class="lock-alt"><a id="rsBack">Back to log in</a></div>'
+    );
+    var pw=document.getElementById("rsPass");
+    function submit(){ doReset(token, pw.value); }
+    document.getElementById("rsGo").addEventListener("click", submit);
+    pw.addEventListener("keydown", function(e){ if(e.key==="Enter") submit(); });
+    document.getElementById("rsBack").addEventListener("click", function(){ cleanUrl(); authForm("login"); });
+    pw.focus();
+  }
+  async function doReset(token, password){
+    lockErr("");
+    if((password||"").length<8){ lockErr("Password must be at least 8 characters."); return; }
+    var go=document.getElementById("rsGo"); if(go){ go.disabled=true; go.textContent="…"; }
+    try{
+      var r=await fetch("/api/auth?action=reset",{method:"POST",headers:{"Content-Type":"application/json"},credentials:"same-origin",body:JSON.stringify({token:token,password:password})});
+      var d=await r.json().catch(function(){ return {}; });
+      if(!r.ok || !d.ok) throw new Error(d.error||"Couldn’t reset — request a new link.");
+      cleanUrl(); ACCOUNT={email:d.email,plan:d.plan,verified:d.verified};
+      await afterAuthLoad(); computeComeback(); showApp(true); render();
+      toast("Password updated. You’re in.");
+    }catch(e){
+      lockErr((e&&e.message)||"Couldn’t reset — request a new link.");
+      if(go){ go.disabled=false; go.textContent="Set password"; }
+    }
+  }
+  async function resendVerify(){
+    try{
+      var r=await fetch("/api/auth?action=resend-verify",{method:"POST",credentials:"same-origin"});
+      var d=await r.json().catch(function(){ return {}; });
+      toast(d.already?"Already verified — you’re good.":(d.ok?"Verification email sent.":"Couldn’t send — try again."));
+    }catch(e){ toast("Couldn’t send — try again."); }
   }
   async function doAuth(mode, email, password){
     lockErr("");
@@ -768,10 +818,12 @@
       var r=await fetch("/api/auth?action="+mode,{method:"POST",headers:{"Content-Type":"application/json"},credentials:"same-origin",body:JSON.stringify({email:email,password:password})});
       var d=await r.json().catch(function(){ return {}; });
       if(!r.ok || !d.ok) throw new Error(d.error||"Something went wrong. Try again.");
+      ACCOUNT={email:d.email,plan:d.plan,verified:d.verified};
       await afterAuthLoad();
       computeComeback();
       showApp(true); render();
       if(d.migrated) toast("Welcome back — your pipeline’s here.");
+      else if(mode==="signup") toast("Welcome to ANYWAY. Check your inbox to confirm your email.");
     }catch(e){
       lockErr((e&&e.message)||"Something went wrong. Try again.");
       if(go){ go.disabled=false; go.textContent=(mode==="signup"?"Start free":"Log in"); }
@@ -794,18 +846,30 @@
     try{ await fetch("/api/auth?action=logout",{method:"POST",credentials:"same-origin"}); }catch(e){}
     clearState(); comebackDismissed=false; showApp(false); authForm("login");
   }
+  function afterBootParams(params){
+    var vf=params.get("verified");
+    if(vf==="1") toast("Email verified. You’re all set.");
+    else if(vf==="0") toast("That link expired — resend from the banner up top.");
+    if(vf!==null) cleanUrl();
+  }
   async function boot(){
+    var params=new URLSearchParams(location.search);
+    var rst=params.get("reset");
+    if(rst){ showApp(false); renderResetForm(rst); return; }
     try{
       var r=await fetch("/api/auth?action=status",{credentials:"same-origin"});
       var d=r.ok ? await r.json() : {};
       if(d && d.authenticated){
+        ACCOUNT={email:d.email,plan:d.plan,verified:d.verified};
         await afterAuthLoad();
         computeComeback();
         showApp(true); render();
+        afterBootParams(params);
         return;
       }
     }catch(e){}
     showApp(false); authForm("login");
+    afterBootParams(params);
   }
 
   // ================= ANYWAY UI (wired to existing accounts/threads/KV) =================
@@ -964,6 +1028,13 @@
     var top=el('<div class="top"><div class="mark">ANYWAY<span>.</span></div><div class="top-right"><span class="date">'+DOW[now.getDay()]+" "+MON[now.getMonth()]+" "+now.getDate()+'</span><button class="lockbtn" id="lockBtn">Lock</button></div></div>');
     top.querySelector("#lockBtn").addEventListener("click", function(){ logout(); });
     m.appendChild(top);
+
+    // VERIFY EMAIL — gentle, non-blocking nudge until confirmed
+    if(ACCOUNT && ACCOUNT.email && ACCOUNT.verified===false){
+      var vb=el('<div class="verifybar">Confirm your email to secure your account — check your inbox. <a id="vbResend">Resend</a></div>');
+      vb.querySelector("#vbResend").addEventListener("click", resendVerify);
+      m.appendChild(vb);
+    }
 
     // COMEBACK — met by your own note, warm leads, and streak. No guilt, no catch-up.
     var warmNow=contacts.filter(function(c){ return c.status==="warm"; }).length;
