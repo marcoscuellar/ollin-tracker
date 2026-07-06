@@ -6,7 +6,8 @@ import { send, requireSession } from './_lib.js';
 const ALLOWED = ['docs.google.com', 'www.googleapis.com', 'sheets.googleapis.com'];
 
 export default async function handler(req, res) {
-  if (!requireSession(req)) return send(res, 401, { error: 'unauthorized' });
+  // Sign-in temporarily disabled — session gate off.
+  // if (!requireSession(req)) return send(res, 401, { error: 'unauthorized' });
 
   const url = (req.query && req.query.url) || '';
   let parsed;
