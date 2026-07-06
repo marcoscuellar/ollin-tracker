@@ -141,6 +141,57 @@ export function sessionUserId(req) {
   return s && s.sub ? s.sub : null;
 }
 
+// ---------- purpose-scoped signed tokens (verify email, reset password) ----------
+// Reuse the HMAC session signer; carry a `typ` so a token minted for one
+// purpose can't be replayed for another.
+export function signToken(payload, ttlMs) {
+  return signSession({ ...payload, exp: Date.now() + ttlMs });
+}
+export function verifyToken(token, typ) {
+  const p = verifySession(token);
+  if (!p || p.typ !== typ) return null;
+  return p;
+}
+
+// ---------- transactional email (Resend) ----------
+export const MAIL_FROM = 'ANYWAY <hello@send.anywayidid.com>';
+export async function sendEmail({ to, subject, html }) {
+  const key = process.env.RESEND_API_KEY;
+  if (!key) return { ok: false, error: 'RESEND_API_KEY not set' };
+  try {
+    const r = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ from: MAIL_FROM, to: Array.isArray(to) ? to : [to], subject, html }),
+    });
+    if (!r.ok) {
+      const t = await r.text().catch(() => '');
+      return { ok: false, error: `resend ${r.status}: ${t.slice(0, 200)}` };
+    }
+    return { ok: true };
+  } catch (e) {
+    return { ok: false, error: String((e && e.message) || e) };
+  }
+}
+
+// Branded HTML shell for ANYWAY emails.
+export function emailShell(headline, bodyHtml, cta) {
+  const btn = cta
+    ? `<tr><td style="padding:2px 32px 28px"><a href="${cta.url}" style="display:inline-block;background:#2D2D2D;color:#FCFBF9;text-decoration:none;font-weight:600;font-size:15px;padding:14px 26px;letter-spacing:.02em">${cta.text}</a></td></tr>`
+    : '';
+  return `<!doctype html><html><body style="margin:0;background:#F8F7F4;padding:32px 16px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#2D2D2D">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td align="center">
+    <table role="presentation" width="460" cellpadding="0" cellspacing="0" style="max-width:460px;width:100%;background:#FCFBF9;border:1px solid #E7E3DC">
+      <tr><td style="padding:28px 32px 0"><div style="font-family:'Arial Black',Arial,sans-serif;font-weight:900;font-size:22px;letter-spacing:-.02em">ANYWAY<span style="color:#E0A93A">.</span></div></td></tr>
+      <tr><td style="padding:22px 32px 6px"><h1 style="margin:0;font-size:21px;font-weight:800;letter-spacing:-.01em">${headline}</h1></td></tr>
+      <tr><td style="padding:4px 32px 22px;font-size:15px;line-height:1.6;color:#4a4a4a">${bodyHtml}</td></tr>
+      ${btn}
+      <tr><td style="padding:18px 32px 26px;border-top:1px solid #E7E3DC;font-size:12px;line-height:1.5;color:#9A9A9A">You're receiving this because this email was used to sign up for ANYWAY. If that wasn't you, you can ignore this message.</td></tr>
+    </table>
+    <div style="font-family:monospace;font-size:10px;letter-spacing:.16em;color:#9A9A9A;margin-top:16px">ANYWAYIDID.COM</div>
+  </td></tr></table></body></html>`;
+}
+
 // ---------- recovery code ----------
 export function genRecoveryCode() {
   // 20 hex chars grouped XXXXX-XXXXX-XXXXX-XXXXX
