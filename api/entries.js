@@ -1,14 +1,15 @@
-// Session-gated read/write of the single tracker blob in Vercel KV.
-import { kv, KEYS, readJson, send, requireSession } from './_lib.js';
+// Read/write the tracker blob for the logged-in user (entries:<userId>).
+import { kv, readJson, send, requireSession, entriesKey } from './_lib.js';
 
 const EMPTY = { accounts: [], done: {}, notes: {}, active: null, seeded: false, sheetUrl: '', dailyGoal: 50, handoffNote: '', extra: {} };
 
 export default async function handler(req, res) {
-  // Sign-in temporarily disabled — session gate off.
-  // if (!requireSession(req)) return send(res, 401, { error: 'unauthorized' });
+  const s = requireSession(req);
+  if (!s || !s.sub) return send(res, 401, { error: 'unauthorized' });
+  const key = entriesKey(s.sub);
 
   if (req.method === 'GET') {
-    const data = await kv.get(KEYS.entries);
+    const data = await kv.get(key);
     return send(res, 200, data || EMPTY);
   }
 
@@ -25,7 +26,7 @@ export default async function handler(req, res) {
       handoffNote: typeof body.handoffNote === 'string' ? body.handoffNote.slice(0, 2000) : '',
       extra: body.extra && typeof body.extra === 'object' ? body.extra : {},
     };
-    await kv.set(KEYS.entries, payload);
+    await kv.set(key, payload);
     return send(res, 200, { ok: true });
   }
 

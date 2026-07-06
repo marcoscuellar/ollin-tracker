@@ -1,6 +1,9 @@
 // Drafts a single outreach message with Claude (Haiku — cheapest model).
 // Used by the "Write with AI" button in each queue card. Returns { text }.
-import { send, readJson } from './_lib.js';
+import { kv, send, readJson, requireSession, userKey } from './_lib.js';
+
+const FREE_AI_PER_MONTH = 25;
+function monthKey() { return new Date().toISOString().slice(0, 7); } // 'YYYY-MM'
 
 const CHANNELS = {
   li: 'a short LinkedIn message (2–4 sentences, no subject line, warm and human, not salesy — the goal is to start a conversation, not to pitch)',
@@ -19,8 +22,21 @@ const STEP_CONTEXT = {
 export default async function handler(req, res) {
   if (req.method !== 'POST') return send(res, 405, { error: 'method not allowed' });
 
+  const s = requireSession(req);
+  if (!s || !s.sub) return send(res, 401, { error: 'unauthorized' });
+
   const key = process.env.ANTHROPIC_API_KEY;
   if (!key) return send(res, 500, { error: 'AI drafting is not configured (missing ANTHROPIC_API_KEY).' });
+
+  // Enforce the free monthly AI quota (Pro is unlimited).
+  const user = await kv.get(userKey(s.sub));
+  if (!user) return send(res, 401, { error: 'unauthorized' });
+  const mk = monthKey();
+  user.ai = user.ai || {};
+  const used = user.ai[mk] || 0;
+  if ((user.plan || 'free') !== 'pro' && used >= FREE_AI_PER_MONTH) {
+    return send(res, 402, { error: 'You’ve used your ' + FREE_AI_PER_MONTH + ' free AI drafts this month. Upgrade to Pro for unlimited.' });
+  }
 
   const body = await readJson(req);
   const name = (body.name || '').toString().slice(0, 120) || 'there';
@@ -71,7 +87,13 @@ export default async function handler(req, res) {
       .trim();
 
     if (!text) return send(res, 502, { error: 'AI returned an empty draft. Try again.' });
-    return send(res, 200, { text: text });
+
+    // Count this draft against the user's monthly quota.
+    user.ai[mk] = used + 1;
+    await kv.set(userKey(s.sub), user);
+
+    const remaining = (user.plan || 'free') === 'pro' ? null : Math.max(0, FREE_AI_PER_MONTH - user.ai[mk]);
+    return send(res, 200, { text: text, remaining: remaining });
   } catch (e) {
     return send(res, 500, { error: String((e && e.message) || e) });
   }
