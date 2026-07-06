@@ -80,6 +80,10 @@
   .script-actions{display:flex;gap:8px;margin-top:8px;}
   .script-actions button{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;border:.5px solid var(--hairline);background:none;padding:7px 12px;cursor:pointer;color:var(--grey);}
   .script-actions button:hover{color:var(--ink);border-color:var(--ink);}
+  .script-actions button.ai-btn{color:var(--ink);border-color:var(--ink);}
+  .script-actions button.ai-btn:hover{background:var(--gold);border-color:var(--gold);color:var(--ink);}
+  .script-actions button.ai-btn[disabled]{opacity:.5;cursor:default;}
+  .script-actions button.ai-btn[disabled]:hover{background:none;color:var(--ink);}
   .clear-msg{text-align:center;padding:30px 10px;}
   .clear-msg .big{font-family:'Archivo Black',sans-serif;font-size:20px;text-transform:uppercase;}
   .clear-msg .big span{color:var(--gold);}
@@ -936,11 +940,28 @@
       var card=el('<div class="qcard'+(i.overdueDays>0?" overdue":"")+'">'+
         '<div class="qmain"><div class="qwho"><div class="qname">'+esc(c.name)+'</div><div class="qmeta">'+esc(c.title||"")+(c.title?" · ":"")+esc(c.account)+" · touch "+i.stepNum+"/"+c.touches.length+over+'</div></div>'+
         '<div class="qactions"><span class="chip step-ch">'+CH_LABEL[i.ch]+'</span><button class="btn-replied" title="They answered — pause cadence">Replied</button><button class="btn-script">Script</button><button class="btn-done">Done</button></div></div>'+
-        '<div class="script"><p class="eyebrow">'+CH_LABEL[i.ch]+' script — use it or write your own</p><textarea>'+esc(scriptVal)+'</textarea><div class="script-actions"><button class="copy-btn">Copy</button></div></div>');
+        '<div class="script"><p class="eyebrow">'+CH_LABEL[i.ch]+' script — use it, or let ANYWAY write it</p><textarea>'+esc(scriptVal)+'</textarea><div class="script-actions"><button class="ai-btn">✦ Write with AI</button><button class="copy-btn">Copy</button></div></div>');
       var scr=card.querySelector(".script"), ta=card.querySelector("textarea");
       card.querySelector(".btn-script").addEventListener("click", function(){ scr.classList.toggle("open"); });
       ta.addEventListener("change", function(){ state.notes[i.touch.id]=ta.value; persistNotes(); });
       card.querySelector(".copy-btn").addEventListener("click", function(){ copy(ta.value||""); });
+      (function(){
+        var aiBtn=card.querySelector(".ai-btn");
+        aiBtn.addEventListener("click", function(){
+          if(aiBtn.disabled) return;
+          scr.classList.add("open");
+          aiBtn.disabled=true; var label=aiBtn.textContent; aiBtn.textContent="Writing…";
+          fetch("/api/write",{method:"POST",headers:{"Content-Type":"application/json"},
+            body:JSON.stringify({name:c.name,title:c.title||"",company:c.account||"",channel:i.ch,step:i.stepNum})})
+            .then(function(r){ return r.json().then(function(d){ return {ok:r.ok,d:d}; }); })
+            .then(function(res){
+              if(!res.ok||!res.d||!res.d.text){ toast((res.d&&res.d.error)||"AI couldn’t draft that — try again"); return; }
+              ta.value=res.d.text; state.notes[i.touch.id]=res.d.text; persistNotes(); toast("Drafted. Yours to edit.");
+            })
+            .catch(function(){ toast("Network hiccup — try again"); })
+            .then(function(){ aiBtn.disabled=false; aiBtn.textContent=label; });
+        });
+      })();
       card.querySelector(".btn-done").addEventListener("click", function(){ completeTouch(c); });
       card.querySelector(".btn-replied").addEventListener("click", function(){ setStatus(c,"warm", firstName(c.name)+" moved to WARM"); });
       ql.appendChild(card);
@@ -956,7 +977,7 @@
       '<p class="hint">Name, Title — one per line. Each person starts the cadence today.</p>'+
       '<button class="btn-primary" id="addBtn" type="button">Add to cadence</button>'+
       '<div class="upload-note"><p class="eyebrow">Or upload a list</p>'+
-        '<p class="upload-fields"><b>Required:</b> Name · Company <span class="upload-dim">(Company = the client)</span><br><b>Optional:</b> Title · LinkedIn URL · Email · Touch 1–5 messages</p></div>'+
+        '<p class="upload-fields"><b>Required:</b> Name · Company <span class="upload-dim">(Company = the client)</span><br><b>Optional:</b> Title · LinkedIn URL · Email · Touch 1–5 messages <span class="upload-dim">— no messages? ANYWAY AI writes them for you (use them or not).</span></p></div>'+
       '<div class="btn-row"><button class="btn-mini" id="csvBtn">Paste CSV</button><button class="btn-mini" id="sheetBtn">Google Sheet</button></div>'+
       '<div id="importHost"></div></details>');
     add.querySelector("#addBtn").addEventListener("click", function(){
