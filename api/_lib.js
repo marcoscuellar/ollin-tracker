@@ -113,6 +113,34 @@ export function requireSession(req) {
   return verifySession(parseCookies(req)[SESSION_COOKIE]);
 }
 
+// ---------- multi-user accounts (email + password, scrypt) ----------
+// Keys: user:<id> -> account record, useremail:<email> -> id, entries:<id> -> tracker blob.
+export function normalizeEmail(e) { return (e || '').trim().toLowerCase(); }
+export const userKey = (id) => `user:${id}`;
+export const emailKey = (email) => `useremail:${normalizeEmail(email)}`;
+export const entriesKey = (id) => `entries:${id}`;
+
+// One-time migration of the legacy single-user blob (ollin:entries) to the
+// first owner account that signs up with this email.
+export const MIGRATED_FLAG = 'ollin:migrated';
+export const LEGACY_OWNER_EMAIL = 'marcoscuellar99@icloud.com';
+
+export function newUserId() { return crypto.randomBytes(12).toString('hex'); }
+export function makeSalt() { return crypto.randomBytes(16).toString('hex'); }
+export function hashPassword(password, salt) {
+  return crypto.scryptSync(String(password), salt, 64).toString('hex');
+}
+export function verifyPassword(password, salt, expectedHex) {
+  const got = Buffer.from(hashPassword(password, salt), 'hex');
+  const exp = Buffer.from(String(expectedHex || ''), 'hex');
+  return got.length === exp.length && crypto.timingSafeEqual(got, exp);
+}
+// Current session's user id (or null). requireSession is defined above.
+export function sessionUserId(req) {
+  const s = requireSession(req);
+  return s && s.sub ? s.sub : null;
+}
+
 // ---------- recovery code ----------
 export function genRecoveryCode() {
   // 20 hex chars grouped XXXXX-XXXXX-XXXXX-XXXXX

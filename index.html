@@ -163,6 +163,9 @@
   .lock-rec.show{display:block;}
   .lock-rec input{width:100%;text-align:center;font-family:'JetBrains Mono',monospace;letter-spacing:.12em;margin-bottom:10px;background:var(--cream);border:.5px solid var(--hairline);padding:11px;color:var(--ink);}
   .lock-err{color:#A5341F;font-size:13px;margin-top:14px;min-height:16px;font-weight:500;}
+  .auth-lead{color:var(--grey);font-size:14px;line-height:1.55;margin:0 0 18px;}
+  .auth-input{width:100%;background:var(--cream);border:.5px solid var(--hairline);font-family:'Inter',sans-serif;font-size:15px;padding:12px;color:var(--ink);margin-bottom:10px;text-align:left;}
+  .auth-input::placeholder{color:var(--grey2);}
   .reccode{font-family:'JetBrains Mono',monospace;font-size:18px;letter-spacing:.1em;color:var(--ink);background:var(--panel);border:.5px solid var(--hairline);padding:14px;margin:14px 0;word-break:break-all;font-weight:500;}
 
   /* import / manage forms (existing import logic, ANYWAY skin) */
@@ -212,7 +215,6 @@
 
 <div class="toast" id="toast"></div>
 
-<script src="https://unpkg.com/@simplewebauthn/browser@13/dist/bundle/index.umd.min.js"></script>
 <script>
 (function(){
   "use strict";
@@ -673,76 +675,51 @@
     return { accounts:removedAccts, threads:removedThreads };
   }
   // ---------- auth / lock screen (passkeys via WebAuthn + Vercel KV) ----------
-  function WA(){ return window.SimpleWebAuthnBrowser; }
   function lockErr(m){ var e=document.getElementById("lockErr"); if(e) e.textContent=m||""; }
   function lockBody(html){ document.getElementById("lockBody").innerHTML=html; }
   function showApp(show){
     document.getElementById("appMain").classList.toggle("hide", !show);
     document.getElementById("lockScreen").classList.toggle("hide", show);
   }
-  function renderRegister(){
+  function authForm(mode){
     lockErr("");
-    lockBody('<p>Set up this device with your fingerprint or Face ID. No password needed.</p><button class="btn" id="doRegister">Set up fingerprint</button>');
-    document.getElementById("doRegister").addEventListener("click", function(){ doRegister(); });
-  }
-  function renderUnlock(){
-    lockErr("");
+    var isSignup = mode==="signup";
     lockBody(
-      '<p>Unlock with your fingerprint or Face ID.</p>'+
-      '<button class="btn" id="doUnlock">Unlock with fingerprint</button>'+
-      '<div class="lock-alt">New device? <a id="showRec">Use recovery code</a></div>'+
-      '<div class="lock-rec" id="recBox">'+
-        '<input id="recInput" placeholder="XXXXX-XXXXX-XXXXX-XXXXX" autocomplete="off" autocapitalize="characters">'+
-        '<button class="btn ghost" id="doRegisterRec">Add this device</button>'+
-      '</div>'
+      '<p class="auth-lead">'+(isSignup?"Create your account. Your pipeline, private to you.":"Welcome back. Log in to your pipeline.")+'</p>'+
+      '<input class="auth-input" id="authEmail" type="email" placeholder="you@work.com" autocomplete="email" autocapitalize="off" autocorrect="off">'+
+      '<input class="auth-input" id="authPass" type="password" placeholder="Password'+(isSignup?" (8+ characters)":"")+'" autocomplete="'+(isSignup?"new-password":"current-password")+'">'+
+      '<button class="btn" id="authGo">'+(isSignup?"Start free":"Log in")+'</button>'+
+      '<div class="lock-alt">'+(isSignup?'Already have an account? <a id="authSwap">Log in</a>':'New here? <a id="authSwap">Create an account</a>')+'</div>'
     );
-    document.getElementById("doUnlock").addEventListener("click", function(){ doUnlock(); });
-    document.getElementById("showRec").addEventListener("click", function(){ document.getElementById("recBox").classList.toggle("show"); });
-    document.getElementById("doRegisterRec").addEventListener("click", function(){ doRegister(document.getElementById("recInput").value.trim()); });
+    var em=document.getElementById("authEmail"), pw=document.getElementById("authPass");
+    function submit(){ doAuth(mode, em.value, pw.value); }
+    document.getElementById("authGo").addEventListener("click", submit);
+    em.addEventListener("keydown", function(e){ if(e.key==="Enter") pw.focus(); });
+    pw.addEventListener("keydown", function(e){ if(e.key==="Enter") submit(); });
+    document.getElementById("authSwap").addEventListener("click", function(){ authForm(isSignup?"login":"signup"); });
+    em.focus();
   }
-  function renderRecoveryReveal(code){
+  async function doAuth(mode, email, password){
     lockErr("");
-    lockBody(
-      '<p>Save this recovery code somewhere safe. It is the <b>only</b> way to add another device later. You will not see it again.</p>'+
-      '<div class="reccode">'+esc(code)+'</div>'+
-      '<button class="btn" id="recDone">I’ve saved it — continue</button>'
-    );
-    document.getElementById("recDone").addEventListener("click", function(){ showApp(true); render(); });
-  }
-  async function doRegister(recoveryCode){
-    lockErr("");
-    if(!WA()){ lockErr("Security library failed to load."); return; }
+    email=(email||"").trim(); password=password||"";
+    if(!email || !password){ lockErr("Enter your email and password."); return; }
+    if(mode==="signup" && password.length<8){ lockErr("Password must be at least 8 characters."); return; }
+    var go=document.getElementById("authGo"); if(go){ go.disabled=true; go.textContent="…"; }
     try{
-      var optRes=await fetch("/api/auth?action=register-options",{credentials:"same-origin"});
-      if(!optRes.ok) throw new Error("Could not start setup");
-      var options=await optRes.json();
-      var attResp=await WA().startRegistration({ optionsJSON: options });
-      var body={ attResp:attResp };
-      if(typeof recoveryCode==="string" && recoveryCode) body.recoveryCode=recoveryCode;
-      var verRes=await fetch("/api/auth?action=register-verify",{method:"POST",headers:{"Content-Type":"application/json"},credentials:"same-origin",body:JSON.stringify(body)});
-      var ver=await verRes.json();
-      if(!verRes.ok || !ver.verified) throw new Error(ver.error||"Setup failed");
+      var r=await fetch("/api/auth?action="+mode,{method:"POST",headers:{"Content-Type":"application/json"},credentials:"same-origin",body:JSON.stringify({email:email,password:password})});
+      var d=await r.json().catch(function(){ return {}; });
+      if(!r.ok || !d.ok) throw new Error(d.error||"Something went wrong. Try again.");
       await afterAuthLoad();
-      if(ver.recoveryCode) renderRecoveryReveal(ver.recoveryCode);
-      else { showApp(true); render(); }
-    }catch(e){ lockErr((e&&e.message)||"Setup failed"); }
-  }
-  async function doUnlock(){
-    lockErr("");
-    if(!WA()){ lockErr("Security library failed to load."); return; }
-    try{
-      var optRes=await fetch("/api/auth?action=login-options",{credentials:"same-origin"});
-      if(!optRes.ok) throw new Error("Could not start login");
-      var options=await optRes.json();
-      var authResp=await WA().startAuthentication({ optionsJSON: options });
-      var verRes=await fetch("/api/auth?action=login-verify",{method:"POST",headers:{"Content-Type":"application/json"},credentials:"same-origin",body:JSON.stringify({authResp:authResp})});
-      var ver=await verRes.json();
-      if(!verRes.ok || !ver.verified) throw new Error(ver.error||"Login failed");
-      await afterAuthLoad();
+      computeComeback();
       showApp(true); render();
-    }catch(e){ lockErr((e&&e.message)||"Login failed"); }
+      if(d.migrated) toast("Welcome back — your pipeline’s here.");
+    }catch(e){
+      lockErr((e&&e.message)||"Something went wrong. Try again.");
+      if(go){ go.disabled=false; go.textContent=(mode==="signup"?"Start free":"Log in"); }
+    }
   }
   async function afterAuthLoad(){
+    MODE.api=true;
     try{
       var r=await fetch("/api/entries",{credentials:"same-origin"});
       if(r.ok){
@@ -753,26 +730,23 @@
       }
     }catch(e){}
   }
+  function clearState(){ state.accounts=[]; state.done={}; state.notes={}; state.extra={}; state.handoffNote=""; state.activeId=null; state.seeded=false; }
   async function logout(){
     try{ await fetch("/api/auth?action=logout",{method:"POST",credentials:"same-origin"}); }catch(e){}
-    showApp(false); renderUnlock();
+    clearState(); comebackDismissed=false; showApp(false); authForm("login");
   }
   async function boot(){
-    // Sign-in temporarily disabled — load straight from KV, no lock screen.
-    var live=false;
     try{
-      var r=await fetch("/api/entries",{credentials:"same-origin"});
-      if(r.ok){
-        var d=await r.json();
-        state.accounts=d.accounts||[]; state.done=d.done||{}; state.notes=d.notes||{};
-        state.seeded=!!d.seeded; state.sheetUrl=d.sheetUrl||""; state.dailyGoal=parseInt(d.dailyGoal,10)||50;
-        state.handoffNote=d.handoffNote||""; state.extra=d.extra||{};
-        MODE.api=true; live=true;
+      var r=await fetch("/api/auth?action=status",{credentials:"same-origin"});
+      var d=r.ok ? await r.json() : {};
+      if(d && d.authenticated){
+        await afterAuthLoad();
+        computeComeback();
+        showApp(true); render();
+        return;
       }
     }catch(e){}
-    if(!live){ MODE.api=false; await load(); }
-    computeComeback();
-    showApp(true); render();
+    showApp(false); authForm("login");
   }
 
   // ================= ANYWAY UI (wired to existing accounts/threads/KV) =================
