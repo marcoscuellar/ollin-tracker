@@ -407,7 +407,7 @@
     var rows=parseCSV(text);
     if(rows.length<2) return {ok:false,msg:"No data rows found"};
     var cm=colMap(rows[0]);
-    if(cm.name<0 && cm.first<0) return {ok:false,msg:"No Name column found — paste the Engine 7 CSV with its header row"};
+    if(cm.name<0 && cm.first<0) return {ok:false,msg:"No Name column found — include a header row with Name and Company"};
     var byCompany={};
     var imported=0;
     for(var i=1;i<rows.length;i++){
@@ -521,7 +521,7 @@
         '</div>'+
         '<div class="form-actions"><button class="btn ghost" id="sh-cancel">Cancel</button><button class="btn" id="sh-go">Import / Sync</button></div>'+
       '</div>');
-    root.insertBefore(f, root.children[2]);
+    root.appendChild(f);
     var inp=f.querySelector("#sh-url"); inp.value=state.sheetUrl||""; inp.focus();
     f.querySelector("#sh-cancel").addEventListener("click", function(){ f.remove(); });
     f.querySelector("#sh-go").addEventListener("click", function(){
@@ -545,12 +545,12 @@
   function showImportForm(root){
     var f=el(
       '<div class="form">'+
-        '<label class="full"><span class="lbl">Paste Engine 7 HubSpot CSV (include the header row)</span>'+
-        '<textarea id="imp-text" style="height:160px; font-family:\'Geist Mono\',monospace; font-size:12.5px" placeholder="First Name,Last Name,Email,Company,Job Title,LinkedIn URL,Outreach Thread,Sequence Day,First Touch Channel,Outreach Angle,Lead Status&#10;Maya,Chen,m.chen@arcadia.io,Arcadia,Eng Manager,https://...,Thread 1 - Champion,Day 1,LinkedIn,Platform rearchitecture needs senior capacity,Outreach - Round 1"></textarea></label>'+
-        '<div style="font-size:12.5px; color:var(--ink-2); margin:2px 0 12px; line-height:1.5">Campaign start date is set to <b>today</b> (Day 1). Sequence Day values become each contact\u2019s staggered entry. Edit the start date afterward in the account if needed.</div>'+
-        '<div class="form-actions"><button class="btn ghost" id="imp-cancel">Cancel</button><button class="btn" id="imp-save">Import campaign</button></div>'+
+        '<label class="full"><span class="lbl">Paste your contacts CSV (include the header row)</span>'+
+        '<textarea id="imp-text" style="height:160px; font-family:\'JetBrains Mono\',monospace; font-size:12.5px" placeholder="Name,Title,Company,LinkedIn URL,Email&#10;Maya Chen,VP Merchandising,Arcadia,linkedin.com/in/mayachen,maya@arcadia.io&#10;Luis Ortega,Sr Manager DTC,Arcadia,linkedin.com/in/luisortega,luis@arcadia.io"></textarea></label>'+
+        '<div style="font-size:12.5px; color:var(--grey); margin:2px 0 12px; line-height:1.55"><b>Required:</b> Name and Company (Company = the client each person belongs to). <b>Optional:</b> Title, LinkedIn URL, Email, and per-step message columns (Touch 1\u20135) to pre-fill scripts. Everyone starts the cadence today.</div>'+
+        '<div class="form-actions"><button class="btn ghost" id="imp-cancel">Cancel</button><button class="btn" id="imp-save">Import contacts</button></div>'+
       '</div>');
-    root.insertBefore(f, root.children[2]);
+    root.appendChild(f);
     f.querySelector("#imp-text").focus();
     f.querySelector("#imp-cancel").addEventListener("click", function(){ f.remove(); });
     f.querySelector("#imp-save").addEventListener("click", function(){
