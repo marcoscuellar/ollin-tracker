@@ -293,6 +293,36 @@
   .th-chap-actions .lk{color:var(--green); border-color:var(--hair-strong)}
   .th-chap-actions .lk:hover{border-color:var(--green); background:var(--green-soft)}
   @media(max-width:640px){ .th-who{font-size:27px} }
+
+  /* line-art timeline nodes */
+  .tl-node{width:22px; height:22px; border-radius:50%; border:1.5px solid var(--hair-strong); display:flex; align-items:center; justify-content:center; background:var(--surface); color:var(--ink-3); position:relative; z-index:2; box-shadow:0 1px 2px rgba(22,36,29,.06)}
+  .tl-node .ico{width:12px; height:12px}
+  .tl-node.todo.li{color:var(--li)} .tl-node.todo.em{color:var(--em)} .tl-node.todo.call{color:var(--call)}
+  .tl-node.done{background:var(--green); border-color:var(--green); color:#fff}
+  .tl-node.over{background:var(--ox-soft); border-color:var(--ox); color:var(--ox)}
+  .tl-legend .tl-node.lg{width:18px; height:18px; box-shadow:none}
+  .tl-legend .tl-node.lg .ico{width:11px; height:11px}
+
+  /* rescue mode — welcome back */
+  .welcome{position:fixed; inset:0; z-index:78; background:var(--bg); overflow-y:auto; padding:44px 20px 80px; display:flex; justify-content:center}
+  .wb-card{max-width:560px; width:100%}
+  .wb-head{margin-bottom:26px}
+  .wb-title{font-family:"Geist",sans-serif; font-size:34px; font-weight:800; letter-spacing:-.03em; color:var(--ink); margin:9px 0 0; line-height:1.1}
+  .wb-note{background:var(--green); color:#fff; border-radius:var(--r); padding:20px 22px; margin-bottom:24px; box-shadow:var(--sh-lg)}
+  .wb-note .lbl{color:rgba(255,255,255,.6)}
+  .wb-note-body{font-family:"Geist",sans-serif; font-size:19px; font-weight:600; line-height:1.4; margin-top:10px; white-space:pre-wrap}
+  .wb-threads{margin-bottom:24px}
+  .wb-threads > .lbl{display:block; margin-bottom:12px}
+  .wb-thread{display:flex; align-items:center; gap:14px; width:100%; text-align:left; background:var(--surface); border:1.5px solid var(--hair-strong); border-radius:var(--r); padding:16px 18px; margin-bottom:10px; cursor:pointer; transition:.14s; font:inherit; color:inherit}
+  .wb-thread:hover{border-color:var(--green); box-shadow:var(--sh)}
+  .wb-thread-main{flex:1; min-width:0}
+  .wb-thread-who{font-family:"Geist",sans-serif; font-size:17px; font-weight:700; letter-spacing:-.01em; color:var(--ink)}
+  .wb-thread-meta{font-size:13px; color:var(--ink-3); font-weight:500; margin-top:2px}
+  .wb-thread-why{font-size:13.5px; color:var(--ink-2); font-weight:500; margin-top:7px}
+  .wb-thread-go{display:flex; flex-direction:column; align-items:flex-end; gap:10px; flex:none}
+  .wb-resume{display:inline-flex; align-items:center; gap:5px; font-family:"Geist Mono",monospace; font-size:11px; letter-spacing:.06em; text-transform:uppercase; font-weight:700; color:var(--green)}
+  .wb-resume .ico{width:14px; height:14px}
+  .wb-enter{width:100%; justify-content:center; padding:14px; font-size:14px; display:block}
 </style>
 
 <header class="hide">
@@ -345,6 +375,8 @@
 </div>
 
 <div class="thread-view hide" id="threadView"></div>
+
+<div class="welcome hide" id="welcomeScreen"></div>
 
 <script src="https://unpkg.com/@simplewebauthn/browser@13/dist/bundle/index.umd.min.js"></script>
 <script>
@@ -618,8 +650,9 @@
           var tid=acct.id+"|"+t.id+"|"+tb.i;
           var done=!!state.done[tid];
           var over = !done && tb.date<today;
-          var cls="dot "+tb.ch+" "+(done?"done":(over?"over":"todo"));
-          cell.appendChild(el('<div class="'+cls+'" title="Touch '+(tb.i+1)+' — '+CADENCE[tb.i].label+' · '+fmtShort(tb.date)+'"></div>'));
+          var st=done?"done":(over?"over":"todo");
+          var title="Touch "+(tb.i+1)+" — "+CADENCE[tb.i].label+" · "+fmtShort(tb.date)+(done?" · sent":over?" · overdue":"");
+          cell.appendChild(el('<div class="tl-node '+tb.ch+' '+st+'" title="'+esc(title)+'">'+(done?icon("check"):chIcon(tb.ch))+'</div>'));
         }
         if(di===todayIdx){ cell.appendChild(el('<div class="todayline"></div>')); }
         track.appendChild(cell);
@@ -628,11 +661,11 @@
     });
 
     grid.appendChild(el('<div class="tl-legend">'+
-      '<span><span class="dot li todo" style="width:10px;height:10px"></span>LinkedIn</span>'+
-      '<span><span class="dot em todo" style="width:10px;height:10px"></span>Email</span>'+
-      '<span><span class="dot call todo" style="width:10px;height:10px"></span>Call</span>'+
-      '<span><span class="dot done" style="width:10px;height:10px"></span>Sent</span>'+
-      '<span><span class="dot over" style="width:10px;height:10px"></span>Overdue</span>'+
+      '<span><span class="tl-node li todo lg">'+icon("li")+'</span>LinkedIn</span>'+
+      '<span><span class="tl-node em todo lg">'+icon("em")+'</span>Email</span>'+
+      '<span><span class="tl-node call todo lg">'+icon("call")+'</span>Call</span>'+
+      '<span><span class="tl-node done lg">'+icon("check")+'</span>Sent</span>'+
+      '<span><span class="tl-node over lg">'+icon("clock")+'</span>Overdue</span>'+
     '</div>'));
     return box;
   }
@@ -811,6 +844,62 @@
 
     v.classList.remove("hide"); v.scrollTop=0;
   }
+
+  // ---------- rescue mode: the three threads most worth continuing ----------
+  function topThreads(n){
+    var today=todayStr(), list=[];
+    state.accounts.forEach(function(a){ (a.threads||[]).forEach(function(t){
+      if(t.persona==="Blocker") return;
+      var rec=recommendation(a,t), heat=heatOf(a,t), score, whyNow;
+      if(rec.complete){ score = heat.key==="opp"?58:22; whyNow="Sequence complete — ready for a direct ask."; }
+      else {
+        var tt=rec.touch;
+        if(tt.date<today){ var d=daysBetween(tt.date,today); score=100+d; whyNow="Waiting "+d+" day"+(d===1?"":"s")+" — "+rec.label.toLowerCase()+"."; }
+        else if(tt.date===today){ score=70; whyNow="Ready today — "+rec.label.toLowerCase()+"."; }
+        else { score=28; whyNow="Next up — "+rec.label.toLowerCase()+", "+fmtShort(tt.date)+"."; }
+        if(heat.key==="champ") score+=16; else if(heat.key==="opp") score+=24; else if(heat.key==="active") score+=8;
+      }
+      list.push({a:a,t:t,rec:rec,heat:heat,score:score,whyNow:whyNow});
+    }); });
+    list.sort(function(x,y){ return y.score-x.score; });
+    return list.slice(0,n);
+  }
+
+  var welcomeShown=false;
+  function maybeWelcome(){
+    if(welcomeShown) return; welcomeShown=true;
+    if(!(state.handoffNote||"").trim() && !state.accounts.length) return;
+    showWelcome();
+  }
+  function showWelcome(){
+    var w=document.getElementById("welcomeScreen"); w.innerHTML="";
+    var card=el('<div class="wb-card"></div>');
+    card.appendChild(el('<div class="wb-head"><span class="lbl">Welcome back</span><h1 class="wb-title">We kept your place.</h1></div>'));
+    if((state.handoffNote||"").trim()){
+      card.appendChild(el('<div class="wb-note"><span class="lbl">Where you left off</span><div class="wb-note-body">'+esc(state.handoffNote)+'</div></div>'));
+    }
+    var top=topThreads(3);
+    if(top.length){
+      var list=el('<div class="wb-threads"><span class="lbl">Continue where it matters</span></div>');
+      top.forEach(function(it){
+        var row=el('<button class="wb-thread">'+
+          '<div class="wb-thread-main"><div class="wb-thread-who">'+esc(it.t.name)+'</div>'+
+            '<div class="wb-thread-meta">'+esc(it.a.company)+(it.t.title?' · '+esc(it.t.title):'')+'</div>'+
+            '<div class="wb-thread-why">'+esc(it.whyNow)+'</div></div>'+
+          '<div class="wb-thread-go">'+heatPill(it.a,it.t)+'<span class="wb-resume">Resume '+icon("back").replace("<svg","<svg style=\"transform:scaleX(-1)\"")+'</span></div>'+
+        '</button>');
+        row.addEventListener("click", function(){ hideWelcome(); openThread(it.a.id, it.t.id); });
+        list.appendChild(row);
+      });
+      card.appendChild(list);
+    }
+    var enter=el('<button class="btn wb-enter">Enter</button>');
+    enter.addEventListener("click", function(){ hideWelcome(); });
+    card.appendChild(enter);
+    w.appendChild(card);
+    w.classList.remove("hide"); w.scrollTop=0;
+  }
+  function hideWelcome(){ reentrySeen=true; document.getElementById("welcomeScreen").classList.add("hide"); render(); }
 
   // ---------- momentum + today's mission ----------
   function sentOnDate(ds){ var n=0; for(var k in state.done){ if(state.done[k]===ds) n++; } return n; }
@@ -1445,7 +1534,7 @@
       var ver=await verRes.json();
       if(!verRes.ok || !ver.verified) throw new Error(ver.error||"Login failed");
       await afterAuthLoad();
-      showApp(true); render();
+      showApp(true); render(); maybeWelcome();
     }catch(e){ lockErr((e&&e.message)||"Login failed"); }
   }
   async function afterAuthLoad(){
@@ -1461,7 +1550,7 @@
   }
   async function logout(){
     try{ await fetch("/api/auth?action=logout",{method:"POST",credentials:"same-origin"}); }catch(e){}
-    showApp(false); renderUnlock();
+    welcomeShown=false; showApp(false); renderUnlock();
   }
   // The signature CONT. interaction: leave a note for tomorrow-you, then lock.
   function showHandoff(){
@@ -1474,10 +1563,10 @@
     var st=null;
     try{ var r=await fetch("/api/auth?action=status",{credentials:"same-origin"}); if(r.ok) st=await r.json(); }catch(e){}
     if(!st){ // no backend reachable — fall back to local (localStorage / in-memory)
-      MODE.api=false; await load(); showApp(true); render(); return;
+      MODE.api=false; await load(); showApp(true); render(); maybeWelcome(); return;
     }
     MODE.api=true;
-    if(st.authenticated){ await afterAuthLoad(); showApp(true); render(); return; }
+    if(st.authenticated){ await afterAuthLoad(); showApp(true); render(); maybeWelcome(); return; }
     showApp(false);
     if(st.registered) renderUnlock(); else renderRegister();
   }
