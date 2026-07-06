@@ -177,6 +177,10 @@
   .form .full{grid-column:1 / -1;}
   .form-actions{display:flex;gap:9px;justify-content:flex-end;margin-top:6px;}
   .form-actions .btn{width:auto;padding:11px 16px;}
+  .imp-file-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px;}
+  .imp-file-row .btn{width:auto;padding:11px 16px;}
+  .imp-file-name{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.04em;color:var(--grey);}
+  .form.drag{outline:2px dashed var(--gold);outline-offset:3px;}
   .mono{font-family:'JetBrains Mono',monospace;}
   .lbl{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--grey);}
   /* ANY / WAY. stacked lockup (lock screen) */
@@ -569,25 +573,80 @@
     });
   }
 
+  // Lazy-load the Excel reader only when someone actually uploads an .xlsx.
+  var _xlsxP=null;
+  function loadXLSX(){
+    if(window.XLSX) return Promise.resolve(window.XLSX);
+    if(_xlsxP) return _xlsxP;
+    _xlsxP=new Promise(function(resolve,reject){
+      var s=document.createElement("script");
+      s.src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js";
+      s.onload=function(){ window.XLSX ? resolve(window.XLSX) : reject(new Error("Excel reader failed to load")); };
+      s.onerror=function(){ reject(new Error("Couldn\u2019t load the Excel reader \u2014 check your connection")); };
+      document.head.appendChild(s);
+    });
+    return _xlsxP;
+  }
+  function applyImportRows(rows){
+    rows=(rows||[]).map(function(row){ return (row||[]).map(function(c){ return c==null?"":String(c); }); });
+    if(rows.length<2){ toast("That file has no contact rows"); return; }
+    var res=importRows(rows, true);
+    if(!res.ok){ toast(res.msg); return; }
+    state.seeded=true; persistAccounts(); render();
+    toast("Imported: "+res.added+" added, "+res.updated+" updated");
+  }
+  function handleImportFile(file){
+    if(!file) return;
+    var nm=(file.name||"").toLowerCase(), ty=(file.type||"").toLowerCase();
+    var isXlsx=/\.(xlsx|xls)$/.test(nm) || ty.indexOf("sheet")>-1 || ty.indexOf("excel")>-1;
+    if(isXlsx){
+      toast("Reading Excel\u2026");
+      loadXLSX().then(function(XLSX){
+        var rd=new FileReader();
+        rd.onload=function(){
+          try{
+            var wb=XLSX.read(new Uint8Array(rd.result), {type:"array"});
+            var sh=wb.Sheets[wb.SheetNames[0]];
+            applyImportRows(XLSX.utils.sheet_to_json(sh, {header:1, blankrows:false, defval:""}));
+          }catch(e){ toast("Couldn\u2019t read that Excel file"); }
+        };
+        rd.onerror=function(){ toast("Couldn\u2019t read that file"); };
+        rd.readAsArrayBuffer(file);
+      }).catch(function(e){ toast(e.message||"Excel reader failed to load"); });
+    } else {
+      var rd=new FileReader();
+      rd.onload=function(){ applyImportRows(parseCSV(String(rd.result||""))); };
+      rd.onerror=function(){ toast("Couldn\u2019t read that file"); };
+      rd.readAsText(file);
+    }
+  }
   function showImportForm(root){
     var f=el(
       '<div class="form">'+
-        '<label class="full"><span class="lbl">Paste your contacts CSV (include the header row)</span>'+
-        '<textarea id="imp-text" style="height:160px; font-family:\'JetBrains Mono\',monospace; font-size:12.5px" placeholder="Name,Title,Company,LinkedIn URL,Email&#10;Maya Chen,VP Merchandising,Arcadia,linkedin.com/in/mayachen,maya@arcadia.io&#10;Luis Ortega,Sr Manager DTC,Arcadia,linkedin.com/in/luisortega,luis@arcadia.io"></textarea></label>'+
+        '<div class="imp-file-row"><input type="file" id="imp-file" accept=".csv,.xlsx,.xls" style="display:none"><button type="button" class="btn" id="imp-file-btn">Upload CSV or Excel file</button><span class="imp-file-name" id="imp-file-name">or drop a file here \u00b7 or paste below</span></div>'+
+        '<label class="full"><span class="lbl">\u2026or paste your contacts (include the header row)</span>'+
+        '<textarea id="imp-text" style="height:130px; font-family:\'JetBrains Mono\',monospace; font-size:12.5px" placeholder="Name,Title,Company,LinkedIn URL,Email&#10;Maya Chen,VP Merchandising,Arcadia,linkedin.com/in/mayachen,maya@arcadia.io&#10;Luis Ortega,Sr Manager DTC,Arcadia,linkedin.com/in/luisortega,luis@arcadia.io"></textarea></label>'+
         '<div style="font-size:12.5px; color:var(--grey); margin:2px 0 12px; line-height:1.55"><b>Required:</b> Name and Company (Company = the client each person belongs to). <b>Optional:</b> Title, LinkedIn URL, Email, and per-step message columns (Touch 1\u20135) to pre-fill scripts. Everyone starts the cadence today.</div>'+
         '<div class="form-actions"><button class="btn ghost" id="imp-cancel">Cancel</button><button class="btn" id="imp-save">Import contacts</button></div>'+
       '</div>');
     root.appendChild(f);
-    f.querySelector("#imp-text").focus();
     f.querySelector("#imp-cancel").addEventListener("click", function(){ f.remove(); });
+    f.querySelector("#imp-file-btn").addEventListener("click", function(){ f.querySelector("#imp-file").click(); });
+    f.querySelector("#imp-file").addEventListener("change", function(e){
+      var file=e.target.files&&e.target.files[0];
+      if(file){ f.querySelector("#imp-file-name").textContent=file.name; handleImportFile(file); }
+    });
+    f.addEventListener("dragover", function(e){ e.preventDefault(); f.classList.add("drag"); });
+    f.addEventListener("dragleave", function(e){ if(e.target===f) f.classList.remove("drag"); });
+    f.addEventListener("drop", function(e){
+      e.preventDefault(); f.classList.remove("drag");
+      var file=e.dataTransfer&&e.dataTransfer.files&&e.dataTransfer.files[0];
+      if(file){ f.querySelector("#imp-file-name").textContent=file.name; handleImportFile(file); }
+    });
     f.querySelector("#imp-save").addEventListener("click", function(){
       var txt=f.querySelector("#imp-text").value.trim();
-      if(!txt){ toast("Paste a CSV first"); return; }
-      var res=importRows(parseCSV(txt), true);
-      if(!res.ok){ toast(res.msg); return; }
-      state.seeded=true;
-      persistAccounts(); render();
-      toast("Imported: "+res.added+" added, "+res.updated+" updated");
+      if(!txt){ toast("Paste a CSV, or use Upload above"); return; }
+      applyImportRows(parseCSV(txt));
     });
   }
 
