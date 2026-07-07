@@ -973,6 +973,8 @@
   var focusIdx=0, meterRevealed=false, navView="home", focusMode=false;
   function initials(n){ n=(n||"").trim(); if(!n) return "?"; var p=n.split(/\s+/); return ((p[0]||" ").charAt(0)+(p[1]?p[1].charAt(0):"")).toUpperCase(); }
   function avaInitial(){ return (((ACCOUNT&&ACCOUNT.email)||"m").charAt(0)); }
+  function normUrl(u){ u=(u||"").trim(); if(!u) return ""; if(!/^https?:\/\//i.test(u)) u="https://"+u; return u; }
+  function liSearch(c){ return "https://www.linkedin.com/search/results/people/?keywords="+encodeURIComponent(((c.name||"")+" "+(c.account||"")).trim()); }
   var DOW=["SUN","MON","TUE","WED","THU","FRI","SAT"], MON=["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
   var TEMPLATES = {
     li: "Hi {first} — saw your work leading {account}'s team and wanted to connect. I work with mid-market brands on engineering and data hiring (onshore + nearshore). No pitch — just building my corner of the industry. — Marcos",
@@ -1196,7 +1198,12 @@
     card.querySelector("#miSkip").addEventListener("click", function(){ if(focusIdx<dueList.length-1){ focusIdx++; renderDeckInto(host,dueList,warm); } else toast("That’s the last one due."); });
     card.querySelector("#miReview").addEventListener("click", function(){ scr.classList.toggle("open"); });
     card.querySelector("#aScript").addEventListener("click", function(){ scr.classList.toggle("open"); });
-    card.querySelector("#aChan").addEventListener("click", function(){ scr.classList.add("open"); });
+    card.querySelector("#aChan").addEventListener("click", function(){
+      scr.classList.add("open");
+      var li=((c.t&&c.t.linkedin)||"").trim(), em=((c.t&&c.t.email)||"").trim();
+      if(i.ch==="li"){ window.open(li?normUrl(li):liSearch(c), "_blank", "noopener"); }
+      else if(i.ch==="em"){ if(em) window.open("mailto:"+em, "_blank"); }
+    });
     ta.addEventListener("change", function(){ state.notes[i.touch.id]=ta.value; persistNotes(); });
     card.querySelector(".copy-btn").addEventListener("click", function(){ copy(ta.value||""); });
     card.querySelector("#aDone").addEventListener("click", function(){ completeTouch(c); });
