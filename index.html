@@ -264,7 +264,12 @@
   .dc-meta{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--grey);margin-top:4px;}
   .dc-due{margin-left:auto;display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--ink);background:var(--honey);border:.5px solid var(--honey);border-radius:20px;padding:7px 14px;white-space:nowrap;}
   .dc-due.over{color:var(--cream);background:var(--ink);border-color:var(--ink);}
-  .dc-navrow{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;}
+  .dc-navrow{display:flex;align-items:center;justify-content:center;margin-bottom:14px;}
+  .tl-row{display:flex;align-items:flex-start;gap:8px;margin:6px 0 22px;}
+  .tl-row .timeline{flex:1;margin:0;}
+  .tl-arrow{height:30px;display:flex;align-items:center;justify-content:center;background:none;border:none;color:var(--grey);font-size:28px;line-height:1;cursor:pointer;padding:0 4px;font-family:inherit;flex-shrink:0;}
+  .tl-arrow:hover{color:var(--ink);}
+  .tl-arrow:disabled{opacity:.22;cursor:default;}
   .dc-touch{text-align:center;}
   .dc-touch b{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.14em;text-transform:uppercase;}
   .dc-touch span{display:block;font-size:12.5px;color:var(--grey);margin-top:3px;}
@@ -1212,8 +1217,8 @@
     var sub = i.stepNum===1 ? "First outreach due — script, send, done." : "Touch "+i.stepNum+" — script, send, done.";
     var card=el('<div class="dc deckcard active">'+
       '<div class="dc-head"><div class="dc-ava">'+esc(initials(c.name))+'</div><div><div class="dc-name">'+esc(c.name)+'</div><div class="dc-meta">'+esc((c.title||"")+(c.title&&c.account?" · ":"")+(c.account||""))+'</div></div><div class="dc-due'+over+'">'+duePill(i)+'</div></div>'+
-      '<div class="dc-navrow"><button class="dc-btn" id="dcBack">← Back</button><div class="dc-touch"><b>Touch '+i.stepNum+' of '+c.touches.length+'</b><span>'+sub+'</span></div><button class="dc-btn dark" id="dcNext">Next →</button></div>'+
-      timelineHTML(c,false)+
+      '<div class="dc-navrow"><div class="dc-touch"><b>Touch '+i.stepNum+' of '+c.touches.length+'</b><span>'+sub+'</span></div></div>'+
+      '<div class="tl-row"><button class="tl-arrow" id="dcBack" title="Previous contact">‹</button>'+timelineHTML(c,false)+'<button class="tl-arrow" id="dcNext" title="Next contact">›</button></div>'+
       '<div class="dc-mid"><button class="mi" id="miReview"><div><div class="mi-t">Review / Verify</div><div class="mi-s">Check the script before you send</div></div></button><button class="mi" id="miSkip"><div><div class="mi-t">Skip for now</div><div class="mi-s">Come back to this one later</div></div></button></div>'+
       '<div class="dc-actions"><button class="dc-act" id="aChan">'+CH_LABEL[i.ch]+'</button><button class="dc-act" id="aReplied">Replied</button><button class="dc-act" id="aScript">Script</button><button class="dc-act done" id="aDone">✓ Done</button></div>'+
       '<div class="dc-script" id="dcScript"><p class="eyebrow" style="margin-bottom:8px">'+CH_LABEL[i.ch]+' script — use it, or let ANYWAY write it</p><textarea>'+esc(scriptVal)+'</textarea>'+
