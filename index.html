@@ -682,7 +682,7 @@
     return "Additional";
   }
   function channelFrom(s){ s=(s||"").toLowerCase(); if(s.indexOf("email")>-1)return"em"; if(s.indexOf("call")>-1)return"call"; return "li"; }
-  function dayFrom(s, persona){ var m=(s||"").match(/\d+/); if(m) return parseInt(m[0],10); return PERSONA_ENTRY[persona]||1; }
+  function dayFrom(s, persona){ var m=(s||"").match(/\d+/); if(m) return parseInt(m[0],10); return 1; } // no Sequence Day column → start today
 
   function importEngine7(text){
     var rows=parseCSV(text);
