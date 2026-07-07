@@ -964,7 +964,7 @@
         var d=await r.json();
         state.accounts=d.accounts||[]; state.done=d.done||{}; state.notes=d.notes||{}; state.seeded=!!d.seeded; state.sheetUrl=d.sheetUrl||""; state.dailyGoal=parseInt(d.dailyGoal,10)||50; state.handoffNote=d.handoffNote||""; state.extra=d.extra||{};
         state.activeId=((d.active===ALL && state.accounts.length) || (d.active && state.accounts.some(function(a){return a.id===d.active;})))?d.active:((state.accounts[0]&&state.accounts[0].id)||null);
-        if(!state.seeded && state.accounts.length===0){ seed(); state.seeded=true; apiSave(); }
+        if(!state.seeded){ state.seeded=true; apiSave(); } // new users start empty → guided onboarding
       }
     }catch(e){}
   }
@@ -1386,12 +1386,23 @@
       m.appendChild(ws);
     }
 
-    // START HERE — carousel deck
-    var start=el('<div class="starthead"><div><div class="start-title">Start here<span style="color:var(--gold)">.</span></div><div class="start-sub">Everyone due for a touch today, most overdue first. Script, send, done.</div></div><div class="start-due">'+(dueList.length?dueList.length+" due":"all clear")+'</div></div>');
-    m.appendChild(start);
-    var deckHost=el('<div id="deckHost"></div>');
-    m.appendChild(deckHost);
-    renderDeckInto(deckHost, dueList, warm);
+    // START HERE — carousel deck, or first-run onboarding when empty
+    var empty = contacts.length===0;
+    if(empty){
+      var hero=el('<div class="deck"><div class="dc deckcard active" style="text-align:center;padding:46px 34px">'+
+        '<div class="start-title" style="font-size:29px">Add your first contacts<span style="color:var(--honey)">.</span></div>'+
+        '<p style="color:var(--grey);margin:12px auto 22px;max-width:440px;line-height:1.6">Drop in a CSV or Excel list — or add a few by hand — and ANYWAY builds your daily queue: who to reach, what to say, when.</p>'+
+        '<button class="btn" id="heroAdd" style="width:auto;display:inline-block;padding:14px 28px">Add contacts</button>'+
+        '</div></div>');
+      hero.querySelector("#heroAdd").addEventListener("click", function(){ var a=document.getElementById("addSection"); if(a){ a.open=true; try{ a.scrollIntoView({behavior:"smooth",block:"center"}); }catch(e){} } });
+      m.appendChild(hero);
+    } else {
+      var start=el('<div class="starthead"><div><div class="start-title">Start here<span style="color:var(--gold)">.</span></div><div class="start-sub">Everyone due for a touch today, most overdue first. Script, send, done.</div></div><div class="start-due">'+(dueList.length?dueList.length+" due":"all clear")+'</div></div>');
+      m.appendChild(start);
+      var deckHost=el('<div id="deckHost"></div>');
+      m.appendChild(deckHost);
+      renderDeckInto(deckHost, dueList, warm);
+    }
 
     // ADD CONTACTS
     var accts={}; state.accounts.forEach(function(a){ accts[a.company]=1; });
@@ -1424,8 +1435,10 @@
       if(addQuick(add.querySelector("#acctInput").value, add.querySelector("#bulkInput").value)) add.open=true;
     });
     add.querySelector("#sheetBtn").addEventListener("click", function(){ showSheetForm(add.querySelector("#importHost")); });
+    add.open = empty; // first-run: the one action that matters is open and prominent
     m.appendChild(add);
 
+    if(!empty){
     // PIPELINE (grouped by account, with rollups)
     var groups={}; contacts.forEach(function(c){ (groups[c.account]=groups[c.account]||[]).push(c); });
     var totalC=contacts.length, acctN=Object.keys(groups).length;
@@ -1507,6 +1520,7 @@
       hi.addEventListener("blur", save);
     })();
     m.appendChild(ho);
+    } // end !empty — Pipeline / Last-14 / History / handoff only show once there's data
 
     // MANAGE + FOOT
     var manage=el('<details class="section" id="secManage"><summary><span class="sum-title">Manage</span><span class="sum-count">backup · cleanup</span></summary><div class="btn-row"><button class="btn-mini" id="expBtn">Export backup</button><button class="btn-mini" id="resBtn">Restore</button><button class="btn-mini" id="dupBtn">Delete duplicates</button><button class="btn-mini danger" id="clrBtn">Clear all</button></div><input type="file" id="resFile" accept="application/json,.json" style="display:none"></details>');
