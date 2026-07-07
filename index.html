@@ -81,10 +81,10 @@
   .script-actions{display:flex;gap:8px;margin-top:8px;}
   .script-actions button{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;border:.5px solid var(--hairline);background:none;padding:7px 12px;cursor:pointer;color:var(--grey);}
   .script-actions button:hover{color:var(--ink);border-color:var(--ink);}
-  .script-actions button.ai-btn{color:var(--ink);border-color:var(--ink);}
-  .script-actions button.ai-btn:hover{background:var(--hover);border-color:var(--hover);color:var(--cream);}
+  .script-actions button.ai-btn{color:var(--blue);border-color:var(--blue);font-weight:600;}
+  .script-actions button.ai-btn:hover{background:var(--blue);border-color:var(--blue);color:#fff;}
   .script-actions button.ai-btn[disabled]{opacity:.5;cursor:default;}
-  .script-actions button.ai-btn[disabled]:hover{background:none;color:var(--ink);}
+  .script-actions button.ai-btn[disabled]:hover{background:none;color:var(--blue);}
   .clear-msg{text-align:center;padding:30px 10px;}
   .clear-msg .big{font-family:'Archivo Black',sans-serif;font-size:20px;text-transform:uppercase;}
   .clear-msg .big span{color:var(--gold);}
@@ -297,17 +297,18 @@
   .dc-script{display:none;margin-top:18px;border-top:.5px solid var(--hairline);padding-top:16px;}
   .dc-script.open{display:block;}
   .dc-script textarea{width:100%;background:var(--bg);border:.5px solid var(--hairline);border-radius:8px;font-family:'Inter',sans-serif;font-size:14px;line-height:1.55;padding:12px;min-height:110px;resize:vertical;color:var(--ink);}
-  .ai-steer{display:none;margin-top:12px;border:.5px solid var(--hairline);border-left:2px solid var(--blue);border-radius:8px;padding:12px;background:var(--bg);}
+  .ai-steer{display:none;margin-top:12px;border:1.5px solid var(--blue);border-radius:10px;padding:14px;background:rgba(27,46,82,.05);}
   .ai-steer.open{display:block;}
-  .ai-steer-lead{font-size:12.5px;color:var(--grey);margin-bottom:9px;}
-  .ai-steer .chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;}
+  .ai-steer-lead{font-size:12.5px;color:var(--blue);font-weight:500;margin-bottom:10px;}
+  .ai-steer .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;}
   .ai-chip{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.06em;text-transform:uppercase;border:.5px solid var(--hairline);background:var(--card);border-radius:20px;padding:6px 11px;cursor:pointer;color:var(--grey);}
   .ai-chip:hover{border-color:var(--blue);color:var(--blue);}
   .ai-steer-row{display:flex;gap:8px;}
-  .ai-steer-row input{flex:1;min-width:0;background:var(--card);border:.5px solid var(--hairline);border-radius:7px;font-family:'Inter',sans-serif;font-size:13.5px;padding:10px 11px;color:var(--ink);}
-  .ai-draft{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;background:var(--ink);color:var(--cream);border:.5px solid var(--ink);border-radius:7px;padding:10px 15px;cursor:pointer;white-space:nowrap;}
-  .ai-draft:hover{background:var(--hover);}
-  .ai-draft[disabled]{opacity:.5;cursor:default;}
+  .ai-steer-row input{flex:1;min-width:0;background:var(--card);border:.5px solid var(--hairline);border-radius:7px;font-family:'Inter',sans-serif;font-size:13.5px;padding:11px 12px;color:var(--ink);}
+  .ai-steer-row input:focus{outline:2px solid var(--blue);outline-offset:0;border-color:var(--blue);}
+  .ai-draft{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;background:var(--blue);color:#fff;border:.5px solid var(--blue);border-radius:7px;padding:11px 16px;cursor:pointer;white-space:nowrap;}
+  .ai-draft:hover{background:#12203C;border-color:#12203C;}
+  .ai-draft[disabled]{opacity:.55;cursor:default;}
   /* peek mini */
   .pk-head{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
   .pk-ava{width:38px;height:38px;border-radius:50%;background:var(--panel);display:flex;align-items:center;justify-content:center;font-family:'Archivo Black',sans-serif;font-size:12px;flex-shrink:0;}
@@ -1202,7 +1203,8 @@
       '<div class="dc-script" id="dcScript"><p class="eyebrow" style="margin-bottom:8px">'+CH_LABEL[i.ch]+' script — use it, or let ANYWAY write it</p><textarea>'+esc(scriptVal)+'</textarea>'+
         '<div class="script-actions"><button class="ai-btn">✦ Write with AI</button><button class="copy-btn">Copy</button></div>'+
         '<div class="ai-steer" id="aiSteer">'+
-          '<p class="ai-steer-lead">Steer it — tap a nudge or type your own direction:</p>'+
+          '<p class="ai-steer-lead">Tell ANYWAY how to write it — type a direction, or tap a nudge below.</p>'+
+          '<div class="ai-steer-row"><input id="aiSteerInput" placeholder="e.g. mention their new store openings, keep it under 3 sentences…" maxlength="240"><button class="ai-draft" id="aiDraft">Draft it</button></div>'+
           '<div class="chips">'+
             '<button class="ai-chip" data-s="Lean into our nearshore capabilities">Push nearshore</button>'+
             '<button class="ai-chip" data-s="Make it more conversational and human">More conversational</button>'+
@@ -1210,7 +1212,6 @@
             '<button class="ai-chip" data-s="Make it warmer and more personal">Warmer</button>'+
             '<button class="ai-chip" data-s="Try a completely different angle">Different angle</button>'+
           '</div>'+
-          '<div class="ai-steer-row"><input id="aiSteerInput" placeholder="e.g. mention their new store openings, keep it under 3 sentences…" maxlength="240"><button class="ai-draft" id="aiDraft">Draft it</button></div>'+
         '</div>'+
       '</div>'+
     '</div>');
