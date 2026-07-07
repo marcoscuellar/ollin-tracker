@@ -297,6 +297,17 @@
   .dc-script{display:none;margin-top:18px;border-top:.5px solid var(--hairline);padding-top:16px;}
   .dc-script.open{display:block;}
   .dc-script textarea{width:100%;background:var(--bg);border:.5px solid var(--hairline);border-radius:8px;font-family:'Inter',sans-serif;font-size:14px;line-height:1.55;padding:12px;min-height:110px;resize:vertical;color:var(--ink);}
+  .ai-steer{display:none;margin-top:12px;border:.5px solid var(--hairline);border-left:2px solid var(--blue);border-radius:8px;padding:12px;background:var(--bg);}
+  .ai-steer.open{display:block;}
+  .ai-steer-lead{font-size:12.5px;color:var(--grey);margin-bottom:9px;}
+  .ai-steer .chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;}
+  .ai-chip{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.06em;text-transform:uppercase;border:.5px solid var(--hairline);background:var(--card);border-radius:20px;padding:6px 11px;cursor:pointer;color:var(--grey);}
+  .ai-chip:hover{border-color:var(--blue);color:var(--blue);}
+  .ai-steer-row{display:flex;gap:8px;}
+  .ai-steer-row input{flex:1;min-width:0;background:var(--card);border:.5px solid var(--hairline);border-radius:7px;font-family:'Inter',sans-serif;font-size:13.5px;padding:10px 11px;color:var(--ink);}
+  .ai-draft{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;background:var(--ink);color:var(--cream);border:.5px solid var(--ink);border-radius:7px;padding:10px 15px;cursor:pointer;white-space:nowrap;}
+  .ai-draft:hover{background:var(--hover);}
+  .ai-draft[disabled]{opacity:.5;cursor:default;}
   /* peek mini */
   .pk-head{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
   .pk-ava{width:38px;height:38px;border-radius:50%;background:var(--panel);display:flex;align-items:center;justify-content:center;font-family:'Archivo Black',sans-serif;font-size:12px;flex-shrink:0;}
@@ -1188,7 +1199,20 @@
       timelineHTML(c,false)+
       '<div class="dc-mid"><button class="mi" id="miReview"><div><div class="mi-t">Review / Verify</div><div class="mi-s">Check the script before you send</div></div></button><button class="mi" id="miSkip"><div><div class="mi-t">Skip for now</div><div class="mi-s">Come back to this one later</div></div></button></div>'+
       '<div class="dc-actions"><button class="dc-act" id="aChan">'+CH_LABEL[i.ch]+'</button><button class="dc-act" id="aReplied">Replied</button><button class="dc-act" id="aScript">Script</button><button class="dc-act done" id="aDone">✓ Done</button></div>'+
-      '<div class="dc-script" id="dcScript"><p class="eyebrow" style="margin-bottom:8px">'+CH_LABEL[i.ch]+' script — use it, or let ANYWAY write it</p><textarea>'+esc(scriptVal)+'</textarea><div class="script-actions"><button class="ai-btn">✦ Write with AI</button><button class="copy-btn">Copy</button></div></div>'+
+      '<div class="dc-script" id="dcScript"><p class="eyebrow" style="margin-bottom:8px">'+CH_LABEL[i.ch]+' script — use it, or let ANYWAY write it</p><textarea>'+esc(scriptVal)+'</textarea>'+
+        '<div class="script-actions"><button class="ai-btn">✦ Write with AI</button><button class="copy-btn">Copy</button></div>'+
+        '<div class="ai-steer" id="aiSteer">'+
+          '<p class="ai-steer-lead">Steer it — tap a nudge or type your own direction:</p>'+
+          '<div class="chips">'+
+            '<button class="ai-chip" data-s="Lean into our nearshore capabilities">Push nearshore</button>'+
+            '<button class="ai-chip" data-s="Make it more conversational and human">More conversational</button>'+
+            '<button class="ai-chip" data-s="Make it shorter and punchier">Shorter</button>'+
+            '<button class="ai-chip" data-s="Make it warmer and more personal">Warmer</button>'+
+            '<button class="ai-chip" data-s="Try a completely different angle">Different angle</button>'+
+          '</div>'+
+          '<div class="ai-steer-row"><input id="aiSteerInput" placeholder="e.g. mention their new store openings, keep it under 3 sentences…" maxlength="240"><button class="ai-draft" id="aiDraft">Draft it</button></div>'+
+        '</div>'+
+      '</div>'+
     '</div>');
     var scr=card.querySelector("#dcScript"), ta=card.querySelector("textarea");
     var back=card.querySelector("#dcBack"), next=card.querySelector("#dcNext");
@@ -1209,15 +1233,30 @@
     card.querySelector("#aDone").addEventListener("click", function(){ completeTouch(c); });
     card.querySelector("#aReplied").addEventListener("click", function(){ setStatus(c,"warm", firstName(c.name)+" moved to WARM"); });
     (function(){
-      var aiBtn=card.querySelector(".ai-btn");
+      var aiBtn=card.querySelector(".ai-btn"), steer=card.querySelector("#aiSteer"),
+          steerInput=card.querySelector("#aiSteerInput"), draftBtn=card.querySelector("#aiDraft");
       aiBtn.addEventListener("click", function(){
-        if(aiBtn.disabled) return; scr.classList.add("open");
-        aiBtn.disabled=true; var label=aiBtn.textContent; aiBtn.textContent="Writing…";
-        fetch("/api/write",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({name:c.name,title:c.title||"",company:c.account||"",channel:i.ch,step:i.stepNum})})
+        scr.classList.add("open");
+        steer.classList.toggle("open");
+        if(steer.classList.contains("open")) steerInput.focus();
+      });
+      function generate(steerText){
+        scr.classList.add("open");
+        draftBtn.disabled=true; aiBtn.disabled=true;
+        var dl=draftBtn.textContent; draftBtn.textContent="Writing…";
+        fetch("/api/write",{method:"POST",headers:{"Content-Type":"application/json"},
+          body:JSON.stringify({name:c.name,title:c.title||"",company:c.account||"",channel:i.ch,step:i.stepNum,steer:steerText||""})})
           .then(function(r){ return r.json().then(function(d){ return {ok:r.ok,d:d}; }); })
-          .then(function(res){ if(!res.ok||!res.d||!res.d.text){ toast((res.d&&res.d.error)||"AI couldn’t draft that — try again"); return; } ta.value=res.d.text; state.notes[i.touch.id]=res.d.text; persistNotes(); toast("Drafted. Yours to edit."); })
+          .then(function(res){ if(!res.ok||!res.d||!res.d.text){ toast((res.d&&res.d.error)||"AI couldn’t draft that — try again"); return; }
+            ta.value=res.d.text; state.notes[i.touch.id]=res.d.text; persistNotes();
+            toast(steerText?"Redrafted with your direction.":"Drafted. Yours to edit."); })
           .catch(function(){ toast("Network hiccup — try again"); })
-          .then(function(){ aiBtn.disabled=false; aiBtn.textContent=label; });
+          .then(function(){ draftBtn.disabled=false; aiBtn.disabled=false; draftBtn.textContent=dl; });
+      }
+      draftBtn.addEventListener("click", function(){ generate(steerInput.value.trim()); });
+      steerInput.addEventListener("keydown", function(e){ if(e.key==="Enter"){ e.preventDefault(); generate(steerInput.value.trim()); } });
+      Array.prototype.forEach.call(card.querySelectorAll(".ai-chip"), function(chip){
+        chip.addEventListener("click", function(){ var s=chip.getAttribute("data-s"); steerInput.value=s; generate(s); });
       });
     })();
     return card;

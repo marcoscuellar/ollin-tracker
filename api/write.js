@@ -44,6 +44,7 @@ export default async function handler(req, res) {
   const company = (body.company || '').toString().slice(0, 160) || 'their company';
   const channel = CHANNELS[body.channel] ? body.channel : 'li';
   const step = Math.min(5, Math.max(1, parseInt(body.step, 10) || 1));
+  const steer = (body.steer || '').toString().slice(0, 240).trim();
 
   const system =
     'You write outreach messages for Marcos Cuellar, a recruiter at Spyglass Partners. ' +
@@ -56,6 +57,7 @@ export default async function handler(req, res) {
     'Write ' + CHANNELS[channel] + '.\n\n' +
     'Recipient: ' + name + (title ? ', ' + title : '') + ' at ' + company + '.\n' +
     (STEP_CONTEXT[step] || '') + '\n\n' +
+    (steer ? 'Direction from Marcos (follow this while keeping his voice and the rules above): ' + steer + '\n\n' : '') +
     'Write it now.';
 
   try {
