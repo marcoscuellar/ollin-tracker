@@ -211,6 +211,108 @@
   @media (prefers-reduced-motion:reduce){.mini-square,.toast{transition:none;}}
   @media (max-width:430px){.qmain{flex-wrap:wrap;}.qactions{width:100%;justify-content:flex-end;}}
 
+  /* ===================== REFRESHED DESKTOP FACE ===================== */
+  :root{ --radius:12px; --shadow:0 1px 2px rgba(45,45,45,.05),0 6px 20px rgba(45,45,45,.06); }
+  .app{max-width:1180px;padding:0 24px 90px;}
+  /* top nav */
+  .nav{display:flex;align-items:center;gap:20px;padding:16px 0 22px;}
+  .nav-logo{font-family:'Archivo Black',sans-serif;font-size:19px;letter-spacing:-.01em;}
+  .nav-logo span{color:var(--gold);}
+  .nav-tabs{display:flex;align-items:center;gap:2px;}
+  .nav-tab{font-size:14px;color:var(--grey);background:none;border:none;cursor:pointer;padding:9px 15px;border-radius:9px;font-family:inherit;white-space:nowrap;}
+  .nav-tab:hover{color:var(--ink);background:rgba(45,45,45,.04);}
+  .nav-tab.active{color:var(--ink);background:var(--card);box-shadow:var(--shadow);font-weight:500;}
+  .nav-right{margin-left:auto;display:flex;align-items:center;gap:16px;}
+  .nav-date{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.12em;color:var(--grey);}
+  .nav-lock{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.12em;color:var(--grey);background:none;border:none;cursor:pointer;}
+  .nav-lock:hover{color:var(--ink);}
+  .nav-bell{position:relative;width:9px;height:9px;border:1.5px solid var(--grey);border-radius:50%;}
+  .nav-bell .dot{position:absolute;top:-3px;right:-3px;width:6px;height:6px;background:var(--gold);border-radius:50%;}
+  .nav-ava{width:30px;height:30px;border-radius:50%;background:var(--ink);color:var(--card);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;text-transform:uppercase;}
+  /* stat strip + momentum gauge */
+  .statstrip{display:flex;align-items:center;background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px 24px;margin-bottom:34px;}
+  .stat{display:flex;flex-direction:column;gap:4px;}
+  .stat b{font-family:'Archivo Black',sans-serif;font-size:22px;line-height:1;}
+  .stat .lbl2{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--grey);}
+  .stat-sep{color:var(--grey2);margin:0 26px;}
+  .meter-stat{cursor:pointer;user-select:none;}
+  .meter{display:flex;gap:3px;align-items:flex-end;height:22px;}
+  .meter i{width:5px;height:100%;background:var(--hairline);border-radius:1px;transition:background .2s;}
+  .meter i.on{background:var(--gold);}
+  .meter.full i{background:var(--gold);}
+  .meter-num{font-family:'Archivo Black',sans-serif;font-size:22px;line-height:1;}
+  .strip-right{margin-left:auto;display:flex;gap:10px;}
+  .strip-btn{display:flex;align-items:center;gap:7px;font-size:13px;color:var(--ink);background:var(--card);border:.5px solid var(--hairline);border-radius:9px;padding:9px 15px;cursor:pointer;font-family:inherit;}
+  .strip-btn:hover{border-color:var(--ink);}
+  .strip-btn.on{background:var(--ink);color:var(--card);border-color:var(--ink);}
+  /* start here */
+  .starthead{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:20px;}
+  .start-title{font-family:'Archivo Black',sans-serif;font-size:24px;text-transform:uppercase;letter-spacing:-.01em;}
+  .start-sub{font-size:13.5px;color:var(--grey);margin-top:5px;}
+  .start-due{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;color:var(--grey);white-space:nowrap;}
+  /* deck / carousel */
+  .deck{position:relative;display:flex;justify-content:center;min-height:320px;margin-bottom:36px;}
+  .deckcard{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);}
+  .dc.active{width:100%;max-width:840px;padding:30px 34px;z-index:2;}
+  .dc.peek{position:absolute;top:24px;width:290px;padding:22px;opacity:.5;z-index:1;overflow:hidden;cursor:pointer;}
+  .dc.peek.left{left:0;} .dc.peek.right{right:0;}
+  .dc.peek:hover{opacity:.85;}
+  @media(max-width:1080px){.dc.peek{display:none;} .dc.active{max-width:100%;}}
+  .dc-head{display:flex;align-items:center;gap:16px;margin-bottom:22px;}
+  .dc-ava{width:54px;height:54px;border-radius:50%;background:var(--panel);display:flex;align-items:center;justify-content:center;font-family:'Archivo Black',sans-serif;font-size:16px;flex-shrink:0;}
+  .dc-name{font-family:'Archivo Black',sans-serif;font-size:23px;letter-spacing:-.01em;}
+  .dc-meta{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--grey);margin-top:4px;}
+  .dc-due{margin-left:auto;display:flex;align-items:center;gap:6px;font-size:12px;color:var(--grey);border:.5px solid var(--hairline);border-radius:20px;padding:7px 14px;white-space:nowrap;}
+  .dc-due.over{color:var(--gold);border-color:var(--gold);}
+  .dc-navrow{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;}
+  .dc-touch{text-align:center;}
+  .dc-touch b{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.14em;text-transform:uppercase;}
+  .dc-touch span{display:block;font-size:12.5px;color:var(--grey);margin-top:3px;}
+  .dc-btn{display:flex;align-items:center;gap:8px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;background:none;border:.5px solid var(--hairline);border-radius:9px;padding:10px 16px;cursor:pointer;color:var(--ink);}
+  .dc-btn.dark{background:var(--ink);color:var(--card);border-color:var(--ink);}
+  .dc-btn:disabled{opacity:.3;cursor:default;}
+  .dc-btn:not(:disabled):hover{border-color:var(--ink);}
+  /* timeline */
+  .timeline{display:flex;align-items:flex-start;justify-content:space-between;margin:6px 0 22px;}
+  .tl-step{display:flex;flex-direction:column;align-items:center;flex:1;position:relative;}
+  .tl-node{width:30px;height:30px;border-radius:50%;border:1.5px solid var(--hairline);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;background:var(--card);color:var(--grey);z-index:2;}
+  .tl-step.done .tl-node,.tl-step.active .tl-node{background:var(--ink);border-color:var(--ink);color:var(--card);}
+  .tl-line{position:absolute;top:15px;left:50%;width:100%;height:1.5px;background:var(--hairline);z-index:1;}
+  .tl-step:last-child .tl-line{display:none;}
+  .tl-step.done .tl-line{background:var(--ink);}
+  .tl-label{font-size:11.5px;color:var(--grey);margin-top:9px;text-align:center;line-height:1.2;}
+  .tl-step.active .tl-label{color:var(--ink);font-weight:600;}
+  /* mid row */
+  .dc-mid{display:flex;border-top:.5px solid var(--hairline);border-bottom:.5px solid var(--hairline);padding:16px 4px;margin-bottom:20px;}
+  .dc-mid .mi{display:flex;align-items:flex-start;gap:11px;flex:1;cursor:pointer;background:none;border:none;text-align:left;font-family:inherit;color:var(--ink);}
+  .dc-mid .mi:hover .mi-t{color:var(--gold);}
+  .mi-t{font-size:14px;}
+  .mi-s{font-size:12px;color:var(--grey);margin-top:2px;}
+  /* bottom actions */
+  .dc-actions{display:flex;gap:10px;}
+  .dc-act{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;font-size:13px;background:var(--card);border:.5px solid var(--hairline);border-radius:9px;padding:14px;cursor:pointer;color:var(--ink);font-family:inherit;}
+  .dc-act:hover{border-color:var(--ink);}
+  .dc-act.done{background:var(--ink);color:var(--card);border-color:var(--ink);}
+  .dc-act.done:hover{background:var(--gold);border-color:var(--gold);color:var(--ink);}
+  .dc-script{display:none;margin-top:18px;border-top:.5px solid var(--hairline);padding-top:16px;}
+  .dc-script.open{display:block;}
+  .dc-script textarea{width:100%;background:var(--bg);border:.5px solid var(--hairline);border-radius:8px;font-family:'Inter',sans-serif;font-size:14px;line-height:1.55;padding:12px;min-height:110px;resize:vertical;color:var(--ink);}
+  /* peek mini */
+  .pk-head{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+  .pk-ava{width:38px;height:38px;border-radius:50%;background:var(--panel);display:flex;align-items:center;justify-content:center;font-family:'Archivo Black',sans-serif;font-size:12px;flex-shrink:0;}
+  .pk-name{font-family:'Archivo Black',sans-serif;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .pk-meta{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.06em;text-transform:uppercase;color:var(--grey);margin-top:2px;}
+  .pk-due{font-size:11px;color:var(--grey);border:.5px solid var(--hairline);border-radius:20px;padding:4px 10px;display:inline-block;}
+  /* section rows as floating cards */
+  details.section{border-top:none;margin-top:12px;background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:2px 22px;}
+  details.section[open]{padding-bottom:20px;}
+  details.section summary{padding:17px 0;justify-content:flex-start;gap:12px;}
+  details.section summary .sum-title{margin-right:auto;}
+  details.section > summary::after{content:"\203A";color:var(--grey2);font-size:17px;line-height:1;transition:transform .2s;}
+  details.section[open] > summary::after{transform:rotate(90deg);}
+  .warm,.comeback,.handoff,.verifybar{max-width:840px;margin-left:auto;margin-right:auto;border-radius:var(--radius);}
+  .foot{margin-top:44px;}
+
 </style>
 
 <div class="app hide" id="appMain"></div>
@@ -854,6 +956,10 @@
 
   // ================= ANYWAY UI (wired to existing accounts/threads/KV) =================
   var CH_LABEL = { li:"LinkedIn", em:"Email", call:"Call" };
+  var STEP_NAMES = ["Outreach","Follow up","Nudge","Break up","Final attempt"];
+  var focusIdx=0, meterRevealed=false, navView="home", focusMode=false;
+  function initials(n){ n=(n||"").trim(); if(!n) return "?"; var p=n.split(/\s+/); return ((p[0]||" ").charAt(0)+(p[1]?p[1].charAt(0):"")).toUpperCase(); }
+  function avaInitial(){ return (((ACCOUNT&&ACCOUNT.email)||"m").charAt(0)); }
   var DOW=["SUN","MON","TUE","WED","THU","FRI","SAT"], MON=["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
   var TEMPLATES = {
     li: "Hi {first} — saw your work leading {account}'s team and wanted to connect. I work with mid-market brands on engineering and data hiring (onshore + nearshore). No pitch — just building my corner of the industry. — Marcos",
@@ -997,6 +1103,114 @@
   }
 
   // ---- render ----
+  // ---- momentum gauge: fills up, number hidden until tapped ----
+  function buildMeter(){
+    var SEG=16, wrap=el('<div class="stat meter-stat" title="Tap to see the number"></div>');
+    function draw(){
+      var goal=goalVal(), sent=sentToday(), full=sent>=goal;
+      var on=goal>0?Math.min(SEG,Math.round(sent/goal*SEG)):0; if(sent>0&&on===0)on=1;
+      wrap.innerHTML="";
+      if(meterRevealed){
+        wrap.appendChild(el('<div class="meter-num" style="'+(full?"color:var(--gold)":"")+'">'+sent+'</div>'));
+        var sub=el('<div class="lbl2">of <button id="mGoal" style="background:none;border:none;color:var(--grey);text-decoration:underline;cursor:pointer;font:inherit;letter-spacing:inherit">'+goal+'</button> · sent today</div>');
+        wrap.appendChild(sub);
+        sub.querySelector("#mGoal").addEventListener("click", function(e){ e.stopPropagation(); editGoal(); });
+      } else {
+        var mtr=el('<div class="meter'+(full?" full":"")+'"></div>');
+        for(var k=0;k<SEG;k++) mtr.appendChild(el('<i class="'+(k<on?"on":"")+'"></i>'));
+        wrap.appendChild(mtr);
+        wrap.appendChild(el('<div class="lbl2">sent today</div>'));
+      }
+    }
+    draw();
+    wrap.addEventListener("click", function(){ meterRevealed=!meterRevealed; draw(); });
+    return wrap;
+  }
+  // ---- step timeline (5 touches, human names) ----
+  function timelineHTML(c, mini){
+    var html='<div class="timeline"'+(mini?' style="margin:14px 0 0"':'')+'>';
+    for(var s=0;s<5;s++){
+      var cls="tl-step"+(s<c.step?" done":(s===c.step?" active":""));
+      var inner = s<c.step ? "✓" : (s+1);
+      var nodeStyle = mini ? ' style="width:22px;height:22px;font-size:10px"' : '';
+      html+='<div class="'+cls+'"><div class="tl-line"></div><div class="tl-node"'+nodeStyle+'>'+inner+'</div>'+(mini?'':'<div class="tl-label">'+STEP_NAMES[s]+'</div>')+'</div>';
+    }
+    return html+'</div>';
+  }
+  function duePill(i){ return i.overdueDays>0 ? (i.overdueDays===1?"Due yesterday":i.overdueDays+"d overdue") : "Due today"; }
+  // ---- carousel deck ----
+  function renderDeckInto(host, dueList, warm){
+    host.innerHTML="";
+    if(!dueList.length){
+      host.appendChild(el('<div class="deck"><div class="dc deckcard active" style="text-align:center;padding:50px 34px"><div class="start-title" style="font-size:28px">Queue clear<span style="color:var(--gold)">.</span></div><p style="color:var(--grey);margin-top:10px">Nobody’s due. Add contacts below, or take the win.</p></div></div>'));
+      return;
+    }
+    if(focusIdx>=dueList.length) focusIdx=dueList.length-1;
+    if(focusIdx<0) focusIdx=0;
+    var deck=el('<div class="deck"></div>');
+    if(focusIdx>0) deck.appendChild(peekCard(dueList[focusIdx-1],"left",focusIdx-1,host,dueList,warm));
+    deck.appendChild(activeCard(dueList[focusIdx],host,dueList,warm));
+    if(focusIdx<dueList.length-1) deck.appendChild(peekCard(dueList[focusIdx+1],"right",focusIdx+1,host,dueList,warm));
+    host.appendChild(deck);
+  }
+  function peekCard(item, side, idx, host, dueList, warm){
+    var c=item.c;
+    var card=el('<div class="dc deckcard peek '+side+'">'+
+      '<div class="pk-head"><div class="pk-ava">'+esc(initials(c.name))+'</div><div style="min-width:0"><div class="pk-name">'+esc(c.name)+'</div><div class="pk-meta">'+esc((c.title||"")+(c.title&&c.account?" · ":"")+(c.account||""))+'</div></div></div>'+
+      '<div class="pk-due">'+duePill(item.i)+'</div>'+
+      timelineHTML(c,true)+'</div>');
+    card.addEventListener("click", function(){ focusIdx=idx; renderDeckInto(host,dueList,warm); });
+    return card;
+  }
+  function activeCard(item, host, dueList, warm){
+    var c=item.c, i=item.i;
+    var over = i.overdueDays>0 ? " over" : "";
+    var scriptVal = state.notes[i.touch.id] || fillTemplate(TEMPLATES[i.ch], c);
+    var sub = i.stepNum===1 ? "First outreach due — script, send, done." : "Touch "+i.stepNum+" — script, send, done.";
+    var card=el('<div class="dc deckcard active">'+
+      '<div class="dc-head"><div class="dc-ava">'+esc(initials(c.name))+'</div><div><div class="dc-name">'+esc(c.name)+'</div><div class="dc-meta">'+esc((c.title||"")+(c.title&&c.account?" · ":"")+(c.account||""))+'</div></div><div class="dc-due'+over+'">'+duePill(i)+'</div></div>'+
+      '<div class="dc-navrow"><button class="dc-btn" id="dcBack">← Back</button><div class="dc-touch"><b>Touch '+i.stepNum+' of '+c.touches.length+'</b><span>'+sub+'</span></div><button class="dc-btn dark" id="dcNext">Next →</button></div>'+
+      timelineHTML(c,false)+
+      '<div class="dc-mid"><button class="mi" id="miReview"><div><div class="mi-t">Review / Verify</div><div class="mi-s">Check the script before you send</div></div></button><button class="mi" id="miSkip"><div><div class="mi-t">Skip for now</div><div class="mi-s">Come back to this one later</div></div></button></div>'+
+      '<div class="dc-actions"><button class="dc-act" id="aChan">'+CH_LABEL[i.ch]+'</button><button class="dc-act" id="aReplied">Replied</button><button class="dc-act" id="aScript">Script</button><button class="dc-act done" id="aDone">✓ Done</button></div>'+
+      '<div class="dc-script" id="dcScript"><p class="eyebrow" style="margin-bottom:8px">'+CH_LABEL[i.ch]+' script — use it, or let ANYWAY write it</p><textarea>'+esc(scriptVal)+'</textarea><div class="script-actions"><button class="ai-btn">✦ Write with AI</button><button class="copy-btn">Copy</button></div></div>'+
+    '</div>');
+    var scr=card.querySelector("#dcScript"), ta=card.querySelector("textarea");
+    var back=card.querySelector("#dcBack"), next=card.querySelector("#dcNext");
+    back.disabled = focusIdx<=0; next.disabled = focusIdx>=dueList.length-1;
+    back.addEventListener("click", function(){ if(focusIdx>0){ focusIdx--; renderDeckInto(host,dueList,warm); } });
+    next.addEventListener("click", function(){ if(focusIdx<dueList.length-1){ focusIdx++; renderDeckInto(host,dueList,warm); } });
+    card.querySelector("#miSkip").addEventListener("click", function(){ if(focusIdx<dueList.length-1){ focusIdx++; renderDeckInto(host,dueList,warm); } else toast("That’s the last one due."); });
+    card.querySelector("#miReview").addEventListener("click", function(){ scr.classList.toggle("open"); });
+    card.querySelector("#aScript").addEventListener("click", function(){ scr.classList.toggle("open"); });
+    card.querySelector("#aChan").addEventListener("click", function(){ scr.classList.add("open"); });
+    ta.addEventListener("change", function(){ state.notes[i.touch.id]=ta.value; persistNotes(); });
+    card.querySelector(".copy-btn").addEventListener("click", function(){ copy(ta.value||""); });
+    card.querySelector("#aDone").addEventListener("click", function(){ completeTouch(c); });
+    card.querySelector("#aReplied").addEventListener("click", function(){ setStatus(c,"warm", firstName(c.name)+" moved to WARM"); });
+    (function(){
+      var aiBtn=card.querySelector(".ai-btn");
+      aiBtn.addEventListener("click", function(){
+        if(aiBtn.disabled) return; scr.classList.add("open");
+        aiBtn.disabled=true; var label=aiBtn.textContent; aiBtn.textContent="Writing…";
+        fetch("/api/write",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({name:c.name,title:c.title||"",company:c.account||"",channel:i.ch,step:i.stepNum})})
+          .then(function(r){ return r.json().then(function(d){ return {ok:r.ok,d:d}; }); })
+          .then(function(res){ if(!res.ok||!res.d||!res.d.text){ toast((res.d&&res.d.error)||"AI couldn’t draft that — try again"); return; } ta.value=res.d.text; state.notes[i.touch.id]=res.d.text; persistNotes(); toast("Drafted. Yours to edit."); })
+          .catch(function(){ toast("Network hiccup — try again"); })
+          .then(function(){ aiBtn.disabled=false; aiBtn.textContent=label; });
+      });
+    })();
+    return card;
+  }
+  function navGo(view){
+    if(view==="home"){ try{ window.scrollTo({top:0,behavior:"smooth"}); }catch(e){ window.scrollTo(0,0); } return; }
+    var map={contacts:"addSection",pipeline:"secPipeline",activity:"secActivity",history:"secHistory",manage:"secManage"};
+    var id=map[view]; if(!id) return;
+    var t=document.getElementById(id); if(!t) return;
+    if(t.tagName==="DETAILS") t.open=true;
+    try{ t.scrollIntoView({behavior:"smooth",block:"start"}); }catch(e){}
+  }
+
   function render(){
     var m=document.getElementById("appMain"); if(!m) return;
     state.extra=state.extra||{};
