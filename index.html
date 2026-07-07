@@ -335,6 +335,22 @@
   .pc-status.gold{color:var(--gold);}
   .pc-x{background:none;border:none;color:var(--grey2);font-size:16px;cursor:pointer;flex-shrink:0;line-height:1;padding:0 2px;}
   .pc-x:hover{color:var(--ink);}
+  /* pipeline: collapsible companies + expandable contacts */
+  .acct-det{border-bottom:.5px solid var(--hairline);}
+  .acct-det:last-of-type{border-bottom:none;}
+  .acct-det>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:12px;padding:15px 2px;}
+  .acct-det>summary::-webkit-details-marker{display:none;}
+  .acct-nm{font-family:'Archivo Black',sans-serif;font-size:15px;}
+  .acct-sub{margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--grey);}
+  .acct-sub b{color:var(--ink);font-weight:600;}
+  .acct-det>summary::after{content:"\203A";color:var(--grey2);font-size:16px;line-height:1;transition:transform .2s;}
+  .acct-det[open]>summary::after{transform:rotate(90deg);}
+  .acct-body{padding:2px 0 14px;}
+  .pc-wrap{margin-bottom:8px;}
+  .pc-wrap .pcard{cursor:pointer;}
+  .pc-wrap .pcard.expanded{border-color:var(--blue);}
+  .pc-exec{display:none;margin-top:8px;}
+  .pc-exec.open{display:block;}
   /* focus mode — collapse everything but today's work */
   .app.focus .section,.app.focus .handoff,.app.focus .foot{display:none;}
 
@@ -1262,6 +1278,21 @@
     })();
     return card;
   }
+  // For pipeline contacts with no live "next touch" (warm/meeting/lost/complete)
+  function pausedPanel(c){
+    var s=statusLabel(c);
+    var p=el('<div class="dc deckcard active" style="padding:24px 28px">'+
+      '<div class="dc-head"><div class="dc-ava">'+esc(initials(c.name))+'</div><div><div class="dc-name">'+esc(c.name)+'</div><div class="dc-meta">'+esc((c.title||"")+(c.title&&c.account?" · ":"")+(c.account||""))+'</div></div><div class="dc-due">'+esc(s.txt)+'</div></div>'+
+      timelineHTML(c,false)+
+      (c.status==="warm" ? '<div class="dc-actions"><button class="dc-act" data-a="meeting">Meeting booked</button><button class="dc-act" data-a="touch">Log a reply</button><button class="dc-act" data-a="lost">Not interested</button></div>' : '')+
+    '</div>');
+    if(c.status==="warm"){
+      p.querySelector('[data-a="meeting"]').addEventListener("click", function(){ setStatus(c,"meeting","Meeting booked. ANYWAY."); });
+      p.querySelector('[data-a="touch"]').addEventListener("click", function(){ logWarmTouch(c); });
+      p.querySelector('[data-a="lost"]').addEventListener("click", function(){ setStatus(c,"lost","Marked not interested"); });
+    }
+    return p;
+  }
   function navGo(view){
     if(view==="home"){ try{ window.scrollTo({top:0,behavior:"smooth"}); }catch(e){ window.scrollTo(0,0); } return; }
     var map={contacts:"addSection",pipeline:"secPipeline",activity:"secActivity",history:"secHistory",manage:"secManage"};
@@ -1403,27 +1434,36 @@
     Object.keys(groups).sort().forEach(function(acct){
       var list=groups[acct], warmN=0,meetN=0,lostN=0,activeN=0,compN=0;
       list.forEach(function(c){ if(c.status==="warm")warmN++; else if(c.status==="meeting")meetN++; else if(c.status==="lost")lostN++; else if(c.complete)compN++; else activeN++; });
-      var wrap=el('<div class="acct"></div>');
-      wrap.appendChild(el('<div class="acct-name"><span>'+esc(acct)+'</span><span class="sum-count">'+list.length+' people</span></div>'));
       var parts=[];
       if(meetN) parts.push("<b>"+meetN+" meeting"+(meetN>1?"s":"")+"</b>");
       if(warmN) parts.push("<b>"+warmN+" warm</b>");
       if(activeN) parts.push(activeN+" in cadence");
       if(compN) parts.push(compN+" complete");
       if(lostN) parts.push(lostN+" out");
-      wrap.appendChild(el('<div class="acct-roll">'+(parts.join(" · ")||"nothing yet")+'</div>'));
+      var det=el('<details class="acct-det"><summary><span class="acct-nm">'+esc(acct)+'</span><span class="acct-sub">'+(parts.join(" · ")||list.length+" people")+'</span></summary><div class="acct-body"></div></details>');
+      var body=det.querySelector(".acct-body");
       list.forEach(function(c){
         var s=statusLabel(c);
         var nextTxt = c.complete ? "cadence complete" : (c.status==="active" ? (function(){ var di=dueInfo(c); return di ? ("Touch "+di.stepNum+" of "+c.touches.length) : ""; })() : "");
-        var card=el('<div class="pcard">'+
-          '<div class="pc-ava">'+esc(initials(c.name))+'</div>'+
-          '<div class="pc-main"><div class="pc-name">'+esc(c.name)+'</div><div class="pc-meta">'+esc((c.title||"")+(c.title&&c.account?" · ":"")+(c.account||""))+(nextTxt?' · '+nextTxt:"")+'</div></div>'+
-          '<div class="pc-status'+(s.gold?" gold":"")+'">'+s.txt+'</div>'+
-          '<button class="pc-x" title="Remove">×</button></div>');
-        card.querySelector(".pc-x").addEventListener("click", function(){ removeContact(c); });
-        wrap.appendChild(card);
+        var wrap2=el('<div class="pc-wrap">'+
+          '<div class="pcard">'+
+            '<div class="pc-ava">'+esc(initials(c.name))+'</div>'+
+            '<div class="pc-main"><div class="pc-name">'+esc(c.name)+'</div><div class="pc-meta">'+esc((c.title||"")+(c.title&&c.account?" · ":"")+(c.account||""))+(nextTxt?' · '+nextTxt:"")+'</div></div>'+
+            '<div class="pc-status'+(s.gold?" gold":"")+'">'+s.txt+'</div>'+
+            '<button class="pc-x" title="Remove">×</button>'+
+          '</div>'+
+          '<div class="pc-exec"></div></div>');
+        var pcard=wrap2.querySelector(".pcard"), exec=wrap2.querySelector(".pc-exec");
+        wrap2.querySelector(".pc-x").addEventListener("click", function(e){ e.stopPropagation(); removeContact(c); });
+        pcard.addEventListener("click", function(){
+          if(exec.classList.contains("open")){ exec.classList.remove("open"); exec.innerHTML=""; pcard.classList.remove("expanded"); return; }
+          exec.innerHTML=""; exec.classList.add("open"); pcard.classList.add("expanded");
+          var di=dueInfo(c);
+          exec.appendChild(di ? activeCard({c:c,i:di}, exec, [{c:c,i:di}], warm) : pausedPanel(c));
+        });
+        body.appendChild(wrap2);
       });
-      pl.appendChild(wrap);
+      pl.appendChild(det);
     });
     m.appendChild(pipe);
 
