@@ -215,7 +215,14 @@
   :root{ --radius:12px; --shadow:0 2px 5px rgba(17,17,17,.06),0 14px 40px rgba(17,17,17,.14); }
   .app{max-width:1180px;padding:0 24px 90px;}
   /* top nav */
-  .nav{display:flex;align-items:center;gap:20px;padding:16px 0 22px;}
+  .nav{display:flex;align-items:center;gap:20px;padding:16px 0 22px;position:relative;}
+  .nav-tabs{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);}
+  .pipe-tools{display:flex;gap:8px;margin-bottom:12px;}
+  .pc-check{width:18px;height:18px;border:1.5px solid var(--hairline);border-radius:5px;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+  .pc-check.on{background:var(--ink);border-color:var(--ink);}
+  .pc-check.on::after{content:"\2713";color:var(--cream);font-size:11px;line-height:1;}
+  .pc-wrap .pcard.selectable{cursor:pointer;}
+  .pc-wrap .pcard.selected{border-color:var(--ink);background:var(--panel);}
   .nav-logo{font-family:'Archivo Black',sans-serif;font-size:19px;letter-spacing:-.03em;}
   .nav-logo .way{color:var(--honey);}
   .nav-tabs{display:flex;align-items:center;gap:2px;}
@@ -1104,6 +1111,23 @@
   var CH_LABEL = { li:"LinkedIn", em:"Email", call:"Call" };
   var STEP_NAMES = ["Outreach","Follow up","Nudge","Break up","Final attempt"];
   var focusIdx=0, meterRevealed=false, navView="home", focusMode=false;
+  var pipeSelect=false, pipeSel={};
+  function selCount(){ var n=0; for(var k in pipeSel){ if(pipeSel[k]) n++; } return n; }
+  function startEveryoneToday(){
+    var n=0;
+    state.accounts.forEach(function(a){ (a.threads||[]).forEach(function(t){ if(t.persona!=="Blocker" && t.entryDay!==1){ t.entryDay=1; n++; } }); });
+    if(!n){ toast("Everyone already starts today"); return; }
+    persistAccounts(); render(); toast(n+" now start today");
+  }
+  function deleteSelected(){
+    var keys=[]; for(var k in pipeSel){ if(pipeSel[k]) keys.push(k); }
+    if(!keys.length){ toast("Nothing selected"); return; }
+    if(!confirm("Delete "+keys.length+" contact"+(keys.length>1?"s":"")+"? This can’t be undone.")) return;
+    keys.forEach(function(key){ var p=key.split("|"); var a=state.accounts.find(function(x){return x.id===p[0];}); if(a) a.threads=(a.threads||[]).filter(function(t){return t.id!==p[1];}); });
+    state.accounts=state.accounts.filter(function(a){ return (a.threads||[]).length>0; });
+    pipeSel={}; pipeSelect=false;
+    persistAccounts(); render(); toast(keys.length+" removed");
+  }
   function initials(n){ n=(n||"").trim(); if(!n) return "?"; var p=n.split(/\s+/); return ((p[0]||" ").charAt(0)+(p[1]?p[1].charAt(0):"")).toUpperCase(); }
   function avaInitial(){ return (((ACCOUNT&&ACCOUNT.email)||"m").charAt(0)); }
   function normUrl(u){ u=(u||"").trim(); if(!u) return ""; if(!/^https?:\/\//i.test(u)) u="https://"+u; return u; }
@@ -1543,13 +1567,27 @@
     // PIPELINE (grouped by account, with rollups)
     var groups={}; contacts.forEach(function(c){ (groups[c.account]=groups[c.account]||[]).push(c); });
     var totalC=contacts.length, acctN=Object.keys(groups).length;
-    var pipe=el('<details class="section" id="secPipeline"><summary><span class="sum-title">Pipeline</span><span class="sum-count">'+(totalC?totalC+" contacts · "+acctN+" accounts":"empty")+'</span></summary><div class="cadence-row" id="cadRow"></div><p class="hint" style="margin-top:0;">The cadence every contact runs. Replies pause it automatically.</p><div id="pipeList"></div></details>');
+    var pipe=el('<details class="section" id="secPipeline"'+(pipeSelect?' open':'')+'><summary><span class="sum-title">Pipeline</span><span class="sum-count">'+(totalC?totalC+" contacts · "+acctN+" accounts":"empty")+'</span></summary><div class="cadence-row" id="cadRow"></div><p class="hint" style="margin-top:0;">The cadence every contact runs. Replies pause it automatically.</p><div id="pipeList"></div></details>');
     var cr=pipe.querySelector("#cadRow");
     CADENCE.forEach(function(s,idx){
       cr.appendChild(el('<span class="cad-step">Day '+(s.off+1)+" "+CH_LABEL[s.ch]+'</span>'));
       if(idx<CADENCE.length-1) cr.appendChild(el('<span class="cad-arrow">→</span>'));
     });
     var pl=pipe.querySelector("#pipeList");
+    // select-to-delete toolbar
+    var tools=el('<div class="pipe-tools"></div>');
+    if(!pipeSelect){
+      var selBtn=el('<button class="btn-mini" id="pipeSelBtn">Select to delete</button>');
+      selBtn.addEventListener("click", function(){ pipeSelect=true; render(); });
+      tools.appendChild(selBtn);
+    } else {
+      var delBtn=el('<button class="btn-mini danger">Delete selected (<span id="pipeCount">'+selCount()+'</span>)</button>');
+      var cancelBtn=el('<button class="btn-mini">Cancel</button>');
+      delBtn.addEventListener("click", deleteSelected);
+      cancelBtn.addEventListener("click", function(){ pipeSelect=false; pipeSel={}; render(); });
+      tools.appendChild(delBtn); tools.appendChild(cancelBtn);
+    }
+    pl.appendChild(tools);
     Object.keys(groups).sort().forEach(function(acct){
       var list=groups[acct], warmN=0,meetN=0,lostN=0,activeN=0,compN=0;
       list.forEach(function(c){ if(c.status==="warm")warmN++; else if(c.status==="meeting")meetN++; else if(c.status==="lost")lostN++; else if(c.complete)compN++; else activeN++; });
@@ -1559,27 +1597,38 @@
       if(activeN) parts.push(activeN+" in cadence");
       if(compN) parts.push(compN+" complete");
       if(lostN) parts.push(lostN+" out");
-      var det=el('<details class="acct-det"><summary><span class="acct-nm">'+esc(acct)+'</span><span class="acct-sub">'+(parts.join(" · ")||list.length+" people")+'</span></summary><div class="acct-body"></div></details>');
+      var det=el('<details class="acct-det"'+(pipeSelect?' open':'')+'><summary><span class="acct-nm">'+esc(acct)+'</span><span class="acct-sub">'+(parts.join(" · ")||list.length+" people")+'</span></summary><div class="acct-body"></div></details>');
       var body=det.querySelector(".acct-body");
       list.forEach(function(c){
         var s=statusLabel(c);
+        var key=c.a.id+"|"+c.t.id;
         var nextTxt = c.complete ? "cadence complete" : (c.status==="active" ? (function(){ var di=dueInfo(c); return di ? ("Touch "+di.stepNum+" of "+c.touches.length) : ""; })() : "");
         var wrap2=el('<div class="pc-wrap">'+
-          '<div class="pcard">'+
+          '<div class="pcard'+(pipeSelect?" selectable":"")+(pipeSelect&&pipeSel[key]?" selected":"")+'">'+
+            (pipeSelect?'<div class="pc-check'+(pipeSel[key]?" on":"")+'"></div>':'')+
             '<div class="pc-ava">'+esc(initials(c.name))+'</div>'+
             '<div class="pc-main"><div class="pc-name">'+esc(c.name)+'</div><div class="pc-meta">'+esc((c.title||"")+(c.title&&c.account?" · ":"")+(c.account||""))+(nextTxt?' · '+nextTxt:"")+'</div></div>'+
             '<div class="pc-status'+(s.gold?" gold":"")+'">'+s.txt+'</div>'+
-            '<button class="pc-x" title="Remove">×</button>'+
+            (pipeSelect?'':'<button class="pc-x" title="Remove">×</button>')+
           '</div>'+
           '<div class="pc-exec"></div></div>');
         var pcard=wrap2.querySelector(".pcard"), exec=wrap2.querySelector(".pc-exec");
-        wrap2.querySelector(".pc-x").addEventListener("click", function(e){ e.stopPropagation(); removeContact(c); });
-        pcard.addEventListener("click", function(){
-          if(exec.classList.contains("open")){ exec.classList.remove("open"); exec.innerHTML=""; pcard.classList.remove("expanded"); return; }
-          exec.innerHTML=""; exec.classList.add("open"); pcard.classList.add("expanded");
-          var di=dueInfo(c);
-          exec.appendChild(di ? activeCard({c:c,i:di}, exec, [{c:c,i:di}], warm) : pausedPanel(c));
-        });
+        if(pipeSelect){
+          pcard.addEventListener("click", function(){
+            pipeSel[key]=!pipeSel[key];
+            pcard.classList.toggle("selected");
+            pcard.querySelector(".pc-check").classList.toggle("on");
+            var cnt=document.getElementById("pipeCount"); if(cnt) cnt.textContent=selCount();
+          });
+        } else {
+          wrap2.querySelector(".pc-x").addEventListener("click", function(e){ e.stopPropagation(); removeContact(c); });
+          pcard.addEventListener("click", function(){
+            if(exec.classList.contains("open")){ exec.classList.remove("open"); exec.innerHTML=""; pcard.classList.remove("expanded"); return; }
+            exec.innerHTML=""; exec.classList.add("open"); pcard.classList.add("expanded");
+            var di=dueInfo(c);
+            exec.appendChild(di ? activeCard({c:c,i:di}, exec, [{c:c,i:di}], warm) : pausedPanel(c));
+          });
+        }
         body.appendChild(wrap2);
       });
       pl.appendChild(det);
@@ -1624,7 +1673,8 @@
     } // end !empty — Pipeline / Last-14 / History / handoff only show once there's data
 
     // MANAGE + FOOT
-    var manage=el('<details class="section" id="secManage"><summary><span class="sum-title">Manage</span><span class="sum-count">backup · cleanup</span></summary><div class="btn-row"><button class="btn-mini" id="expBtn">Export backup</button><button class="btn-mini" id="resBtn">Restore</button><button class="btn-mini" id="dupBtn">Delete duplicates</button><button class="btn-mini danger" id="clrBtn">Clear all</button></div><input type="file" id="resFile" accept="application/json,.json" style="display:none"></details>');
+    var manage=el('<details class="section" id="secManage"><summary><span class="sum-title">Manage</span><span class="sum-count">backup · cleanup</span></summary><div class="btn-row"><button class="btn-mini" id="todayBtn">Start everyone today</button><button class="btn-mini" id="expBtn">Export backup</button><button class="btn-mini" id="resBtn">Restore</button><button class="btn-mini" id="dupBtn">Delete duplicates</button><button class="btn-mini danger" id="clrBtn">Clear all</button></div><input type="file" id="resFile" accept="application/json,.json" style="display:none"></details>');
+    manage.querySelector("#todayBtn").addEventListener("click", startEveryoneToday);
     manage.querySelector("#expBtn").addEventListener("click", doExport);
     manage.querySelector("#dupBtn").addEventListener("click", doDedupe);
     manage.querySelector("#clrBtn").addEventListener("click", doClear);
