@@ -871,17 +871,16 @@
     var isSignup = mode==="signup";
     lockBody(
       '<p class="auth-lead">'+(isSignup?"Create your account. Your pipeline, private to you.":"Welcome back. Log in to your pipeline.")+'</p>'+
-      '<input class="auth-input" id="authEmail" type="email" placeholder="you@work.com" autocomplete="email" autocapitalize="off" autocorrect="off">'+
-      '<input class="auth-input" id="authPass" type="password" placeholder="Password'+(isSignup?" (8+ characters)":"")+'" autocomplete="'+(isSignup?"new-password":"current-password")+'">'+
-      '<button class="btn" id="authGo">'+(isSignup?"Start free":"Log in")+'</button>'+
+      '<form id="authFormEl" autocomplete="on">'+
+        '<input class="auth-input" id="authEmail" name="email" type="email" autocomplete="username" placeholder="you@work.com" autocapitalize="off" autocorrect="off">'+
+        '<input class="auth-input" id="authPass" name="password" type="password" autocomplete="'+(isSignup?"new-password":"current-password")+'" placeholder="Password'+(isSignup?" (8+ characters)":"")+'">'+
+        '<button class="btn" id="authGo" type="submit">'+(isSignup?"Start free":"Log in")+'</button>'+
+      '</form>'+
       '<div class="lock-alt">'+(isSignup?'Already have an account? <a id="authSwap">Log in</a>':'New here? <a id="authSwap">Create an account</a>')+'</div>'+
       (isSignup?'':'<div class="lock-alt"><a id="authForgot">Forgot password?</a></div>')
     );
     var em=document.getElementById("authEmail"), pw=document.getElementById("authPass");
-    function submit(){ doAuth(mode, em.value, pw.value); }
-    document.getElementById("authGo").addEventListener("click", submit);
-    em.addEventListener("keydown", function(e){ if(e.key==="Enter") pw.focus(); });
-    pw.addEventListener("keydown", function(e){ if(e.key==="Enter") submit(); });
+    document.getElementById("authFormEl").addEventListener("submit", function(e){ e.preventDefault(); doAuth(mode, em.value, pw.value); });
     document.getElementById("authSwap").addEventListener("click", function(){ authForm(isSignup?"login":"signup"); });
     var fg=document.getElementById("authForgot"); if(fg) fg.addEventListener("click", function(){ doForgot(em.value); });
     em.focus();
