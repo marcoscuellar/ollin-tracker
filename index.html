@@ -197,8 +197,8 @@
   .lbl{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--grey);}
   /* ANY / WAY. stacked lockup (lock screen) */
   .logo-lockup{margin-bottom:26px;}
-  .ll-word{font-family:'Archivo Black',sans-serif;font-size:44px;line-height:1;letter-spacing:-.02em;color:var(--ink);display:flex;align-items:flex-end;justify-content:center;gap:7px;}
-  .ll-dot{width:.30em;height:.30em;background:var(--blue);display:inline-block;margin-bottom:.14em;}
+  .ll-word{font-family:'Archivo Black',sans-serif;font-size:46px;line-height:1;letter-spacing:-.03em;color:var(--ink);}
+  .ll-way{color:var(--honey);}
   .ll-rule{width:34px;height:3px;background:var(--ink);margin:18px auto 12px;}
   .ll-tag{font-family:'Inter',sans-serif;font-size:18px;color:var(--ink);font-weight:500;}
   .ll-domain{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.16em;color:var(--grey);margin-top:26px;}
@@ -215,8 +215,8 @@
   .app{max-width:1180px;padding:0 24px 90px;}
   /* top nav */
   .nav{display:flex;align-items:center;gap:20px;padding:16px 0 22px;}
-  .nav-logo{font-family:'Archivo Black',sans-serif;font-size:19px;letter-spacing:-.01em;}
-  .nav-logo span{color:var(--blue);}
+  .nav-logo{font-family:'Archivo Black',sans-serif;font-size:19px;letter-spacing:-.03em;}
+  .nav-logo .way{color:var(--honey);}
   .nav-tabs{display:flex;align-items:center;gap:2px;}
   .nav-tab{font-size:14px;color:var(--grey);background:none;border:none;cursor:pointer;padding:9px 15px;border-radius:9px;font-family:inherit;white-space:nowrap;}
   .nav-tab:hover{color:var(--ink);background:rgba(45,45,45,.04);}
@@ -361,7 +361,7 @@
 <div class="lock hide" id="lockScreen">
   <div class="lock-card">
     <div class="logo-lockup">
-      <div class="ll-word">ANYWAY<span class="ll-dot"></span></div>
+      <div class="ll-word">ANY<span class="ll-way">WAY.</span></div>
       <div class="ll-rule"></div>
       <div class="ll-tag">We got you.</div>
     </div>
@@ -1310,7 +1310,7 @@
 
     // NAV
     var TABS=[["home","Home"],["contacts","Contacts"],["pipeline","Pipeline"],["activity","Activity"],["history","History"],["manage","Manage"]];
-    var nav=el('<div class="nav"><div class="nav-logo">ANYWAY<span>.</span></div><div class="nav-tabs" id="navTabs"></div><div class="nav-right"><span class="nav-date">'+DOW[now.getDay()]+" "+MON[now.getMonth()]+" "+now.getDate()+'</span><button class="nav-lock" id="lockBtn">Lock</button><div class="nav-bell"><span class="dot"></span></div><div class="nav-ava">'+esc(avaInitial())+'</div></div></div>');
+    var nav=el('<div class="nav"><div class="nav-logo">ANY<span class="way">WAY.</span></div><div class="nav-tabs" id="navTabs"></div><div class="nav-right"><span class="nav-date">'+DOW[now.getDay()]+" "+MON[now.getMonth()]+" "+now.getDate()+'</span><button class="nav-lock" id="lockBtn">Lock</button><div class="nav-bell"><span class="dot"></span></div><div class="nav-ava">'+esc(avaInitial())+'</div></div></div>');
     var ntabs=nav.querySelector("#navTabs");
     TABS.forEach(function(t){
       var b=el('<button class="nav-tab'+(navView===t[0]?" active":"")+'">'+t[1]+'</button>');
