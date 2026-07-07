@@ -312,6 +312,19 @@
   details.section[open] > summary::after{transform:rotate(90deg);}
   .warm,.comeback,.handoff,.verifybar{max-width:840px;margin-left:auto;margin-right:auto;border-radius:var(--radius);}
   .foot{margin-top:44px;}
+  /* pipeline / history contact cards */
+  .pcard{display:flex;align-items:center;gap:13px;background:var(--bg);border:.5px solid var(--hairline);border-radius:10px;padding:12px 14px;margin-bottom:8px;transition:border-color .15s;}
+  .pcard:hover{border-color:var(--ink);}
+  .pc-ava{width:38px;height:38px;border-radius:50%;background:var(--panel);display:flex;align-items:center;justify-content:center;font-family:'Archivo Black',sans-serif;font-size:12px;flex-shrink:0;}
+  .pc-main{flex:1;min-width:0;}
+  .pc-name{font-family:'Archivo Black',sans-serif;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .pc-meta{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--grey);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .pc-status{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--grey);white-space:nowrap;flex-shrink:0;}
+  .pc-status.gold{color:var(--gold);}
+  .pc-x{background:none;border:none;color:var(--grey2);font-size:16px;cursor:pointer;flex-shrink:0;line-height:1;padding:0 2px;}
+  .pc-x:hover{color:var(--ink);}
+  /* focus mode — collapse everything but today's work */
+  .app.focus .section,.app.focus .handoff,.app.focus .foot{display:none;}
 
 </style>
 
@@ -1218,10 +1231,22 @@
     var contacts=asContacts();
     var tk=todayStr(), total=sentToday(), goal=goalVal(), done=total>=goal, now=new Date();
 
-    // TOP
-    var top=el('<div class="top"><div class="mark">ANYWAY<span>.</span></div><div class="top-right"><span class="date">'+DOW[now.getDay()]+" "+MON[now.getMonth()]+" "+now.getDate()+'</span><button class="lockbtn" id="lockBtn">Lock</button></div></div>');
-    top.querySelector("#lockBtn").addEventListener("click", function(){ logout(); });
-    m.appendChild(top);
+    // NAV
+    var TABS=[["home","Home"],["contacts","Contacts"],["pipeline","Pipeline"],["activity","Activity"],["history","History"],["manage","Manage"]];
+    var nav=el('<div class="nav"><div class="nav-logo">ANYWAY<span>.</span></div><div class="nav-tabs" id="navTabs"></div><div class="nav-right"><span class="nav-date">'+DOW[now.getDay()]+" "+MON[now.getMonth()]+" "+now.getDate()+'</span><button class="nav-lock" id="lockBtn">Lock</button><div class="nav-bell"><span class="dot"></span></div><div class="nav-ava">'+esc(avaInitial())+'</div></div></div>');
+    var ntabs=nav.querySelector("#navTabs");
+    TABS.forEach(function(t){
+      var b=el('<button class="nav-tab'+(navView===t[0]?" active":"")+'">'+t[1]+'</button>');
+      b.addEventListener("click", function(){
+        navView=t[0];
+        Array.prototype.forEach.call(ntabs.children,function(x){ x.classList.remove("active"); });
+        b.classList.add("active");
+        navGo(t[0]);
+      });
+      ntabs.appendChild(b);
+    });
+    nav.querySelector("#lockBtn").addEventListener("click", function(){ logout(); });
+    m.appendChild(nav);
 
     // VERIFY EMAIL — gentle, non-blocking nudge until confirmed
     if(ACCOUNT && ACCOUNT.email && ACCOUNT.verified===false){
@@ -1246,10 +1271,22 @@
       m.appendChild(cb);
     }
 
-    // SCORE
-    var score=el('<div class="score"><div class="score-left"><div><div class="big-num'+(done?" done":"")+'">'+total+'</div><div class="score-sub">of <span>'+goal+'</span> touches · <button id="editGoal">change</button></div></div><div class="mini-square'+(done?" done":"")+'"></div></div><div><div class="streak-num"><i>'+streakWithBend()+'</i> day streak</div><div class="score-sub" style="text-align:right;">bends, doesn’t break</div></div></div>');
-    score.querySelector("#editGoal").addEventListener("click", editGoal);
-    m.appendChild(score);
+    // STAT STRIP + momentum gauge
+    var dueList=[];
+    contacts.forEach(function(c){ var i=dueInfo(c); if(i && i.overdueDays>=0) dueList.push({c:c,i:i}); });
+    dueList.sort(function(x,y){ return y.i.overdueDays - x.i.overdueDays; });
+    var inCadence=contacts.filter(function(c){ return c.status==="active" && !c.complete; }).length;
+    var strip=el('<div class="statstrip"></div>');
+    strip.appendChild(el('<div class="stat"><b>'+dueList.length+'</b><div class="lbl2">Due today</div></div>'));
+    strip.appendChild(el('<div class="stat-sep">·</div>'));
+    strip.appendChild(el('<div class="stat"><b>'+inCadence+'</b><div class="lbl2">In cadence</div></div>'));
+    strip.appendChild(el('<div class="stat-sep">·</div>'));
+    strip.appendChild(buildMeter());
+    var sr=el('<div class="strip-right"></div>');
+    var fmBtn=el('<button class="strip-btn'+(focusMode?" on":"")+'" id="fmBtn">◎ Focus mode</button>');
+    fmBtn.addEventListener("click", function(){ focusMode=!focusMode; m.classList.toggle("focus",focusMode); fmBtn.classList.toggle("on",focusMode); });
+    sr.appendChild(fmBtn); strip.appendChild(sr);
+    m.appendChild(strip);
 
     // WARM
     var warm=contacts.filter(function(c){ return c.status==="warm"; });
@@ -1266,49 +1303,12 @@
       m.appendChild(ws);
     }
 
-    // QUEUE
-    var due=[];
-    contacts.forEach(function(c){ var i=dueInfo(c); if(i && i.overdueDays>=0) due.push({c:c,i:i}); });
-    due.sort(function(x,y){ return y.i.overdueDays - x.i.overdueDays; });
-    var q=el('<section class="queue"><div class="queue-head"><h1 class="queue-title">Start here<span style="color:var(--gold)">.</span></h1><span class="sum-count">'+(due.length?due.length+" due":"")+'</span></div><p class="queue-sub">Everyone due for a touch today, most overdue first. Script, send, done.</p><div id="queueList"></div></section>');
-    var ql=q.querySelector("#queueList");
-    if(!due.length && !warm.length){
-      ql.appendChild(el('<div class="clear-msg"><p class="big">Queue clear<span>.</span></p><p>Nobody’s due. Add contacts below or take the win.</p></div>'));
-    }
-    due.forEach(function(item){
-      var c=item.c, i=item.i;
-      var over = i.overdueDays>0 ? " · "+i.overdueDays+"d overdue" : "";
-      var scriptVal = state.notes[i.touch.id] || fillTemplate(TEMPLATES[i.ch], c);
-      var card=el('<div class="qcard'+(i.overdueDays>0?" overdue":"")+'">'+
-        '<div class="qmain"><div class="qwho"><div class="qname">'+esc(c.name)+'</div><div class="qmeta">'+esc(c.title||"")+(c.title?" · ":"")+esc(c.account)+" · touch "+i.stepNum+"/"+c.touches.length+over+'</div></div>'+
-        '<div class="qactions"><span class="chip step-ch">'+CH_LABEL[i.ch]+'</span><button class="btn-replied" title="They answered — pause cadence">Replied</button><button class="btn-script">Script</button><button class="btn-done">Done</button></div></div>'+
-        '<div class="script"><p class="eyebrow">'+CH_LABEL[i.ch]+' script — use it, or let ANYWAY write it</p><textarea>'+esc(scriptVal)+'</textarea><div class="script-actions"><button class="ai-btn">✦ Write with AI</button><button class="copy-btn">Copy</button></div></div>');
-      var scr=card.querySelector(".script"), ta=card.querySelector("textarea");
-      card.querySelector(".btn-script").addEventListener("click", function(){ scr.classList.toggle("open"); });
-      ta.addEventListener("change", function(){ state.notes[i.touch.id]=ta.value; persistNotes(); });
-      card.querySelector(".copy-btn").addEventListener("click", function(){ copy(ta.value||""); });
-      (function(){
-        var aiBtn=card.querySelector(".ai-btn");
-        aiBtn.addEventListener("click", function(){
-          if(aiBtn.disabled) return;
-          scr.classList.add("open");
-          aiBtn.disabled=true; var label=aiBtn.textContent; aiBtn.textContent="Writing…";
-          fetch("/api/write",{method:"POST",headers:{"Content-Type":"application/json"},
-            body:JSON.stringify({name:c.name,title:c.title||"",company:c.account||"",channel:i.ch,step:i.stepNum})})
-            .then(function(r){ return r.json().then(function(d){ return {ok:r.ok,d:d}; }); })
-            .then(function(res){
-              if(!res.ok||!res.d||!res.d.text){ toast((res.d&&res.d.error)||"AI couldn’t draft that — try again"); return; }
-              ta.value=res.d.text; state.notes[i.touch.id]=res.d.text; persistNotes(); toast("Drafted. Yours to edit.");
-            })
-            .catch(function(){ toast("Network hiccup — try again"); })
-            .then(function(){ aiBtn.disabled=false; aiBtn.textContent=label; });
-        });
-      })();
-      card.querySelector(".btn-done").addEventListener("click", function(){ completeTouch(c); });
-      card.querySelector(".btn-replied").addEventListener("click", function(){ setStatus(c,"warm", firstName(c.name)+" moved to WARM"); });
-      ql.appendChild(card);
-    });
-    m.appendChild(q);
+    // START HERE — carousel deck
+    var start=el('<div class="starthead"><div><div class="start-title">Start here<span style="color:var(--gold)">.</span></div><div class="start-sub">Everyone due for a touch today, most overdue first. Script, send, done.</div></div><div class="start-due">'+(dueList.length?dueList.length+" due":"all clear")+'</div></div>');
+    m.appendChild(start);
+    var deckHost=el('<div id="deckHost"></div>');
+    m.appendChild(deckHost);
+    renderDeckInto(deckHost, dueList, warm);
 
     // ADD CONTACTS
     var accts={}; state.accounts.forEach(function(a){ accts[a.company]=1; });
@@ -1346,7 +1346,7 @@
     // PIPELINE (grouped by account, with rollups)
     var groups={}; contacts.forEach(function(c){ (groups[c.account]=groups[c.account]||[]).push(c); });
     var totalC=contacts.length, acctN=Object.keys(groups).length;
-    var pipe=el('<details class="section"><summary><span class="sum-title">Pipeline</span><span class="sum-count">'+(totalC?totalC+" contacts · "+acctN+" accounts":"empty")+'</span></summary><div class="cadence-row" id="cadRow"></div><p class="hint" style="margin-top:0;">The cadence every contact runs. Replies pause it automatically.</p><div id="pipeList"></div></details>');
+    var pipe=el('<details class="section" id="secPipeline"><summary><span class="sum-title">Pipeline</span><span class="sum-count">'+(totalC?totalC+" contacts · "+acctN+" accounts":"empty")+'</span></summary><div class="cadence-row" id="cadRow"></div><p class="hint" style="margin-top:0;">The cadence every contact runs. Replies pause it automatically.</p><div id="pipeList"></div></details>');
     var cr=pipe.querySelector("#cadRow");
     CADENCE.forEach(function(s,idx){
       cr.appendChild(el('<span class="cad-step">Day '+(s.off+1)+" "+CH_LABEL[s.ch]+'</span>'));
@@ -1367,20 +1367,37 @@
       wrap.appendChild(el('<div class="acct-roll">'+(parts.join(" · ")||"nothing yet")+'</div>'));
       list.forEach(function(c){
         var s=statusLabel(c);
-        var row=el('<div class="contact-row"><span class="nm">'+esc(c.name)+(c.title?' <span style="color:var(--grey);font-weight:400;">· '+esc(c.title)+'</span>':"")+'</span><span style="display:flex;align-items:center;gap:6px;flex-shrink:0;"><span class="st'+(s.gold?" gold":"")+'">'+s.txt+'</span><button class="tiny-x" title="Remove">×</button></span></div>');
-        row.querySelector(".tiny-x").addEventListener("click", function(){ removeContact(c); });
-        wrap.appendChild(row);
+        var nextTxt = c.complete ? "cadence complete" : (c.status==="active" ? (function(){ var di=dueInfo(c); return di ? ("Touch "+di.stepNum+" of "+c.touches.length) : ""; })() : "");
+        var card=el('<div class="pcard">'+
+          '<div class="pc-ava">'+esc(initials(c.name))+'</div>'+
+          '<div class="pc-main"><div class="pc-name">'+esc(c.name)+'</div><div class="pc-meta">'+esc((c.title||"")+(c.title&&c.account?" · ":"")+(c.account||""))+(nextTxt?' · '+nextTxt:"")+'</div></div>'+
+          '<div class="pc-status'+(s.gold?" gold":"")+'">'+s.txt+'</div>'+
+          '<button class="pc-x" title="Remove">×</button></div>');
+        card.querySelector(".pc-x").addEventListener("click", function(){ removeContact(c); });
+        wrap.appendChild(card);
       });
       pl.appendChild(wrap);
     });
     m.appendChild(pipe);
 
     // LAST 14 DAYS
-    var fort=el('<details class="section"><summary><span class="sum-title">Last 14 days</span><span class="sum-count" id="fortCount"></span></summary><div class="day-row" id="dayRow"></div></details>');
+    var fort=el('<details class="section" id="secActivity"><summary><span class="sum-title">Last 14 days</span><span class="sum-count" id="fortCount"></span></summary><div class="day-row" id="dayRow"></div></details>');
     var dr=fort.querySelector("#dayRow"), hit=0;
     for(var i2=13;i2>=0;i2--){ var k=keyForOff(i2), t=dayTotal(k), cls="day-sq"; if(t>=goal){cls+=" hit";hit++;} else if(t>0)cls+=" partial"; if(i2===0)cls+=" today-marker"; var sq=el('<div class="'+cls+'"></div>'); sq.title=k+" — "+t+" touches"; dr.appendChild(sq); }
     fort.querySelector("#fortCount").textContent=hit+" gold";
     m.appendChild(fort);
+
+    // HISTORY — recent completed touches (date-grouped)
+    var touchMap={}; contacts.forEach(function(c){ (c.touches||[]).forEach(function(t,ix){ touchMap[t.id]={name:c.name,account:c.account,step:STEP_NAMES[ix]||("Touch "+(ix+1)),ch:CADENCE[ix]?CH_LABEL[CADENCE[ix].ch]:""}; }); });
+    var doneList=[]; for(var dk in state.done){ if(touchMap[dk]) doneList.push({key:dk,date:state.done[dk],info:touchMap[dk]}); }
+    doneList.sort(function(a,b){ return (b.date||"").localeCompare(a.date||""); });
+    var hist=el('<details class="section" id="secHistory"><summary><span class="sum-title">History</span><span class="sum-count">'+(doneList.length?doneList.length+" sent":"empty")+'</span></summary><div id="histList"></div></details>');
+    var hl=hist.querySelector("#histList");
+    if(!doneList.length){ hl.appendChild(el('<p class="hint" style="margin:2px 0 4px;">Nothing marked done yet — completed touches show up here.</p>')); }
+    else { doneList.slice(0,60).forEach(function(d){
+      hl.appendChild(el('<div class="pcard"><div class="pc-ava">'+esc(initials(d.info.name))+'</div><div class="pc-main"><div class="pc-name">'+esc(d.info.name)+'</div><div class="pc-meta">'+esc(d.info.step+(d.info.ch?" · "+d.info.ch:"")+(d.info.account?" · "+d.info.account:""))+'</div></div><div class="pc-status">'+esc(d.date)+'</div></div>'));
+    }); }
+    m.appendChild(hist);
 
     // BEFORE YOU GO — one line to your future self (saved as handoffNote)
     var ho=el('<section class="handoff"><h2>Before you go</h2><p class="hsub">One line to your future self. It’s the first thing you’ll see when you’re back — even days later.</p>'+
@@ -1400,7 +1417,7 @@
     m.appendChild(ho);
 
     // MANAGE + FOOT
-    var manage=el('<details class="section"><summary><span class="sum-title">Manage</span><span class="sum-count">backup · cleanup</span></summary><div class="btn-row"><button class="btn-mini" id="expBtn">Export backup</button><button class="btn-mini" id="resBtn">Restore</button><button class="btn-mini" id="dupBtn">Delete duplicates</button><button class="btn-mini danger" id="clrBtn">Clear all</button></div><input type="file" id="resFile" accept="application/json,.json" style="display:none"></details>');
+    var manage=el('<details class="section" id="secManage"><summary><span class="sum-title">Manage</span><span class="sum-count">backup · cleanup</span></summary><div class="btn-row"><button class="btn-mini" id="expBtn">Export backup</button><button class="btn-mini" id="resBtn">Restore</button><button class="btn-mini" id="dupBtn">Delete duplicates</button><button class="btn-mini danger" id="clrBtn">Clear all</button></div><input type="file" id="resFile" accept="application/json,.json" style="display:none"></details>');
     manage.querySelector("#expBtn").addEventListener("click", doExport);
     manage.querySelector("#dupBtn").addEventListener("click", doDedupe);
     manage.querySelector("#clrBtn").addEventListener("click", doClear);
@@ -1410,6 +1427,7 @@
     m.appendChild(manage);
 
     m.appendChild(el('<p class="foot">We got you.</p>'));
+    m.classList.toggle("focus", focusMode);
   }
 
   boot();
