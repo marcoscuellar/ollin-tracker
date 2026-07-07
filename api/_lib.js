@@ -188,7 +188,7 @@ export function emailShell(headline, bodyHtml, cta) {
       ${btn}
       <tr><td style="padding:18px 32px 26px;border-top:1px solid #E7E3DC;font-size:12px;line-height:1.5;color:#9A9A9A">You're receiving this because this email was used to sign up for ANYWAY. If that wasn't you, you can ignore this message.</td></tr>
     </table>
-    <div style="font-family:monospace;font-size:10px;letter-spacing:.16em;color:#9A9A9A;margin-top:16px">ANYWAYIDID.COM</div>
+    <div style="font-family:monospace;font-size:10px;letter-spacing:.16em;color:#9A9A9A;margin-top:16px">HIANYWAY.APP</div>
   </td></tr></table></body></html>`;
 }
 
