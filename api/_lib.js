@@ -77,7 +77,7 @@ export function parseCookies(req) {
   return out;
 }
 export function setCookie(res, name, value, opts = {}) {
-  const parts = [`${name}=${encodeURIComponent(value)}`, 'Path=/', 'HttpOnly', 'SameSite=Strict', 'Secure'];
+  const parts = [`${name}=${encodeURIComponent(value)}`, 'Path=/', 'HttpOnly', 'SameSite=Lax', 'Secure'];
   if (opts.maxAge != null) parts.push(`Max-Age=${opts.maxAge}`);
   let prev = res.getHeader('Set-Cookie') || [];
   if (!Array.isArray(prev)) prev = [prev];

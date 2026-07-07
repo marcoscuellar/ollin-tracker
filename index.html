@@ -6,7 +6,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root{
-    --ink:#111111; --cream:#FFFFFF; --card:#FFFFFF; --gold:#111111; --blue:#1B2E52; --grey:#6B6B6B;
+    --ink:#111111; --cream:#FFFFFF; --card:#FFFFFF; --gold:#111111; --blue:#1B2E52; --honey:#E0A93A; --grey:#6B6B6B;
     --bg:#F2F2F2; --grey2:#A6A6A6; --hover:#2A2A2A;
     --hairline:#EAEAEA; --panel:#F5F5F5;
     /* vertical accents (reserved for future) */
@@ -44,14 +44,14 @@
   .streak-num i{font-style:normal;color:var(--gold);}
 
   .warm{padding:26px 0 0;}
-  .warm-title{font-family:'Archivo Black',sans-serif;font-size:16px;text-transform:uppercase;color:var(--gold);}
+  .warm-title{font-family:'Archivo Black',sans-serif;font-size:16px;text-transform:uppercase;color:var(--honey);}
   .warm-sub{font-size:13px;color:var(--grey);margin:2px 0 12px;}
-  .wcard{border:1.5px solid var(--gold);margin-bottom:10px;background:var(--cream);padding:13px 14px;}
+  .wcard{border:1.5px solid var(--honey);margin-bottom:10px;background:var(--cream);padding:13px 14px;}
   .wname{font-weight:600;font-size:15px;}
   .wmeta{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--grey);margin:3px 0 10px;}
   .wactions{display:flex;gap:8px;flex-wrap:wrap;}
   .wbtn{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;border:.5px solid var(--ink);background:none;padding:8px 12px;cursor:pointer;color:var(--ink);}
-  .wbtn.gold{background:var(--gold);border-color:var(--gold);color:var(--cream);}
+  .wbtn.gold{background:var(--honey);border-color:var(--honey);color:var(--ink);}
   .wbtn:hover{background:var(--ink);color:var(--cream);}
   .wbtn.quiet{border-color:var(--hairline);color:var(--grey);}
   .wbtn.quiet:hover{background:none;color:var(--ink);border-color:var(--ink);}
@@ -123,8 +123,8 @@
 
   .day-row{display:flex;gap:5px;padding:14px 0 4px;}
   .day-sq{flex:1;aspect-ratio:1/1;max-width:30px;border:1.5px solid var(--hairline);position:relative;}
-  .day-sq.hit{background:var(--gold);border-color:var(--gold);}
-  .day-sq.partial{background:linear-gradient(to top,var(--gold) 45%,transparent 45%);border-color:var(--gold);}
+  .day-sq.hit{background:var(--honey);border-color:var(--honey);}
+  .day-sq.partial{background:linear-gradient(to top,var(--honey) 45%,transparent 45%);border-color:var(--honey);}
   .day-sq.today-marker::after{content:"";position:absolute;left:0;right:0;bottom:-7px;height:2px;background:var(--ink);}
 
   .foot{text-align:center;margin-top:40px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--grey);}
