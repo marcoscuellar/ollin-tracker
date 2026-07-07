@@ -197,8 +197,7 @@
   .lbl{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--grey);}
   /* ANY / WAY. stacked lockup (lock screen) */
   .logo-lockup{margin-bottom:26px;}
-  .ll-any,.ll-way{font-family:'Archivo Black',sans-serif;font-size:54px;line-height:.92;letter-spacing:-.02em;color:var(--ink);}
-  .ll-way{display:flex;align-items:flex-end;justify-content:center;gap:9px;}
+  .ll-word{font-family:'Archivo Black',sans-serif;font-size:44px;line-height:1;letter-spacing:-.02em;color:var(--ink);display:flex;align-items:flex-end;justify-content:center;gap:7px;}
   .ll-dot{width:.30em;height:.30em;background:var(--blue);display:inline-block;margin-bottom:.14em;}
   .ll-rule{width:34px;height:3px;background:var(--ink);margin:18px auto 12px;}
   .ll-tag{font-family:'Inter',sans-serif;font-size:18px;color:var(--ink);font-weight:500;}
@@ -212,7 +211,7 @@
   @media (max-width:430px){.qmain{flex-wrap:wrap;}.qactions{width:100%;justify-content:flex-end;}}
 
   /* ===================== REFRESHED DESKTOP FACE ===================== */
-  :root{ --radius:12px; --shadow:0 1px 2px rgba(45,45,45,.05),0 6px 20px rgba(45,45,45,.06); }
+  :root{ --radius:12px; --shadow:0 2px 5px rgba(17,17,17,.06),0 14px 40px rgba(17,17,17,.14); }
   .app{max-width:1180px;padding:0 24px 90px;}
   /* top nav */
   .nav{display:flex;align-items:center;gap:20px;padding:16px 0 22px;}
@@ -334,8 +333,7 @@
 <div class="lock hide" id="lockScreen">
   <div class="lock-card">
     <div class="logo-lockup">
-      <div class="ll-any">ANY</div>
-      <div class="ll-way">WAY<span class="ll-dot"></span></div>
+      <div class="ll-word">ANYWAY<span class="ll-dot"></span></div>
       <div class="ll-rule"></div>
       <div class="ll-tag">We got you.</div>
     </div>
