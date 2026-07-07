@@ -147,7 +147,7 @@
   .toast.show{opacity:1;}
 
   /* lock screen (passkey) — ANYWAY styling */
-  .lock{position:fixed;inset:0;z-index:80;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:24px;}
+  .lock{position:fixed;inset:0;z-index:80;background:var(--bg);overflow-y:auto;}
   .lock-card{max-width:410px;width:100%;text-align:center;border:.5px solid var(--hairline);border-radius:var(--radius);box-shadow:var(--shadow);padding:46px 38px;background:var(--card);}
   .lock .mark{font-family:'Archivo Black',sans-serif;font-size:34px;}
   .lock .sub{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--grey);margin:8px 0 26px;}
@@ -360,20 +360,110 @@
   /* focus mode — collapse everything but today's work */
   .app.focus .section,.app.focus .handoff,.app.focus .foot{display:none;}
 
+  /* ============ landing page (logged-out) ============ */
+  .lp{max-width:1000px;margin:0 auto;padding:0 24px 40px;}
+  .lp-nav{display:flex;align-items:center;justify-content:space-between;padding:22px 0;}
+  .lp-login{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;background:none;border:.5px solid var(--ink);border-radius:9px;padding:9px 18px;cursor:pointer;color:var(--ink);}
+  .lp-login:hover{background:var(--ink);color:var(--cream);}
+  .lp-hero{text-align:center;padding:54px 0 66px;max-width:680px;margin:0 auto;}
+  .lp-hero .ll-rule{margin:0 auto 26px;}
+  .lp-h1{font-family:'Archivo Black',sans-serif;font-size:46px;line-height:1.06;letter-spacing:-.02em;color:var(--ink);}
+  .lp-sub{font-size:17px;line-height:1.6;color:var(--grey);margin:20px auto 30px;max-width:560px;}
+  .lp-cta{width:auto;display:inline-block;padding:16px 34px;font-size:13px;}
+  .lp-fine{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.06em;color:var(--grey2);margin-top:16px;text-transform:uppercase;}
+  .lp-band{border-top:.5px solid var(--hairline);padding:56px 0;}
+  .lp-h2{font-family:'Archivo Black',sans-serif;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--grey);text-align:center;margin-bottom:36px;}
+  .lp-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+  .lp-step{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:26px 24px;}
+  .lp-num{width:34px;height:34px;border-radius:50%;background:var(--ink);color:var(--cream);display:flex;align-items:center;justify-content:center;font-family:'Archivo Black',sans-serif;font-size:15px;margin-bottom:16px;}
+  .lp-st-h{font-family:'Archivo Black',sans-serif;font-size:17px;margin-bottom:8px;}
+  .lp-step p{font-size:14.5px;line-height:1.55;color:var(--grey);}
+  .lp-pricing{border-top:.5px solid var(--hairline);padding:56px 0 0;}
+  .lp-tiers{display:grid;grid-template-columns:repeat(2,1fr);gap:22px;max-width:720px;margin:0 auto;}
+  .lp-tier{position:relative;background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:30px 28px;display:flex;flex-direction:column;}
+  .lp-tier.feat{border:1.5px solid var(--honey);}
+  .lp-badge{position:absolute;top:-11px;left:28px;background:var(--honey);color:var(--ink);font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;padding:4px 10px;border-radius:20px;font-weight:600;}
+  .lp-tier-name{font-family:'Archivo Black',sans-serif;font-size:15px;text-transform:uppercase;}
+  .lp-price{font-family:'Archivo Black',sans-serif;font-size:40px;line-height:1;margin-top:12px;}
+  .lp-price span{font-size:16px;color:var(--grey);}
+  .lp-per{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--grey);margin-top:6px;}
+  .lp-feat{list-style:none;margin:20px 0 24px;flex:1;}
+  .lp-feat li{font-size:14px;color:var(--ink);padding:9px 0;border-bottom:.5px solid var(--hairline);}
+  .lp-founding{text-align:center;margin-top:30px;font-size:14px;color:var(--grey);}
+  .lp-founding b{color:var(--ink);}
+  .lp-flink{color:var(--honey);font-weight:600;cursor:pointer;text-decoration:underline;margin-left:6px;}
+  .lp-foot{text-align:center;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--grey2);padding:50px 0 10px;}
+  .lp-overlay{position:fixed;inset:0;z-index:90;background:rgba(17,17,17,.45);display:flex;align-items:center;justify-content:center;padding:24px;}
+  .lp-overlay.hide{display:none;}
+  .lp-overlay .lock-card{position:relative;}
+  .lp-close{position:absolute;top:14px;right:16px;background:none;border:none;font-size:22px;color:var(--grey2);cursor:pointer;line-height:1;}
+  .lp-close:hover{color:var(--ink);}
+  @media(max-width:720px){.lp-steps{grid-template-columns:1fr;}.lp-tiers{grid-template-columns:1fr;}.lp-h1{font-size:33px;}}
+
 </style>
 
 <div class="app hide" id="appMain"></div>
 
 <div class="lock hide" id="lockScreen">
-  <div class="lock-card">
-    <div class="logo-lockup">
-      <div class="ll-word">ANY<span class="ll-way">WAY.</span></div>
+  <div class="lp">
+    <header class="lp-nav">
+      <div class="nav-logo">ANY<span class="way">WAY.</span></div>
+      <button class="lp-login" id="lpLogin">Log in</button>
+    </header>
+
+    <section class="lp-hero">
       <div class="ll-rule"></div>
-      <div class="ll-tag">We got you.</div>
+      <h1 class="lp-h1">See who to message today.<br>Send it. Done.</h1>
+      <p class="lp-sub">The outreach tracker for sales brains that scatter. Open it, see who's due, send the script — ANYWAY writes it if you want. No CRM sprawl, no guilt.</p>
+      <button class="btn lp-cta" id="lpStart">Start free</button>
+      <p class="lp-fine">Free for your first account · no credit card</p>
+    </section>
+
+    <section class="lp-band">
+      <h2 class="lp-h2">How it works</h2>
+      <div class="lp-steps">
+        <div class="lp-step"><div class="lp-num">1</div><div class="lp-st-h">Add your list</div><p>Drop in a CSV or Excel of contacts. ANYWAY sorts everyone into a 5-touch cadence.</p></div>
+        <div class="lp-step"><div class="lp-num">2</div><div class="lp-st-h">See who's due</div><p>Every day, one clean queue — most overdue first. No deciding, no dashboards.</p></div>
+        <div class="lp-step"><div class="lp-num">3</div><div class="lp-st-h">Send &amp; done</div><p>Use the script or let ANYWAY AI write it in your voice. One tap: done.</p></div>
+      </div>
+    </section>
+
+    <section class="lp-pricing">
+      <h2 class="lp-h2">Pricing</h2>
+      <div class="lp-tiers">
+        <div class="lp-tier">
+          <div class="lp-tier-name">Free</div>
+          <div class="lp-price">$0</div>
+          <div class="lp-per">your first account</div>
+          <ul class="lp-feat"><li>1 account · 15 contacts</li><li>The daily queue, in order</li><li>Scripts for every touch</li><li>Streak + comeback ritual</li></ul>
+          <button class="btn ghost lp-pick" data-plan="free">Start free</button>
+        </div>
+        <div class="lp-tier feat">
+          <div class="lp-badge">Most popular</div>
+          <div class="lp-tier-name">Pro</div>
+          <div class="lp-price">$12<span>/mo</span></div>
+          <div class="lp-per">or $99/yr</div>
+          <ul class="lp-feat"><li>Unlimited accounts &amp; contacts</li><li>Unlimited AI-written messages</li><li>Warm-lead tracking &amp; rollups</li><li>CSV export</li></ul>
+          <button class="btn lp-pick" data-plan="pro">Go Pro</button>
+        </div>
+      </div>
+      <div class="lp-founding">Founding member — lock <b>$79/yr</b>, forever. <a class="lp-flink" id="lpFound">Claim it &rarr;</a></div>
+    </section>
+
+    <footer class="lp-foot">We got you. · HIANYWAY.APP</footer>
+  </div>
+
+  <div class="lp-overlay hide" id="authOverlay">
+    <div class="lock-card">
+      <button class="lp-close" id="authClose" aria-label="Close">&times;</button>
+      <div class="logo-lockup">
+        <div class="ll-word">ANY<span class="ll-way">WAY.</span></div>
+        <div class="ll-rule"></div>
+        <div class="ll-tag">We got you.</div>
+      </div>
+      <div id="lockBody"></div>
+      <div class="lock-err" id="lockErr"></div>
     </div>
-    <div id="lockBody"></div>
-    <div class="lock-err" id="lockErr"></div>
-    <div class="ll-domain">HIANYWAY.APP</div>
   </div>
 </div>
 
@@ -872,6 +962,17 @@
     document.getElementById("appMain").classList.toggle("hide", !show);
     document.getElementById("lockScreen").classList.toggle("hide", show);
   }
+  function openAuth(mode){ document.getElementById("authOverlay").classList.remove("hide"); if(mode) authForm(mode); }
+  function closeAuth(){ document.getElementById("authOverlay").classList.add("hide"); }
+  function wireLanding(){
+    var by=function(x){ return document.getElementById(x); };
+    if(by("lpLogin")) by("lpLogin").addEventListener("click", function(){ openAuth("login"); });
+    if(by("lpStart")) by("lpStart").addEventListener("click", function(){ openAuth("signup"); });
+    if(by("lpFound")) by("lpFound").addEventListener("click", function(){ openAuth("signup"); });
+    if(by("authClose")) by("authClose").addEventListener("click", closeAuth);
+    var ov=by("authOverlay"); if(ov) ov.addEventListener("click", function(e){ if(e.target===ov) closeAuth(); });
+    Array.prototype.forEach.call(document.querySelectorAll(".lp-pick"), function(b){ b.addEventListener("click", function(){ openAuth("signup"); }); });
+  }
   function authForm(mode){
     lockErr("");
     var isSignup = mode==="signup";
@@ -921,7 +1022,7 @@
       var d=await r.json().catch(function(){ return {}; });
       if(!r.ok || !d.ok) throw new Error(d.error||"Couldn’t reset — request a new link.");
       cleanUrl(); ACCOUNT={email:d.email,plan:d.plan,verified:d.verified};
-      await afterAuthLoad(); computeComeback(); showApp(true); render();
+      await afterAuthLoad(); computeComeback(); closeAuth(); showApp(true); render();
       toast("Password updated. You’re in.");
     }catch(e){
       lockErr((e&&e.message)||"Couldn’t reset — request a new link.");
@@ -948,7 +1049,7 @@
       ACCOUNT={email:d.email,plan:d.plan,verified:d.verified};
       await afterAuthLoad();
       computeComeback();
-      showApp(true); render();
+      closeAuth(); showApp(true); render();
       if(d.migrated) toast("Welcome back — your pipeline’s here.");
       else if(mode==="signup") toast("Welcome to ANYWAY. Check your inbox to confirm your email.");
     }catch(e){
@@ -971,7 +1072,7 @@
   function clearState(){ state.accounts=[]; state.done={}; state.notes={}; state.extra={}; state.handoffNote=""; state.activeId=null; state.seeded=false; }
   async function logout(){
     try{ await fetch("/api/auth?action=logout",{method:"POST",credentials:"same-origin"}); }catch(e){}
-    clearState(); comebackDismissed=false; showApp(false); authForm("login");
+    clearState(); comebackDismissed=false; closeAuth(); showApp(false);
   }
   function afterBootParams(params){
     var vf=params.get("verified");
@@ -982,7 +1083,7 @@
   async function boot(){
     var params=new URLSearchParams(location.search);
     var rst=params.get("reset");
-    if(rst){ showApp(false); renderResetForm(rst); return; }
+    if(rst){ showApp(false); openAuth(); renderResetForm(rst); return; }
     try{
       var r=await fetch("/api/auth?action=status",{credentials:"same-origin"});
       var d=r.ok ? await r.json() : {};
@@ -995,7 +1096,7 @@
         return;
       }
     }catch(e){}
-    showApp(false); authForm("login");
+    showApp(false); closeAuth();
     afterBootParams(params);
   }
 
@@ -1536,6 +1637,7 @@
     m.classList.toggle("focus", focusMode);
   }
 
+  wireLanding();
   boot();
 
 })();
