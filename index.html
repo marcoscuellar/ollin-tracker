@@ -3,7 +3,7 @@
 <title>VAMOS. — Tracker</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;900&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;800;900&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
     --ink:#111110; --cream:#FFFFFF; --card:#FFFFFF; --gold:#111110; --blue:#1B2E52; --blue900:#1B2E52; --honey:#E0A93A; --grey:#6B6B6B; --tint:#E9EBF1;
@@ -497,97 +497,277 @@
   .faq summary{font-size:14.5px;padding:15px 0;}
   .faq .a{font-size:13.5px;}}
 
+
+  /* ================= VAMOS marketing landing (logged-out) ================= */
+  .vl{
+    --font-display:'Geist',sans-serif; --font-body:'Geist',system-ui,sans-serif; --font-mono:'Geist Mono',monospace;
+    --blue-900:#1B2E52; --ink-900:#111110; --white:#FFFFFF; --grey-600:#6E6A61;
+    --paper:#F2F2F2; --panel:#F5F5F5; --hairline:rgba(17,17,16,.12);
+    --honey-500:#E0A93A; --honey-600:#C99420; --cobalt-500:#3B77C2; --magenta-500:#B8438A; --verde-500:#3E9B4F;
+    --accent:#E0A93A; --text-primary:#111110; --text-secondary:#6E6A61; --text-display:#1B2E52;
+    --surface-card:#FFFFFF; --radius-card:12px;
+    --shadow-card:0 2px 5px rgba(17,17,17,.06),0 14px 40px rgba(17,17,17,.14);
+    background:#FFFFFF; color:var(--text-primary); font-family:var(--font-body); line-height:1.6;
+  }
+  .vl *{box-sizing:border-box;}
+  .vl .wrap{max-width:1080px;margin:0 auto;padding:0 24px;}
+  .vl .tint{background:color-mix(in srgb, var(--blue-900) 5%, var(--paper));}
+  /* header */
+  .vl-head{border-bottom:.5px solid var(--hairline);position:sticky;top:0;background:rgba(255,255,255,.9);backdrop-filter:saturate(180%) blur(10px);-webkit-backdrop-filter:saturate(180%) blur(10px);z-index:10;}
+  .vl-bar{display:flex;justify-content:space-between;align-items:center;padding:16px 0;gap:16px;}
+  .vl-mark{font-family:var(--font-display);font-weight:800;font-size:22px;letter-spacing:-.03em;text-transform:uppercase;color:var(--blue-900);}
+  .vl-head-tag{font-family:var(--font-mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-secondary);margin-left:14px;}
+  .vl-login{font-family:var(--font-mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-900);background:none;border:.5px solid var(--ink-900);border-radius:9px;padding:9px 18px;cursor:pointer;white-space:nowrap;}
+  .vl-login:hover{background:var(--ink-900);color:#fff;}
+  /* shared type */
+  .vl-eyebrow{font-family:var(--font-mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--text-secondary);}
+  .vl-h2{font-family:var(--font-display);font-weight:800;text-transform:uppercase;line-height:1.15;color:var(--text-display);}
+  .vl-h2 .dot{color:var(--accent);}
+  .vl-btn{display:inline-block;font-family:var(--font-mono);font-size:13px;letter-spacing:.14em;text-transform:uppercase;font-weight:600;background:var(--blue-900);color:#fff;border:.5px solid var(--blue-900);border-radius:9px;padding:16px 32px;cursor:pointer;text-decoration:none;transition:background .15s,border-color .15s;}
+  .vl-btn:hover{background:var(--ink-900);border-color:var(--ink-900);color:#fff;}
+  /* hero */
+  .vl-hero{padding:104px 0 80px;text-align:center;}
+  .vl-wordmark{font-family:var(--font-display);font-weight:800;font-size:clamp(74px,18vw,220px);line-height:.92;letter-spacing:-.03em;text-transform:uppercase;color:var(--text-display);}
+  .vl-rule{width:40px;height:3px;background:var(--accent);margin:36px auto 26px;border-radius:2px;}
+  .vl-hero-tag{font-size:clamp(20px,3vw,26px);font-weight:500;letter-spacing:.01em;margin:0;}
+  .vl-hero-sub{max-width:440px;margin:20px auto 0;color:var(--text-secondary);font-size:15.5px;}
+  .vl-hero-free{font-family:var(--font-mono);font-size:11px;letter-spacing:.08em;color:var(--text-secondary);margin-top:16px;}
+  /* sections */
+  .vl-sec{padding:80px 0;}
+  .vl-sec.hair{border-top:.5px solid var(--hairline);}
+  .vl-sec.white{background:#fff;}
+  .vl-sub{max-width:480px;margin:22px auto 0;color:var(--text-secondary);font-size:15.5px;}
+  /* said */
+  .vl-said-grid{display:flex;gap:48px;align-items:center;flex-wrap:wrap;margin-top:8px;}
+  .vl-said-list{list-style:none;margin:0;padding:0;flex:1;min-width:260px;}
+  .vl-said-list li{font-family:var(--font-display);font-weight:800;font-size:clamp(18px,4.6vw,44px);line-height:1.35;text-transform:uppercase;width:fit-content;color:var(--text-display);text-decoration:line-through;text-decoration-color:var(--accent);text-decoration-thickness:3px;font-style:italic;}
+  .vl-said-list li+li{margin-top:10px;}
+  .vl-said-answer{flex:1;min-width:260px;}
+  .vl-said-answer .card{font-size:clamp(16px,2.4vw,20px);font-weight:500;line-height:1.65;margin:0;background:var(--surface-card);border-radius:var(--radius-card);box-shadow:var(--shadow-card);padding:28px 26px;color:#1B2E52;}
+  .vl-vamos{font-family:var(--font-display);font-weight:800;font-size:clamp(26px,5vw,52px);text-transform:uppercase;line-height:1.2;margin-top:36px;color:#1B2E52;}
+  /* step + feature cards */
+  .vl-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:56px;text-align:left;}
+  .vl-feat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:52px;text-align:left;}
+  .vl-card{background:var(--surface-card);border-radius:var(--radius-card);box-shadow:var(--shadow-card);}
+  .vl-card.dark{background:var(--blue-900);}
+  .vl-card.dark h3{color:#fff;} .vl-card.dark p{color:rgba(255,255,255,.86);} .vl-card.dark p b{color:#fff;} .vl-card.dark .vl-label{color:rgba(255,255,255,.72);}
+  .vl-step{padding:26px 24px;}
+  .vl-step .num{font-family:var(--font-display);font-weight:800;font-size:15px;}
+  .vl-step h3,.vl-feat h3{font-family:var(--font-display);font-weight:800;font-size:19px;text-transform:uppercase;margin:12px 0 8px;color:var(--text-display);}
+  .vl-step p,.vl-feat p{font-size:14.5px;color:var(--text-secondary);line-height:1.55;}
+  .vl-step p b,.vl-feat p b{color:var(--text-primary);font-weight:600;}
+  .vl-feat{padding:28px 26px;}
+  .vl-label{font-family:var(--font-mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-secondary);}
+  .vl-feat.hl .vl-label{color:var(--accent);}
+  .vl-nt{display:inline-block;margin-top:26px;font-family:var(--font-mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#fff;border:.5px solid var(--hairline);padding:8px 14px;background:var(--blue-900);border-radius:6px;}
+  /* comeback */
+  .vl-cb-grid{display:flex;gap:44px;align-items:center;margin-top:56px;text-align:left;}
+  .vl-cb-copy{flex:1;}
+  .vl-cb-copy p{font-size:15.5px;color:var(--text-secondary);max-width:440px;}
+  .vl-cb-copy p+p{margin-top:18px;}
+  .vl-cb-copy p b{color:var(--text-primary);font-weight:600;}
+  .vl-cb-quote{border-left:3px solid var(--ink-900);padding:2px 0 2px 18px;margin-top:26px;}
+  .vl-cb-quote p{font-size:16px;font-weight:500;font-style:italic;margin:0;color:var(--text-primary);}
+  .vl-wyo-wrap{flex:1;max-width:340px;width:100%;}
+  .vl-wyo{background:#fff;border-radius:var(--radius-card);box-shadow:var(--shadow-card);padding:22px 22px;}
+  .vl-wyo .lbl{font-family:var(--font-mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--text-secondary);}
+  .vl-wyo .note{font-size:15px;font-weight:500;margin:12px 0 16px;padding:12px;background:var(--paper);border:.5px solid var(--hairline);border-radius:8px;}
+  .vl-wyo .row{display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;padding:9px 0;border-bottom:.5px solid var(--hairline);}
+  .vl-wyo .row b{color:var(--accent);font-weight:500;}
+  .vl-wyo .cta{display:block;width:100%;text-align:center;margin-top:18px;font-family:var(--font-mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;background:var(--blue-900);color:#fff;border:none;border-radius:9px;padding:13px;cursor:pointer;}
+  .vl-wyo .cta:hover{background:var(--ink-900);}
+  /* manifesto */
+  .vl-man-grid{display:flex;gap:32px;align-items:flex-start;margin-top:56px;}
+  .vl-man-photo{width:200px;flex-shrink:0;border:.5px solid var(--hairline);aspect-ratio:4/5;display:flex;align-items:center;justify-content:center;background:var(--panel);}
+  .vl-man-photo span{font-family:var(--font-mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-tertiary,#9A9A9A);text-align:center;padding:0 10px;line-height:1.5;}
+  .vl-man-body p{font-size:clamp(18px,2.4vw,22px);line-height:1.65;font-weight:500;margin:0;}
+  .vl-man-body p+p{margin-top:26px;}
+  .vl-man-name{font-family:var(--font-display);font-weight:800;font-size:15px;text-transform:uppercase;letter-spacing:.02em;margin-top:26px;color:var(--text-display);}
+  .vl-man-name span{display:block;font-family:var(--font-mono);font-size:11px;letter-spacing:.14em;color:var(--text-secondary);text-transform:uppercase;margin-top:4px;font-weight:400;}
+  /* expansion cells */
+  .vl-cells{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:56px;max-width:560px;margin-left:auto;margin-right:auto;}
+  .vl-cell{background:#fff;border-radius:var(--radius-card);box-shadow:var(--shadow-card);padding:22px 20px;display:flex;flex-direction:column;justify-content:space-between;aspect-ratio:1;}
+  .vl-cell .nm{font-family:var(--font-display);font-weight:800;font-size:clamp(17px,2.6vw,22px);text-transform:uppercase;line-height:1.15;color:var(--text-display);}
+  .vl-cell .nm em{font-style:normal;display:block;}
+  .vl-cell .st{font-family:var(--font-mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-secondary);}
+  /* faq */
+  .vl-faq{border-bottom:.5px solid var(--hairline);background:#fff;border-radius:var(--radius-card);padding:0 20px;margin-bottom:8px;box-shadow:var(--shadow-card);}
+  .vl-faq summary{list-style:none;cursor:pointer;padding:18px 0;font-weight:600;font-size:15.5px;display:flex;justify-content:space-between;align-items:center;gap:12px;color:var(--text-primary);}
+  .vl-faq summary::-webkit-details-marker{display:none;}
+  .vl-faq summary::after{content:"+";font-family:var(--font-display);font-weight:800;color:var(--accent);font-size:18px;}
+  .vl-faq[open] summary::after{content:"\2013";}
+  .vl-faq .a{font-size:14.5px;color:var(--text-secondary);padding:0 0 18px;}
+  .vl-faq .a b{color:var(--text-primary);font-weight:600;}
+  /* signup */
+  .vl-signup{padding:88px 0 96px;text-align:center;}
+  .vl-signup-form{margin-top:40px;display:flex;justify-content:center;max-width:460px;margin-left:auto;margin-right:auto;}
+  .vl-signup-form input{flex:1;font-family:var(--font-mono);font-size:13px;padding:16px 18px;background:transparent;border:.5px solid var(--ink-900);border-right:none;border-radius:9px 0 0 9px;color:var(--text-primary);}
+  .vl-signup-form input:focus{outline:none;}
+  .vl-signup-form button{font-family:var(--font-mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;background:var(--blue-900);color:#fff;font-weight:600;border:.5px solid var(--blue-900);padding:0 26px;cursor:pointer;border-radius:0 9px 9px 0;}
+  .vl-signup-form button:hover{background:var(--ink-900);border-color:var(--ink-900);}
+  .vl-signup-note{margin-top:16px;font-size:12.5px;color:var(--text-secondary);font-family:var(--font-mono);letter-spacing:.04em;}
+  /* footer */
+  .vl-footer{border-top:.5px solid var(--hairline);padding:28px 0 40px;}
+  .vl-foot{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font-family:var(--font-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-secondary);}
+  @media(max-width:760px){
+    .vl-steps,.vl-feat-grid,.vl-cells{grid-template-columns:1fr;}
+    .vl-said-grid,.vl-cb-grid,.vl-man-grid{flex-direction:column;align-items:flex-start;}
+    .vl-wyo-wrap{max-width:100%;}
+    .vl-man-photo{width:140px;}
+    .vl-sec{padding:60px 0;}
+    .vl-hero{padding:72px 0 56px;}
+  }
+
 </style>
 
 <div class="app hide" id="appMain"></div>
 
 <div class="lock hide" id="lockScreen">
-  <div class="mkt">
-    <header class="mkt-head"><div class="wrap bar"><div class="bar-mark">VAMOS</div><button class="bar-login" id="lpLogin">Log in</button></div></header>
+  <div class="vl">
+    <header class="vl-head"><div class="wrap vl-bar">
+      <div style="display:flex;align-items:center;"><span class="vl-mark">VAMOS</span><span class="vl-head-tag">We got you.</span></div>
+      <button class="vl-login" id="lpLogin">Log in</button>
+    </div></header>
+
     <main>
-      <section class="hero wrap">
-        <h1 class="wordmark">VAMOS</h1>
-        <div class="hero-rule" aria-hidden="true"></div>
-        <p class="hero-tag">We got you.</p>
-        <p class="hero-sub">A daily outreach tracker built for ADHD brains. It tells you who to touch today, hands you the script, and shifts gears the second they reply.</p>
-        <button class="hero-cta lp-open">Try it free</button>
-        <p class="hero-free">First <b>25 contacts</b> free · No card · No pitch</p>
+      <!-- HERO -->
+      <section class="vl-hero tint"><div class="wrap">
+        <div class="vl-wordmark">VAMOS</div>
+        <div class="vl-rule"></div>
+        <p class="vl-hero-tag">We got you.</p>
+        <p class="vl-hero-sub">A daily outreach tracker built for ADHD brains. It tells you who to touch today, hands you the script, and shifts gears the second they reply.</p>
+        <div style="margin-top:36px;"><button class="vl-btn lp-open">Try it free</button></div>
+        <p class="vl-hero-free">First 25 contacts free · No card · No pitch</p>
+      </div></section>
+
+      <!-- THINGS THEY SAID -->
+      <section class="vl-sec white" style="border-top:.5px solid var(--hairline);border-bottom:.5px solid var(--hairline);"><div class="wrap">
+        <div style="text-align:center;">
+          <p class="vl-eyebrow" style="margin-bottom:32px;">Things we've all heard</p>
+          <h2 class="vl-h2" style="font-size:clamp(28px,4vw,40px);margin:-16px 0 44px;">We've heard it all before<span class="dot">.</span></h2>
+        </div>
+        <div class="vl-said-grid">
+          <ul class="vl-said-list">
+            <li><i>"Just try harder."</i></li>
+            <li><i>"It's not that hard."</i></li>
+            <li><i>"Just focus."</i></li>
+          </ul>
+          <div class="vl-said-answer">
+            <p class="card">I tried the "ADHD-friendly" apps. Most of them felt like they were built by people guessing.<br><br>So I stopped waiting for the right tool and built the one I needed. It helps me keep up with my ideas, my work, and the way my brain actually moves.<br><br>Turns out, it works. So I'm sharing it with others who think and work like I do.</p>
+            <p class="vl-vamos">Vamos.</p>
+          </div>
+        </div>
+      </div></section>
+
+      <!-- HOW IT WORKS -->
+      <section class="vl-sec tint hair"><div class="wrap" style="text-align:center;">
+        <p class="vl-eyebrow">How it works</p>
+        <h2 class="vl-h2" style="font-size:clamp(32px,6vw,52px);margin:16px 0 0;">Two minutes to your first touch<span class="dot">.</span></h2>
+        <p class="vl-sub">No setup, no config screen. Load your list once — VAMOS handles the cadence, the script, and the queue from there.</p>
+        <div class="vl-steps">
+          <div class="vl-card vl-step"><div class="num" style="color:var(--accent);">01</div><h3>Upload or paste your list</h3><p>Upload a CSV or paste contacts manually — <b>your whole list at once.</b> Every person starts a 5-touch cadence: Outreach → Follow up → Nudge → Break up → Final attempt.</p></div>
+          <div class="vl-card dark vl-step"><div class="num" style="color:#fff;">02</div><h3>Work the carousel</h3><p>Open the app, <b>one card, one contact at a time.</b> See their name, title, touch step, and the script — ready to send. Review it, skip it, or tap Done. Next card.</p></div>
+          <div class="vl-card vl-step"><div class="num" style="color:var(--magenta-500);">03</div><h3>Watch the meter fill</h3><p>The stat strip tracks <b>due today · in cadence · sent today</b> in real time. <b>Someone replies? They jump to the top.</b> Toggle Focus mode to lock in.</p></div>
+        </div>
+      </div></section>
+
+      <!-- PRODUCT -->
+      <section class="vl-sec white"><div class="wrap" style="text-align:center;">
+        <p class="vl-eyebrow">The tracker</p>
+        <h2 class="vl-h2" style="font-size:clamp(32px,6vw,52px);max-width:760px;margin:16px auto 0;">Not another "ADHD friendly" app</h2>
+        <p class="vl-sub">Every screen below is built around one rule: reduce the decisions, keep the momentum.</p>
+        <p class="vl-nt">✓ Also neurotypical-friendly</p>
+        <div class="vl-feat-grid">
+          <div class="vl-card dark vl-feat"><div class="vl-label">One screen</div><h3>No dashboards</h3><p>Today's outreach, today's number, one place. Nothing to configure, nothing to get lost in. Open it, do the thing, close it.</p></div>
+          <div class="vl-card vl-feat"><div class="vl-label">Momentum</div><h3>Streaks without shame</h3><p>Miss a day? The streak bends, it doesn't break. VAMOS is built to restart you, not to punish you.</p></div>
+          <div class="vl-card vl-feat"><div class="vl-label">Proof</div><h3>Receipts, daily</h3><p>Every touch logged, every day stacked. When someone asks if you're "applying yourself," you'll have the number.</p></div>
+          <div class="vl-card dark vl-feat"><div class="vl-label">Pipeline</div><h3>Who's next — and what changed</h3><p>Load contacts once, every person runs a five-touch cadence automatically. Queue is built every morning, most overdue first.</p></div>
+          <div class="vl-card dark vl-feat"><div class="vl-label">Comeback</div><h3>No restarting — you pick up where you left off</h3><p>End your day with one line to your future self: "What matters tomorrow?" Come back — even days later — and your note, your warm leads, and your streak are waiting.</p></div>
+          <div class="vl-card vl-feat hl"><div class="vl-label">AI</div><h3>Every message drafted for you — before you ask</h3><p>AI writes each touch using the contact's name, title, and cadence step. When someone replies, it drafts the warm next move. You edit or send.</p></div>
+        </div>
+      </div></section>
+
+      <!-- COMEBACK -->
+      <section class="vl-sec tint hair">
+        <div class="wrap" style="text-align:center;">
+          <p class="vl-eyebrow">The part nobody builds</p>
+          <h2 class="vl-h2" style="font-size:clamp(32px,6vw,52px);margin:16px auto 0;">The comeback is built in<span class="dot">.</span></h2>
+        </div>
+        <div class="wrap vl-cb-grid">
+          <div class="vl-cb-copy">
+            <p>Starting isn't the hard part for ADHD brains — <b>restarting is.</b> At the end of each day, VAMOS asks one question: <b>"What matters tomorrow?"</b> One line, to your future self.</p>
+            <p>Step away for a day — or a week — and you're met with your own note, your warm leads still waiting, and a streak that <b>bent instead of breaking.</b> One button back in.</p>
+            <div class="vl-cb-quote"><p>"The hardest part of ADHD isn't doing the work. It's getting back into it after life interrupts you."</p></div>
+          </div>
+          <div class="vl-wyo-wrap"><div class="vl-wyo">
+            <p class="lbl">While you were out</p>
+            <p class="note">"Call Karin first. Don't overthink the Foot Locker email."</p>
+            <div class="row"><span>Warm leads waiting</span><b>3</b></div>
+            <div class="row"><span>Streak</span><b>Bent, not broken</b></div>
+            <button class="cta lp-open">Pick up where you left off</button>
+          </div></div>
+        </div>
       </section>
 
-      <section class="said"><div class="wrap">
-        <p class="mkt-eyebrow">Things we've all heard</p>
-        <ul class="said-list"><li>"Just try harder."</li><li>"It's not that hard."</li><li>"Just focus."</li></ul>
-        <p class="said-answer" style="font-family:'Geist',sans-serif;font-size:clamp(16px,2.4vw,20px);font-weight:500;line-height:1.65;text-transform:none;max-width:640px;">I'm an overachieving ADHD workaholic. I don't struggle because I lack ambition. I struggle because most tools slow my brain down, bury the important stuff, and expect me to work in ways that never made sense. I tried the "ADHD-friendly" apps — most felt built by people guessing. So I stopped waiting and built the one I needed. It works. So I'm sharing it with others who think and work like I do.</p>
-      </div></section>
-
-      <section class="how"><div class="wrap">
-        <p class="mkt-eyebrow">How it works</p>
-        <h2>Two minutes to your first touch<span>.</span></h2>
-        <div class="steps">
-          <div class="step"><p class="step-num">01</p><h3>Upload or paste your list</h3><p>Upload a CSV or paste contacts — <b>your whole list at once.</b> Everyone starts a 5-touch cadence: Outreach → Follow up → Nudge → Break up → Final attempt.</p></div>
-          <div class="step"><p class="step-num">02</p><h3>Work the carousel</h3><p>Open the app, <b>one card, one contact at a time.</b> Name, title, step, and the script — ready to send. Review, skip, or tap Done. Next card.</p></div>
-          <div class="step"><p class="step-num">03</p><h3>Watch the meter fill</h3><p>The stat strip tracks <b>due today · in cadence · sent today.</b> <b>Someone replies? They jump to the top.</b> Toggle Focus mode to lock in.</p></div>
+      <!-- MANIFESTO -->
+      <section class="vl-sec white"><div class="wrap" style="max-width:680px;">
+        <div style="text-align:center;">
+          <p class="vl-eyebrow">The science</p>
+          <h2 class="vl-h2" style="font-size:clamp(28px,4vw,40px);margin:16px 0 0;">It's not a discipline problem<span class="dot">.</span></h2>
+        </div>
+        <div class="vl-man-grid">
+          <div class="vl-man-photo"><span>Founder photo<br>coming soon</span></div>
+          <div class="vl-man-body">
+            <p>ADHD isn't a discipline problem. Research from the National Institute of Mental Health shows it's a neurodevelopmental condition associated with differences in brain development and function — not a lack of willpower.</p>
+            <p>You don't need another lecture. You need tools that meet your brain where it is.</p>
+            <p class="vl-vamos" style="font-size:clamp(20px,3vw,28px);margin-top:26px;">Vamos.</p>
+            <p class="vl-man-name">Marcos Cuellar<span>Founder — VAMOS</span></p>
+          </div>
         </div>
       </div></section>
 
-      <section class="product wrap">
-        <p class="mkt-eyebrow">The tracker</p>
-        <h2>Built for the brain you actually have — not the one they kept asking for.</h2>
-        <p class="nt-badge">&#10003; Also neurotypical-friendly</p>
-        <div class="feat-grid" style="grid-template-columns:repeat(2,1fr);">
-          <div class="feat"><p class="feat-label">One screen</p><h3>No dashboards</h3><p>Today's outreach, today's number, one place. Open it, do the thing, close it.</p></div>
-          <div class="feat"><p class="feat-label">Momentum</p><h3>Streaks without shame</h3><p>Miss a day? The streak bends, it doesn't break. Built to restart you, not punish you.</p></div>
-          <div class="feat"><p class="feat-label">Proof</p><h3>Receipts, daily</h3><p>Every touch logged, every day stacked. When someone asks if you're "applying yourself," you'll have the number.</p></div>
-          <div class="feat"><p class="feat-label">Pipeline</p><h3>Who's next — and what changed</h3><p>Load contacts once; everyone runs a five-touch cadence. The queue rebuilds every morning, most overdue first.</p></div>
-          <div class="feat hl"><p class="feat-label">Comeback</p><h3>Pick up where you left off</h3><p>End your day with one line to your future self. Come back — even days later — and your note, warm leads, and streak are waiting.</p></div>
-          <div class="feat hl"><p class="feat-label">AI</p><h3>Every message drafted for you</h3><p>AI writes each touch using the contact's name, title, and step — and drafts the warm next move when they reply. You edit or send.</p></div>
+      <!-- EXPANSION -->
+      <section class="vl-sec tint hair"><div class="wrap">
+        <div style="text-align:center;">
+          <p class="vl-eyebrow">Where this is going</p>
+          <h2 class="vl-h2" style="font-size:clamp(28px,4vw,40px);margin:16px 0 0;">One brain, four brands<span class="dot">.</span></h2>
         </div>
-      </section>
-
-      <section class="mkt-comeback"><div class="wrap mkt-comeback-grid">
-        <div class="mkt-comeback-copy">
-          <p class="mkt-eyebrow">The part nobody builds</p>
-          <div class="cb-quote"><p>"The hardest part of ADHD isn't doing the work. It's getting back into it after life interrupts you."</p></div>
-          <h2>The comeback is built in<span>.</span></h2>
-          <p>Starting isn't the hard part for ADHD brains — <b>restarting is.</b> At the end of each day, VAMOS. asks one question: <b>"What matters tomorrow?"</b></p>
-          <p>Step away for a day — or a week — and you're met with your own note, your warm leads still waiting, and a streak that <b>bent instead of breaking.</b> One button back in.</p>
-        </div>
-        <div class="wyo-card">
-          <h4 class="wyo-h">Welcome back<span>.</span></h4>
-          <p class="wyo-sub">3 days away. Nothing piled up — no catch-up screen. Pick up right where you left off.</p>
-          <div class="wyo-note">“Call Karin first. Don't overthink the Foot Locker email.”</div>
-          <div class="wyo-meta">3 warm leads waiting · 5-day streak intact</div>
-          <button class="wyo-cta lp-open">One tap back in</button>
+        <div class="vl-cells">
+          <div class="vl-cell"><div class="nm">VAMOS.<em style="color:var(--accent);">for sales</em></div><div class="st">Live — early access</div></div>
+          <div class="vl-cell"><div class="nm">VAMOS.<em style="color:var(--cobalt-500);">for students</em></div><div class="st">Coming</div></div>
+          <div class="vl-cell"><div class="nm">VAMOS.<em style="color:var(--magenta-500);">for events</em></div><div class="st">Coming</div></div>
+          <div class="vl-cell"><div class="nm">VAMOS.<em style="color:var(--verde-500);">for life</em></div><div class="st">Coming</div></div>
         </div>
       </div></section>
 
-      <section class="quotes"><div class="wrap">
-        <p class="mkt-eyebrow">From beta users</p>
-        <h2>Sound familiar<span>?</span></h2>
-        <div class="q-grid">
-          <div class="q-card"><p>"I didn't need another manager telling me to 'be more organized.' I needed a system that could keep up with the way my brain actually works. <b>VAMOS. finally gave me one.</b>"</p><p class="who">Zach — Senior AE</p></div>
-          <div class="q-card"><p>"People loved my energy in meetings. What they didn't see was the battle to stay on top of everything after. <b>VAMOS. makes sure I never lose the thread.</b>"</p><p class="who">Sarah — VP of Sales</p></div>
-          <div class="q-card"><p>"My ADHD has always been a strength — until workflows expected me to think like everyone else. <b>VAMOS. adapted to me.</b>"</p><p class="who">Valeria — BDR</p></div>
-          <div class="q-card"><p>"I wasn't inconsistent because I didn't care. Every tool expected my brain to work like everyone else's. <b>VAMOS. was the first that didn't.</b>"</p><p class="who">Sean — AE</p></div>
+      <!-- FAQ -->
+      <section class="vl-sec white"><div class="wrap">
+        <div style="text-align:center;">
+          <p class="vl-eyebrow">Questions</p>
+          <h2 class="vl-h2" style="font-size:clamp(24px,4vw,34px);margin:16px 0 44px;">Before you ask<span class="dot">.</span></h2>
         </div>
+        <details class="vl-faq"><summary>Is this another CRM I have to maintain?</summary><p class="a">No — and that's the point. VAMOS is <b>one screen that tells you who to touch today.</b> No pipelines to groom, no fields to fill, no dashboard to configure.</p></details>
+        <details class="vl-faq"><summary>What happens when I fall off for a few days?</summary><p class="a">You come back to <b>your own note, your warm leads, and a streak that bent instead of breaking.</b> The comeback is a designed feature, not a failure state — and it's free forever.</p></details>
+        <details class="vl-faq"><summary>Do I have to use the AI-written scripts?</summary><p class="a">No. <b>AI drafts every message — personalized to the contact and their step in the cadence — but it's editable right in the card.</b> Use it, tweak it, or write your own.</p></details>
+        <details class="vl-faq"><summary>Can neurotypicals use it?</summary><p class="a"><b>Yes. We made it simple enough for them.</b></p></details>
+        <details class="vl-faq"><summary>What does it cost?</summary><p class="a"><b>Your first 25 contacts are free — no card, no catch.</b> After that the app will prompt you to upgrade.</p></details>
       </div></section>
 
-      <section class="faq"><div class="wrap">
-        <p class="mkt-eyebrow">Questions</p>
-        <h2>Before you ask<span>.</span></h2>
-        <details><summary>Is this another CRM I have to maintain?</summary><p class="a">No — that's the point. <b>One screen that tells you who to touch today.</b> No pipelines to groom, no fields to fill.</p></details>
-        <details><summary>What happens when I fall off for a few days?</summary><p class="a">You come back to <b>your own note, your warm leads, and a streak that bent instead of breaking.</b> The comeback is a designed feature, not a failure state.</p></details>
-        <details><summary>Do I have to use the AI-written scripts?</summary><p class="a">No. <b>AI drafts every message — editable right in the card.</b> Use it, tweak it, or write your own.</p></details>
-        <details><summary>What does it cost?</summary><p class="a"><b>Your first 25 contacts are free — no card, no catch.</b> After that the app prompts you to upgrade.</p></details>
+      <!-- SIGNUP -->
+      <section class="vl-sec vl-signup tint hair" id="signup"><div class="wrap">
+        <h2 class="vl-h2" style="font-size:clamp(30px,5vw,54px);line-height:1.1;">Give it a shot<span class="dot">.</span></h2>
+        <div class="vl-signup-form">
+          <input type="email" id="emailInput" placeholder="you@work.com" aria-label="Email address">
+          <button type="button" id="signupBtn">I'm in</button>
+        </div>
+        <p class="vl-signup-note">First 25 contacts free · No card · We got you.</p>
       </div></section>
-
-      <section class="signup wrap" id="signup">
-        <h2>Give it a shot<span>.</span></h2>
-        <div class="signup-form"><input type="email" id="emailInput" placeholder="you@work.com" aria-label="Email address"><button type="button" id="signupBtn">I'm in</button></div>
-        <p class="signup-note" id="signupNote">First 25 contacts free · No card · We got you.</p>
-      </section>
     </main>
-    <footer class="mkt-footer"><div class="wrap mkt-foot"><span>VAMOS. — HIANYWAY.APP · for sales.</span><span>Built with ADHD, out of spite.</span></div></footer>
+
+    <footer class="vl-footer"><div class="wrap vl-foot">
+      <span>VAMOS — for sales. Students, events &amp; life coming.</span>
+      <span>Built with ADHD, out of spite.</span>
+    </div></footer>
   </div>
 
   <div class="lp-overlay hide" id="authOverlay">
