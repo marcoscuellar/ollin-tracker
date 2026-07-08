@@ -653,6 +653,15 @@
   .vl-demo-acts{display:flex;gap:10px;}
   .vl-demo-act{flex:1;text-align:center;font-size:13px;background:#fff;border:.5px solid var(--hairline);border-radius:9px;padding:14px;color:var(--text-primary);font-family:var(--font-body);}
   .vl-demo-act.done{background:var(--blue-900);border-color:var(--blue-900);color:#fff;}
+  /* AI-assist affordance (navy = AI, per the system) */
+  .vl-demo-ai{margin-top:18px;border-top:.5px solid var(--hairline);padding-top:18px;}
+  .vl-demo-script{font-size:14px;line-height:1.55;color:var(--text-primary);background:var(--panel);border:.5px solid var(--hairline);border-radius:8px;padding:14px 16px;margin:0;}
+  .vl-demo-ai-row{display:flex;align-items:center;gap:14px;margin-top:14px;flex-wrap:wrap;}
+  .vl-demo-rewrite{font-family:var(--font-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;background:var(--blue-900);color:#fff;border:.5px solid var(--blue-900);border-radius:9px;padding:11px 18px;cursor:pointer;}
+  .vl-demo-ai-note{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--blue-900);}
+  .vl-demo-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;}
+  .vl-demo-chip{font-family:var(--font-mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;border:.5px solid var(--blue-900);color:var(--blue-900);background:transparent;border-radius:20px;padding:7px 13px;cursor:pointer;}
+  .vl-demo-chip:hover{background:var(--blue-900);color:#fff;}
   @media(max-width:760px){.vl-demo{padding:22px 20px;}.vl-demo-acts{flex-wrap:wrap;}.vl-demo-act{min-width:calc(50% - 5px);}.vl-tl-label{font-size:9px;}.vl-demo-name{font-size:19px;}}
 
 </style>
@@ -719,6 +728,17 @@
           <div class="vl-tl"><div class="vl-tl-step active"><div class="vl-tl-node">1</div><div class="vl-tl-label">Outreach</div><div class="vl-tl-line"></div></div><div class="vl-tl-step"><div class="vl-tl-node">2</div><div class="vl-tl-label">Follow up</div><div class="vl-tl-line"></div></div><div class="vl-tl-step"><div class="vl-tl-node">3</div><div class="vl-tl-label">Nudge</div><div class="vl-tl-line"></div></div><div class="vl-tl-step"><div class="vl-tl-node">4</div><div class="vl-tl-label">Break up</div><div class="vl-tl-line"></div></div><div class="vl-tl-step"><div class="vl-tl-node">5</div><div class="vl-tl-label">Final attempt</div><div class="vl-tl-line"></div></div></div>
           <div class="vl-demo-mid"><div class="m"><div class="mt">Review / Verify</div><div class="ms">Check the script before you send</div></div><div class="m"><div class="mt">Skip for now</div><div class="ms">Come back to this one later</div></div></div>
           <div class="vl-demo-acts"><div class="vl-demo-act">LinkedIn</div><div class="vl-demo-act">Replied</div><div class="vl-demo-act">Script</div><div class="vl-demo-act done">✓ Done</div></div>
+          <div class="vl-demo-ai">
+            <p class="vl-demo-script">Hi Amelia — saw Northwind's DTC push this quarter. We help mid-market retail teams add senior engineers, nearshore, without the big-firm overhead. Worth a quick 15 minutes?</p>
+            <div class="vl-demo-ai-row"><button class="vl-demo-rewrite">✦ Rewrite with AI</button><span class="vl-demo-ai-note">Type a direction, or tap a suggestion —</span></div>
+            <div class="vl-demo-chips">
+              <span class="vl-demo-chip">Make it shorter</span>
+              <span class="vl-demo-chip">More conversational</span>
+              <span class="vl-demo-chip">Warmer</span>
+              <span class="vl-demo-chip">Push nearshore</span>
+              <span class="vl-demo-chip">Different angle</span>
+            </div>
+          </div>
         </div>
       </div></section>
 
