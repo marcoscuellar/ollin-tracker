@@ -368,96 +368,174 @@
   .app.focus .section,.app.focus .handoff,.app.focus .foot{display:none;}
 
   /* ============ landing page (logged-out) ============ */
-  .lp{max-width:1000px;margin:0 auto;padding:0 24px 40px;}
-  .lp-nav{display:flex;align-items:center;justify-content:space-between;padding:22px 0;}
-  .lp-login{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;background:none;border:.5px solid var(--ink);border-radius:9px;padding:9px 18px;cursor:pointer;color:var(--ink);}
-  .lp-login:hover{background:var(--ink);color:var(--cream);}
-  .lp-hero{text-align:center;padding:54px 0 66px;max-width:680px;margin:0 auto;}
-  .lp-hero .ll-rule{margin:0 auto 26px;}
-  .lp-h1{font-family:'Archivo Black',sans-serif;font-size:46px;line-height:1.06;letter-spacing:-.02em;color:var(--ink);}
-  .lp-sub{font-size:17px;line-height:1.6;color:var(--grey);margin:20px auto 30px;max-width:560px;}
-  .lp-cta{width:auto;display:inline-block;padding:16px 34px;font-size:13px;}
-  .lp-fine{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.06em;color:var(--grey2);margin-top:16px;text-transform:uppercase;}
-  .lp-band{border-top:.5px solid var(--hairline);padding:56px 0;}
-  .lp-h2{font-family:'Archivo Black',sans-serif;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--grey);text-align:center;margin-bottom:36px;}
-  .lp-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
-  .lp-step{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:26px 24px;}
-  .lp-num{width:34px;height:34px;border-radius:50%;background:var(--ink);color:var(--cream);display:flex;align-items:center;justify-content:center;font-family:'Archivo Black',sans-serif;font-size:15px;margin-bottom:16px;}
-  .lp-st-h{font-family:'Archivo Black',sans-serif;font-size:17px;margin-bottom:8px;}
-  .lp-step p{font-size:14.5px;line-height:1.55;color:var(--grey);}
-  .lp-pricing{border-top:.5px solid var(--hairline);padding:56px 0 0;}
-  .lp-tiers{display:grid;grid-template-columns:repeat(2,1fr);gap:22px;max-width:720px;margin:0 auto;}
-  .lp-tier{position:relative;background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:30px 28px;display:flex;flex-direction:column;}
-  .lp-tier.feat{border:1.5px solid var(--honey);}
-  .lp-badge{position:absolute;top:-11px;left:28px;background:var(--honey);color:var(--ink);font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;padding:4px 10px;border-radius:20px;font-weight:600;}
-  .lp-tier-name{font-family:'Archivo Black',sans-serif;font-size:15px;text-transform:uppercase;}
-  .lp-price{font-family:'Archivo Black',sans-serif;font-size:40px;line-height:1;margin-top:12px;}
-  .lp-price span{font-size:16px;color:var(--grey);}
-  .lp-per{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--grey);margin-top:6px;}
-  .lp-feat{list-style:none;margin:20px 0 24px;flex:1;}
-  .lp-feat li{font-size:14px;color:var(--ink);padding:9px 0;border-bottom:.5px solid var(--hairline);}
-  .lp-founding{text-align:center;margin-top:30px;font-size:14px;color:var(--grey);}
-  .lp-founding b{color:var(--ink);}
-  .lp-flink{color:var(--honey);font-weight:600;cursor:pointer;text-decoration:underline;margin-left:6px;}
-  .lp-foot{text-align:center;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--grey2);padding:50px 0 10px;}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 24px;}
+  .mkt-head{border-bottom:.5px solid var(--hairline);position:sticky;top:0;background:#fff;z-index:10;}
+  .bar{display:flex;justify-content:space-between;align-items:center;padding:16px 0;}
+  .bar-mark{font-family:'Archivo Black',sans-serif;font-size:18px;letter-spacing:.02em;}
+  .bar-mark span{color:var(--honey);}
+  .bar-login{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink);background:none;border:.5px solid var(--ink);border-radius:9px;padding:9px 18px;cursor:pointer;}
+  .bar-login:hover{background:var(--ink);color:var(--cream);}
+  .hero{padding:78px 0 58px;text-align:center;}
+  .wordmark{font-family:'Archivo Black',sans-serif;font-size:clamp(72px,17vw,180px);line-height:.92;letter-spacing:.01em;text-transform:uppercase;}
+  .wordmark .dot{color:var(--honey);}
+  .hero-rule{width:40px;height:3px;background:var(--honey);margin:38px auto 26px;}
+  .hero-tag{font-size:clamp(20px,3vw,26px);font-weight:500;}
+  .hero-sub{max-width:440px;margin:20px auto 0;color:var(--grey);font-size:15px;line-height:1.6;}
+  .hero-cta{display:inline-block;margin-top:36px;font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--cream);background:var(--ink);padding:16px 32px;border:.5px solid var(--ink);border-radius:var(--radius);cursor:pointer;}
+  .hero-cta:hover{background:var(--honey);border-color:var(--honey);color:var(--ink);}
+  .mkt-eyebrow{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--grey);margin-bottom:26px;}
+  .said{border-top:.5px solid var(--hairline);border-bottom:.5px solid var(--hairline);padding:60px 0;}
+  .said-list{list-style:none;}
+  .said-list li{font-family:'Archivo Black',sans-serif;font-size:clamp(18px,4.4vw,42px);line-height:1.35;text-transform:uppercase;color:var(--ink);position:relative;width:fit-content;}
+  .said-list li+li{margin-top:10px;}
+  .said-list li::after{content:"";position:absolute;left:0;top:54%;height:3px;width:100%;background:var(--honey);}
+  .said-answer{margin-top:38px;}
+  .how,.mkt-comeback,.quotes,.faq{border-top:.5px solid var(--hairline);}
+  .how,.product,.mkt-comeback,.quotes,.faq{padding:70px 0;}
+  .how h2,.product h2,.mkt-comeback h2,.quotes h2,.faq h2{font-family:'Archivo Black',sans-serif;font-size:clamp(26px,4vw,38px);text-transform:uppercase;line-height:1.15;}
+  .how h2 span,.product h2 span,.mkt-comeback h2 span,.quotes h2 span,.faq h2 span{color:var(--honey);}
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:32px;}
+  .q-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:32px;}
+  .step,.feat,.q-card{border-radius:var(--radius);background:#fff;box-shadow:var(--shadow);padding:28px 24px;}
+  .step-num{font-family:'Archivo Black',sans-serif;font-size:15px;color:var(--honey);}
+  .step h3,.feat h3{font-family:'Archivo Black',sans-serif;font-size:17px;text-transform:uppercase;margin:10px 0 8px;}
+  .step p,.feat p{font-size:14px;color:var(--grey);line-height:1.55;}
+  .step p b,.feat p b{color:var(--ink);font-weight:600;}
+  .nt-badge{display:inline-block;margin-top:20px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--grey);border:.5px solid var(--hairline);padding:8px 14px;}
+  .feat-grid{margin-top:36px;display:grid;gap:16px;}
+  .feat-label{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--honey);}
+  .mkt-comeback-grid{display:flex;gap:40px;align-items:center;}
+  .mkt-comeback-copy{flex:1;}
+  .mkt-comeback-copy p{font-size:15.5px;color:var(--grey);margin-top:16px;max-width:440px;}
+  .mkt-comeback-copy p b{color:var(--ink);font-weight:600;}
+  .cb-quote{border-left:3px solid var(--honey);padding:2px 0 2px 18px;margin-bottom:20px;}
+  .cb-quote p{font-size:16px;font-weight:500;font-style:italic;max-width:440px;}
+  .wyo-card{flex:1;max-width:340px;border-radius:var(--radius);background:#fff;box-shadow:var(--shadow);padding:22px 20px;}
+  .wyo-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--grey);}
+  .wyo-note{font-size:15px;font-weight:500;margin:12px 0 16px;padding:12px;background:var(--bg);border:.5px solid var(--hairline);}
+  .wyo-row{display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;padding:9px 0;border-bottom:.5px solid var(--hairline);}
+  .wyo-row b{color:var(--honey);font-weight:500;}
+  .wyo-cta{display:block;width:100%;text-align:center;margin-top:18px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;background:var(--ink);color:var(--cream);padding:13px;border:none;border-radius:9px;cursor:pointer;}
+  .wyo-cta:hover{background:var(--honey);color:var(--ink);}
+  .q-card p{font-size:14.5px;line-height:1.55;font-weight:500;}
+  .q-card p b{color:var(--honey);font-weight:600;}
+  .q-card .who{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--grey);margin-top:14px;}
+  .faq h2{margin-bottom:24px;}
+  .faq details{border-bottom:.5px solid var(--hairline);background:#fff;border-radius:var(--radius);padding:0 20px;margin-bottom:8px;box-shadow:var(--shadow);}
+  .faq summary{list-style:none;cursor:pointer;padding:18px 0;font-weight:600;font-size:15.5px;display:flex;justify-content:space-between;align-items:center;gap:12px;}
+  .faq summary::-webkit-details-marker{display:none;}
+  .faq summary::after{content:"+";font-family:'Archivo Black',sans-serif;color:var(--honey);font-size:18px;}
+  .faq details[open] summary::after{content:"\2013";}
+  .faq .a{font-size:14.5px;color:var(--grey);padding:0 0 18px;max-width:600px;}
+  .faq .a b{color:var(--ink);font-weight:600;}
+  .signup{padding:78px 0 88px;text-align:center;}
+  .signup h2{font-family:'Archivo Black',sans-serif;font-size:clamp(30px,5vw,50px);text-transform:uppercase;line-height:1.1;}
+  .signup h2 span{color:var(--honey);}
+  .signup-form{margin-top:36px;display:flex;justify-content:center;max-width:460px;margin-left:auto;margin-right:auto;}
+  .signup-form input{flex:1;font-family:'JetBrains Mono',monospace;font-size:13px;padding:16px 18px;background:#fff;border:.5px solid var(--ink);border-right:none;border-radius:var(--radius) 0 0 var(--radius);color:var(--ink);}
+  .signup-form button{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.14em;text-transform:uppercase;background:var(--ink);color:var(--cream);border:.5px solid var(--ink);padding:0 26px;cursor:pointer;border-radius:0 var(--radius) var(--radius) 0;}
+  .signup-form button:hover{background:var(--honey);border-color:var(--honey);color:var(--ink);}
+  .signup-note{margin-top:16px;font-size:12.5px;color:var(--grey);font-family:'JetBrains Mono',monospace;}
+  .mkt-footer{border-top:.5px solid var(--hairline);padding:28px 0 40px;}
+  .mkt-foot{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--grey);}
   .lp-overlay{position:fixed;inset:0;z-index:90;background:rgba(17,17,17,.45);display:flex;align-items:center;justify-content:center;padding:24px;}
   .lp-overlay.hide{display:none;}
   .lp-overlay .lock-card{position:relative;}
   .lp-close{position:absolute;top:14px;right:16px;background:none;border:none;font-size:22px;color:var(--grey2);cursor:pointer;line-height:1;}
   .lp-close:hover{color:var(--ink);}
-  @media(max-width:720px){.lp-steps{grid-template-columns:1fr;}.lp-tiers{grid-template-columns:1fr;}.lp-h1{font-size:33px;}}
+  @media(max-width:760px){.steps{grid-template-columns:1fr;}.q-grid{grid-template-columns:1fr;}.feat-grid{grid-template-columns:1fr!important;}.mkt-comeback-grid{flex-direction:column;align-items:flex-start;}.wyo-card{max-width:100%;width:100%;}.signup-form{flex-direction:column;}.signup-form input{border-right:.5px solid var(--ink);border-bottom:none;border-radius:var(--radius) var(--radius) 0 0;}.signup-form button{padding:16px;border-radius:0 0 var(--radius) var(--radius);}}
 
 </style>
 
 <div class="app hide" id="appMain"></div>
 
 <div class="lock hide" id="lockScreen">
-  <div class="lp">
-    <header class="lp-nav">
-      <div class="nav-logo">ANY<span class="way">WAY.</span></div>
-      <button class="lp-login" id="lpLogin">Log in</button>
-    </header>
+  <div class="mkt">
+    <header class="mkt-head"><div class="wrap bar"><div class="bar-mark">ANY<span>WAY.</span></div><button class="bar-login" id="lpLogin">Log in</button></div></header>
+    <main>
+      <section class="hero wrap">
+        <h1 class="wordmark">ANY<br><span class="dot">WAY.</span></h1>
+        <div class="hero-rule" aria-hidden="true"></div>
+        <p class="hero-tag">We got you.</p>
+        <p class="hero-sub">A daily outreach tracker built for ADHD brains. It tells you who to touch today, hands you the script, and shifts gears the second they reply.</p>
+        <button class="hero-cta lp-open">Try it free</button>
+        <p style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;color:var(--grey);margin-top:14px;">First 25 contacts free · No card · No pitch</p>
+      </section>
 
-    <section class="lp-hero">
-      <div class="ll-rule"></div>
-      <h1 class="lp-h1">See who to message today.<br>Send it. Done.</h1>
-      <p class="lp-sub">The outreach tracker for sales brains that scatter. Open it, see who's due, send the script — ANYWAY writes it if you want. No CRM sprawl, no guilt.</p>
-      <button class="btn lp-cta" id="lpStart">Start free</button>
-      <p class="lp-fine">Free for your first account · no credit card</p>
-    </section>
+      <section class="said"><div class="wrap">
+        <p class="mkt-eyebrow">Things we've all heard</p>
+        <ul class="said-list"><li>"Just try harder."</li><li>"It's not that hard."</li><li>"Just focus."</li></ul>
+        <p class="said-answer" style="font-family:'Inter',sans-serif;font-size:clamp(16px,2.4vw,20px);font-weight:500;line-height:1.65;text-transform:none;max-width:640px;">I'm an overachieving ADHD workaholic. I don't struggle because I lack ambition. I struggle because most tools slow my brain down, bury the important stuff, and expect me to work in ways that never made sense. I tried the "ADHD-friendly" apps — most felt built by people guessing. So I stopped waiting and built the one I needed. It works. So I'm sharing it with others who think and work like I do.</p>
+      </div></section>
 
-    <section class="lp-band">
-      <h2 class="lp-h2">How it works</h2>
-      <div class="lp-steps">
-        <div class="lp-step"><div class="lp-num">1</div><div class="lp-st-h">Add your list</div><p>Drop in a CSV or Excel of contacts. ANYWAY sorts everyone into a 5-touch cadence.</p></div>
-        <div class="lp-step"><div class="lp-num">2</div><div class="lp-st-h">See who's due</div><p>Every day, one clean queue — most overdue first. No deciding, no dashboards.</p></div>
-        <div class="lp-step"><div class="lp-num">3</div><div class="lp-st-h">Send &amp; done</div><p>Use the script or let ANYWAY AI write it in your voice. One tap: done.</p></div>
-      </div>
-    </section>
-
-    <section class="lp-pricing">
-      <h2 class="lp-h2">Pricing</h2>
-      <div class="lp-tiers">
-        <div class="lp-tier">
-          <div class="lp-tier-name">Free</div>
-          <div class="lp-price">$0</div>
-          <div class="lp-per">your first account</div>
-          <ul class="lp-feat"><li>1 account · 15 contacts</li><li>The daily queue, in order</li><li>Scripts for every touch</li><li>Streak + comeback ritual</li></ul>
-          <button class="btn ghost lp-pick" data-plan="free">Start free</button>
+      <section class="how"><div class="wrap">
+        <p class="mkt-eyebrow">How it works</p>
+        <h2>Two minutes to your first touch<span>.</span></h2>
+        <div class="steps">
+          <div class="step"><p class="step-num">01</p><h3>Upload or paste your list</h3><p>Upload a CSV or paste contacts — <b>your whole list at once.</b> Everyone starts a 5-touch cadence: Outreach → Follow up → Nudge → Break up → Final attempt.</p></div>
+          <div class="step"><p class="step-num">02</p><h3>Work the carousel</h3><p>Open the app, <b>one card, one contact at a time.</b> Name, title, step, and the script — ready to send. Review, skip, or tap Done. Next card.</p></div>
+          <div class="step"><p class="step-num">03</p><h3>Watch the meter fill</h3><p>The stat strip tracks <b>due today · in cadence · sent today.</b> <b>Someone replies? They jump to the top.</b> Toggle Focus mode to lock in.</p></div>
         </div>
-        <div class="lp-tier feat">
-          <div class="lp-badge">Most popular</div>
-          <div class="lp-tier-name">Pro</div>
-          <div class="lp-price">$12<span>/mo</span></div>
-          <div class="lp-per">or $99/yr</div>
-          <ul class="lp-feat"><li>Unlimited accounts &amp; contacts</li><li>Unlimited AI-written messages</li><li>Warm-lead tracking &amp; rollups</li><li>CSV export</li></ul>
-          <button class="btn lp-pick" data-plan="pro">Go Pro</button>
-        </div>
-      </div>
-      <div class="lp-founding">Founding member — lock <b>$79/yr</b>, forever. <a class="lp-flink" id="lpFound">Claim it &rarr;</a></div>
-    </section>
+      </div></section>
 
-    <footer class="lp-foot">We got you. · HIANYWAY.APP</footer>
+      <section class="product wrap">
+        <p class="mkt-eyebrow">The tracker</p>
+        <h2>Built for the brain you actually have — not the one they kept asking for.</h2>
+        <p class="nt-badge">&#10003; Also neurotypical-friendly</p>
+        <div class="feat-grid" style="grid-template-columns:repeat(2,1fr);">
+          <div class="feat"><p class="feat-label">One screen</p><h3>No dashboards</h3><p>Today's outreach, today's number, one place. Open it, do the thing, close it.</p></div>
+          <div class="feat"><p class="feat-label">Momentum</p><h3>Streaks without shame</h3><p>Miss a day? The streak bends, it doesn't break. Built to restart you, not punish you.</p></div>
+          <div class="feat"><p class="feat-label">Proof</p><h3>Receipts, daily</h3><p>Every touch logged, every day stacked. When someone asks if you're "applying yourself," you'll have the number.</p></div>
+          <div class="feat"><p class="feat-label">Pipeline</p><h3>Who's next — and what changed</h3><p>Load contacts once; everyone runs a five-touch cadence. The queue rebuilds every morning, most overdue first.</p></div>
+          <div class="feat"><p class="feat-label" style="color:var(--honey);">Comeback</p><h3>Pick up where you left off</h3><p>End your day with one line to your future self. Come back — even days later — and your note, warm leads, and streak are waiting.</p></div>
+          <div class="feat"><p class="feat-label" style="color:var(--honey);">AI</p><h3>Every message drafted for you</h3><p>AI writes each touch using the contact's name, title, and step — and drafts the warm next move when they reply. You edit or send.</p></div>
+        </div>
+      </section>
+
+      <section class="mkt-comeback"><div class="wrap mkt-comeback-grid">
+        <div class="mkt-comeback-copy">
+          <p class="mkt-eyebrow">The part nobody builds</p>
+          <div class="cb-quote"><p>"The hardest part of ADHD isn't doing the work. It's getting back into it after life interrupts you."</p></div>
+          <h2>The comeback is built in<span>.</span></h2>
+          <p>Starting isn't the hard part for ADHD brains — <b>restarting is.</b> At the end of each day, ANYWAY. asks one question: <b>"What matters tomorrow?"</b></p>
+          <p>Step away for a day — or a week — and you're met with your own note, your warm leads still waiting, and a streak that <b>bent instead of breaking.</b> One button back in.</p>
+        </div>
+        <div class="wyo-card">
+          <p class="wyo-label">While you were out</p>
+          <p class="wyo-note">"Call Karin first. Don't overthink the Foot Locker email."</p>
+          <div class="wyo-row"><span>Warm leads waiting</span><b>3</b></div>
+          <div class="wyo-row"><span>Streak</span><b>Bent, not broken</b></div>
+          <button class="wyo-cta lp-open">Pick up where you left off</button>
+        </div>
+      </div></section>
+
+      <section class="quotes"><div class="wrap">
+        <p class="mkt-eyebrow">From beta users</p>
+        <h2>Sound familiar<span>?</span></h2>
+        <div class="q-grid">
+          <div class="q-card"><p>"I didn't need another manager telling me to 'be more organized.' I needed a system that could keep up with the way my brain actually works. <b>ANYWAY. finally gave me one.</b>"</p><p class="who">Zach — Senior AE</p></div>
+          <div class="q-card"><p>"People loved my energy in meetings. What they didn't see was the battle to stay on top of everything after. <b>ANYWAY. makes sure I never lose the thread.</b>"</p><p class="who">Sarah — VP of Sales</p></div>
+          <div class="q-card"><p>"My ADHD has always been a strength — until workflows expected me to think like everyone else. <b>ANYWAY. adapted to me.</b>"</p><p class="who">Valeria — BDR</p></div>
+          <div class="q-card"><p>"I wasn't inconsistent because I didn't care. Every tool expected my brain to work like everyone else's. <b>ANYWAY. was the first that didn't.</b>"</p><p class="who">Sean — AE</p></div>
+        </div>
+      </div></section>
+
+      <section class="faq"><div class="wrap">
+        <p class="mkt-eyebrow">Questions</p>
+        <h2>Before you ask<span>.</span></h2>
+        <details><summary>Is this another CRM I have to maintain?</summary><p class="a">No — that's the point. <b>One screen that tells you who to touch today.</b> No pipelines to groom, no fields to fill.</p></details>
+        <details><summary>What happens when I fall off for a few days?</summary><p class="a">You come back to <b>your own note, your warm leads, and a streak that bent instead of breaking.</b> The comeback is a designed feature, not a failure state.</p></details>
+        <details><summary>Do I have to use the AI-written scripts?</summary><p class="a">No. <b>AI drafts every message — editable right in the card.</b> Use it, tweak it, or write your own.</p></details>
+        <details><summary>What does it cost?</summary><p class="a"><b>Your first 25 contacts are free — no card, no catch.</b> After that the app prompts you to upgrade.</p></details>
+      </div></section>
+
+      <section class="signup wrap" id="signup">
+        <h2>Give it a shot<span>.</span></h2>
+        <div class="signup-form"><input type="email" id="emailInput" placeholder="you@work.com" aria-label="Email address"><button type="button" id="signupBtn">I'm in</button></div>
+        <p class="signup-note" id="signupNote">First 25 contacts free · No card · We got you.</p>
+      </section>
+    </main>
+    <footer class="mkt-footer"><div class="wrap mkt-foot"><span>ANYWAY. — HIANYWAY.APP · for sales.</span><span>Built with ADHD, out of spite.</span></div></footer>
   </div>
 
   <div class="lp-overlay hide" id="authOverlay">
@@ -969,18 +1047,22 @@
     document.getElementById("appMain").classList.toggle("hide", !show);
     document.getElementById("lockScreen").classList.toggle("hide", show);
   }
-  function openAuth(mode){ document.getElementById("authOverlay").classList.remove("hide"); if(mode) authForm(mode); }
+  function openAuth(mode, prefill){ document.getElementById("authOverlay").classList.remove("hide"); if(mode) authForm(mode, prefill); }
   function closeAuth(){ document.getElementById("authOverlay").classList.add("hide"); }
   function wireLanding(){
     var by=function(x){ return document.getElementById(x); };
     if(by("lpLogin")) by("lpLogin").addEventListener("click", function(){ openAuth("login"); });
-    if(by("lpStart")) by("lpStart").addEventListener("click", function(){ openAuth("signup"); });
-    if(by("lpFound")) by("lpFound").addEventListener("click", function(){ openAuth("signup"); });
+    // Every "Try it free" / "Pick up where you left off" CTA opens the signup modal.
+    Array.prototype.forEach.call(document.querySelectorAll(".lp-open"), function(b){ b.addEventListener("click", function(){ openAuth("signup"); }); });
+    // Hero email field → carry the address straight into the signup modal.
+    var sb=by("signupBtn"), ei=by("emailInput");
+    function fromHero(){ openAuth("signup", ei ? ei.value : ""); }
+    if(sb) sb.addEventListener("click", fromHero);
+    if(ei) ei.addEventListener("keydown", function(e){ if(e.key==="Enter"){ e.preventDefault(); fromHero(); } });
     if(by("authClose")) by("authClose").addEventListener("click", closeAuth);
     var ov=by("authOverlay"); if(ov) ov.addEventListener("click", function(e){ if(e.target===ov) closeAuth(); });
-    Array.prototype.forEach.call(document.querySelectorAll(".lp-pick"), function(b){ b.addEventListener("click", function(){ openAuth("signup"); }); });
   }
-  function authForm(mode){
+  function authForm(mode, prefill){
     lockErr("");
     var isSignup = mode==="signup";
     lockBody(
@@ -997,7 +1079,7 @@
     document.getElementById("authFormEl").addEventListener("submit", function(e){ e.preventDefault(); doAuth(mode, em.value, pw.value); });
     document.getElementById("authSwap").addEventListener("click", function(){ authForm(isSignup?"login":"signup"); });
     var fg=document.getElementById("authForgot"); if(fg) fg.addEventListener("click", function(){ doForgot(em.value); });
-    em.focus();
+    if(prefill){ em.value=prefill; pw.focus(); } else { em.focus(); }
   }
   async function doForgot(email){
     email=(email||"").trim();
