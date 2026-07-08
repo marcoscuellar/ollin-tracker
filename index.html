@@ -392,10 +392,12 @@
      Honey is the one accent: primary CTAs, underlines/strikethroughs, section-closing periods. */
   /* Primary CTA hover inverts: honey fill -> ink fill, ink text -> honey text. */
   .btn:hover{background:var(--ink);border-color:var(--ink);color:var(--honey);}
-  /* Work card: navy Review/Skip labels + navy Done button (inverts to white on hover) */
-  .dc-mid .mi-t{color:var(--blue);font-weight:600;}
-  .dc-mid .mi-s{color:var(--blue);opacity:.62;}
-  .dc-mid .mi:hover .mi-t{color:#12203C;}
+  /* Work card: Review/Skip is a filled navy section; navy Done button (inverts on hover) */
+  .dc-mid{background:var(--blue);border:none;border-radius:10px;padding:18px 20px;margin-bottom:20px;}
+  .dc-mid .mi{color:#fff;}
+  .dc-mid .mi-t{color:#fff;font-weight:600;}
+  .dc-mid .mi-s{color:rgba(255,255,255,.68);}
+  .dc-mid .mi:hover .mi-t{color:var(--honey);}
   .dc-act.done{background:var(--blue);border-color:var(--blue);color:#fff;}
   .dc-act.done:hover{background:#fff;border-color:var(--blue);color:var(--blue);}
 
@@ -624,6 +626,35 @@
     .vl-hero{padding:72px 0 56px;}
   }
 
+
+  /* landing: live work-card demo */
+  .vl-demo-sec{padding:80px 0;background:#fff;border-top:.5px solid var(--hairline);}
+  .vl-demo{max-width:720px;margin:48px auto 0;background:#fff;border-radius:var(--radius-card);box-shadow:0 6px 16px rgba(17,17,17,.18),0 22px 50px rgba(17,17,17,.34);padding:30px 32px;text-align:left;}
+  .vl-demo-head{display:flex;align-items:center;gap:16px;margin-bottom:22px;}
+  .vl-demo-ava{width:52px;height:52px;border-radius:50%;background:var(--panel);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:800;font-size:15px;color:var(--blue-900);flex-shrink:0;}
+  .vl-demo-name{font-family:var(--font-display);font-weight:800;font-size:22px;color:var(--text-display);}
+  .vl-demo-meta{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-secondary);margin-top:4px;}
+  .vl-demo-due{margin-left:auto;font-family:var(--font-mono);font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--ink-900);background:var(--honey-500);border-radius:20px;padding:7px 14px;white-space:nowrap;}
+  .vl-demo-touch{text-align:center;margin-bottom:16px;}
+  .vl-demo-touch b{font-family:var(--font-mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-display);}
+  .vl-demo-touch span{display:block;font-size:12.5px;color:var(--text-secondary);margin-top:3px;}
+  .vl-tl{display:flex;justify-content:space-between;margin:6px 0 22px;}
+  .vl-tl-step{display:flex;flex-direction:column;align-items:center;flex:1;position:relative;}
+  .vl-tl-node{width:30px;height:30px;border-radius:50%;border:1.5px solid var(--hairline);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;background:#fff;color:var(--text-secondary);z-index:2;font-family:var(--font-mono);}
+  .vl-tl-step.active .vl-tl-node{background:var(--blue-900);border-color:var(--blue-900);color:#fff;}
+  .vl-tl-line{position:absolute;top:15px;left:50%;width:100%;height:1.5px;background:var(--hairline);z-index:1;}
+  .vl-tl-step:last-child .vl-tl-line{display:none;}
+  .vl-tl-label{font-size:11px;color:var(--text-secondary);margin-top:9px;text-align:center;}
+  .vl-tl-step.active .vl-tl-label{color:var(--text-primary);font-weight:600;}
+  .vl-demo-mid{display:flex;background:var(--blue-900);border-radius:10px;padding:16px 20px;margin-bottom:18px;gap:16px;}
+  .vl-demo-mid .m{flex:1;color:#fff;}
+  .vl-demo-mid .mt{font-size:14px;font-weight:600;}
+  .vl-demo-mid .ms{font-size:12px;color:rgba(255,255,255,.68);margin-top:2px;}
+  .vl-demo-acts{display:flex;gap:10px;}
+  .vl-demo-act{flex:1;text-align:center;font-size:13px;background:#fff;border:.5px solid var(--hairline);border-radius:9px;padding:14px;color:var(--text-primary);font-family:var(--font-body);}
+  .vl-demo-act.done{background:var(--blue-900);border-color:var(--blue-900);color:#fff;}
+  @media(max-width:760px){.vl-demo{padding:22px 20px;}.vl-demo-acts{flex-wrap:wrap;}.vl-demo-act{min-width:calc(50% - 5px);}.vl-tl-label{font-size:9px;}.vl-demo-name{font-size:19px;}}
+
 </style>
 
 <div class="app hide" id="appMain"></div>
@@ -674,6 +705,20 @@
           <div class="vl-card vl-step"><div class="num" style="color:var(--accent);">01</div><h3>Upload or paste your list</h3><p>Upload a CSV or paste contacts manually — <b>your whole list at once.</b> Every person starts a 5-touch cadence: Outreach → Follow up → Nudge → Break up → Final attempt.</p></div>
           <div class="vl-card dark vl-step"><div class="num" style="color:#fff;">02</div><h3>Work the carousel</h3><p>Open the app, <b>one card, one contact at a time.</b> See their name, title, touch step, and the script — ready to send. Review it, skip it, or tap Done. Next card.</p></div>
           <div class="vl-card vl-step"><div class="num" style="color:var(--magenta-500);">03</div><h3>Watch the meter fill</h3><p>The stat strip tracks <b>due today · in cadence · sent today</b> in real time. <b>Someone replies? They jump to the top.</b> Toggle Focus mode to lock in.</p></div>
+        </div>
+      </div></section>
+
+      <!-- LIVE CARD DEMO -->
+      <section class="vl-sec vl-demo-sec white"><div class="wrap" style="text-align:center;">
+        <p class="vl-eyebrow">The daily card</p>
+        <h2 class="vl-h2" style="font-size:clamp(28px,4vw,40px);margin:16px 0 0;">One contact. One card. Done<span class="dot">.</span></h2>
+        <p class="vl-sub">This is the whole app. Who's up, what to say, one tap to log it — then the next card.</p>
+        <div class="vl-demo">
+          <div class="vl-demo-head"><div class="vl-demo-ava">JV</div><div><div class="vl-demo-name">Jeff Veldhuizen</div><div class="vl-demo-meta">VP of Ecommerce · Skechers</div></div><div class="vl-demo-due">LinkedIn today</div></div>
+          <div class="vl-demo-touch"><b>Touch 1 of 5</b><span>First outreach due — script, send, done.</span></div>
+          <div class="vl-tl"><div class="vl-tl-step active"><div class="vl-tl-node">1</div><div class="vl-tl-label">Outreach</div><div class="vl-tl-line"></div></div><div class="vl-tl-step"><div class="vl-tl-node">2</div><div class="vl-tl-label">Follow up</div><div class="vl-tl-line"></div></div><div class="vl-tl-step"><div class="vl-tl-node">3</div><div class="vl-tl-label">Nudge</div><div class="vl-tl-line"></div></div><div class="vl-tl-step"><div class="vl-tl-node">4</div><div class="vl-tl-label">Break up</div><div class="vl-tl-line"></div></div><div class="vl-tl-step"><div class="vl-tl-node">5</div><div class="vl-tl-label">Final attempt</div><div class="vl-tl-line"></div></div></div>
+          <div class="vl-demo-mid"><div class="m"><div class="mt">Review / Verify</div><div class="ms">Check the script before you send</div></div><div class="m"><div class="mt">Skip for now</div><div class="ms">Come back to this one later</div></div></div>
+          <div class="vl-demo-acts"><div class="vl-demo-act">LinkedIn</div><div class="vl-demo-act">Replied</div><div class="vl-demo-act">Script</div><div class="vl-demo-act done">✓ Done</div></div>
         </div>
       </div></section>
 
