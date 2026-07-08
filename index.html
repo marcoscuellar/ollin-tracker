@@ -386,20 +386,25 @@
 
   /* ============ landing page (logged-out) ============ */
   .wrap{max-width:1080px;margin:0 auto;padding:0 24px;}
-  .mkt-head{border-bottom:.5px solid var(--hairline);position:sticky;top:0;background:#fff;z-index:10;}
+  .mkt-head{border-bottom:.5px solid var(--hairline);position:sticky;top:0;background:rgba(255,255,255,.86);backdrop-filter:saturate(180%) blur(12px);-webkit-backdrop-filter:saturate(180%) blur(12px);z-index:10;box-shadow:0 1px 0 var(--hairline),0 6px 20px rgba(17,17,17,.04);}
   .bar{display:flex;justify-content:space-between;align-items:center;padding:16px 0;}
   .bar-mark{font-family:'Archivo Black',sans-serif;font-size:18px;letter-spacing:.02em;}
   .bar-mark span{color:var(--honey);}
   .bar-login{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink);background:none;border:.5px solid var(--ink);border-radius:9px;padding:9px 18px;cursor:pointer;}
   .bar-login:hover{background:var(--ink);color:var(--cream);}
-  .hero{padding:78px 0 58px;text-align:center;}
+  .hero{position:relative;padding:88px 0 64px;text-align:center;overflow:hidden;}
+  /* soft honey glow behind the wordmark */
+  .hero::before{content:"";position:absolute;top:8%;left:50%;transform:translateX(-50%);width:min(720px,88vw);height:340px;background:radial-gradient(ellipse at center,rgba(224,169,58,.16),rgba(224,169,58,0) 70%);pointer-events:none;z-index:0;}
+  .hero>*{position:relative;z-index:1;}
   .wordmark{font-family:'Archivo Black',sans-serif;font-size:clamp(72px,17vw,180px);line-height:.92;letter-spacing:.01em;text-transform:uppercase;}
   .wordmark .dot{color:var(--honey);}
-  .hero-rule{width:40px;height:3px;background:var(--honey);margin:38px auto 26px;}
+  .hero-rule{width:44px;height:3px;background:var(--honey);margin:38px auto 26px;border-radius:2px;}
   .hero-tag{font-size:clamp(20px,3vw,26px);font-weight:500;}
-  .hero-sub{max-width:440px;margin:20px auto 0;color:var(--grey);font-size:15px;line-height:1.6;}
-  .hero-cta{display:inline-block;margin-top:36px;font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--cream);background:var(--ink);padding:16px 32px;border:.5px solid var(--ink);border-radius:var(--radius);cursor:pointer;}
-  .hero-cta:hover{background:var(--honey);border-color:var(--honey);color:var(--ink);}
+  .hero-sub{max-width:460px;margin:20px auto 0;color:var(--grey);font-size:15.5px;line-height:1.65;}
+  .hero-cta{display:inline-block;margin-top:38px;font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink);background:var(--honey);padding:17px 36px;border:.5px solid var(--honey);border-radius:var(--radius);cursor:pointer;font-weight:600;box-shadow:0 2px 6px rgba(224,169,58,.28),0 14px 34px rgba(224,169,58,.22);transition:transform .12s ease,box-shadow .12s ease,background .15s;}
+  .hero-cta:hover{background:#C99420;border-color:#C99420;color:var(--ink);transform:translateY(-1px);box-shadow:0 4px 10px rgba(224,169,58,.3),0 18px 42px rgba(224,169,58,.26);}
+  .hero-free{display:inline-block;margin-top:18px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--grey);}
+  .hero-free b{color:var(--ink);font-weight:600;}
   .mkt-eyebrow{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--grey);margin-bottom:26px;}
   .said{border-top:.5px solid var(--hairline);border-bottom:.5px solid var(--hairline);padding:60px 0;}
   .said-list{list-style:none;}
@@ -427,13 +432,15 @@
   .mkt-comeback-copy p b{color:var(--ink);font-weight:600;}
   .cb-quote{border-left:3px solid var(--honey);padding:2px 0 2px 18px;margin-bottom:20px;}
   .cb-quote p{font-size:16px;font-weight:500;font-style:italic;max-width:440px;}
-  .wyo-card{flex:1;max-width:340px;border-radius:var(--radius);background:#fff;box-shadow:var(--shadow);padding:22px 20px;}
-  .wyo-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--grey);}
-  .wyo-note{font-size:15px;font-weight:500;margin:12px 0 16px;padding:12px;background:var(--bg);border:.5px solid var(--hairline);}
-  .wyo-row{display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;padding:9px 0;border-bottom:.5px solid var(--hairline);}
-  .wyo-row b{color:var(--honey);font-weight:500;}
-  .wyo-cta{display:block;width:100%;text-align:center;margin-top:18px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;background:var(--ink);color:var(--cream);padding:13px;border:none;border-radius:9px;cursor:pointer;}
-  .wyo-cta:hover{background:var(--honey);color:var(--ink);}
+  /* faithful match to the app's real Welcome-back card (.comeback) */
+  .wyo-card{flex:1;max-width:380px;width:100%;border:.5px solid var(--hairline);border-left:3px solid var(--ink);border-radius:var(--radius);background:var(--cream);box-shadow:var(--shadow);padding:22px 24px;}
+  .wyo-h{font-family:'Archivo Black',sans-serif;font-size:17px;letter-spacing:-.01em;text-transform:uppercase;}
+  .wyo-h span{color:var(--honey);}
+  .wyo-sub{font-size:13.5px;color:var(--grey);line-height:1.5;margin:7px 0 0;}
+  .wyo-note{font-family:'Inter',sans-serif;font-size:15.5px;line-height:1.5;color:var(--ink);border-left:2px solid var(--ink);padding-left:13px;margin:15px 0;}
+  .wyo-meta{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--grey);margin-bottom:16px;}
+  .wyo-cta{display:block;width:100%;text-align:center;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;background:var(--ink);color:var(--cream);padding:12px;border:.5px solid var(--ink);border-radius:9px;cursor:pointer;transition:background .15s,border-color .15s;}
+  .wyo-cta:hover{background:var(--hover);border-color:var(--hover);color:var(--cream);}
   .q-card p{font-size:14.5px;line-height:1.55;font-weight:500;}
   .q-card p b{color:var(--honey);font-weight:600;}
   .q-card .who{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--grey);margin-top:14px;}
@@ -450,8 +457,9 @@
   .signup h2 span{color:var(--honey);}
   .signup-form{margin-top:36px;display:flex;justify-content:center;max-width:460px;margin-left:auto;margin-right:auto;}
   .signup-form input{flex:1;font-family:'JetBrains Mono',monospace;font-size:13px;padding:16px 18px;background:#fff;border:.5px solid var(--ink);border-right:none;border-radius:var(--radius) 0 0 var(--radius);color:var(--ink);}
-  .signup-form button{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.14em;text-transform:uppercase;background:var(--ink);color:var(--cream);border:.5px solid var(--ink);padding:0 26px;cursor:pointer;border-radius:0 var(--radius) var(--radius) 0;}
-  .signup-form button:hover{background:var(--honey);border-color:var(--honey);color:var(--ink);}
+  .signup-form input:focus{outline:none;border-color:var(--honey);}
+  .signup-form button{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;background:var(--honey);color:var(--ink);border:.5px solid var(--honey);padding:0 28px;cursor:pointer;border-radius:0 var(--radius) var(--radius) 0;transition:background .15s;}
+  .signup-form button:hover{background:#C99420;border-color:#C99420;color:var(--ink);}
   .signup-note{margin-top:16px;font-size:12.5px;color:var(--grey);font-family:'JetBrains Mono',monospace;}
   .mkt-footer{border-top:.5px solid var(--hairline);padding:28px 0 40px;}
   .mkt-foot{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--grey);}
@@ -476,7 +484,7 @@
         <p class="hero-tag">We got you.</p>
         <p class="hero-sub">A daily outreach tracker built for ADHD brains. It tells you who to touch today, hands you the script, and shifts gears the second they reply.</p>
         <button class="hero-cta lp-open">Try it free</button>
-        <p style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;color:var(--grey);margin-top:14px;">First 25 contacts free · No card · No pitch</p>
+        <p class="hero-free">First <b>25 contacts</b> free · No card · No pitch</p>
       </section>
 
       <section class="said"><div class="wrap">
@@ -518,11 +526,11 @@
           <p>Step away for a day — or a week — and you're met with your own note, your warm leads still waiting, and a streak that <b>bent instead of breaking.</b> One button back in.</p>
         </div>
         <div class="wyo-card">
-          <p class="wyo-label">While you were out</p>
-          <p class="wyo-note">"Call Karin first. Don't overthink the Foot Locker email."</p>
-          <div class="wyo-row"><span>Warm leads waiting</span><b>3</b></div>
-          <div class="wyo-row"><span>Streak</span><b>Bent, not broken</b></div>
-          <button class="wyo-cta lp-open">Pick up where you left off</button>
+          <h4 class="wyo-h">Welcome back<span>.</span></h4>
+          <p class="wyo-sub">3 days away. Nothing piled up — no catch-up screen. Pick up right where you left off.</p>
+          <div class="wyo-note">“Call Karin first. Don't overthink the Foot Locker email.”</div>
+          <div class="wyo-meta">3 warm leads waiting · 5-day streak intact</div>
+          <button class="wyo-cta lp-open">One tap back in</button>
         </div>
       </div></section>
 
