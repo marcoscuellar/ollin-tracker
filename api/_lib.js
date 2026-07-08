@@ -125,6 +125,10 @@ export const entriesKey = (id) => `entries:${id}`;
 export const MIGRATED_FLAG = 'ollin:migrated';
 export const LEGACY_OWNER_EMAIL = 'marcoscuellar99@icloud.com';
 
+// Founding-member interest list: [{ email, at }] — people who raised their
+// hand for unlimited (Pro) access during the early launch.
+export const FOUNDING_LIST_KEY = 'founding:list';
+
 export function newUserId() { return crypto.randomBytes(12).toString('hex'); }
 export function makeSalt() { return crypto.randomBytes(16).toString('hex'); }
 export function hashPassword(password, salt) {

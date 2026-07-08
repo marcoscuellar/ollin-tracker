@@ -8,7 +8,7 @@ import {
   normalizeEmail, userKey, emailKey, entriesKey,
   newUserId, makeSalt, hashPassword, verifyPassword,
   signToken, verifyToken, sendEmail, emailShell,
-  MIGRATED_FLAG, LEGACY_OWNER_EMAIL,
+  MIGRATED_FLAG, LEGACY_OWNER_EMAIL, FOUNDING_LIST_KEY,
 } from './_lib.js';
 
 const SESSION_TTL_MS = 1000 * 60 * 60 * 24 * 30; // 30 days
@@ -28,6 +28,7 @@ export default async function handler(req, res) {
       case 'request-reset': return requestReset(req, res);
       case 'reset': return reset(req, res);
       case 'resend-verify': return resendVerify(req, res);
+      case 'founding': return founding(req, res);
       default: return send(res, 400, { error: 'unknown action' });
     }
   } catch (e) {
@@ -194,4 +195,32 @@ async function resendVerify(req, res) {
   if (user.verified) return send(res, 200, { ok: true, already: true });
   const r = await sendVerifyEmail(req, user);
   return send(res, 200, { ok: !!r.ok });
+}
+
+// POST (session-gated) — the user raises their hand for founding-member
+// access. Grants the founding tier (unlimited, free while we build) and
+// records their email so Marcos knows who came in early.
+async function founding(req, res) {
+  const s = requireSession(req);
+  if (!s || !s.sub) return send(res, 401, { error: 'unauthorized' });
+  const user = await kv.get(userKey(s.sub));
+  if (!user) return send(res, 401, { error: 'unauthorized' });
+
+  // Only promote a free account; never downgrade a paid Pro.
+  if ((user.plan || 'free') === 'free') {
+    user.plan = 'founding';
+    user.foundingAt = Date.now();
+    await kv.set(userKey(s.sub), user);
+  }
+
+  // Record the founding member for follow-up (dedup by email).
+  try {
+    const list = (await kv.get(FOUNDING_LIST_KEY)) || [];
+    if (!list.some((x) => x && x.email === user.email)) {
+      list.push({ email: user.email, at: Date.now() });
+      await kv.set(FOUNDING_LIST_KEY, list);
+    }
+  } catch (e) { /* ignore — don't fail the upgrade on a list write */ }
+
+  return send(res, 200, { ok: true, plan: user.plan || 'founding' });
 }

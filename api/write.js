@@ -28,14 +28,15 @@ export default async function handler(req, res) {
   const key = process.env.ANTHROPIC_API_KEY;
   if (!key) return send(res, 500, { error: 'AI drafting is not configured (missing ANTHROPIC_API_KEY).' });
 
-  // Enforce the free monthly AI quota (Pro is unlimited).
+  // Enforce the free monthly AI quota (Pro and founding members are unlimited).
   const user = await kv.get(userKey(s.sub));
   if (!user) return send(res, 401, { error: 'unauthorized' });
   const mk = monthKey();
   user.ai = user.ai || {};
   const used = user.ai[mk] || 0;
-  if ((user.plan || 'free') !== 'pro' && used >= FREE_AI_PER_MONTH) {
-    return send(res, 402, { error: 'You’ve used your ' + FREE_AI_PER_MONTH + ' free AI drafts this month. Upgrade to Pro for unlimited.' });
+  const unlimited = ['pro', 'founding'].includes(user.plan || 'free');
+  if (!unlimited && used >= FREE_AI_PER_MONTH) {
+    return send(res, 402, { error: 'You’ve used your ' + FREE_AI_PER_MONTH + ' free AI drafts this month. Become a founding member for unlimited.' });
   }
 
   const body = await readJson(req);
@@ -94,7 +95,7 @@ export default async function handler(req, res) {
     user.ai[mk] = used + 1;
     await kv.set(userKey(s.sub), user);
 
-    const remaining = (user.plan || 'free') === 'pro' ? null : Math.max(0, FREE_AI_PER_MONTH - user.ai[mk]);
+    const remaining = unlimited ? null : Math.max(0, FREE_AI_PER_MONTH - user.ai[mk]);
     return send(res, 200, { text: text, remaining: remaining });
   } catch (e) {
     return send(res, 500, { error: String((e && e.message) || e) });

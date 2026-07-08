@@ -169,6 +169,23 @@
   .auth-input::placeholder{color:var(--grey2);}
   .verifybar{border:.5px solid var(--hairline);border-left:3px solid var(--gold);background:var(--cream);padding:10px 14px;margin-bottom:14px;font-size:12.5px;line-height:1.5;color:var(--grey);}
   .verifybar a{color:var(--gold);font-weight:600;cursor:pointer;text-decoration:underline;}
+  /* plan / founding-member gating */
+  .planbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;border:.5px solid var(--hairline);border-left:3px solid var(--honey);background:var(--cream);padding:10px 14px;margin-bottom:14px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.06em;color:var(--grey);}
+  .planbar.full{border-left-color:#C99420;}
+  .planbar.founding{border-left-color:var(--honey);color:var(--ink);}
+  .planbar .pb-count{text-transform:uppercase;}
+  .planbar a{color:var(--honey);font-weight:700;cursor:pointer;text-decoration:none;text-transform:uppercase;letter-spacing:.08em;white-space:nowrap;}
+  .planbar a:hover{color:#C99420;text-decoration:underline;}
+  .btn-mini.gopro{border-color:var(--honey);color:var(--honey);}
+  .btn-mini.gopro:hover{background:var(--honey);border-color:var(--honey);color:var(--ink);}
+  .upgrade-card{text-align:left;}
+  .upgrade-card .up-eyebrow{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--honey);font-weight:700;margin-bottom:8px;}
+  .upgrade-card .up-title{font-size:24px;font-weight:800;letter-spacing:-.01em;margin:0 0 12px;line-height:1.15;}
+  .upgrade-card .up-body{color:var(--grey);font-size:14px;line-height:1.6;margin:0 0 14px;}
+  .upgrade-card .up-list{list-style:none;padding:0;margin:0 0 20px;}
+  .upgrade-card .up-list li{position:relative;padding-left:22px;font-size:14px;line-height:1.5;color:var(--ink);margin-bottom:9px;}
+  .upgrade-card .up-list li::before{content:"\2713";position:absolute;left:0;top:0;color:var(--honey);font-weight:700;}
+  .upgrade-card .up-fine{font-size:11.5px;color:var(--grey2);margin:12px 0 0;text-align:center;}
   .reccode{font-family:'JetBrains Mono',monospace;font-size:18px;letter-spacing:.1em;color:var(--ink);background:var(--panel);border:.5px solid var(--hairline);padding:14px;margin:14px 0;word-break:break-all;font-weight:500;}
 
   /* import / manage forms (existing import logic, ANYWAY skin) */
@@ -828,7 +845,8 @@
     if(!rows || rows.length<2) return {ok:false,msg:"No data rows found (need a header row + at least one contact)"};
     var cm=colMap(rows[0]);
     if(cm.name<0 && cm.first<0) return {ok:false,msg:"No Name column found — check the header row"};
-    var added=0, updated=0, lastAcctId=null;
+    var added=0, updated=0, skipped=0, lastAcctId=null;
+    var budget=freeLeft(); // new contacts allowed under the free cap (Infinity if unlimited)
     for(var i=1;i<rows.length;i++){
       var r=rows[i];
       var get=function(idx){ return idx>=0 && idx<r.length ? (r[idx]||"").trim() : ""; };
@@ -852,6 +870,7 @@
         thread.channel=fields.channel; thread.linkedin=fields.linkedin; thread.email=fields.email; thread.angle=fields.angle;
         updated++;
       } else {
+        if(added>=budget){ skipped++; continue; } // over the free cap — hold this one back
         thread={ id:"t"+Date.now()+"_"+i+"_"+Math.floor(Math.random()*999) };
         for(var f in fields) thread[f]=fields[f];
         acct.threads.push(thread); added++;
@@ -859,8 +878,10 @@
       for(var k=0;k<5;k++){ var v=(msgs[k]||"").trim(); if(v) state.notes[acct.id+"|"+thread.id+"|"+k]=v; }
       lastAcctId=acct.id;
     }
-    if(lastAcctId) state.activeId=lastAcctId;
-    return {ok:true, added:added, updated:updated};
+    // drop any account left empty because all its rows hit the cap
+    state.accounts=state.accounts.filter(function(a){ return (a.threads||[]).length>0; });
+    if(lastAcctId && state.accounts.some(function(a){return a.id===lastAcctId;})) state.activeId=lastAcctId;
+    return {ok:true, added:added, updated:updated, skipped:skipped};
   }
 
   // turn any Google Sheets link into an anonymously-fetchable CSV URL.
@@ -903,6 +924,7 @@
           state.sheetUrl=raw; state.seeded=true;
           persistAccounts(); render();
           toast("Synced: "+res.added+" added, "+res.updated+" updated");
+          if(res.skipped) openUpgrade(res.skipped+" contact"+(res.skipped>1?"s":"")+" didn’t fit your "+FREE_CONTACT_CAP+" free slots.");
         })
         .catch(function(e){ toast(e.message||"Import failed"); btn.disabled=false; btn.textContent="Import / Sync"; });
     });
@@ -929,6 +951,7 @@
     if(!res.ok){ toast(res.msg); return; }
     state.seeded=true; persistAccounts(); render();
     toast("Imported: "+res.added+" added, "+res.updated+" updated");
+    if(res.skipped) openUpgrade(res.skipped+" contact"+(res.skipped>1?"s":"")+" didn’t fit your "+FREE_CONTACT_CAP+" free slots.");
   }
   function handleImportFile(file){
     if(!file) return;
@@ -1195,6 +1218,41 @@
   var focusIdx=0, meterRevealed=false, navView="home", focusMode=false;
   var pipeSelect=false, pipeSel={};
   function selCount(){ var n=0; for(var k in pipeSel){ if(pipeSel[k]) n++; } return n; }
+
+  // ---- plans / founding-member gating ----
+  var FREE_CONTACT_CAP=25;
+  function planName(){ return (ACCOUNT&&ACCOUNT.plan)||"free"; }
+  function isUnlimited(){ var p=planName(); return p==="pro"||p==="founding"; }
+  function contactCount(){ var n=0; state.accounts.forEach(function(a){ n+=(a.threads||[]).length; }); return n; }
+  function freeLeft(){ return isUnlimited()?Infinity:Math.max(0, FREE_CONTACT_CAP-contactCount()); }
+  function closeUpgrade(){ var o=document.getElementById("upgradeOverlay"); if(o) o.remove(); }
+  function openUpgrade(reason){
+    closeUpgrade();
+    var lead = reason || ("You're at "+contactCount()+" of "+FREE_CONTACT_CAP+" free contacts.");
+    var o=el('<div class="lp-overlay" id="upgradeOverlay"><div class="lock-card upgrade-card">'+
+      '<button class="lp-close" id="upClose" aria-label="Close">&times;</button>'+
+      '<div class="up-eyebrow">Founding member</div>'+
+      '<h2 class="up-title">Keep going — no limits<span style="color:var(--honey)">.</span></h2>'+
+      '<p class="up-body">'+esc(lead)+' ANYWAY. is brand new, and the people who show up first shape it. Raise your hand and I’ll set you up as a <b>founding member</b> — free while we’re building.</p>'+
+      '<ul class="up-list"><li>Unlimited contacts in cadence</li><li>Unlimited AI-drafted messages</li><li>A direct line to shape what gets built next</li></ul>'+
+      '<button class="btn" id="upGo" type="button">I’m in — count me as a founding member</button>'+
+      '<p class="up-fine">No card. No catch. I just want to know who’s in early.</p>'+
+      '</div></div>');
+    o.querySelector("#upClose").addEventListener("click", closeUpgrade);
+    o.addEventListener("click", function(e){ if(e.target===o) closeUpgrade(); });
+    o.querySelector("#upGo").addEventListener("click", function(){ goFounding(o.querySelector("#upGo")); });
+    document.body.appendChild(o);
+  }
+  function goFounding(btn){
+    if(btn){ btn.disabled=true; btn.textContent="…"; }
+    fetch("/api/auth?action=founding",{method:"POST",credentials:"same-origin"})
+      .then(function(r){ return r.json().catch(function(){ return {}; }); })
+      .then(function(d){
+        if(d && d.ok){ if(ACCOUNT) ACCOUNT.plan=d.plan||"founding"; closeUpgrade(); render(); toast("You’re a founding member. No limits. We got you."); }
+        else { if(btn){ btn.disabled=false; btn.textContent="I’m in — count me as a founding member"; } toast("Couldn’t do that — try again."); }
+      })
+      .catch(function(){ if(btn){ btn.disabled=false; btn.textContent="I’m in — count me as a founding member"; } toast("Couldn’t do that — try again."); });
+  }
   function startEveryoneToday(){
     var n=0;
     state.accounts.forEach(function(a){ (a.threads||[]).forEach(function(t){ if(t.persona!=="Blocker" && t.entryDay!==1){ t.entryDay=1; n++; } }); });
@@ -1307,20 +1365,29 @@
     var acct=(acctVal||"").trim(), bulk=(bulkVal||"").trim();
     if(!acct){ toast("Account name first"); return false; }
     if(!bulk){ toast("Add at least one person"); return false; }
+    // gather valid people first so we can respect the free cap before mutating state
+    var people=[];
+    bulk.split("\n").forEach(function(line){
+      line=line.trim(); if(!line) return;
+      var p=line.split(","), name=(p[0]||"").trim(), title=p.slice(1).join(",").trim();
+      if(name) people.push({name:name, title:title});
+    });
+    if(!people.length){ toast("No valid lines"); return false; }
+    var left=freeLeft(), blocked=0;
+    if(people.length>left){ blocked=people.length-Math.max(0,left); people=people.slice(0,Math.max(0,left)); }
+    if(!people.length){ openUpgrade("You’ve reached your "+FREE_CONTACT_CAP+" free contacts."); return false; }
     var a=state.accounts.find(function(x){ return normCompany(x.company)===normCompany(acct); });
     if(!a){ a={ id:"a"+Date.now(), company:acct, start:todayStr(), threads:[] }; state.accounts.push(a); }
     a.threads=a.threads||[];
     var entry=Math.max(1, daysBetween(a.start, todayStr())+1); // day 1 = today
     var added=0;
-    bulk.split("\n").forEach(function(line){
-      line=line.trim(); if(!line) return;
-      var p=line.split(","), name=(p[0]||"").trim(), title=p.slice(1).join(",").trim();
-      if(!name) return;
-      a.threads.push({ id:"t"+Date.now()+"_"+added+"_"+Math.floor(Math.random()*999), name:name, title:title, persona:"Additional", entryDay:entry, channel:"li", linkedin:"", email:"", angle:"", status:"active" });
+    people.forEach(function(pp){
+      a.threads.push({ id:"t"+Date.now()+"_"+added+"_"+Math.floor(Math.random()*999), name:pp.name, title:pp.title, persona:"Additional", entryDay:entry, channel:"li", linkedin:"", email:"", angle:"", status:"active" });
       added++;
     });
-    if(!added){ toast("No valid lines"); return false; }
-    persistAccounts(); render(); toast(added+" added to cadence");
+    persistAccounts(); render();
+    if(blocked>0){ openUpgrade("Added "+added+". "+blocked+" more would pass your "+FREE_CONTACT_CAP+" free contacts."); }
+    else toast(added+" added to cadence");
     return true;
   }
 
@@ -1545,6 +1612,16 @@
       m.appendChild(vb);
     }
 
+    // PLAN — free users see where they stand + a way to become a founding member
+    if(ACCOUNT && !isUnlimited()){
+      var used=contactCount(), left=Math.max(0,FREE_CONTACT_CAP-used), near=used>=FREE_CONTACT_CAP;
+      var pb=el('<div class="planbar'+(near?" full":"")+'"><span class="pb-count">'+used+' / '+FREE_CONTACT_CAP+' free contacts'+(near?" — full":(left<=5?" — "+left+" left":""))+'</span><a id="pbGo">Become a founding member</a></div>');
+      pb.querySelector("#pbGo").addEventListener("click", function(){ openUpgrade(); });
+      m.appendChild(pb);
+    } else if(ACCOUNT && planName()==="founding"){
+      m.appendChild(el('<div class="planbar founding"><span class="pb-count">Founding member — no limits. We got you.</span></div>'));
+    }
+
     // COMEBACK — met by your own note, warm leads, and streak. No guilt, no catch-up.
     var warmNow=contacts.filter(function(c){ return c.status==="warm"; }).length;
     if(COMEBACK.show && !comebackDismissed && (state.handoffNote || warmNow)){
@@ -1756,6 +1833,11 @@
 
     // MANAGE + FOOT
     var manage=el('<details class="section" id="secManage"><summary><span class="sum-title">Manage</span><span class="sum-count">backup · cleanup</span></summary><div class="btn-row"><button class="btn-mini" id="todayBtn">Start everyone today</button><button class="btn-mini" id="expBtn">Export backup</button><button class="btn-mini" id="resBtn">Restore</button><button class="btn-mini" id="dupBtn">Delete duplicates</button><button class="btn-mini danger" id="clrBtn">Clear all</button></div><input type="file" id="resFile" accept="application/json,.json" style="display:none"></details>');
+    if(ACCOUNT && !isUnlimited()){
+      var proBtn=el('<button class="btn-mini gopro" id="goProBtn">★ Become a founding member</button>');
+      proBtn.addEventListener("click", function(){ openUpgrade(); });
+      manage.querySelector(".btn-row").insertBefore(proBtn, manage.querySelector(".btn-row").firstChild);
+    }
     manage.querySelector("#todayBtn").addEventListener("click", startEveryoneToday);
     manage.querySelector("#expBtn").addEventListener("click", doExport);
     manage.querySelector("#dupBtn").addEventListener("click", doDedupe);
