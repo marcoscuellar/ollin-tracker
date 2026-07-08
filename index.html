@@ -392,6 +392,12 @@
      Honey is the one accent: primary CTAs, underlines/strikethroughs, section-closing periods. */
   /* Primary CTA hover inverts: honey fill -> ink fill, ink text -> honey text. */
   .btn:hover{background:var(--ink);border-color:var(--ink);color:var(--honey);}
+  /* Work card: navy Review/Skip labels + navy Done button (inverts to white on hover) */
+  .dc-mid .mi-t{color:var(--blue);font-weight:600;}
+  .dc-mid .mi-s{color:var(--blue);opacity:.62;}
+  .dc-mid .mi:hover .mi-t{color:#12203C;}
+  .dc-act.done{background:var(--blue);border-color:var(--blue);color:#fff;}
+  .dc-act.done:hover{background:#fff;border-color:var(--blue);color:var(--blue);}
 
   /* ============ landing page (logged-out) ============ */
   .wrap{max-width:1080px;margin:0 auto;padding:0 24px;}
