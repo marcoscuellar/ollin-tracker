@@ -46,10 +46,10 @@ async function sendVerifyEmail(req, user) {
   const url = `${origin}/api/auth?action=verify&token=${encodeURIComponent(token)}`;
   return sendEmail({
     to: user.email,
-    subject: 'Welcome to ANYWAY — confirm your email',
+    subject: 'Welcome to VAMOS — confirm your email',
     html: emailShell(
-      'Welcome to ANYWAY.',
-      "You're in. Confirm your email and your account is locked to you — then it's just you, your queue, and one honest touch at a time. You can start using ANYWAY right now; this just keeps it yours.",
+      'Welcome to VAMOS.',
+      "You're in. Confirm your email and your account is locked to you — then it's just you, your queue, and one honest touch at a time. You can start using VAMOS right now; this just keeps it yours.",
       { text: 'Confirm your email', url }
     ),
   });
@@ -157,7 +157,7 @@ async function requestReset(req, res) {
     try {
       await sendEmail({
         to: email,
-        subject: 'Reset your ANYWAY password',
+        subject: 'Reset your VAMOS password',
         html: emailShell(
           'Reset your password',
           "Click below to set a new password. This link works for one hour. Didn't ask for this? Ignore it — your password stays exactly as it is.",
