@@ -737,16 +737,16 @@
   .dc-mid .mi-t{color:var(--ink);} .dc-mid .mi-s{color:var(--grey);} .dc-mid .mi:hover .mi-t{color:var(--ink);}
   .dc-act.done{background:var(--ink);border-color:var(--ink);color:#fff;}
   .dc-act.done:hover{background:var(--hover);border-color:var(--hover);color:#fff;}
-  /* Founding / upgrade -> neutral ink; active founding = green status */
-  .planbar{border-left-color:var(--ink);}
-  .planbar a{color:var(--ink);} .planbar a:hover{color:var(--hover);}
+  /* Unlimited / upgrade -> navy (AI, secondary lead); active plan = green status */
+  .planbar{border-left-color:var(--navy);}
+  .planbar a{color:var(--navy);} .planbar a:hover{color:var(--navy-2);}
   .planbar.founding{border-left-color:var(--green-d);color:var(--ink);}
-  .btn-mini.gopro{border-color:var(--ink);color:var(--ink);}
-  .btn-mini.gopro:hover{background:var(--ink);border-color:var(--ink);color:#fff;}
-  .upgrade-card .up-eyebrow{color:var(--grey);}
-  .upgrade-card .up-list li::before{color:var(--green-d);}
-  .upgrade-card .btn{background:var(--ink);border-color:var(--ink);color:#fff;}
-  .upgrade-card .btn:hover{background:var(--hover);border-color:var(--hover);color:#fff;}
+  .btn-mini.gopro{border-color:var(--navy);color:var(--navy);}
+  .btn-mini.gopro:hover{background:var(--navy);border-color:var(--navy);color:#fff;}
+  .upgrade-card .up-eyebrow{color:var(--navy);}
+  .upgrade-card .up-list li::before{color:var(--navy);}
+  .upgrade-card .btn{background:var(--navy);border-color:var(--navy);color:#fff;}
+  .upgrade-card .btn:hover{background:var(--navy-2);border-color:var(--navy-2);color:#fff;}
 
   /* ===================== VAMOS landing · GLVE / Marcos Cuellar system ===================== */
   .site{
@@ -1141,7 +1141,7 @@
           <details><summary>What happens when I fall off for a few days?</summary><div class="a">You come back to <b>your own note, your warm leads, and a streak that bent instead of breaking.</b> The comeback is a designed feature, not a failure state.</div></details>
           <details><summary>Do I have to use the AI-written scripts?</summary><div class="a">No. <b>AI drafts every message — personalized to the contact and their step — but it's editable right in the card.</b> Use it, tweak it, or write your own.</div></details>
           <details><summary>Can neurotypicals use it?</summary><div class="a"><b>Yes. We made it simple enough for them.</b></div></details>
-          <details><summary>What does it cost?</summary><div class="a"><b>Your first 25 contacts are free — no card, no catch.</b> After that the app prompts you to upgrade.</div></details>
+          <details><summary>What does it cost?</summary><div class="a"><b>Your first 25 outreaches are free — no card required to start.</b> After that, it's $11/month for unlimited AI drafting.</div></details>
         </div>
       </div></section>
 
@@ -1974,12 +1974,12 @@
     var lead = reason || ("You're at "+contactCount()+" of "+FREE_CONTACT_CAP+" free contacts.");
     var o=el('<div class="lp-overlay" id="upgradeOverlay"><div class="lock-card upgrade-card">'+
       '<button class="lp-close" id="upClose" aria-label="Close">&times;</button>'+
-      '<div class="up-eyebrow">Founding member</div>'+
-      '<h2 class="up-title">Keep going — no limits<span style="color:var(--honey)">.</span></h2>'+
-      '<p class="up-body">'+esc(lead)+' VAMOS. is brand new, and the people who show up first shape it. Raise your hand and I’ll set you up as a <b>founding member</b> — free while we’re building.</p>'+
-      '<ul class="up-list"><li>Unlimited contacts in cadence</li><li>Unlimited AI-drafted messages</li><li>A direct line to shape what gets built next</li></ul>'+
-      '<button class="btn" id="upGo" type="button">I’m in — count me as a founding member</button>'+
-      '<p class="up-fine">No card. No catch. I just want to know who’s in early.</p>'+
+      '<div class="up-eyebrow">Unlimited</div>'+
+      '<h2 class="up-title">Keep drafting — no limits<span style="color:var(--navy)">.</span></h2>'+
+      '<p class="up-body">'+esc(lead)+' Your first 25 outreaches are free. After that, it’s <b>$11/month</b> for unlimited AI drafting — no card required to start.</p>'+
+      '<ul class="up-list"><li>Unlimited AI-drafted outreach</li><li>Unlimited contacts in cadence</li><li>Every thread and comeback, kept</li></ul>'+
+      '<button class="btn" id="upGo" type="button">Continue — no card required</button>'+
+      '<p class="up-fine">No card required to start. Billing comes later.</p>'+
       '</div></div>');
     o.querySelector("#upClose").addEventListener("click", closeUpgrade);
     o.addEventListener("click", function(e){ if(e.target===o) closeUpgrade(); });
@@ -1991,10 +1991,10 @@
     fetch("/api/auth?action=founding",{method:"POST",credentials:"same-origin"})
       .then(function(r){ return r.json().catch(function(){ return {}; }); })
       .then(function(d){
-        if(d && d.ok){ if(ACCOUNT) ACCOUNT.plan=d.plan||"founding"; closeUpgrade(); render(); toast("You’re a founding member. No limits. We got you."); }
-        else { if(btn){ btn.disabled=false; btn.textContent="I’m in — count me as a founding member"; } toast("Couldn’t do that — try again."); }
+        if(d && d.ok){ if(ACCOUNT) ACCOUNT.plan=d.plan||"founding"; closeUpgrade(); render(); toast("You’re unlimited. No card needed for now."); }
+        else { if(btn){ btn.disabled=false; btn.textContent="Continue — no card required"; } toast("Couldn’t do that — try again."); }
       })
-      .catch(function(){ if(btn){ btn.disabled=false; btn.textContent="I’m in — count me as a founding member"; } toast("Couldn’t do that — try again."); });
+      .catch(function(){ if(btn){ btn.disabled=false; btn.textContent="Continue — no card required"; } toast("Couldn’t do that — try again."); });
   }
   function startEveryoneToday(){
     var n=0;
@@ -2355,14 +2355,14 @@
       m.appendChild(vb);
     }
 
-    // PLAN — free users see where they stand + a way to become a founding member
+    // PLAN — free users see where they stand + the path to unlimited
     if(ACCOUNT && !isUnlimited()){
       var used=contactCount(), left=Math.max(0,FREE_CONTACT_CAP-used), near=used>=FREE_CONTACT_CAP;
-      var pb=el('<div class="planbar'+(near?" full":"")+'"><span class="pb-count">'+used+' / '+FREE_CONTACT_CAP+' free contacts'+(near?" — full":(left<=5?" — "+left+" left":""))+'</span><a id="pbGo">Become a founding member</a></div>');
+      var pb=el('<div class="planbar'+(near?" full":"")+'"><span class="pb-count">'+used+' / '+FREE_CONTACT_CAP+' free contacts'+(near?" — full":(left<=5?" — "+left+" left":""))+'</span><a id="pbGo">Get unlimited</a></div>');
       pb.querySelector("#pbGo").addEventListener("click", function(){ openUpgrade(); });
       m.appendChild(pb);
     } else if(ACCOUNT && planName()==="founding"){
-      m.appendChild(el('<div class="planbar founding"><span class="pb-count">Founding member — no limits. We got you.</span></div>'));
+      m.appendChild(el('<div class="planbar founding"><span class="pb-count">Unlimited — no limits. We got you.</span></div>'));
     }
 
     // COMEBACK — met by your own note, warm leads, and streak. No guilt, no catch-up.
@@ -2577,7 +2577,7 @@
     // MANAGE + FOOT
     var manage=el('<details class="section" id="secManage"><summary><span class="sum-title">Manage</span><span class="sum-count">identity · backup · cleanup</span></summary><div class="btn-row"><button class="btn-mini" id="senderBtn">Outreach identity</button><button class="btn-mini" id="todayBtn">Start everyone today</button><button class="btn-mini" id="expBtn">Export backup</button><button class="btn-mini" id="resBtn">Restore</button><button class="btn-mini" id="dupBtn">Delete duplicates</button><button class="btn-mini danger" id="clrBtn">Clear all</button></div><input type="file" id="resFile" accept="application/json,.json" style="display:none"></details>');
     if(ACCOUNT && !isUnlimited()){
-      var proBtn=el('<button class="btn-mini gopro" id="goProBtn">★ Become a founding member</button>');
+      var proBtn=el('<button class="btn-mini gopro" id="goProBtn">★ Get unlimited</button>');
       proBtn.addEventListener("click", function(){ openUpgrade(); });
       manage.querySelector(".btn-row").insertBefore(proBtn, manage.querySelector(".btn-row").firstChild);
     }
