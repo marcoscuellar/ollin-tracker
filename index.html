@@ -6,7 +6,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800;900&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
-    --ink:#111110; --cream:#FFFFFF; --card:#FFFFFF; --gold:#111110; --blue:#1B2E52; --blue900:#1B2E52; --honey:#E0A93A; --grey:#6B6B6B; --tint:#E9EBF1;
+    --ink:#0a0a0a; --cream:#FFFFFF; --card:#FFFFFF; --gold:#0a0a0a; --blue:#1B2E52; --blue900:#1B2E52; --honey:#E0A93A; --grey:#6B6B6B; --tint:#E9EBF1;
+    --amber:#f59e0b; --amber-d:#d97706; --navy:#0A1F3D; --green:#10b981; --green-d:#059669;
     --bg:#F2F2F2; --grey2:#A6A6A6; --hover:#2A2A2A;
     --hairline:rgba(17,17,16,.12); --panel:#F5F5F5;
     /* vertical accents (reserved for future) */
@@ -664,6 +665,52 @@
   .vl-demo-chip:hover{background:var(--blue-900);color:#fff;}
   @media(max-width:760px){.vl-demo{padding:22px 20px;}.vl-demo-acts{flex-wrap:wrap;}.vl-demo-act{min-width:calc(50% - 5px);}.vl-tl-label{font-size:9px;}.vl-demo-name{font-size:19px;}}
 
+
+  /* ============ VAMOS app · GLVE accents: amber=AI, navy=comeback, green=status ============ */
+  /* AI affordances -> amber */
+  .script-actions button.ai-btn{color:var(--amber-d);border-color:var(--amber);}
+  .script-actions button.ai-btn:hover{background:var(--amber);border-color:var(--amber);color:#1c0a00;}
+  .script-actions button.ai-btn[disabled]:hover{background:none;color:var(--amber-d);}
+  .ai-steer{border-color:var(--amber);background:rgba(245,158,11,.06);}
+  .ai-steer-lead{color:var(--amber-d);}
+  .ai-chip:hover{border-color:var(--amber);color:var(--amber-d);}
+  .ai-steer-row input:focus{outline-color:var(--amber);border-color:var(--amber);}
+  .ai-draft{background:var(--amber);border-color:var(--amber);color:#1c0a00;}
+  .ai-draft:hover{background:var(--amber-d);border-color:var(--amber-d);color:#1c0a00;}
+  /* Comeback + before-you-go -> navy */
+  .comeback{border-left-color:var(--navy);}
+  .comeback .cb-note{border-left-color:var(--navy);}
+  .comeback .cb-back{background:var(--navy);border-color:var(--navy);}
+  .comeback .cb-back:hover{background:#1a3052;border-color:#1a3052;color:var(--cream);}
+  .handoff{border-left:3px solid var(--navy);}
+  .handoff .saved{color:var(--green-d);}
+  /* System status -> green */
+  .pc-status.gold{color:var(--green-d);}
+  .warm-title{color:var(--green-d);}
+  .meter i.on,.meter.full i{background:var(--green);}
+  .nav-bell .dot{background:var(--green);}
+  .big-num.done{color:var(--green-d);}
+  .handoff .saved{color:var(--green-d);}
+  /* Primary buttons + work-card neutrals (ink; navy freed for comeback) */
+  .btn{background:var(--ink);border-color:var(--ink);color:#fff;}
+  .btn:hover{background:var(--hover);border-color:var(--hover);color:#fff;}
+  .dc-due{background:var(--panel);color:var(--ink);border-color:var(--hairline);}
+  .dc-due.over{background:var(--ink);color:var(--cream);border-color:var(--ink);}
+  .tl-step.active .tl-node{background:var(--ink);border-color:var(--ink);}
+  .dc-mid{background:var(--panel);}
+  .dc-mid .mi-t{color:var(--ink);} .dc-mid .mi-s{color:var(--grey);} .dc-mid .mi:hover .mi-t{color:var(--ink);}
+  .dc-act.done{background:var(--ink);border-color:var(--ink);color:#fff;}
+  .dc-act.done:hover{background:var(--hover);border-color:var(--hover);color:#fff;}
+  /* Founding / upgrade -> neutral ink; active founding = green status */
+  .planbar{border-left-color:var(--ink);}
+  .planbar a{color:var(--ink);} .planbar a:hover{color:var(--hover);}
+  .planbar.founding{border-left-color:var(--green-d);color:var(--ink);}
+  .btn-mini.gopro{border-color:var(--ink);color:var(--ink);}
+  .btn-mini.gopro:hover{background:var(--ink);border-color:var(--ink);color:#fff;}
+  .upgrade-card .up-eyebrow{color:var(--grey);}
+  .upgrade-card .up-list li::before{color:var(--green-d);}
+  .upgrade-card .btn{background:var(--ink);border-color:var(--ink);color:#fff;}
+  .upgrade-card .btn:hover{background:var(--hover);border-color:var(--hover);color:#fff;}
 
   /* ===================== VAMOS landing · GLVE / Marcos Cuellar system ===================== */
   .site{
