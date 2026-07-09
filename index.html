@@ -720,6 +720,18 @@
   .gl-sub{font-size:20px;color:var(--ink-2);line-height:1.5;max-width:52ch;margin:28px 0 0;}
   .gl-cta{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:36px;}
   .gl-hero-note{margin-top:20px;}
+  /* --- thread section (context-after-interruption story) --- */
+  .gl-thread{padding:80px 0;border-top:1px solid var(--line);background:var(--paper);}
+  .gl-thread .t-inner{max-width:680px;}
+  .gl-thread .t-head{font-weight:700;font-size:clamp(30px,4.6vw,54px);letter-spacing:-.04em;line-height:1.04;margin:0;}
+  .gl-thread .t-head .l1{display:block;color:var(--ink-3);font-weight:400;}
+  .gl-thread .t-head .l2{display:block;color:var(--ink);}
+  .gl-thread .t-story{margin-top:36px;display:flex;flex-direction:column;gap:20px;}
+  .gl-thread .t-story p{font-size:19px;line-height:1.65;color:var(--ink-2);margin:0;max-width:46ch;}
+  .gl-thread .t-story .t-beat{color:var(--ink);font-weight:500;}
+  .gl-thread .t-turn{font-weight:700;font-size:clamp(22px,2.6vw,30px);letter-spacing:-.03em;color:var(--ink);margin:40px 0 16px;}
+  .gl-thread .t-close{font-size:17px;line-height:1.7;color:var(--ink-2);max-width:56ch;margin:0;}
+  .gl-thread .t-close b{color:var(--ink);font-weight:600;}
   /* --- section scaffolding --- */
   .gl-sec{padding:72px 0;}
   .gl-sec-head{max-width:60ch;}
@@ -856,14 +868,28 @@
       <!-- HERO -->
       <section class="gl-hero"><div class="wrap">
         <div class="eyebrow">[ Daily outreach · built for ADHD brains ]</div>
-        <h1 class="gl-h1">Stop staring at the list.<span class="light"> Start working it.</span></h1>
-        <p class="gl-sub">VAMOS is a daily outreach tracker that tells you who to touch today, hands you the script, and shifts the second they reply. One contact, one card at a time.</p>
+        <h1 class="gl-h1">You bring the list.<span class="light"> VAMOS works the plan.</span></h1>
+        <p class="gl-sub">From client intel to campaigns, scripts, replies, and follow-ups — VAMOS keeps the whole outreach loop in one place so you can come back and keep moving.</p>
         <div class="gl-cta">
           <button class="btn-p lp-open">Try it free<svg class="btn-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
           <a class="btn-s" href="#how">See how it works</a>
         </div>
-        <div class="gl-hero-note statuspill"><span class="mono" style="color:var(--ink-3);font-size:11px;">First 25 contacts free · No card · No pitch</span></div>
+        <div class="gl-hero-note statuspill"><span class="mono" style="color:var(--ink-3);font-size:11px;">First 25 contacts free. No card required.</span></div>
       </div></section>
+
+      <!-- THREAD SECTION -->
+      <section class="gl-thread"><div class="wrap"><div class="t-inner">
+        <div class="eyebrow" style="margin-bottom:24px;">[ The thread ]</div>
+        <h2 class="t-head"><span class="l1">The day didn't fall apart.</span><span class="l2">The thread did.</span></h2>
+        <div class="t-story">
+          <p>You were in motion. Coffee was hitting. The list was open. You knew the next move.</p>
+          <p>Then Slack. A call. One tiny interruption.</p>
+          <p>Now you're back, staring at the same list like it belongs to someone else.</p>
+          <p class="t-beat">It's 9:16am. You're already tired.</p>
+        </div>
+        <p class="t-turn">VAMOS keeps the thread for you.</p>
+        <p class="t-close">It gathers the client intel, builds the campaign, writes the scripts, tracks replies, and keeps the next step ready — <b>so one interruption doesn't erase the whole plan.</b></p>
+      </div></div></section>
 
       <!-- IMPACT BAR -->
       <div class="wrap"><div class="impactbar">
