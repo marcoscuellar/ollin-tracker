@@ -710,6 +710,9 @@
   .ai-steer-row input:focus{outline-color:var(--amber);border-color:var(--amber);}
   .ai-draft{background:var(--amber);border-color:var(--amber);color:#1c0a00;}
   .ai-draft:hover{background:var(--amber-d);border-color:var(--amber-d);color:#1c0a00;}
+  /* subtle, non-blocking signal hint under an AI draft (from write.js angleWarning) */
+  .ai-hint{display:none;margin-top:10px;font-size:12px;line-height:1.45;color:var(--grey);border-left:2px solid var(--amber);background:rgba(245,158,11,.06);padding:8px 11px;border-radius:0 6px 6px 0;}
+  .ai-hint.show{display:block;}
   /* Comeback + before-you-go -> navy */
   .comeback{border-left-color:var(--navy);}
   .comeback .cb-note{border-left-color:var(--navy);}
@@ -2240,6 +2243,7 @@
       '<div class="dc-actions"><button class="dc-act" id="aChan">'+CH_LABEL[i.ch]+'</button><button class="dc-act" id="aReplied">Replied</button><button class="dc-act" id="aScript">Script</button><button class="dc-act done" id="aDone">✓ Done</button></div>'+
       '<div class="dc-script" id="dcScript"><p class="eyebrow" style="margin-bottom:8px">'+CH_LABEL[i.ch]+' script — use it, or let VAMOS write it</p><textarea>'+esc(scriptVal)+'</textarea>'+
         '<div class="script-actions"><button class="ai-btn">✦ Write with AI</button><button class="copy-btn">Copy</button></div>'+
+        '<div class="ai-hint" id="aiHint"></div>'+
         '<div class="ai-steer" id="aiSteer">'+
           '<p class="ai-steer-lead">Tell VAMOS how to write it — type a direction, or tap a nudge below.</p>'+
           '<div class="ai-steer-row"><input id="aiSteerInput" placeholder="e.g. mention their new store openings, keep it under 3 sentences…" maxlength="240"><button class="ai-draft" id="aiDraft">Draft it</button></div>'+
@@ -2279,8 +2283,11 @@
         steer.classList.toggle("open");
         if(steer.classList.contains("open")) steerInput.focus();
       });
+      var hint=card.querySelector("#aiHint");
+      function setHint(msg){ if(msg){ hint.textContent=msg; hint.classList.add("show"); } else { hint.textContent=""; hint.classList.remove("show"); } }
       function generate(steerText){
         scr.classList.add("open");
+        setHint(""); // clear any prior signal hint before a fresh draft
         draftBtn.disabled=true; aiBtn.disabled=true;
         var dl=draftBtn.textContent; draftBtn.textContent="Writing…";
         fetch("/api/write",{method:"POST",headers:{"Content-Type":"application/json"},
@@ -2288,6 +2295,7 @@
           .then(function(r){ return r.json().then(function(d){ return {ok:r.ok,d:d}; }); })
           .then(function(res){ if(!res.ok||!res.d||!res.d.text){ toast((res.d&&res.d.error)||"AI couldn’t draft that — try again"); return; }
             ta.value=res.d.text; state.notes[i.touch.id]=res.d.text; persistNotes();
+            setHint(res.d.angleWarning||""); // non-blocking nudge, never inside the draft
             toast(steerText?"Redrafted with your direction.":"Drafted. Yours to edit."); })
           .catch(function(){ toast("Network hiccup — try again"); })
           .then(function(){ draftBtn.disabled=false; aiBtn.disabled=false; draftBtn.textContent=dl; });
