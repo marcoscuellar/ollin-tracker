@@ -129,6 +129,26 @@ export const LEGACY_OWNER_EMAIL = 'marcoscuellar99@icloud.com';
 // hand for unlimited (Pro) access during the early launch.
 export const FOUNDING_LIST_KEY = 'founding:list';
 
+// ---------- sender identity (outreach profile, set at onboarding) ----------
+// Stored on the user record as user.sender. Used by api/write.js to introduce
+// the rep after the prospect-first opener, instead of hardcoding a name.
+export const DEFAULT_SENDER_INTRO = 'I run a team focused on adding engineering capacity without unnecessary overhead.';
+export const DEFAULT_ASSET = 'Capacity Map';
+// Normalize a sender payload (accepts request-shape `senderName` or stored
+// `name`) into the canonical stored shape, applying safe defaults. `name` is
+// left blank if not provided — callers decide whether to require it.
+export function normalizeSender(input) {
+  input = input || {};
+  const clip = (v, n) => (v == null ? '' : String(v)).trim().slice(0, n);
+  return {
+    name: clip(input.senderName != null ? input.senderName : input.name, 80),
+    intro: clip(input.senderIntro != null ? input.senderIntro : input.intro, 280) || DEFAULT_SENDER_INTRO,
+    company: clip(input.senderCompany != null ? input.senderCompany : input.company, 120),
+    credibility: clip(input.senderCredibility != null ? input.senderCredibility : input.credibility, 240),
+    defaultAsset: clip(input.defaultAsset, 60) || DEFAULT_ASSET,
+  };
+}
+
 export function newUserId() { return crypto.randomBytes(12).toString('hex'); }
 export function makeSalt() { return crypto.randomBytes(16).toString('hex'); }
 export function hashPassword(password, salt) {
