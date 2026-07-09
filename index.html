@@ -739,8 +739,9 @@
   .gl-h2 .light{color:var(--ink-3);font-weight:400;}
   .gl-lead{font-size:16px;color:var(--ink-2);line-height:1.6;max-width:56ch;margin:18px 0 0;}
   /* --- impact bar --- */
-  .impactbar{padding:36px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);}
-  .impactbar .ib-eye{text-align:center;margin-bottom:30px;}
+  .impactbar{padding:56px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);}
+  .impactbar .ib-head{text-align:center;margin-bottom:48px;}
+  .impactbar .ib-head .gl-h2{margin-top:12px;}
   .impactbar .ib-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:40px 56px;max-width:1040px;margin:0 auto;}
   .impactbar .ib{display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;}
   .impactbar .ib-lbl{font-family:var(--mono);font-size:10px;font-weight:600;color:var(--ink-3);text-transform:uppercase;letter-spacing:.07em;}
@@ -893,11 +894,14 @@
 
       <!-- IMPACT BAR -->
       <div class="wrap"><div class="impactbar">
-        <div class="ib-eye eyebrow">[ What you get ]</div>
+        <div class="ib-head">
+          <div class="eyebrow">[ What VAMOS gives back ]</div>
+          <h2 class="gl-h2">Less restarting.<span class="light"> More vámonos.</span></h2>
+        </div>
         <div class="ib-grid">
-          <div class="ib"><div class="ib-lbl">Free tier</div><div class="ib-val">25</div><div class="ib-desc">Contacts free — no card, no catch.</div></div>
-          <div class="ib"><div class="ib-lbl">Every contact</div><div class="ib-val">5</div><div class="ib-desc">Touches, scheduled automatically.</div></div>
-          <div class="ib"><div class="ib-lbl">Your screen</div><div class="ib-val">1</div><div class="ib-desc">One card at a time. Zero dashboards.</div></div>
+          <div class="ib"><div class="ib-lbl">Thread</div><div class="ib-val">1</div><div class="ib-desc">Kept together across contacts, campaigns, replies, and follow-ups.</div></div>
+          <div class="ib"><div class="ib-lbl">Rebuilds</div><div class="ib-val">0</div><div class="ib-desc">When Slack, calls, or life pull you away.</div></div>
+          <div class="ib"><div class="ib-lbl">Free sendouts</div><div class="ib-val">25</div><div class="ib-desc">To try outreach without the mental reset.</div></div>
         </div>
       </div></div>
 
