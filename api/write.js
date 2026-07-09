@@ -1,23 +1,49 @@
-// Drafts a single outreach message with Claude (Haiku — cheapest model).
-// Used by the "Write with AI" button in each queue card. Returns { text }.
+// Drafts a single outreach message with Claude. Used by the "Write with AI"
+// button in each queue card. Returns { text }. Model: Sonnet — the prompt +
+// this tier are what keep the drafts human and specific, not templated.
 import { kv, send, readJson, requireSession, userKey } from './_lib.js';
 
+const MODEL = 'claude-sonnet-5';
 const FREE_AI_PER_MONTH = 25;
 function monthKey() { return new Date().toISOString().slice(0, 7); } // 'YYYY-MM'
 
 const CHANNELS = {
-  li: 'a short LinkedIn message (2–4 sentences, no subject line, warm and human, not salesy — the goal is to start a conversation, not to pitch)',
-  em: 'a short cold email — start with a "Subject: ..." line, then the body (3–5 short sentences), sign off as Marcos',
-  call: 'brief call notes / a talk track (bullet points): an opener, one good question to ask, a reminder to listen more than pitch, and the goal of booking 15 minutes',
+  li: 'a LinkedIn message: 2–4 short sentences, no subject line. It should read like a note one human types to another — a specific opener about THEM, one honest reason you\'re writing, and one low-friction ask (a question, or "worth a quick chat?"). Never a pitch.',
+  em: 'a cold email. First line is "Subject: ..." — make the subject lowercase, specific, and un-salesy (e.g. "quick one on your eng roadmap", never "Transform Your Hiring!"). Then 3–5 short sentences, plain and direct, signed off as "Marcos". No greeting fluff.',
+  call: 'a short call talk-track as 4–5 tight bullet points: a natural opener, ONE sharp question worth answering, a reminder to listen more than pitch, and the goal — book 15 minutes. Keep it to what Marcos would actually say out loud.',
 };
 
 const STEP_CONTEXT = {
-  1: 'This is the FIRST touch — they have never heard from Marcos. Keep it light and low-pressure.',
-  2: 'This is a follow-up — a previous LinkedIn/email touch went unanswered. Reference that lightly without guilt-tripping.',
-  3: 'Third touch. Still no reply. Stay friendly and brief; add a small new angle or piece of value.',
-  4: 'Fourth touch. Persistent but respectful. Acknowledge you have reached out before.',
-  5: 'Final touch (a call). This is the last planned attempt — make it count, keep it human, leave a short voicemail if no answer.',
+  1: 'FIRST touch — they have never heard from Marcos. Earn the reply: lead with something specific to their role or company, keep it light, make the ask tiny.',
+  2: 'Second touch — a first message went unanswered. Reference it in one breath without guilt ("figured this might have slipped by"), then add a fresh angle. Do not repeat the first message.',
+  3: 'Third touch — still no reply. Shorter than before. Lead with one new, useful thought or observation, not "just following up."',
+  4: 'Fourth touch — persistent but respectful. Acknowledge you\'ve reached out a couple times, keep it warm, give an easy out.',
+  5: 'Final touch (a call / voicemail). Last planned attempt. Human and brief; if it\'s a voicemail, one clear reason to call back. No pressure, no guilt.',
 };
+
+const SYSTEM = [
+  'You write outreach for Marcos Cuellar, a recruiter at Spyglass Partners.',
+  'What Marcos does: he helps mid-market brands add senior engineering and data talent — onshore and nearshore — without big-firm overhead or markup.',
+  '',
+  'YOUR JOB: write outreach a sharp operator would actually be glad to receive. It must read like Marcos typed it himself in 30 seconds — human, specific, and easy to reply to.',
+  '',
+  'WHAT MAKES IT GOOD:',
+  '- Open with THEM, not Marcos. Reference their role, company, or likely situation — something that shows you\'re writing to a person, not a list.',
+  '- One honest reason for the message. One low-friction ask (a real question, or "worth a chat?"). Never a hard pitch, never multiple asks.',
+  '- Short. Every sentence earns its place. Cut throat-clearing and set-up. Contractions. Plain words.',
+  '- Confident and warm, never eager or salesy. Give an easy out. Sound like a peer, not a vendor.',
+  '',
+  'NEVER USE (these are what make outreach read as spam):',
+  '"I hope this email finds you well", "I hope you\'re doing well", "I wanted to reach out", "I came across your profile", "just circling back", "just following up", "touch base", "hop on a quick call", "pick your brain", "at your earliest convenience", "please don\'t hesitate", "synergy", "leverage", "game-changer", "revolutionize", "in today\'s fast-paced world", "cutting-edge", "world-class", any exclamation-mark hype, and any emoji.',
+  '',
+  'HARD RULES:',
+  '- Never invent facts about the person or their company. Personalize only from the name, title, and company you\'re given — if you don\'t know a detail, speak to their role or situation generally rather than making something up.',
+  '- Never promise specific candidates, timelines, or results.',
+  '- Output ONLY the message itself — no preamble, no notes, no quotation marks around it, no "Here\'s a draft".',
+  '',
+  'Example of the bar (LinkedIn, first touch):',
+  'Hi Dana — saw your team\'s been scaling DTC engineering at Skechers. I help brands your size add senior/nearshore engineers without the agency markup, so I keep an eye on teams that are growing. If hiring\'s on your plate this quarter, happy to share what\'s working — otherwise no worries at all.',
+].join('\n');
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') return send(res, 405, { error: 'method not allowed' });
@@ -46,20 +72,15 @@ export default async function handler(req, res) {
   const channel = CHANNELS[body.channel] ? body.channel : 'li';
   const step = Math.min(5, Math.max(1, parseInt(body.step, 10) || 1));
   const steer = (body.steer || '').toString().slice(0, 240).trim();
-
-  const system =
-    'You write outreach messages for Marcos Cuellar, a recruiter at Spyglass Partners. ' +
-    'Marcos helps mid-market brands add engineering and data talent — onshore and nearshore — without big-firm overhead. ' +
-    'His voice is direct, warm, and human: no corporate filler, no hype, no fake urgency, no emoji. ' +
-    'Never invent facts about the person or their company. Never make promises about specific candidates or results. ' +
-    'Output ONLY the message itself — no preamble, no explanation, no quotation marks around it.';
+  const angle = (body.angle || '').toString().slice(0, 400).trim();
 
   const prompt =
-    'Write ' + CHANNELS[channel] + '.\n\n' +
+    'Write ' + CHANNELS[channel] + '\n\n' +
     'Recipient: ' + name + (title ? ', ' + title : '') + ' at ' + company + '.\n' +
+    (angle ? 'Angle / why this contact matters (Marcos\'s own note — weave it in naturally, don\'t quote it): ' + angle + '\n' : '') +
     (STEP_CONTEXT[step] || '') + '\n\n' +
-    (steer ? 'Direction from Marcos (follow this while keeping his voice and the rules above): ' + steer + '\n\n' : '') +
-    'Write it now.';
+    (steer ? 'Direction from Marcos (follow it while keeping his voice and every rule above): ' + steer + '\n\n' : '') +
+    'Write the message now. Make it specific enough that it could only have been sent to this person.';
 
   try {
     const r = await fetch('https://api.anthropic.com/v1/messages', {
@@ -70,9 +91,9 @@ export default async function handler(req, res) {
         'content-type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'claude-haiku-4-5',
-        max_tokens: 400,
-        system: system,
+        model: MODEL,
+        max_tokens: 500,
+        system: SYSTEM,
         messages: [{ role: 'user', content: prompt }],
       }),
     });

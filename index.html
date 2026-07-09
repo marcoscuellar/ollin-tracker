@@ -2115,7 +2115,7 @@
         draftBtn.disabled=true; aiBtn.disabled=true;
         var dl=draftBtn.textContent; draftBtn.textContent="Writing…";
         fetch("/api/write",{method:"POST",headers:{"Content-Type":"application/json"},
-          body:JSON.stringify({name:c.name,title:c.title||"",company:c.account||"",channel:i.ch,step:i.stepNum,steer:steerText||""})})
+          body:JSON.stringify({name:c.name,title:c.title||"",company:c.account||"",angle:(c.t&&c.t.angle)||"",channel:i.ch,step:i.stepNum,steer:steerText||""})})
           .then(function(r){ return r.json().then(function(d){ return {ok:r.ok,d:d}; }); })
           .then(function(res){ if(!res.ok||!res.d||!res.d.text){ toast((res.d&&res.d.error)||"AI couldn’t draft that — try again"); return; }
             ta.value=res.d.text; state.notes[i.touch.id]=res.d.text; persistNotes();
