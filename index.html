@@ -3,7 +3,7 @@
 <title>VAMOS. — Tracker</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;800;900&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800;900&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
     --ink:#111110; --cream:#FFFFFF; --card:#FFFFFF; --gold:#111110; --blue:#1B2E52; --blue900:#1B2E52; --honey:#E0A93A; --grey:#6B6B6B; --tint:#E9EBF1;
@@ -664,179 +664,374 @@
   .vl-demo-chip:hover{background:var(--blue-900);color:#fff;}
   @media(max-width:760px){.vl-demo{padding:22px 20px;}.vl-demo-acts{flex-wrap:wrap;}.vl-demo-act{min-width:calc(50% - 5px);}.vl-tl-label{font-size:9px;}.vl-demo-name{font-size:19px;}}
 
+
+  /* ===================== VAMOS landing · GLVE / Marcos Cuellar system ===================== */
+  .site{
+    --font:'Geist',-apple-system,BlinkMacSystemFont,sans-serif; --mono:'Geist Mono',ui-monospace,Menlo,monospace;
+    --bg:#fff; --ink:#0a0a0a; --ink-2:#525252; --ink-3:#a3a3a3; --ink-4:#d4d4d4;
+    --line:#e7e5e4; --line-soft:#ededeb; --paper:#f5f5f4;
+    --amber:#f59e0b; --amber-d:#d97706; --amber-ddd:#92400e; --amber-pale:#fef3c7; --amber-bg:#fffbeb;
+    --navy:#0A1F3D; --navy-2:#1a3052; --navy-mid:#4B6177; --navy-soft:#8FA3B8; --navy-fade:#B8C5D1; --navy-on:#93c5fd;
+    --green:#10b981; --green-d:#059669; --green-on:#4ade80;
+    --r-1:4px; --r-2:8px; --r-3:12px; --r-4:14px; --r-5:16px; --r-6:20px; --r-7:28px; --r-8:32px; --r-pill:100px;
+    --sh-card:0 12px 32px rgba(0,0,0,.05),0 2px 4px rgba(0,0,0,.04); --sh-hover:0 12px 28px rgba(0,0,0,.18);
+    --ease:cubic-bezier(.16,1,.3,1);
+    background:#fff; color:var(--ink); font-family:var(--font); font-size:15px; line-height:1.5; letter-spacing:-.01em;
+  }
+  .site *{box-sizing:border-box;}
+  .site .wrap{max-width:1240px;margin:0 auto;padding:0 48px;}
+  @keyframes amberPulse{0%,100%{box-shadow:0 0 18px rgba(245,158,11,.14),0 8px 18px rgba(245,158,11,.06);}50%{box-shadow:0 0 30px rgba(245,158,11,.24),0 10px 22px rgba(245,158,11,.09);}}
+  @keyframes navyPulse{0%,100%{box-shadow:0 0 18px rgba(10,31,61,.14),0 8px 18px rgba(10,31,61,.06);}50%{box-shadow:0 0 30px rgba(10,31,61,.24),0 10px 22px rgba(10,31,61,.09);}}
+  /* --- system text --- */
+  .site .eyebrow{font-family:var(--mono);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-3);}
+  .site .mono{font-family:var(--mono);text-transform:uppercase;letter-spacing:.06em;}
+  /* --- header --- */
+  .gl-head{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.86);backdrop-filter:saturate(180%) blur(10px);-webkit-backdrop-filter:saturate(180%) blur(10px);border-bottom:1px solid var(--line);}
+  .gl-bar{display:flex;align-items:center;justify-content:space-between;padding:20px 0;gap:16px;}
+  .gl-mark{font-weight:700;font-size:22px;letter-spacing:-.04em;}
+  .gl-mark .m{font-family:var(--mono);font-weight:600;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);margin-left:14px;}
+  /* --- buttons --- */
+  .btn-p,.btn-s,.btn-a,.btn-m{display:inline-flex;align-items:center;gap:10px;font-family:var(--font);font-weight:600;letter-spacing:-.01em;cursor:pointer;border:none;text-decoration:none;transition:all .25s var(--ease);font-size:14px;}
+  .btn-p{background:var(--ink);color:#fff;padding:16px 26px;border-radius:var(--r-3);}
+  .btn-p:hover{transform:translateY(-2px);box-shadow:var(--sh-hover);}
+  .btn-s{background:transparent;color:var(--ink);border:1px solid var(--line);padding:16px 26px;border-radius:var(--r-3);}
+  .btn-s:hover{border-color:var(--ink);background:#fff;}
+  .btn-a{background:var(--amber);color:#1c0a00;padding:16px 26px;border-radius:var(--r-3);}
+  .btn-a:hover{background:var(--amber-d);transform:translateY(-2px);}
+  .btn-m{background:var(--paper);color:var(--ink);border:1px solid var(--line);padding:12px 18px;border-radius:var(--r-2);font-family:var(--mono);font-size:12px;letter-spacing:.04em;text-transform:uppercase;}
+  .btn-m:hover{background:#fff;border-color:var(--ink);}
+  .btn-arrow{transition:transform .25s var(--ease);}
+  .btn-p:hover .btn-arrow,.btn-a:hover .btn-arrow{transform:translateX(3px);}
+  /* --- tags --- */
+  .tag{display:inline-flex;align-items:center;gap:7px;padding:6px 10px;border-radius:var(--r-1);font-family:var(--mono);font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;}
+  .tag.pipeline{background:var(--paper);color:var(--ink-2);border:1px solid var(--line);}
+  .tag.amber{background:var(--amber-pale);color:var(--amber-ddd);border:1px solid rgba(245,158,11,.35);}
+  .tag.standalone{background:var(--ink);color:#fff;border:1px solid var(--ink);}
+  .tag.navy{background:rgba(75,97,119,.10);color:var(--navy);border:1px solid rgba(75,97,119,.30);}
+  .tag.live{background:rgba(16,185,129,.10);color:var(--green-d);border:1px solid rgba(16,185,129,.30);}
+  /* --- status pill --- */
+  .statuspill{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:12px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-2);}
+  .statuspill .dot{width:6px;height:6px;border-radius:50%;}
+  .statuspill.live .dot{background:var(--green);box-shadow:0 0 0 3px rgba(16,185,129,.15);}
+  /* --- hero --- */
+  .gl-hero{padding:96px 0 72px;}
+  .gl-h1{font-weight:700;font-size:clamp(56px,8.5vw,120px);letter-spacing:-.05em;line-height:.92;margin:22px 0 0;max-width:15ch;}
+  .gl-h1 .light{color:var(--ink-3);font-weight:400;}
+  .gl-sub{font-size:20px;color:var(--ink-2);line-height:1.5;max-width:52ch;margin:28px 0 0;}
+  .gl-cta{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:36px;}
+  .gl-hero-note{margin-top:20px;}
+  /* --- section scaffolding --- */
+  .gl-sec{padding:72px 0;}
+  .gl-sec-head{max-width:60ch;}
+  .gl-h2{font-weight:700;font-size:clamp(32px,4vw,48px);letter-spacing:-.035em;line-height:1.02;margin:14px 0 0;}
+  .gl-h2 .light{color:var(--ink-3);font-weight:400;}
+  .gl-lead{font-size:16px;color:var(--ink-2);line-height:1.6;max-width:56ch;margin:18px 0 0;}
+  /* --- impact bar --- */
+  .impactbar{padding:36px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);}
+  .impactbar .ib-eye{text-align:center;margin-bottom:30px;}
+  .impactbar .ib-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:40px 56px;max-width:1040px;margin:0 auto;}
+  .impactbar .ib{display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;}
+  .impactbar .ib-lbl{font-family:var(--mono);font-size:10px;font-weight:600;color:var(--ink-3);text-transform:uppercase;letter-spacing:.07em;}
+  .impactbar .ib-val{font-size:clamp(40px,4.6vw,60px);font-weight:700;letter-spacing:-.04em;line-height:.95;}
+  .impactbar .ib-desc{font-size:14px;color:var(--ink-2);}
+  /* --- confessional --- */
+  .gl-said{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center;margin-top:44px;}
+  .gl-said-list{list-style:none;margin:0;padding:0;}
+  .gl-said-list li{font-weight:700;font-size:clamp(22px,3.4vw,40px);letter-spacing:-.03em;line-height:1.3;color:var(--ink);text-decoration:line-through;text-decoration-color:var(--ink-4);text-decoration-thickness:3px;}
+  .gl-said-list li+li{margin-top:10px;}
+  .gl-said-card{background:var(--paper);border:1px solid var(--line);border-radius:var(--r-5);padding:32px 30px;font-size:17px;line-height:1.6;font-weight:450;}
+  .gl-said-tag{margin-top:22px;}
+  /* --- engine card grid --- */
+  .gl-engines{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:52px;}
+  .enginecard{position:relative;background:#fff;border:1px solid var(--line);border-radius:var(--r-6);padding:32px 28px 28px;display:flex;flex-direction:column;min-height:400px;box-shadow:var(--sh-card);}
+  .enginecard.amber{border:2px solid var(--amber);animation:amberPulse 4s ease-in-out infinite;}
+  .enginecard.navy{border:2px solid var(--navy);animation:navyPulse 4s ease-in-out infinite;}
+  .enginecard .ec-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:30px;}
+  .enginecard .ec-num{font-family:var(--mono);font-size:12px;font-weight:600;color:var(--ink-3);}
+  .enginecard.amber .ec-num{color:var(--amber-d);} .enginecard.navy .ec-num{color:var(--navy-mid);}
+  .enginecard .ec-icon{color:var(--ink);opacity:.9;margin-bottom:20px;}
+  .enginecard.amber .ec-icon{color:var(--amber);opacity:1;} .enginecard.navy .ec-icon{color:var(--navy-mid);opacity:1;}
+  .enginecard h3{font-weight:700;font-size:26px;letter-spacing:-.03em;line-height:1.05;margin:0 0 12px;}
+  .enginecard p{font-size:14px;color:var(--ink-2);line-height:1.5;margin:0 auto 0 0;}
+  .enginecard .ec-foot{display:flex;align-items:center;gap:8px;margin-top:20px;font-family:var(--mono);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:var(--ink);}
+  .enginecard.amber .ec-foot{color:var(--amber-d);} .enginecard.navy .ec-foot{color:var(--navy-mid);}
+  /* --- dark flow block --- */
+  .darkflow{position:relative;overflow:hidden;background:var(--ink);color:#fff;border-radius:var(--r-7);padding:56px 48px;margin-top:16px;}
+  .darkflow::before{content:"";position:absolute;top:-30%;right:-10%;width:700px;height:700px;background:radial-gradient(circle,rgba(255,255,255,.045),transparent 65%);pointer-events:none;}
+  .darkflow>*{position:relative;}
+  .darkflow .df-eye{font-family:var(--mono);font-size:11px;color:rgba(255,255,255,.55);text-transform:uppercase;letter-spacing:.08em;font-weight:500;margin-bottom:20px;}
+  .darkflow h3{font-weight:700;font-size:clamp(32px,4vw,48px);letter-spacing:-.035em;line-height:1.02;max-width:760px;margin:0 0 36px;}
+  .darkflow h3 .light{color:rgba(255,255,255,.45);font-weight:400;}
+  .darkflow .df-row{display:flex;align-items:center;flex-wrap:wrap;gap:12px;}
+  .darkflow .df-pill{display:flex;align-items:center;gap:10px;padding:14px 20px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:var(--r-3);font-family:var(--mono);font-size:12px;font-weight:500;text-transform:uppercase;letter-spacing:.04em;}
+  .darkflow .df-pill .n{color:rgba(255,255,255,.5);}
+  .darkflow .df-arrow{color:rgba(255,255,255,.35);font-size:18px;font-weight:300;}
+  .darkflow .df-note{display:inline-flex;align-items:center;gap:14px;padding:14px 22px;background:rgba(255,255,255,.04);border-radius:var(--r-3);font-family:var(--mono);font-size:12px;color:rgba(255,255,255,.7);margin-top:24px;text-transform:uppercase;letter-spacing:.04em;}
+  /* --- daily card demo --- */
+  .gl-demo-wrap{margin-top:48px;display:flex;justify-content:center;}
+  .gl-demo{width:100%;max-width:720px;background:#fff;border:1px solid var(--line);border-radius:var(--r-6);box-shadow:var(--sh-card);padding:30px 32px;}
+  .gl-demo-head{display:flex;align-items:center;gap:16px;margin-bottom:22px;}
+  .gl-demo-ava{width:52px;height:52px;border-radius:50%;background:var(--paper);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-weight:600;font-size:14px;color:var(--ink-2);flex-shrink:0;}
+  .gl-demo-name{font-weight:700;font-size:20px;letter-spacing:-.02em;}
+  .gl-demo-meta{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);margin-top:4px;}
+  .gl-demo-touch{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-2);margin:10px 0 18px;}
+  .gl-demo-touch b{color:var(--ink);}
+  .gl-demo-script{font-size:14px;line-height:1.55;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:var(--r-2);padding:14px 16px;margin:0;}
+  .gl-demo-airow{display:flex;align-items:center;gap:14px;margin-top:14px;flex-wrap:wrap;}
+  .gl-demo-ainote{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--amber-d);}
+  .gl-demo-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;}
+  .gl-demo-chip{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.05em;border:1px solid rgba(245,158,11,.4);color:var(--amber-ddd);background:var(--amber-bg);border-radius:var(--r-2);padding:7px 12px;cursor:pointer;}
+  .gl-demo-chip:hover{background:var(--amber-pale);}
+  .gl-demo-acts{display:flex;gap:10px;margin-top:18px;border-top:1px solid var(--line);padding-top:18px;}
+  .gl-demo-act{flex:1;text-align:center;font-size:13px;background:#fff;border:1px solid var(--line);border-radius:var(--r-2);padding:13px;color:var(--ink);}
+  .gl-demo-act.done{background:var(--ink);border-color:var(--ink);color:#fff;font-weight:600;}
+  /* --- comeback (navy) --- */
+  .gl-comeback{display:grid;grid-template-columns:1fr 360px;gap:44px;align-items:center;margin-top:44px;}
+  .gl-cb-copy p{font-size:15.5px;color:var(--ink-2);line-height:1.6;max-width:46ch;}
+  .gl-cb-copy p+p{margin-top:16px;}
+  .gl-cb-copy b{color:var(--ink);font-weight:600;}
+  .gl-cb-quote{border-left:3px solid var(--navy);padding:2px 0 2px 18px;margin-top:26px;}
+  .gl-cb-quote p{font-size:16px;font-weight:500;font-style:italic;margin:0;color:var(--ink);}
+  .wyo{background:var(--navy);color:#fff;border-radius:var(--r-6);padding:26px 24px;box-shadow:var(--sh-card);}
+  .wyo .wyo-lbl{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--navy-fade);}
+  .wyo .wyo-note{font-size:15px;font-weight:500;line-height:1.5;margin:12px 0 18px;padding:14px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:var(--r-2);}
+  .wyo .wyo-row{display:flex;justify-content:space-between;font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--navy-fade);padding:10px 0;border-bottom:1px solid rgba(255,255,255,.12);}
+  .wyo .wyo-row b{color:#fff;font-weight:600;}
+  .wyo .wyo-cta{display:block;width:100%;text-align:center;margin-top:18px;font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.06em;background:#fff;color:var(--navy);border:none;border-radius:var(--r-2);padding:13px;cursor:pointer;font-weight:600;}
+  /* --- founder --- */
+  .founder{display:grid;grid-template-columns:360px 1fr;gap:56px;align-items:center;background:var(--paper);border-radius:var(--r-7);padding:48px;margin-top:16px;}
+  .founder .f-photo{border-radius:var(--r-6);overflow:hidden;aspect-ratio:4/5;background:#fff;box-shadow:var(--sh-card);}
+  .founder .f-photo img{width:100%;height:100%;object-fit:cover;display:block;}
+  .founder .f-eye{font-family:var(--mono);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-3);margin-bottom:16px;}
+  .founder h3{font-weight:800;font-size:clamp(34px,4vw,48px);letter-spacing:-.04em;line-height:1;margin:0 0 20px;}
+  .founder h3 .light{font-weight:400;color:var(--ink-3);display:block;font-size:.55em;letter-spacing:-.02em;margin-top:6px;}
+  .founder p{font-size:15px;color:var(--ink-2);line-height:1.6;max-width:60ch;margin:0 0 12px;}
+  .founder p b{color:var(--ink);font-weight:600;}
+  .founder .f-stamps{display:flex;gap:8px;flex-wrap:wrap;margin-top:22px;}
+  /* --- faq --- */
+  .gl-faq{margin-top:40px;max-width:820px;}
+  .gl-faq details{border-bottom:1px solid var(--line);padding:0 4px;}
+  .gl-faq summary{list-style:none;cursor:pointer;padding:22px 0;font-weight:600;font-size:17px;letter-spacing:-.02em;display:flex;justify-content:space-between;align-items:center;gap:16px;}
+  .gl-faq summary::-webkit-details-marker{display:none;}
+  .gl-faq summary::after{content:"+";font-family:var(--mono);color:var(--ink-3);font-size:18px;font-weight:400;}
+  .gl-faq details[open] summary::after{content:"\2013";}
+  .gl-faq .a{font-size:15px;color:var(--ink-2);line-height:1.6;padding:0 0 22px;max-width:64ch;}
+  .gl-faq .a b{color:var(--ink);font-weight:600;}
+  /* --- signup + footer --- */
+  .gl-signup{text-align:center;padding:80px 0;border-top:1px solid var(--line);}
+  .gl-signup-form{margin:34px auto 0;display:flex;max-width:480px;}
+  .gl-signup-form input{flex:1;font-family:var(--mono);font-size:13px;padding:16px 18px;background:var(--paper);border:1px solid var(--line);border-right:none;border-radius:var(--r-3) 0 0 var(--r-3);color:var(--ink);}
+  .gl-signup-form input:focus{outline:none;border-color:var(--ink);}
+  .gl-signup-form button{font-family:var(--font);font-weight:600;font-size:14px;background:var(--ink);color:#fff;border:1px solid var(--ink);padding:0 26px;cursor:pointer;border-radius:0 var(--r-3) var(--r-3) 0;}
+  .gl-signup-note{margin-top:16px;font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-3);}
+  .gl-footer{border-top:1px solid var(--line);padding:28px 0 40px;}
+  .gl-foot{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-3);}
+  @media(max-width:900px){
+    .site .wrap{padding:0 24px;}
+    .gl-engines{grid-template-columns:1fr;}
+    .gl-said,.gl-comeback,.founder{grid-template-columns:1fr;}
+    .founder .f-photo{max-width:280px;}
+    .impactbar .ib-grid{grid-template-columns:1fr;gap:32px;}
+    .darkflow{padding:40px 26px;}
+    .gl-signup-form{flex-direction:column;}
+    .gl-signup-form input{border-right:1px solid var(--line);border-bottom:none;border-radius:var(--r-3) var(--r-3) 0 0;}
+    .gl-signup-form button{padding:16px;border-radius:0 0 var(--r-3) var(--r-3);}
+  }
+
 </style>
 
 <div class="app hide" id="appMain"></div>
 
 <div class="lock hide" id="lockScreen">
-  <div class="vl">
-    <header class="vl-head"><div class="wrap vl-bar">
-      <div style="display:flex;align-items:center;"><span class="vl-mark">VAMOS</span><span class="vl-head-tag">We got you.</span></div>
-      <button class="vl-login" id="lpLogin">Log in</button>
+  <div class="site">
+    <header class="gl-head"><div class="wrap gl-bar">
+      <div class="gl-mark">VAMOS<span class="m">· we got you.</span></div>
+      <div style="display:flex;align-items:center;gap:20px;">
+        <span class="statuspill live"><span class="dot"></span>Early access · live</span>
+        <button class="btn-m" id="lpLogin">Log in</button>
+      </div>
     </div></header>
 
     <main>
       <!-- HERO -->
-      <section class="vl-hero tint"><div class="wrap">
-        <div class="vl-wordmark">VAMOS</div>
-        <div class="vl-rule"></div>
-        <p class="vl-hero-tag">We got you.</p>
-        <p class="vl-hero-sub">A daily outreach tracker built for ADHD brains. It tells you who to touch today, hands you the script, and shifts gears the second they reply.</p>
-        <div style="margin-top:36px;"><button class="vl-btn lp-open">Try it free</button></div>
-        <p class="vl-hero-free">First 25 contacts free · No card · No pitch</p>
+      <section class="gl-hero"><div class="wrap">
+        <div class="eyebrow">[ Daily outreach · built for ADHD brains ]</div>
+        <h1 class="gl-h1">Stop staring at the list.<span class="light"> Start working it.</span></h1>
+        <p class="gl-sub">VAMOS is a daily outreach tracker that tells you who to touch today, hands you the script, and shifts the second they reply. One contact, one card at a time.</p>
+        <div class="gl-cta">
+          <button class="btn-p lp-open">Try it free<svg class="btn-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
+          <a class="btn-s" href="#how">See how it works</a>
+        </div>
+        <div class="gl-hero-note statuspill"><span class="mono" style="color:var(--ink-3);font-size:11px;">First 25 contacts free · No card · No pitch</span></div>
       </div></section>
 
-      <!-- THINGS THEY SAID -->
-      <section class="vl-sec white" style="border-top:.5px solid var(--hairline);border-bottom:.5px solid var(--hairline);"><div class="wrap">
-        <div style="text-align:center;">
-          <p class="vl-eyebrow" style="margin-bottom:32px;">Things we've all heard</p>
-          <h2 class="vl-h2" style="font-size:clamp(28px,4vw,40px);margin:-16px 0 44px;">We've heard it all before<span class="dot">.</span></h2>
+      <!-- IMPACT BAR -->
+      <div class="wrap"><div class="impactbar">
+        <div class="ib-eye eyebrow">[ What you get ]</div>
+        <div class="ib-grid">
+          <div class="ib"><div class="ib-lbl">Free tier</div><div class="ib-val">25</div><div class="ib-desc">Contacts free — no card, no catch.</div></div>
+          <div class="ib"><div class="ib-lbl">Every contact</div><div class="ib-val">5</div><div class="ib-desc">Touches, scheduled automatically.</div></div>
+          <div class="ib"><div class="ib-lbl">Your screen</div><div class="ib-val">1</div><div class="ib-desc">One card at a time. Zero dashboards.</div></div>
         </div>
-        <div class="vl-said-grid">
-          <ul class="vl-said-list">
-            <li><i>"Just try harder."</i></li>
-            <li><i>"It's not that hard."</i></li>
-            <li><i>"Just focus."</i></li>
+      </div></div>
+
+      <!-- CONFESSIONAL -->
+      <section class="gl-sec"><div class="wrap">
+        <div class="gl-sec-head">
+          <div class="eyebrow">[ Things we've all heard ]</div>
+          <h2 class="gl-h2">You've heard the advice.<span class="light"> It never worked.</span></h2>
+        </div>
+        <div class="gl-said">
+          <ul class="gl-said-list">
+            <li>"Just try harder."</li>
+            <li>"It's not that hard."</li>
+            <li>"Just focus."</li>
           </ul>
-          <div class="vl-said-answer">
-            <p class="card">I tried the "ADHD-friendly" apps. Most of them felt like they were built by people guessing.<br><br>So I stopped waiting for the right tool and built the one I needed. It helps me keep up with my ideas, my work, and the way my brain actually moves.<br><br>Turns out, it works. So I'm sharing it with others who think and work like I do.</p>
-            <p class="vl-vamos">Vamos.</p>
+          <div>
+            <div class="gl-said-card">I tried the "ADHD-friendly" apps. Most of them felt like they were built by people guessing. So I stopped waiting for the right tool and built the one I needed — the one that keeps up with the way my brain actually moves. Turns out, it works.</div>
+            <div class="gl-said-tag"><span class="tag standalone">— Marcos, founder</span></div>
           </div>
         </div>
       </div></section>
 
-      <!-- HOW IT WORKS -->
-      <section class="vl-sec tint hair"><div class="wrap" style="text-align:center;">
-        <p class="vl-eyebrow">How it works</p>
-        <h2 class="vl-h2" style="font-size:clamp(32px,6vw,52px);margin:16px 0 0;">Two minutes to your first touch<span class="dot">.</span></h2>
-        <p class="vl-sub">No setup, no config screen. Load your list once — VAMOS handles the cadence, the script, and the queue from there.</p>
-        <div class="vl-steps">
-          <div class="vl-card vl-step"><div class="num" style="color:var(--accent);">01</div><h3>Upload or paste your list</h3><p>Upload a CSV or paste contacts manually — <b>your whole list at once.</b> Every person starts a 5-touch cadence: Outreach → Follow up → Nudge → Break up → Final attempt.</p></div>
-          <div class="vl-card dark vl-step"><div class="num" style="color:#fff;">02</div><h3>Work the carousel</h3><p>Open the app, <b>one card, one contact at a time.</b> See their name, title, touch step, and the script — ready to send. Review it, skip it, or tap Done. Next card.</p></div>
-          <div class="vl-card vl-step"><div class="num" style="color:var(--magenta-500);">03</div><h3>Watch the meter fill</h3><p>The stat strip tracks <b>due today · in cadence · sent today</b> in real time. <b>Someone replies? They jump to the top.</b> Toggle Focus mode to lock in.</p></div>
+      <!-- ENGINES -->
+      <section class="gl-sec" id="how"><div class="wrap">
+        <div class="gl-sec-head">
+          <div class="eyebrow">[ The system ]</div>
+          <h2 class="gl-h2">Six moving parts.<span class="light"> One screen to run them.</span></h2>
+          <p class="gl-lead">Every part exists for one reason: reduce the decisions, keep the momentum. Load your list once — VAMOS handles the cadence, the script, and the queue.</p>
+        </div>
+        <div class="gl-engines">
+          <article class="enginecard"><div class="ec-top"><span class="ec-num">01</span><span class="tag pipeline">Daily</span></div>
+            <svg class="ec-icon" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><polygon points="22,2 2,9.5 10,13.5 14,22"/><line x1="10" y1="13.5" x2="22" y2="2"/></svg>
+            <h3>The daily card</h3><p>Open to one contact, one card — name, title, step, and the script, ready to send. Review it, skip it, or log it. Then the next card.</p>
+            <div class="ec-foot">Start here →</div></article>
+          <article class="enginecard"><div class="ec-top"><span class="ec-num">02</span><span class="tag pipeline">Cadence</span></div>
+            <svg class="ec-icon" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="12,4 10.5,9.5 12,11 13.5,9.5"/><polygon points="12,20 10.5,14.5 12,13 13.5,14.5"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg>
+            <h3>The 5-touch cadence</h3><p>Outreach → Follow up → Nudge → Break up → Final attempt. Every contact runs it automatically; the queue rebuilds each morning, most overdue first.</p>
+            <div class="ec-foot">See the flow →</div></article>
+          <article class="enginecard amber"><div class="ec-top"><span class="ec-num">03</span><span class="tag amber">AI</span></div>
+            <svg class="ec-icon" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="1,12.5 5.5,12.5 8,5.5 10.5,19.5 13,12.5 23,12.5"/><circle cx="8" cy="5.5" r="1.2" fill="currentColor" stroke="none"/></svg>
+            <h3>Every message, drafted</h3><p>AI writes each touch from the contact's name, title, and step — then rewrites on command: shorter, warmer, a different angle. You edit or send.</p>
+            <div class="ec-foot">Draft it →</div></article>
+          <article class="enginecard navy"><div class="ec-top"><span class="ec-num">04</span><span class="tag navy">On demand</span></div>
+            <svg class="ec-icon" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="10.5" cy="10.5" r="7"/><line x1="15.5" y1="15.5" x2="21.5" y2="21.5"/><circle cx="10.5" cy="10.5" r="2.5"/></svg>
+            <h3>The comeback, built in</h3><p>Step away for a day — or a week. Come back to your own note, your warm leads, and a streak that bent instead of breaking. One button back in.</p>
+            <div class="ec-foot">Pick up →</div></article>
+          <article class="enginecard"><div class="ec-top"><span class="ec-num">05</span><span class="tag pipeline">Proof</span></div>
+            <svg class="ec-icon" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9,11 12,14 22,4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+            <h3>Receipts, daily</h3><p>Every touch logged, every day stacked. When someone asks whether you're "applying yourself," you'll have the number — not a feeling.</p>
+            <div class="ec-foot"><span class="statuspill live" style="font-size:11px;"><span class="dot"></span>Sent today</span></div></article>
+          <article class="enginecard"><div class="ec-top"><span class="ec-num">06</span><span class="tag pipeline">Signals</span></div>
+            <svg class="ec-icon" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><circle cx="12" cy="3" r="1.8"/><circle cx="21" cy="7.5" r="1.8"/><circle cx="21" cy="16.5" r="1.8"/><circle cx="3" cy="7.5" r="1.8"/><circle cx="3" cy="16.5" r="1.8"/><line x1="12" y1="9" x2="12" y2="4.8"/><line x1="14.6" y1="10.2" x2="19.3" y2="8.3"/><line x1="14.6" y1="13.8" x2="19.3" y2="15.7"/><line x1="9.4" y1="10.2" x2="4.7" y2="8.3"/><line x1="9.4" y1="13.8" x2="4.7" y2="15.7"/></svg>
+            <h3>They reply, they jump the queue</h3><p>The second a prospect responds, they move to the top and the cadence pauses. No chasing cold leads while a warm one sits waiting.</p>
+            <div class="ec-foot">Catch it →</div></article>
         </div>
       </div></section>
 
-      <!-- LIVE CARD DEMO -->
-      <section class="vl-sec vl-demo-sec white"><div class="wrap" style="text-align:center;">
-        <p class="vl-eyebrow">The daily card</p>
-        <h2 class="vl-h2" style="font-size:clamp(28px,4vw,40px);margin:16px 0 0;">One contact. One card. Done<span class="dot">.</span></h2>
-        <p class="vl-sub">This is the whole app. Who's up, what to say, one tap to log it — then the next card.</p>
-        <div class="vl-demo">
-          <div class="vl-demo-head"><div class="vl-demo-ava">JV</div><div><div class="vl-demo-name">Jeff Veldhuizen</div><div class="vl-demo-meta">VP of Ecommerce · Skechers</div></div><div class="vl-demo-due">LinkedIn today</div></div>
-          <div class="vl-demo-touch"><b>Touch 1 of 5</b><span>First outreach due — script, send, done.</span></div>
-          <div class="vl-tl"><div class="vl-tl-step active"><div class="vl-tl-node">1</div><div class="vl-tl-label">Outreach</div><div class="vl-tl-line"></div></div><div class="vl-tl-step"><div class="vl-tl-node">2</div><div class="vl-tl-label">Follow up</div><div class="vl-tl-line"></div></div><div class="vl-tl-step"><div class="vl-tl-node">3</div><div class="vl-tl-label">Nudge</div><div class="vl-tl-line"></div></div><div class="vl-tl-step"><div class="vl-tl-node">4</div><div class="vl-tl-label">Break up</div><div class="vl-tl-line"></div></div><div class="vl-tl-step"><div class="vl-tl-node">5</div><div class="vl-tl-label">Final attempt</div><div class="vl-tl-line"></div></div></div>
-          <div class="vl-demo-mid"><div class="m"><div class="mt">Review / Verify</div><div class="ms">Check the script before you send</div></div><div class="m"><div class="mt">Skip for now</div><div class="ms">Come back to this one later</div></div></div>
-          <div class="vl-demo-acts"><div class="vl-demo-act">LinkedIn</div><div class="vl-demo-act">Replied</div><div class="vl-demo-act">Script</div><div class="vl-demo-act done">✓ Done</div></div>
-          <div class="vl-demo-ai">
-            <p class="vl-demo-script">Hi Amelia — saw Northwind's DTC push this quarter. We help mid-market retail teams add senior engineers, nearshore, without the big-firm overhead. Worth a quick 15 minutes?</p>
-            <div class="vl-demo-ai-row"><button class="vl-demo-rewrite">✦ Rewrite with AI</button><span class="vl-demo-ai-note">Type a direction, or tap a suggestion —</span></div>
-            <div class="vl-demo-chips">
-              <span class="vl-demo-chip">Make it shorter</span>
-              <span class="vl-demo-chip">More conversational</span>
-              <span class="vl-demo-chip">Warmer</span>
-              <span class="vl-demo-chip">Push nearshore</span>
-              <span class="vl-demo-chip">Different angle</span>
+      <!-- DARK FLOW -->
+      <section class="gl-sec"><div class="wrap">
+        <div class="darkflow">
+          <div class="df-eye">[ The daily flow ]</div>
+          <h3>Load it once.<span class="light"> Work it every morning.</span></h3>
+          <div class="df-row">
+            <div class="df-pill"><span class="n">01</span> Upload list</div><span class="df-arrow">→</span>
+            <div class="df-pill"><span class="n">02</span> Today's queue</div><span class="df-arrow">→</span>
+            <div class="df-pill"><span class="n">03</span> Script it</div><span class="df-arrow">→</span>
+            <div class="df-pill"><span class="n">04</span> Log it</div><span class="df-arrow">→</span>
+            <div class="df-pill"><span class="n">05</span> Next</div>
+          </div>
+          <div class="df-note">Someone replies? They jump to the top — automatically.</div>
+        </div>
+      </div></section>
+
+      <!-- DAILY CARD DEMO -->
+      <section class="gl-sec"><div class="wrap">
+        <div class="gl-sec-head">
+          <div class="eyebrow">[ The daily card ]</div>
+          <h2 class="gl-h2">This is the whole app.<span class="light"> One tap to log it.</span></h2>
+        </div>
+        <div class="gl-demo-wrap"><div class="gl-demo">
+          <div class="gl-demo-head"><div class="gl-demo-ava">AB</div><div><div class="gl-demo-name">Amelia Bedelia</div><div class="gl-demo-meta">VP of Ecommerce · Northwind Apparel</div></div><div style="margin-left:auto;"><span class="tag pipeline">Touch 1 · LinkedIn</span></div></div>
+          <div class="gl-demo-touch"><b>Touch 1 of 5</b> — First outreach due. Script, send, done.</div>
+          <p class="gl-demo-script">Hi Amelia — saw Northwind's DTC push this quarter. We help mid-market retail teams add senior engineers, nearshore, without the big-firm overhead. Worth a quick 15 minutes?</p>
+          <div class="gl-demo-airow"><button class="btn-a" style="padding:11px 18px;font-size:12px;font-family:var(--mono);text-transform:uppercase;letter-spacing:.04em;">✦ Rewrite with AI</button><span class="gl-demo-ainote">Tap a suggestion —</span></div>
+          <div class="gl-demo-chips">
+            <span class="gl-demo-chip">Make it shorter</span><span class="gl-demo-chip">More conversational</span><span class="gl-demo-chip">Warmer</span><span class="gl-demo-chip">Push nearshore</span><span class="gl-demo-chip">Different angle</span>
+          </div>
+          <div class="gl-demo-acts"><div class="gl-demo-act">LinkedIn</div><div class="gl-demo-act">Replied</div><div class="gl-demo-act">Script</div><div class="gl-demo-act done">✓ Done</div></div>
+        </div></div>
+      </div></section>
+
+      <!-- COMEBACK (navy) -->
+      <section class="gl-sec"><div class="wrap">
+        <div class="gl-sec-head">
+          <div class="eyebrow">[ On demand · the comeback ]</div>
+          <h2 class="gl-h2">The comeback is built in.<span class="light"> No restarting from zero.</span></h2>
+        </div>
+        <div class="gl-comeback">
+          <div class="gl-cb-copy">
+            <p>Starting isn't the hard part for ADHD brains — <b>restarting is.</b> At the end of each day, VAMOS asks one question: <b>"What matters tomorrow?"</b> One line, to your future self.</p>
+            <p>Step away for a day or a week, and you're met with your own note, your warm leads still waiting, and a streak that <b>bent instead of breaking.</b> One button back in.</p>
+            <div class="gl-cb-quote"><p>"The hardest part of ADHD isn't doing the work. It's getting back into it after life interrupts you."</p></div>
+          </div>
+          <div class="wyo">
+            <div class="wyo-lbl">While you were out</div>
+            <div class="wyo-note">"Call Karin first. Don't overthink the Foot Locker email."</div>
+            <div class="wyo-row"><span>Warm leads waiting</span><b>3</b></div>
+            <div class="wyo-row"><span>Streak</span><b>Bent, not broken</b></div>
+            <button class="wyo-cta lp-open">Pick up where you left off</button>
+          </div>
+        </div>
+      </div></section>
+
+      <!-- FOUNDER -->
+      <section class="gl-sec"><div class="wrap">
+        <div class="founder">
+          <div class="f-photo"><img src="assets/founder-marcos-cuellar.jpg" alt="Marcos Cuellar"></div>
+          <div>
+            <div class="f-eye">[ Founder · built by the operator ]</div>
+            <h3>Marcos Cuellar<span class="light">Founder — VAMOS</span></h3>
+            <p>I built VAMOS in <b>2022</b> as a personal tool, before it was a product. I'm an overachieving ADHD workaholic — I don't struggle for lack of ambition. I struggle because most tools bury the important thing and expect me to work in ways that never made sense.</p>
+            <p>I tried the "ADHD-friendly" apps. Most felt built by people guessing. So I built the one I needed — <b>one screen, one card, one honest touch at a time.</b> It works. Now I'm sharing it with people who think and work like I do.</p>
+            <div class="f-stamps">
+              <span class="tag standalone">Operator, not VC-built</span>
+              <span class="tag pipeline">Built 2022</span>
+              <span class="tag pipeline">Recruiter · Spyglass Partners</span>
             </div>
           </div>
         </div>
       </div></section>
 
-      <!-- PRODUCT -->
-      <section class="vl-sec white"><div class="wrap" style="text-align:center;">
-        <p class="vl-eyebrow">The tracker</p>
-        <h2 class="vl-h2" style="font-size:clamp(32px,6vw,52px);max-width:760px;margin:16px auto 0;">Not another "ADHD friendly" app</h2>
-        <p class="vl-sub">Every screen below is built around one rule: reduce the decisions, keep the momentum.</p>
-        <p class="vl-nt">✓ Also neurotypical-friendly</p>
-        <div class="vl-feat-grid">
-          <div class="vl-card dark vl-feat"><div class="vl-label">One screen</div><h3>No dashboards</h3><p>Today's outreach, today's number, one place. Nothing to configure, nothing to get lost in. Open it, do the thing, close it.</p></div>
-          <div class="vl-card vl-feat"><div class="vl-label">Momentum</div><h3>Streaks without shame</h3><p>Miss a day? The streak bends, it doesn't break. VAMOS is built to restart you, not to punish you.</p></div>
-          <div class="vl-card vl-feat"><div class="vl-label">Proof</div><h3>Receipts, daily</h3><p>Every touch logged, every day stacked. When someone asks if you're "applying yourself," you'll have the number.</p></div>
-          <div class="vl-card dark vl-feat"><div class="vl-label">Pipeline</div><h3>Who's next — and what changed</h3><p>Load contacts once, every person runs a five-touch cadence automatically. Queue is built every morning, most overdue first.</p></div>
-          <div class="vl-card dark vl-feat"><div class="vl-label">Comeback</div><h3>No restarting — you pick up where you left off</h3><p>End your day with one line to your future self: "What matters tomorrow?" Come back — even days later — and your note, your warm leads, and your streak are waiting.</p></div>
-          <div class="vl-card vl-feat hl"><div class="vl-label">AI</div><h3>Every message drafted for you — before you ask</h3><p>AI writes each touch using the contact's name, title, and cadence step. When someone replies, it drafts the warm next move. You edit or send.</p></div>
-        </div>
-      </div></section>
-
-      <!-- COMEBACK -->
-      <section class="vl-sec tint hair">
-        <div class="wrap" style="text-align:center;">
-          <p class="vl-eyebrow">The part nobody builds</p>
-          <h2 class="vl-h2" style="font-size:clamp(32px,6vw,52px);margin:16px auto 0;">The comeback is built in<span class="dot">.</span></h2>
-        </div>
-        <div class="wrap vl-cb-grid">
-          <div class="vl-cb-copy">
-            <p>Starting isn't the hard part for ADHD brains — <b>restarting is.</b> At the end of each day, VAMOS asks one question: <b>"What matters tomorrow?"</b> One line, to your future self.</p>
-            <p>Step away for a day — or a week — and you're met with your own note, your warm leads still waiting, and a streak that <b>bent instead of breaking.</b> One button back in.</p>
-            <div class="vl-cb-quote"><p>"The hardest part of ADHD isn't doing the work. It's getting back into it after life interrupts you."</p></div>
-          </div>
-          <div class="vl-wyo-wrap"><div class="vl-wyo">
-            <p class="lbl">While you were out</p>
-            <p class="note">"Call Karin first. Don't overthink the Foot Locker email."</p>
-            <div class="row"><span>Warm leads waiting</span><b>3</b></div>
-            <div class="row"><span>Streak</span><b>Bent, not broken</b></div>
-            <button class="cta lp-open">Pick up where you left off</button>
-          </div></div>
-        </div>
-      </section>
-
-      <!-- MANIFESTO -->
-      <section class="vl-sec white"><div class="wrap" style="max-width:680px;">
-        <div style="text-align:center;">
-          <p class="vl-eyebrow">The science</p>
-          <h2 class="vl-h2" style="font-size:clamp(28px,4vw,40px);margin:16px 0 0;">It's not a discipline problem<span class="dot">.</span></h2>
-        </div>
-        <div class="vl-man-grid">
-          <div class="vl-man-photo"><span>Founder photo<br>coming soon</span></div>
-          <div class="vl-man-body">
-            <p>ADHD isn't a discipline problem. Research from the National Institute of Mental Health shows it's a neurodevelopmental condition associated with differences in brain development and function — not a lack of willpower.</p>
-            <p>You don't need another lecture. You need tools that meet your brain where it is.</p>
-            <p class="vl-vamos" style="font-size:clamp(20px,3vw,28px);margin-top:26px;">Vamos.</p>
-            <p class="vl-man-name">Marcos Cuellar<span>Founder — VAMOS</span></p>
-          </div>
-        </div>
-      </div></section>
-
-      <!-- EXPANSION -->
-      <section class="vl-sec tint hair"><div class="wrap">
-        <div style="text-align:center;">
-          <p class="vl-eyebrow">Where this is going</p>
-          <h2 class="vl-h2" style="font-size:clamp(28px,4vw,40px);margin:16px 0 0;">One brain, four brands<span class="dot">.</span></h2>
-        </div>
-        <div class="vl-cells">
-          <div class="vl-cell"><div class="nm">VAMOS.<em style="color:var(--accent);">for sales</em></div><div class="st">Live — early access</div></div>
-          <div class="vl-cell"><div class="nm">VAMOS.<em style="color:var(--cobalt-500);">for students</em></div><div class="st">Coming</div></div>
-          <div class="vl-cell"><div class="nm">VAMOS.<em style="color:var(--magenta-500);">for events</em></div><div class="st">Coming</div></div>
-          <div class="vl-cell"><div class="nm">VAMOS.<em style="color:var(--verde-500);">for life</em></div><div class="st">Coming</div></div>
-        </div>
-      </div></section>
-
       <!-- FAQ -->
-      <section class="vl-sec white"><div class="wrap">
-        <div style="text-align:center;">
-          <p class="vl-eyebrow">Questions</p>
-          <h2 class="vl-h2" style="font-size:clamp(24px,4vw,34px);margin:16px 0 44px;">Before you ask<span class="dot">.</span></h2>
+      <section class="gl-sec"><div class="wrap">
+        <div class="gl-sec-head">
+          <div class="eyebrow">[ Questions ]</div>
+          <h2 class="gl-h2">Before you ask.</h2>
         </div>
-        <details class="vl-faq"><summary>Is this another CRM I have to maintain?</summary><p class="a">No — and that's the point. VAMOS is <b>one screen that tells you who to touch today.</b> No pipelines to groom, no fields to fill, no dashboard to configure.</p></details>
-        <details class="vl-faq"><summary>What happens when I fall off for a few days?</summary><p class="a">You come back to <b>your own note, your warm leads, and a streak that bent instead of breaking.</b> The comeback is a designed feature, not a failure state — and it's free forever.</p></details>
-        <details class="vl-faq"><summary>Do I have to use the AI-written scripts?</summary><p class="a">No. <b>AI drafts every message — personalized to the contact and their step in the cadence — but it's editable right in the card.</b> Use it, tweak it, or write your own.</p></details>
-        <details class="vl-faq"><summary>Can neurotypicals use it?</summary><p class="a"><b>Yes. We made it simple enough for them.</b></p></details>
-        <details class="vl-faq"><summary>What does it cost?</summary><p class="a"><b>Your first 25 contacts are free — no card, no catch.</b> After that the app will prompt you to upgrade.</p></details>
+        <div class="gl-faq">
+          <details><summary>Is this another CRM I have to maintain?</summary><div class="a">No — and that's the point. VAMOS is <b>one screen that tells you who to touch today.</b> No pipelines to groom, no fields to fill, no dashboard to configure.</div></details>
+          <details><summary>What happens when I fall off for a few days?</summary><div class="a">You come back to <b>your own note, your warm leads, and a streak that bent instead of breaking.</b> The comeback is a designed feature, not a failure state.</div></details>
+          <details><summary>Do I have to use the AI-written scripts?</summary><div class="a">No. <b>AI drafts every message — personalized to the contact and their step — but it's editable right in the card.</b> Use it, tweak it, or write your own.</div></details>
+          <details><summary>Can neurotypicals use it?</summary><div class="a"><b>Yes. We made it simple enough for them.</b></div></details>
+          <details><summary>What does it cost?</summary><div class="a"><b>Your first 25 contacts are free — no card, no catch.</b> After that the app prompts you to upgrade.</div></details>
+        </div>
       </div></section>
 
       <!-- SIGNUP -->
-      <section class="vl-sec vl-signup tint hair" id="signup"><div class="wrap">
-        <h2 class="vl-h2" style="font-size:clamp(30px,5vw,54px);line-height:1.1;">Give it a shot<span class="dot">.</span></h2>
-        <div class="vl-signup-form">
+      <section class="gl-signup" id="signup"><div class="wrap">
+        <div class="eyebrow" style="margin-bottom:14px;">[ Give it a shot ]</div>
+        <h2 class="gl-h2" style="margin:0 auto;max-width:18ch;">Who's up today?<span class="light"> Let's find out.</span></h2>
+        <div class="gl-signup-form">
           <input type="email" id="emailInput" placeholder="you@work.com" aria-label="Email address">
-          <button type="button" id="signupBtn">I'm in</button>
+          <button type="button" id="signupBtn">Try it free</button>
         </div>
-        <p class="vl-signup-note">First 25 contacts free · No card · We got you.</p>
+        <p class="gl-signup-note">First 25 contacts free · No card · We got you.</p>
       </div></section>
     </main>
 
-    <footer class="vl-footer"><div class="wrap vl-foot">
-      <span>VAMOS — for sales. Students, events &amp; life coming.</span>
+    <footer class="gl-footer"><div class="wrap gl-foot">
+      <span>VAMOS — for sales. Built by the operator.</span>
       <span>Built with ADHD, out of spite.</span>
     </div></footer>
   </div>
