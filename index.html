@@ -183,6 +183,24 @@
   .sender-card .sc-err{color:#A5341F;font-size:12.5px;min-height:16px;margin:6px 0 6px;}
   .sender-card .sc-close{position:absolute;top:14px;right:16px;background:none;border:none;font-size:22px;color:var(--grey2);cursor:pointer;line-height:1;}
   .sender-card .sc-close:hover{color:var(--ink);}
+  /* onboarding wizard: progress dots + steps + actions */
+  .sender-card .sc-steps{display:flex;gap:6px;margin:0 0 22px;}
+  .sender-card .sc-dot{height:3px;flex:1;border-radius:2px;background:var(--hairline);transition:background .2s;}
+  .sender-card .sc-dot.on{background:var(--honey);}
+  .sender-card .sc-step{display:none;}
+  .sender-card .sc-step.on{display:block;}
+  .sender-card input.auth-input[disabled]{color:var(--grey);cursor:not-allowed;opacity:.7;}
+  .sender-card .sc-actions{display:flex;gap:12px;align-items:center;margin-top:20px;}
+  .sender-card .sc-actions .btn{flex:1;margin:0;}
+  .sender-card .sc-back{background:none;border:none;font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--grey);cursor:pointer;padding:0 6px;}
+  .sender-card .sc-back:hover{color:var(--ink);}
+  /* pricing step */
+  .sc-price{text-align:center;padding:10px 0 2px;}
+  .sc-price .sc-free{font-family:'Geist',sans-serif;font-weight:800;font-size:56px;letter-spacing:-.04em;line-height:1;color:var(--honey);}
+  .sc-price .sc-freelbl{font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--grey);margin:10px 0 24px;}
+  .sc-price .sc-then{font-size:15.5px;line-height:1.6;color:var(--ink);}
+  .sc-price .sc-then b{font-weight:700;}
+  .sc-price .sc-fine{font-size:12.5px;color:var(--grey);margin-top:12px;line-height:1.5;}
   .verifybar{border:.5px solid var(--hairline);border-left:3px solid var(--gold);background:var(--cream);padding:10px 14px;margin-bottom:14px;font-size:12.5px;line-height:1.5;color:var(--grey);}
   .verifybar a{color:var(--gold);font-weight:600;cursor:pointer;text-decoration:underline;}
   /* plan / founding-member gating */
@@ -1657,45 +1675,135 @@
   var DEFAULT_SENDER_INTRO="I run a team focused on adding engineering capacity without unnecessary overhead.";
   var SENDER_ASSETS=["Capacity Map","Engineering Capacity Map","Delivery Capacity Map","Talent Map","Blueprint","Cost Analysis"];
   function needsOnboarding(){ return !ACCOUNT || !ACCOUNT.sender || !ACCOUNT.sender.name; }
-  // Gate: new users can't reach the app until they've saved a sender identity.
-  function enterAppOrOnboard(){ if(needsOnboarding()){ openSenderForm("onboard"); } else { showApp(true); render(); } }
-  function openSenderForm(mode){
-    var isOnboard = mode!=="settings";
+  // Gate: new users can't reach the app until they've finished onboarding.
+  function enterAppOrOnboard(){ if(needsOnboarding()){ openOnboarding(); } else { showApp(true); render(); } }
+  function assetOptions(sel){
+    var v=sel||"Capacity Map";
+    return SENDER_ASSETS.map(function(a){ return '<option'+(a===v?" selected":"")+'>'+esc(a)+'</option>'; }).join("");
+  }
+  // Shared save call → /api/auth?action=save-sender. Returns { ok, sender }.
+  async function postSender(payload){
+    var r=await fetch("/api/auth?action=save-sender",{method:"POST",headers:{"Content-Type":"application/json"},credentials:"same-origin",body:JSON.stringify(payload)});
+    var d=await r.json().catch(function(){ return {}; });
+    if(!r.ok||!d.ok) throw new Error(d.error||"Couldn’t save — try again.");
+    return d;
+  }
+  // 3-step onboarding wizard: account → AI intro → pricing. Opaque + blocking;
+  // the app stays hidden until the identity is saved on the final step.
+  function openOnboarding(){
     var s=(ACCOUNT&&ACCOUNT.sender)||{};
-    var assetVal=s.defaultAsset||"Capacity Map";
-    var opts=SENDER_ASSETS.map(function(a){ return '<option'+(a===assetVal?" selected":"")+'>'+esc(a)+'</option>'; }).join("");
-    var ov=el('<div class="sender-overlay'+(isOnboard?" solid":"")+'"><div class="sender-card">'+
-      (isOnboard?'':'<button class="sc-close" id="snClose" aria-label="Close">&times;</button>')+
-      '<h2>Set your outreach identity</h2>'+
-      '<p class="sc-help">This is how AI introduces you after opening with the prospect’s company or role.</p>'+
-      '<div class="fld"><label>Display name</label><input class="auth-input" id="snName" placeholder="Marcos" value="'+esc(s.name||"")+'"></div>'+
-      '<div class="fld"><label>Brief intro for outreach</label><textarea class="auth-input" id="snIntro" rows="2">'+esc(s.intro||DEFAULT_SENDER_INTRO)+'</textarea></div>'+
-      '<div class="fld"><label>Credibility line <span class="opt">optional</span></label><input class="auth-input" id="snCred" placeholder="We’ve supported teams scaling digital, product, and engineering delivery." value="'+esc(s.credibility||"")+'"></div>'+
-      '<div class="fld"><label>Default asset</label><select class="auth-input" id="snAsset">'+opts+'</select></div>'+
-      '<div class="sc-err" id="snErr"></div>'+
-      '<button class="btn" id="snSave">'+(isOnboard?"Save and continue":"Save")+'</button>'+
+    var email=(ACCOUNT&&ACCOUNT.email)||"";
+    var ov=el('<div class="sender-overlay solid"><div class="sender-card">'+
+      '<div class="sc-steps"><span class="sc-dot on"></span><span class="sc-dot"></span><span class="sc-dot"></span></div>'+
+      '<div class="sc-step on" data-step="1">'+
+        '<h2>Let’s set up your account</h2>'+
+        '<p class="sc-help">The basics — so VAMOS knows who’s reaching out.</p>'+
+        '<div class="fld"><label>Full name</label><input class="auth-input" id="obName" placeholder="Marcos Cuellar" value="'+esc(s.name||"")+'"></div>'+
+        '<div class="fld"><label>Email</label><input class="auth-input" id="obEmail" value="'+esc(email)+'" disabled></div>'+
+        '<div class="fld"><label>Where you work</label><input class="auth-input" id="obCompany" placeholder="Company name" value="'+esc(s.company||"")+'"></div>'+
+        '<div class="sc-err" id="obErr1"></div>'+
+        '<div class="sc-actions"><button class="btn" data-next="2">Continue</button></div>'+
+      '</div>'+
+      '<div class="sc-step" data-step="2">'+
+        '<h2>How AI should introduce you</h2>'+
+        '<p class="sc-help">After opening on the prospect’s company or role, AI uses this to introduce you.</p>'+
+        '<div class="fld"><label>Brief intro for outreach</label><textarea class="auth-input" id="obIntro" rows="3">'+esc(s.intro||DEFAULT_SENDER_INTRO)+'</textarea></div>'+
+        '<div class="fld"><label>Credibility line <span class="opt">optional</span></label><input class="auth-input" id="obCred" placeholder="We’ve supported teams scaling digital, product, and engineering delivery." value="'+esc(s.credibility||"")+'"></div>'+
+        '<div class="fld"><label>Default asset</label><select class="auth-input" id="obAsset">'+assetOptions(s.defaultAsset)+'</select></div>'+
+        '<div class="sc-err" id="obErr2"></div>'+
+        '<div class="sc-actions"><button class="sc-back" data-back="1">Back</button><button class="btn" data-next="3">Continue</button></div>'+
+      '</div>'+
+      '<div class="sc-step" data-step="3">'+
+        '<h2>Your first 25 are on us</h2>'+
+        '<div class="sc-price">'+
+          '<div class="sc-free">25</div>'+
+          '<div class="sc-freelbl">outreaches free</div>'+
+          '<div class="sc-then">Draft your first <b>25 outreaches free</b>. After that, it’s <b>$11/month</b> for unlimited AI drafting.</div>'+
+          '<div class="sc-fine">No card required to start.</div>'+
+        '</div>'+
+        '<div class="sc-err" id="obErr3"></div>'+
+        '<div class="sc-actions"><button class="sc-back" data-back="2">Back</button><button class="btn" id="obDone">Start using VAMOS</button></div>'+
+      '</div>'+
     '</div></div>');
     document.body.appendChild(ov);
-    var cl=ov.querySelector("#snClose"); if(cl) cl.addEventListener("click", function(){ ov.remove(); });
-    ov.querySelector("#snSave").addEventListener("click", function(){ saveSenderForm(ov, isOnboard); });
+    function go(n){
+      Array.prototype.forEach.call(ov.querySelectorAll(".sc-step"), function(st){ st.classList.toggle("on", st.getAttribute("data-step")===String(n)); });
+      Array.prototype.forEach.call(ov.querySelectorAll(".sc-dot"), function(dt,i){ dt.classList.toggle("on", i<n); });
+      var f=ov.querySelector(".sc-step.on input:not([disabled]), .sc-step.on textarea");
+      if(f) f.focus();
+    }
+    Array.prototype.forEach.call(ov.querySelectorAll("[data-next]"), function(b){ b.addEventListener("click", function(){
+      var to=parseInt(b.getAttribute("data-next"),10);
+      if(to===2){
+        var nm=(ov.querySelector("#obName").value||"").trim();
+        var co=(ov.querySelector("#obCompany").value||"").trim();
+        var e1=ov.querySelector("#obErr1"); e1.textContent="";
+        if(!nm){ e1.textContent="Add your full name."; return; }
+        if(!co){ e1.textContent="Add where you work."; return; }
+      } else if(to===3){
+        var intro=(ov.querySelector("#obIntro").value||"").trim();
+        var e2=ov.querySelector("#obErr2"); e2.textContent="";
+        if(!intro){ e2.textContent="Add a brief intro so AI can introduce you."; return; }
+      }
+      go(to);
+    }); });
+    Array.prototype.forEach.call(ov.querySelectorAll("[data-back]"), function(b){ b.addEventListener("click", function(){ go(parseInt(b.getAttribute("data-back"),10)); }); });
+    ov.querySelector("#obDone").addEventListener("click", function(){ finishOnboarding(ov); });
+    ov.querySelector("#obName").focus();
+  }
+  async function finishOnboarding(ov){
+    var err=ov.querySelector("#obErr3"); err.textContent="";
+    var payload={
+      senderName:(ov.querySelector("#obName").value||"").trim(),
+      senderCompany:(ov.querySelector("#obCompany").value||"").trim(),
+      senderIntro:(ov.querySelector("#obIntro").value||"").trim(),
+      senderCredibility:(ov.querySelector("#obCred").value||"").trim(),
+      defaultAsset:ov.querySelector("#obAsset").value||"Capacity Map",
+    };
+    if(!payload.senderName){ err.textContent="Add your full name on step 1."; return; }
+    if(!payload.senderIntro){ err.textContent="Add a brief intro on step 2."; return; }
+    var btn=ov.querySelector("#obDone"), bl=btn.textContent; btn.disabled=true; btn.textContent="Setting up…";
+    try{
+      var d=await postSender(payload);
+      ACCOUNT.sender=d.sender; ov.remove();
+      showApp(true); render(); toast("You’re set. Let’s go.");
+    }catch(e){ err.textContent=(e&&e.message)||"Couldn’t save — try again."; btn.disabled=false; btn.textContent=bl; }
+  }
+  // Settings editor — single dismissible card, opened from Manage.
+  function openSenderForm(){
+    var s=(ACCOUNT&&ACCOUNT.sender)||{};
+    var ov=el('<div class="sender-overlay"><div class="sender-card">'+
+      '<button class="sc-close" id="snClose" aria-label="Close">&times;</button>'+
+      '<h2>Outreach identity</h2>'+
+      '<p class="sc-help">How AI introduces you after opening on the prospect’s company or role.</p>'+
+      '<div class="fld"><label>Full name</label><input class="auth-input" id="snName" placeholder="Marcos Cuellar" value="'+esc(s.name||"")+'"></div>'+
+      '<div class="fld"><label>Where you work</label><input class="auth-input" id="snCompany" placeholder="Company name" value="'+esc(s.company||"")+'"></div>'+
+      '<div class="fld"><label>Brief intro for outreach</label><textarea class="auth-input" id="snIntro" rows="3">'+esc(s.intro||DEFAULT_SENDER_INTRO)+'</textarea></div>'+
+      '<div class="fld"><label>Credibility line <span class="opt">optional</span></label><input class="auth-input" id="snCred" placeholder="We’ve supported teams scaling digital, product, and engineering delivery." value="'+esc(s.credibility||"")+'"></div>'+
+      '<div class="fld"><label>Default asset</label><select class="auth-input" id="snAsset">'+assetOptions(s.defaultAsset)+'</select></div>'+
+      '<div class="sc-err" id="snErr"></div>'+
+      '<button class="btn" id="snSave">Save</button>'+
+    '</div></div>');
+    document.body.appendChild(ov);
+    ov.querySelector("#snClose").addEventListener("click", function(){ ov.remove(); });
+    ov.querySelector("#snSave").addEventListener("click", function(){ saveSenderForm(ov); });
     ov.querySelector("#snName").focus();
   }
-  async function saveSenderForm(ov, isOnboard){
+  async function saveSenderForm(ov){
     var err=ov.querySelector("#snErr"); err.textContent="";
-    var name=(ov.querySelector("#snName").value||"").trim();
-    var intro=(ov.querySelector("#snIntro").value||"").trim();
-    var cred=(ov.querySelector("#snCred").value||"").trim();
-    var asset=ov.querySelector("#snAsset").value||"Capacity Map";
-    if(!name){ err.textContent="Add your display name."; return; }
-    if(!intro){ err.textContent="Add a brief intro."; return; }
+    var payload={
+      senderName:(ov.querySelector("#snName").value||"").trim(),
+      senderCompany:(ov.querySelector("#snCompany").value||"").trim(),
+      senderIntro:(ov.querySelector("#snIntro").value||"").trim(),
+      senderCredibility:(ov.querySelector("#snCred").value||"").trim(),
+      defaultAsset:ov.querySelector("#snAsset").value||"Capacity Map",
+    };
+    if(!payload.senderName){ err.textContent="Add your full name."; return; }
+    if(!payload.senderIntro){ err.textContent="Add a brief intro."; return; }
     var btn=ov.querySelector("#snSave"), bl=btn.textContent; btn.disabled=true; btn.textContent="Saving…";
     try{
-      var r=await fetch("/api/auth?action=save-sender",{method:"POST",headers:{"Content-Type":"application/json"},credentials:"same-origin",body:JSON.stringify({senderName:name,senderIntro:intro,senderCredibility:cred,defaultAsset:asset})});
-      var d=await r.json().catch(function(){ return {}; });
-      if(!r.ok||!d.ok) throw new Error(d.error||"Couldn’t save — try again.");
-      ACCOUNT.sender=d.sender; ov.remove();
-      if(isOnboard){ showApp(true); render(); toast("You’re set. Let’s go."); }
-      else toast("Outreach identity updated.");
+      var d=await postSender(payload);
+      ACCOUNT.sender=d.sender; ov.remove(); toast("Outreach identity updated.");
     }catch(e){ err.textContent=(e&&e.message)||"Couldn’t save — try again."; btn.disabled=false; btn.textContent=bl; }
   }
   function cleanUrl(){ try{ history.replaceState(null,"",location.pathname); }catch(e){} }
@@ -2473,7 +2581,7 @@
       proBtn.addEventListener("click", function(){ openUpgrade(); });
       manage.querySelector(".btn-row").insertBefore(proBtn, manage.querySelector(".btn-row").firstChild);
     }
-    manage.querySelector("#senderBtn").addEventListener("click", function(){ openSenderForm("settings"); });
+    manage.querySelector("#senderBtn").addEventListener("click", function(){ openSenderForm(); });
     manage.querySelector("#todayBtn").addEventListener("click", startEveryoneToday);
     manage.querySelector("#expBtn").addEventListener("click", doExport);
     manage.querySelector("#dupBtn").addEventListener("click", doDedupe);
