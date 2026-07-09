@@ -697,15 +697,13 @@
   .dc-due{background:var(--panel);color:var(--ink);border-color:var(--hairline);}
   .dc-due.over{background:var(--ink);color:var(--cream);border-color:var(--ink);}
   .tl-step.active .tl-node{background:var(--ink);border-color:var(--ink);}
-  /* Review/Skip: navy band, but the two items read as two distinct buttons */
-  .dc-mid{background:var(--navy);border:none;border-radius:12px;padding:12px;gap:12px;}
-  .dc-mid .mi{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);border-radius:9px;padding:14px 16px;transition:background .15s var(--ease,ease),border-color .15s;}
-  .dc-mid .mi:hover{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.42);}
-  .dc-mid .mi::after{content:"\203A";margin-left:auto;align-self:center;color:rgba(255,255,255,.5);font-size:20px;line-height:1;padding-left:8px;}
-  .dc-mid .mi:hover::after{color:#fff;}
-  .dc-mid .mi-t{color:#fff;} .dc-mid .mi-s{color:rgba(255,255,255,.62);} .dc-mid .mi:hover .mi-t{color:#fff;}
-  .dc-act.done{background:var(--navy);border-color:var(--navy);color:#fff;}
-  .dc-act.done:hover{background:#1a3052;border-color:#1a3052;color:#fff;}
+  /* Review/Skip: neutral band with a dividing line between the two items */
+  .dc-mid{background:var(--panel);border:none;border-radius:12px;padding:4px 8px;}
+  .dc-mid .mi{padding:16px 18px;}
+  .dc-mid .mi + .mi{border-left:1px solid var(--hairline);}
+  .dc-mid .mi-t{color:var(--ink);} .dc-mid .mi-s{color:var(--grey);} .dc-mid .mi:hover .mi-t{color:var(--ink);}
+  .dc-act.done{background:var(--ink);border-color:var(--ink);color:#fff;}
+  .dc-act.done:hover{background:var(--hover);border-color:var(--hover);color:#fff;}
   /* Founding / upgrade -> neutral ink; active founding = green status */
   .planbar{border-left-color:var(--ink);}
   .planbar a{color:var(--ink);} .planbar a:hover{color:var(--hover);}
