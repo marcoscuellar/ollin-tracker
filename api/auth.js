@@ -9,6 +9,7 @@ import {
   newUserId, makeSalt, hashPassword, verifyPassword,
   signToken, verifyToken, sendEmail, emailShell,
   MIGRATED_FLAG, LEGACY_OWNER_EMAIL, FOUNDING_LIST_KEY,
+  normalizeSender,
 } from './_lib.js';
 
 const SESSION_TTL_MS = 1000 * 60 * 60 * 24 * 30; // 30 days
@@ -29,6 +30,7 @@ export default async function handler(req, res) {
       case 'reset': return reset(req, res);
       case 'resend-verify': return resendVerify(req, res);
       case 'founding': return founding(req, res);
+      case 'save-sender': return saveSender(req, res);
       default: return send(res, 400, { error: 'unknown action' });
     }
   } catch (e) {
@@ -74,6 +76,7 @@ async function signup(req, res) {
     verified: false,
     plan: 'free',
     ai: {}, // { 'YYYY-MM': count } — AI draft usage per month
+    sender: null, // outreach identity — set during onboarding (see save-sender)
   };
 
   // First owner signup inherits the legacy single-user pipeline.
@@ -94,7 +97,7 @@ async function signup(req, res) {
   // Best-effort: never fail signup if the email doesn't send.
   try { await sendVerifyEmail(req, user); } catch (e) { /* ignore */ }
 
-  return send(res, 200, { ok: true, email, plan: 'free', verified: false, migrated });
+  return send(res, 200, { ok: true, email, plan: 'free', verified: false, migrated, sender: null });
 }
 
 async function login(req, res) {
@@ -110,7 +113,7 @@ async function login(req, res) {
   if (!user || !verifyPassword(password, user.salt, user.passwordHash)) return fail();
 
   setSession(res, id);
-  return send(res, 200, { ok: true, email, plan: user.plan || 'free', verified: !!user.verified });
+  return send(res, 200, { ok: true, email, plan: user.plan || 'free', verified: !!user.verified, sender: user.sender || null });
 }
 
 function logout(req, res) {
@@ -123,7 +126,7 @@ async function status(req, res) {
   if (!s || !s.sub) return send(res, 200, { authenticated: false });
   const user = await kv.get(userKey(s.sub));
   if (!user) return send(res, 200, { authenticated: false });
-  return send(res, 200, { authenticated: true, email: user.email, plan: user.plan || 'free', verified: !!user.verified });
+  return send(res, 200, { authenticated: true, email: user.email, plan: user.plan || 'free', verified: !!user.verified, sender: user.sender || null });
 }
 
 // GET — clicked from the verification email. Marks verified, then redirects
@@ -223,4 +226,23 @@ async function founding(req, res) {
   } catch (e) { /* ignore — don't fail the upgrade on a list write */ }
 
   return send(res, 200, { ok: true, plan: user.plan || 'founding' });
+}
+
+// POST (session-gated) — save the rep's outreach identity (onboarding /
+// settings). Body may use request-shape keys (senderName, senderIntro,
+// senderCompany, senderCredibility, defaultAsset). Name is required so AI
+// never introduces a blank sender. Returns the normalized stored object.
+async function saveSender(req, res) {
+  const s = requireSession(req);
+  if (!s || !s.sub) return send(res, 401, { error: 'unauthorized' });
+  const user = await kv.get(userKey(s.sub));
+  if (!user) return send(res, 401, { error: 'unauthorized' });
+
+  const body = await readJson(req);
+  const sender = normalizeSender(body);
+  if (!sender.name) return send(res, 400, { error: 'Add a display name so AI can introduce you.' });
+
+  user.sender = sender;
+  await kv.set(userKey(s.sub), user);
+  return send(res, 200, { ok: true, sender });
 }

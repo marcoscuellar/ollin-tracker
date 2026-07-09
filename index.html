@@ -168,6 +168,39 @@
   .auth-input{width:100%;background:var(--bg);border:.5px solid var(--hairline);border-radius:8px;font-family:'Geist',sans-serif;font-size:15px;padding:13px;color:var(--ink);margin-bottom:10px;text-align:left;}
   .auth-input:focus{outline:2px solid var(--honey);outline-offset:0;border-color:var(--honey);}
   .auth-input::placeholder{color:var(--grey2);}
+  /* outreach identity (onboarding + settings) */
+  .sender-overlay{position:fixed;inset:0;z-index:95;display:flex;align-items:center;justify-content:center;padding:24px;background:rgba(10,10,10,.5);overflow-y:auto;}
+  .sender-overlay.solid{background:var(--bg);}
+  .sender-card{max-width:460px;width:100%;background:var(--card);border:.5px solid var(--hairline);border-radius:var(--radius);box-shadow:var(--shadow);padding:38px 34px;text-align:left;position:relative;}
+  .sender-card h2{font-family:'Geist',sans-serif;font-weight:800;font-size:22px;letter-spacing:-.02em;margin:0 0 8px;}
+  .sender-card .sc-help{font-size:13.5px;color:var(--grey);line-height:1.5;margin:0 0 22px;}
+  .sender-card .fld{margin-bottom:14px;}
+  .sender-card label{display:block;font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--grey);margin:0 0 6px;}
+  .sender-card label .opt{color:var(--grey2);}
+  .sender-card .auth-input{margin-bottom:0;}
+  .sender-card textarea.auth-input{min-height:60px;resize:vertical;font-size:14px;line-height:1.5;}
+  .sender-card select.auth-input{cursor:pointer;}
+  .sender-card .sc-err{color:#A5341F;font-size:12.5px;min-height:16px;margin:6px 0 6px;}
+  .sender-card .sc-close{position:absolute;top:14px;right:16px;background:none;border:none;font-size:22px;color:var(--grey2);cursor:pointer;line-height:1;}
+  .sender-card .sc-close:hover{color:var(--ink);}
+  /* onboarding wizard: progress dots + steps + actions */
+  .sender-card .sc-steps{display:flex;gap:6px;margin:0 0 22px;}
+  .sender-card .sc-dot{height:3px;flex:1;border-radius:2px;background:var(--hairline);transition:background .2s;}
+  .sender-card .sc-dot.on{background:var(--honey);}
+  .sender-card .sc-step{display:none;}
+  .sender-card .sc-step.on{display:block;}
+  .sender-card input.auth-input[disabled]{color:var(--grey);cursor:not-allowed;opacity:.7;}
+  .sender-card .sc-actions{display:flex;gap:12px;align-items:center;margin-top:20px;}
+  .sender-card .sc-actions .btn{flex:1;margin:0;}
+  .sender-card .sc-back{background:none;border:none;font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--grey);cursor:pointer;padding:0 6px;}
+  .sender-card .sc-back:hover{color:var(--ink);}
+  /* pricing step */
+  .sc-price{text-align:center;padding:10px 0 2px;}
+  .sc-price .sc-free{font-family:'Geist',sans-serif;font-weight:800;font-size:56px;letter-spacing:-.04em;line-height:1;color:var(--honey);}
+  .sc-price .sc-freelbl{font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--grey);margin:10px 0 24px;}
+  .sc-price .sc-then{font-size:15.5px;line-height:1.6;color:var(--ink);}
+  .sc-price .sc-then b{font-weight:700;}
+  .sc-price .sc-fine{font-size:12.5px;color:var(--grey);margin-top:12px;line-height:1.5;}
   .verifybar{border:.5px solid var(--hairline);border-left:3px solid var(--gold);background:var(--cream);padding:10px 14px;margin-bottom:14px;font-size:12.5px;line-height:1.5;color:var(--grey);}
   .verifybar a{color:var(--gold);font-weight:600;cursor:pointer;text-decoration:underline;}
   /* plan / founding-member gating */
@@ -677,6 +710,9 @@
   .ai-steer-row input:focus{outline-color:var(--amber);border-color:var(--amber);}
   .ai-draft{background:var(--amber);border-color:var(--amber);color:#1c0a00;}
   .ai-draft:hover{background:var(--amber-d);border-color:var(--amber-d);color:#1c0a00;}
+  /* subtle, non-blocking signal hint under an AI draft (from write.js angleWarning) */
+  .ai-hint{display:none;margin-top:10px;font-size:12px;line-height:1.45;color:var(--grey);border-left:2px solid var(--amber);background:rgba(245,158,11,.06);padding:8px 11px;border-radius:0 6px 6px 0;}
+  .ai-hint.show{display:block;}
   /* Comeback + before-you-go -> navy */
   .comeback{border-left-color:var(--navy);}
   .comeback .cb-note{border-left-color:var(--navy);}
@@ -704,16 +740,16 @@
   .dc-mid .mi-t{color:var(--ink);} .dc-mid .mi-s{color:var(--grey);} .dc-mid .mi:hover .mi-t{color:var(--ink);}
   .dc-act.done{background:var(--ink);border-color:var(--ink);color:#fff;}
   .dc-act.done:hover{background:var(--hover);border-color:var(--hover);color:#fff;}
-  /* Founding / upgrade -> neutral ink; active founding = green status */
-  .planbar{border-left-color:var(--ink);}
-  .planbar a{color:var(--ink);} .planbar a:hover{color:var(--hover);}
+  /* Unlimited / upgrade -> navy (AI, secondary lead); active plan = green status */
+  .planbar{border-left-color:var(--navy);}
+  .planbar a{color:var(--navy);} .planbar a:hover{color:var(--navy-2);}
   .planbar.founding{border-left-color:var(--green-d);color:var(--ink);}
-  .btn-mini.gopro{border-color:var(--ink);color:var(--ink);}
-  .btn-mini.gopro:hover{background:var(--ink);border-color:var(--ink);color:#fff;}
-  .upgrade-card .up-eyebrow{color:var(--grey);}
-  .upgrade-card .up-list li::before{color:var(--green-d);}
-  .upgrade-card .btn{background:var(--ink);border-color:var(--ink);color:#fff;}
-  .upgrade-card .btn:hover{background:var(--hover);border-color:var(--hover);color:#fff;}
+  .btn-mini.gopro{border-color:var(--navy);color:var(--navy);}
+  .btn-mini.gopro:hover{background:var(--navy);border-color:var(--navy);color:#fff;}
+  .upgrade-card .up-eyebrow{color:var(--navy);}
+  .upgrade-card .up-list li::before{color:var(--navy);}
+  .upgrade-card .btn{background:var(--navy);border-color:var(--navy);color:#fff;}
+  .upgrade-card .btn:hover{background:var(--navy-2);border-color:var(--navy-2);color:#fff;}
 
   /* ===================== VAMOS landing · GLVE / Marcos Cuellar system ===================== */
   .site{
@@ -1108,7 +1144,7 @@
           <details><summary>What happens when I fall off for a few days?</summary><div class="a">You come back to <b>your own note, your warm leads, and a streak that bent instead of breaking.</b> The comeback is a designed feature, not a failure state.</div></details>
           <details><summary>Do I have to use the AI-written scripts?</summary><div class="a">No. <b>AI drafts every message — personalized to the contact and their step — but it's editable right in the card.</b> Use it, tweak it, or write your own.</div></details>
           <details><summary>Can neurotypicals use it?</summary><div class="a"><b>Yes. We made it simple enough for them.</b></div></details>
-          <details><summary>What does it cost?</summary><div class="a"><b>Your first 25 contacts are free — no card, no catch.</b> After that the app prompts you to upgrade.</div></details>
+          <details><summary>What does it cost?</summary><div class="a"><b>Your first 25 outreaches are free — no card required to start.</b> After that, it's $11/month for unlimited AI drafting.</div></details>
         </div>
       </div></section>
 
@@ -1637,7 +1673,142 @@
     return { accounts:removedAccts, threads:removedThreads };
   }
   // ---------- auth / lock screen (email + password + Vercel KV) ----------
-  var ACCOUNT=null; // { email, plan, verified } for the logged-in user
+  var ACCOUNT=null; // { email, plan, verified, sender } for the logged-in user
+  // ---- outreach identity (sender) — set at onboarding, editable in Manage ----
+  var DEFAULT_SENDER_INTRO="I run a team focused on adding engineering capacity without unnecessary overhead.";
+  var SENDER_ASSETS=["Capacity Map","Engineering Capacity Map","Delivery Capacity Map","Talent Map","Blueprint","Cost Analysis"];
+  function needsOnboarding(){ return !ACCOUNT || !ACCOUNT.sender || !ACCOUNT.sender.name; }
+  // Gate: new users can't reach the app until they've finished onboarding.
+  function enterAppOrOnboard(){ if(needsOnboarding()){ openOnboarding(); } else { showApp(true); render(); } }
+  function assetOptions(sel){
+    var v=sel||"Capacity Map";
+    return SENDER_ASSETS.map(function(a){ return '<option'+(a===v?" selected":"")+'>'+esc(a)+'</option>'; }).join("");
+  }
+  // Shared save call → /api/auth?action=save-sender. Returns { ok, sender }.
+  async function postSender(payload){
+    var r=await fetch("/api/auth?action=save-sender",{method:"POST",headers:{"Content-Type":"application/json"},credentials:"same-origin",body:JSON.stringify(payload)});
+    var d=await r.json().catch(function(){ return {}; });
+    if(!r.ok||!d.ok) throw new Error(d.error||"Couldn’t save — try again.");
+    return d;
+  }
+  // 3-step onboarding wizard: account → AI intro → pricing. Opaque + blocking;
+  // the app stays hidden until the identity is saved on the final step.
+  function openOnboarding(){
+    var s=(ACCOUNT&&ACCOUNT.sender)||{};
+    var email=(ACCOUNT&&ACCOUNT.email)||"";
+    var ov=el('<div class="sender-overlay solid"><div class="sender-card">'+
+      '<div class="sc-steps"><span class="sc-dot on"></span><span class="sc-dot"></span><span class="sc-dot"></span></div>'+
+      '<div class="sc-step on" data-step="1">'+
+        '<h2>Let’s set up your account</h2>'+
+        '<p class="sc-help">The basics — so VAMOS knows who’s reaching out.</p>'+
+        '<div class="fld"><label>Full name</label><input class="auth-input" id="obName" placeholder="Marcos Cuellar" value="'+esc(s.name||"")+'"></div>'+
+        '<div class="fld"><label>Email</label><input class="auth-input" id="obEmail" value="'+esc(email)+'" disabled></div>'+
+        '<div class="fld"><label>Where you work</label><input class="auth-input" id="obCompany" placeholder="Company name" value="'+esc(s.company||"")+'"></div>'+
+        '<div class="sc-err" id="obErr1"></div>'+
+        '<div class="sc-actions"><button class="btn" data-next="2">Continue</button></div>'+
+      '</div>'+
+      '<div class="sc-step" data-step="2">'+
+        '<h2>How AI should introduce you</h2>'+
+        '<p class="sc-help">After opening on the prospect’s company or role, AI uses this to introduce you.</p>'+
+        '<div class="fld"><label>Brief intro for outreach</label><textarea class="auth-input" id="obIntro" rows="3">'+esc(s.intro||DEFAULT_SENDER_INTRO)+'</textarea></div>'+
+        '<div class="fld"><label>Credibility line <span class="opt">optional</span></label><input class="auth-input" id="obCred" placeholder="We’ve supported teams scaling digital, product, and engineering delivery." value="'+esc(s.credibility||"")+'"></div>'+
+        '<div class="fld"><label>Default asset</label><select class="auth-input" id="obAsset">'+assetOptions(s.defaultAsset)+'</select></div>'+
+        '<div class="sc-err" id="obErr2"></div>'+
+        '<div class="sc-actions"><button class="sc-back" data-back="1">Back</button><button class="btn" data-next="3">Continue</button></div>'+
+      '</div>'+
+      '<div class="sc-step" data-step="3">'+
+        '<h2>Your first 25 are on us</h2>'+
+        '<div class="sc-price">'+
+          '<div class="sc-free">25</div>'+
+          '<div class="sc-freelbl">outreaches free</div>'+
+          '<div class="sc-then">Draft your first <b>25 outreaches free</b>. After that, it’s <b>$11/month</b> for unlimited AI drafting.</div>'+
+          '<div class="sc-fine">No card required to start.</div>'+
+        '</div>'+
+        '<div class="sc-err" id="obErr3"></div>'+
+        '<div class="sc-actions"><button class="sc-back" data-back="2">Back</button><button class="btn" id="obDone">Start using VAMOS</button></div>'+
+      '</div>'+
+    '</div></div>');
+    document.body.appendChild(ov);
+    function go(n){
+      Array.prototype.forEach.call(ov.querySelectorAll(".sc-step"), function(st){ st.classList.toggle("on", st.getAttribute("data-step")===String(n)); });
+      Array.prototype.forEach.call(ov.querySelectorAll(".sc-dot"), function(dt,i){ dt.classList.toggle("on", i<n); });
+      var f=ov.querySelector(".sc-step.on input:not([disabled]), .sc-step.on textarea");
+      if(f) f.focus();
+    }
+    Array.prototype.forEach.call(ov.querySelectorAll("[data-next]"), function(b){ b.addEventListener("click", function(){
+      var to=parseInt(b.getAttribute("data-next"),10);
+      if(to===2){
+        var nm=(ov.querySelector("#obName").value||"").trim();
+        var co=(ov.querySelector("#obCompany").value||"").trim();
+        var e1=ov.querySelector("#obErr1"); e1.textContent="";
+        if(!nm){ e1.textContent="Add your full name."; return; }
+        if(!co){ e1.textContent="Add where you work."; return; }
+      } else if(to===3){
+        var intro=(ov.querySelector("#obIntro").value||"").trim();
+        var e2=ov.querySelector("#obErr2"); e2.textContent="";
+        if(!intro){ e2.textContent="Add a brief intro so AI can introduce you."; return; }
+      }
+      go(to);
+    }); });
+    Array.prototype.forEach.call(ov.querySelectorAll("[data-back]"), function(b){ b.addEventListener("click", function(){ go(parseInt(b.getAttribute("data-back"),10)); }); });
+    ov.querySelector("#obDone").addEventListener("click", function(){ finishOnboarding(ov); });
+    ov.querySelector("#obName").focus();
+  }
+  async function finishOnboarding(ov){
+    var err=ov.querySelector("#obErr3"); err.textContent="";
+    var payload={
+      senderName:(ov.querySelector("#obName").value||"").trim(),
+      senderCompany:(ov.querySelector("#obCompany").value||"").trim(),
+      senderIntro:(ov.querySelector("#obIntro").value||"").trim(),
+      senderCredibility:(ov.querySelector("#obCred").value||"").trim(),
+      defaultAsset:ov.querySelector("#obAsset").value||"Capacity Map",
+    };
+    if(!payload.senderName){ err.textContent="Add your full name on step 1."; return; }
+    if(!payload.senderIntro){ err.textContent="Add a brief intro on step 2."; return; }
+    var btn=ov.querySelector("#obDone"), bl=btn.textContent; btn.disabled=true; btn.textContent="Setting up…";
+    try{
+      var d=await postSender(payload);
+      ACCOUNT.sender=d.sender; ov.remove();
+      showApp(true); render(); toast("You’re set. Let’s go.");
+    }catch(e){ err.textContent=(e&&e.message)||"Couldn’t save — try again."; btn.disabled=false; btn.textContent=bl; }
+  }
+  // Settings editor — single dismissible card, opened from Manage.
+  function openSenderForm(){
+    var s=(ACCOUNT&&ACCOUNT.sender)||{};
+    var ov=el('<div class="sender-overlay"><div class="sender-card">'+
+      '<button class="sc-close" id="snClose" aria-label="Close">&times;</button>'+
+      '<h2>Outreach identity</h2>'+
+      '<p class="sc-help">How AI introduces you after opening on the prospect’s company or role.</p>'+
+      '<div class="fld"><label>Full name</label><input class="auth-input" id="snName" placeholder="Marcos Cuellar" value="'+esc(s.name||"")+'"></div>'+
+      '<div class="fld"><label>Where you work</label><input class="auth-input" id="snCompany" placeholder="Company name" value="'+esc(s.company||"")+'"></div>'+
+      '<div class="fld"><label>Brief intro for outreach</label><textarea class="auth-input" id="snIntro" rows="3">'+esc(s.intro||DEFAULT_SENDER_INTRO)+'</textarea></div>'+
+      '<div class="fld"><label>Credibility line <span class="opt">optional</span></label><input class="auth-input" id="snCred" placeholder="We’ve supported teams scaling digital, product, and engineering delivery." value="'+esc(s.credibility||"")+'"></div>'+
+      '<div class="fld"><label>Default asset</label><select class="auth-input" id="snAsset">'+assetOptions(s.defaultAsset)+'</select></div>'+
+      '<div class="sc-err" id="snErr"></div>'+
+      '<button class="btn" id="snSave">Save</button>'+
+    '</div></div>');
+    document.body.appendChild(ov);
+    ov.querySelector("#snClose").addEventListener("click", function(){ ov.remove(); });
+    ov.querySelector("#snSave").addEventListener("click", function(){ saveSenderForm(ov); });
+    ov.querySelector("#snName").focus();
+  }
+  async function saveSenderForm(ov){
+    var err=ov.querySelector("#snErr"); err.textContent="";
+    var payload={
+      senderName:(ov.querySelector("#snName").value||"").trim(),
+      senderCompany:(ov.querySelector("#snCompany").value||"").trim(),
+      senderIntro:(ov.querySelector("#snIntro").value||"").trim(),
+      senderCredibility:(ov.querySelector("#snCred").value||"").trim(),
+      defaultAsset:ov.querySelector("#snAsset").value||"Capacity Map",
+    };
+    if(!payload.senderName){ err.textContent="Add your full name."; return; }
+    if(!payload.senderIntro){ err.textContent="Add a brief intro."; return; }
+    var btn=ov.querySelector("#snSave"), bl=btn.textContent; btn.disabled=true; btn.textContent="Saving…";
+    try{
+      var d=await postSender(payload);
+      ACCOUNT.sender=d.sender; ov.remove(); toast("Outreach identity updated.");
+    }catch(e){ err.textContent=(e&&e.message)||"Couldn’t save — try again."; btn.disabled=false; btn.textContent=bl; }
+  }
   function cleanUrl(){ try{ history.replaceState(null,"",location.pathname); }catch(e){} }
   function lockErr(m){ var e=document.getElementById("lockErr"); if(e) e.textContent=m||""; }
   function lockBody(html){ document.getElementById("lockBody").innerHTML=html; }
@@ -1708,8 +1879,8 @@
       var r=await fetch("/api/auth?action=reset",{method:"POST",headers:{"Content-Type":"application/json"},credentials:"same-origin",body:JSON.stringify({token:token,password:password})});
       var d=await r.json().catch(function(){ return {}; });
       if(!r.ok || !d.ok) throw new Error(d.error||"Couldn’t reset — request a new link.");
-      cleanUrl(); ACCOUNT={email:d.email,plan:d.plan,verified:d.verified};
-      await afterAuthLoad(); computeComeback(); closeAuth(); showApp(true); render();
+      cleanUrl(); ACCOUNT={email:d.email,plan:d.plan,verified:d.verified,sender:d.sender||null};
+      await afterAuthLoad(); computeComeback(); closeAuth(); enterAppOrOnboard();
       toast("Password updated. You’re in.");
     }catch(e){
       lockErr((e&&e.message)||"Couldn’t reset — request a new link.");
@@ -1733,10 +1904,10 @@
       var r=await fetch("/api/auth?action="+mode,{method:"POST",headers:{"Content-Type":"application/json"},credentials:"same-origin",body:JSON.stringify({email:email,password:password})});
       var d=await r.json().catch(function(){ return {}; });
       if(!r.ok || !d.ok) throw new Error(d.error||"Something went wrong. Try again.");
-      ACCOUNT={email:d.email,plan:d.plan,verified:d.verified};
+      ACCOUNT={email:d.email,plan:d.plan,verified:d.verified,sender:d.sender||null};
       await afterAuthLoad();
       computeComeback();
-      closeAuth(); showApp(true); render();
+      closeAuth(); enterAppOrOnboard();
       if(d.migrated) toast("Welcome back — your pipeline’s here.");
       else if(mode==="signup") toast("Welcome to VAMOS. Check your inbox to confirm your email.");
     }catch(e){
@@ -1759,7 +1930,7 @@
   function clearState(){ state.accounts=[]; state.done={}; state.notes={}; state.extra={}; state.handoffNote=""; state.activeId=null; state.seeded=false; }
   async function logout(){
     try{ await fetch("/api/auth?action=logout",{method:"POST",credentials:"same-origin"}); }catch(e){}
-    clearState(); comebackDismissed=false; closeAuth(); showApp(false);
+    ACCOUNT=null; clearState(); comebackDismissed=false; closeAuth(); showApp(false);
   }
   function afterBootParams(params){
     var vf=params.get("verified");
@@ -1775,10 +1946,10 @@
       var r=await fetch("/api/auth?action=status",{credentials:"same-origin"});
       var d=r.ok ? await r.json() : {};
       if(d && d.authenticated){
-        ACCOUNT={email:d.email,plan:d.plan,verified:d.verified};
+        ACCOUNT={email:d.email,plan:d.plan,verified:d.verified,sender:d.sender||null};
         await afterAuthLoad();
         computeComeback();
-        showApp(true); render();
+        enterAppOrOnboard();
         afterBootParams(params);
         return;
       }
@@ -1806,12 +1977,12 @@
     var lead = reason || ("You're at "+contactCount()+" of "+FREE_CONTACT_CAP+" free contacts.");
     var o=el('<div class="lp-overlay" id="upgradeOverlay"><div class="lock-card upgrade-card">'+
       '<button class="lp-close" id="upClose" aria-label="Close">&times;</button>'+
-      '<div class="up-eyebrow">Founding member</div>'+
-      '<h2 class="up-title">Keep going — no limits<span style="color:var(--honey)">.</span></h2>'+
-      '<p class="up-body">'+esc(lead)+' VAMOS. is brand new, and the people who show up first shape it. Raise your hand and I’ll set you up as a <b>founding member</b> — free while we’re building.</p>'+
-      '<ul class="up-list"><li>Unlimited contacts in cadence</li><li>Unlimited AI-drafted messages</li><li>A direct line to shape what gets built next</li></ul>'+
-      '<button class="btn" id="upGo" type="button">I’m in — count me as a founding member</button>'+
-      '<p class="up-fine">No card. No catch. I just want to know who’s in early.</p>'+
+      '<div class="up-eyebrow">Unlimited</div>'+
+      '<h2 class="up-title">Keep drafting — no limits<span style="color:var(--navy)">.</span></h2>'+
+      '<p class="up-body">'+esc(lead)+' Your first 25 outreaches are free. After that, it’s <b>$11/month</b> for unlimited AI drafting — no card required to start.</p>'+
+      '<ul class="up-list"><li>Unlimited AI-drafted outreach</li><li>Unlimited contacts in cadence</li><li>Every thread and comeback, kept</li></ul>'+
+      '<button class="btn" id="upGo" type="button">Continue — no card required</button>'+
+      '<p class="up-fine">No card required to start. Billing comes later.</p>'+
       '</div></div>');
     o.querySelector("#upClose").addEventListener("click", closeUpgrade);
     o.addEventListener("click", function(e){ if(e.target===o) closeUpgrade(); });
@@ -1823,10 +1994,10 @@
     fetch("/api/auth?action=founding",{method:"POST",credentials:"same-origin"})
       .then(function(r){ return r.json().catch(function(){ return {}; }); })
       .then(function(d){
-        if(d && d.ok){ if(ACCOUNT) ACCOUNT.plan=d.plan||"founding"; closeUpgrade(); render(); toast("You’re a founding member. No limits. We got you."); }
-        else { if(btn){ btn.disabled=false; btn.textContent="I’m in — count me as a founding member"; } toast("Couldn’t do that — try again."); }
+        if(d && d.ok){ if(ACCOUNT) ACCOUNT.plan=d.plan||"founding"; closeUpgrade(); render(); toast("You’re unlimited. No card needed for now."); }
+        else { if(btn){ btn.disabled=false; btn.textContent="Continue — no card required"; } toast("Couldn’t do that — try again."); }
       })
-      .catch(function(){ if(btn){ btn.disabled=false; btn.textContent="I’m in — count me as a founding member"; } toast("Couldn’t do that — try again."); });
+      .catch(function(){ if(btn){ btn.disabled=false; btn.textContent="Continue — no card required"; } toast("Couldn’t do that — try again."); });
   }
   function startEveryoneToday(){
     var n=0;
@@ -2072,6 +2243,7 @@
       '<div class="dc-actions"><button class="dc-act" id="aChan">'+CH_LABEL[i.ch]+'</button><button class="dc-act" id="aReplied">Replied</button><button class="dc-act" id="aScript">Script</button><button class="dc-act done" id="aDone">✓ Done</button></div>'+
       '<div class="dc-script" id="dcScript"><p class="eyebrow" style="margin-bottom:8px">'+CH_LABEL[i.ch]+' script — use it, or let VAMOS write it</p><textarea>'+esc(scriptVal)+'</textarea>'+
         '<div class="script-actions"><button class="ai-btn">✦ Write with AI</button><button class="copy-btn">Copy</button></div>'+
+        '<div class="ai-hint" id="aiHint"></div>'+
         '<div class="ai-steer" id="aiSteer">'+
           '<p class="ai-steer-lead">Tell VAMOS how to write it — type a direction, or tap a nudge below.</p>'+
           '<div class="ai-steer-row"><input id="aiSteerInput" placeholder="e.g. mention their new store openings, keep it under 3 sentences…" maxlength="240"><button class="ai-draft" id="aiDraft">Draft it</button></div>'+
@@ -2111,8 +2283,11 @@
         steer.classList.toggle("open");
         if(steer.classList.contains("open")) steerInput.focus();
       });
+      var hint=card.querySelector("#aiHint");
+      function setHint(msg){ if(msg){ hint.textContent=msg; hint.classList.add("show"); } else { hint.textContent=""; hint.classList.remove("show"); } }
       function generate(steerText){
         scr.classList.add("open");
+        setHint(""); // clear any prior signal hint before a fresh draft
         draftBtn.disabled=true; aiBtn.disabled=true;
         var dl=draftBtn.textContent; draftBtn.textContent="Writing…";
         fetch("/api/write",{method:"POST",headers:{"Content-Type":"application/json"},
@@ -2120,6 +2295,7 @@
           .then(function(r){ return r.json().then(function(d){ return {ok:r.ok,d:d}; }); })
           .then(function(res){ if(!res.ok||!res.d||!res.d.text){ toast((res.d&&res.d.error)||"AI couldn’t draft that — try again"); return; }
             ta.value=res.d.text; state.notes[i.touch.id]=res.d.text; persistNotes();
+            setHint(res.d.angleWarning||""); // non-blocking nudge, never inside the draft
             toast(steerText?"Redrafted with your direction.":"Drafted. Yours to edit."); })
           .catch(function(){ toast("Network hiccup — try again"); })
           .then(function(){ draftBtn.disabled=false; aiBtn.disabled=false; draftBtn.textContent=dl; });
@@ -2187,14 +2363,14 @@
       m.appendChild(vb);
     }
 
-    // PLAN — free users see where they stand + a way to become a founding member
+    // PLAN — free users see where they stand + the path to unlimited
     if(ACCOUNT && !isUnlimited()){
       var used=contactCount(), left=Math.max(0,FREE_CONTACT_CAP-used), near=used>=FREE_CONTACT_CAP;
-      var pb=el('<div class="planbar'+(near?" full":"")+'"><span class="pb-count">'+used+' / '+FREE_CONTACT_CAP+' free contacts'+(near?" — full":(left<=5?" — "+left+" left":""))+'</span><a id="pbGo">Become a founding member</a></div>');
+      var pb=el('<div class="planbar'+(near?" full":"")+'"><span class="pb-count">'+used+' / '+FREE_CONTACT_CAP+' free contacts'+(near?" — full":(left<=5?" — "+left+" left":""))+'</span><a id="pbGo">Get unlimited</a></div>');
       pb.querySelector("#pbGo").addEventListener("click", function(){ openUpgrade(); });
       m.appendChild(pb);
     } else if(ACCOUNT && planName()==="founding"){
-      m.appendChild(el('<div class="planbar founding"><span class="pb-count">Founding member — no limits. We got you.</span></div>'));
+      m.appendChild(el('<div class="planbar founding"><span class="pb-count">Unlimited — no limits. We got you.</span></div>'));
     }
 
     // COMEBACK — met by your own note, warm leads, and streak. No guilt, no catch-up.
@@ -2407,12 +2583,13 @@
     } // end !empty — Pipeline / Last-14 / History / handoff only show once there's data
 
     // MANAGE + FOOT
-    var manage=el('<details class="section" id="secManage"><summary><span class="sum-title">Manage</span><span class="sum-count">backup · cleanup</span></summary><div class="btn-row"><button class="btn-mini" id="todayBtn">Start everyone today</button><button class="btn-mini" id="expBtn">Export backup</button><button class="btn-mini" id="resBtn">Restore</button><button class="btn-mini" id="dupBtn">Delete duplicates</button><button class="btn-mini danger" id="clrBtn">Clear all</button></div><input type="file" id="resFile" accept="application/json,.json" style="display:none"></details>');
+    var manage=el('<details class="section" id="secManage"><summary><span class="sum-title">Manage</span><span class="sum-count">identity · backup · cleanup</span></summary><div class="btn-row"><button class="btn-mini" id="senderBtn">Outreach identity</button><button class="btn-mini" id="todayBtn">Start everyone today</button><button class="btn-mini" id="expBtn">Export backup</button><button class="btn-mini" id="resBtn">Restore</button><button class="btn-mini" id="dupBtn">Delete duplicates</button><button class="btn-mini danger" id="clrBtn">Clear all</button></div><input type="file" id="resFile" accept="application/json,.json" style="display:none"></details>');
     if(ACCOUNT && !isUnlimited()){
-      var proBtn=el('<button class="btn-mini gopro" id="goProBtn">★ Become a founding member</button>');
+      var proBtn=el('<button class="btn-mini gopro" id="goProBtn">★ Get unlimited</button>');
       proBtn.addEventListener("click", function(){ openUpgrade(); });
       manage.querySelector(".btn-row").insertBefore(proBtn, manage.querySelector(".btn-row").firstChild);
     }
+    manage.querySelector("#senderBtn").addEventListener("click", function(){ openSenderForm(); });
     manage.querySelector("#todayBtn").addEventListener("click", startEveryoneToday);
     manage.querySelector("#expBtn").addEventListener("click", doExport);
     manage.querySelector("#dupBtn").addEventListener("click", doDedupe);

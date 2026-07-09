@@ -129,6 +129,12 @@ export const LEGACY_OWNER_EMAIL = 'marcoscuellar99@icloud.com';
 // hand for unlimited (Pro) access during the early launch.
 export const FOUNDING_LIST_KEY = 'founding:list';
 
+// ---------- sender identity (outreach profile, set at onboarding) ----------
+// Stored on the user record as user.sender. Canonical definitions live in the
+// I/O-free api/engine7.js (unit-testable without KV); re-exported here so
+// callers keep importing them from _lib.js.
+export { DEFAULT_SENDER_INTRO, DEFAULT_ASSET, normalizeSender } from './engine7.js';
+
 export function newUserId() { return crypto.randomBytes(12).toString('hex'); }
 export function makeSalt() { return crypto.randomBytes(16).toString('hex'); }
 export function hashPassword(password, salt) {
