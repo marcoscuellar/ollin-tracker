@@ -302,6 +302,17 @@
   .seg-btn{font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--grey);background:none;border:none;cursor:pointer;padding:8px 14px;border-radius:8px;}
   .seg-btn.on{color:var(--ink);background:var(--card);box-shadow:var(--shadow);}
   .cv-list{display:flex;flex-direction:column;gap:8px;}
+  /* BRB — the comeback as a full navy-fill popup card (GLVE) */
+  .cb-modal{position:fixed;inset:0;z-index:150;display:flex;align-items:center;justify-content:center;padding:24px;background:rgba(10,10,10,.55);}
+  .cb-card{position:relative;max-width:480px;width:100%;background:var(--navy);color:#fff;border-radius:20px;box-shadow:0 30px 80px rgba(10,31,61,.5);padding:40px 36px;}
+  .cb-card h2{font-family:'Geist',sans-serif;font-weight:900;font-size:26px;letter-spacing:-.02em;margin:0 0 10px;color:#fff;}
+  .cb-card .cbm-sub{font-size:14.5px;line-height:1.6;color:rgba(255,255,255,.72);margin:0 0 20px;}
+  .cb-card .cbm-note{font-family:'Geist',sans-serif;font-size:16px;line-height:1.55;color:#fff;border-left:2px solid var(--honey);padding-left:14px;margin:18px 0;}
+  .cb-card .cbm-meta{font-family:'Geist Mono',monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.55);margin-bottom:22px;}
+  .cb-card .cbm-back{font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;background:var(--cream);color:var(--navy);border:none;border-radius:10px;padding:14px 22px;cursor:pointer;font-weight:600;}
+  .cb-card .cbm-back:hover{background:#fff;}
+  .cb-card .cbm-close{position:absolute;top:16px;right:18px;background:none;border:none;color:rgba(255,255,255,.6);font-size:22px;line-height:1;cursor:pointer;}
+  .cb-card .cbm-close:hover{color:#fff;}
   /* stat strip + momentum gauge */
   .statstrip{display:flex;align-items:center;background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px 24px;margin-bottom:34px;}
   .stat{display:flex;flex-direction:column;gap:4px;}
@@ -1692,7 +1703,7 @@
   var SENDER_ASSETS=["Capacity Map","Engineering Capacity Map","Delivery Capacity Map","Talent Map","Blueprint","Cost Analysis"];
   function needsOnboarding(){ return !ACCOUNT || !ACCOUNT.sender || !ACCOUNT.sender.name; }
   // Gate: new users can't reach the app until they've finished onboarding.
-  function enterAppOrOnboard(){ if(needsOnboarding()){ openOnboarding(); } else { showApp(true); render(); } }
+  function enterAppOrOnboard(){ if(needsOnboarding()){ openOnboarding(); } else { showApp(true); render(); maybeComeback(); } }
   function assetOptions(sel){
     var v=sel||"Capacity Map";
     return SENDER_ASSETS.map(function(a){ return '<option'+(a===v?" selected":"")+'>'+esc(a)+'</option>'; }).join("");
@@ -2370,7 +2381,8 @@
             {label:"See contacts", onClick:function(){ contactsMode="list"; setView("contacts"); }},
             {label:"Delete contacts", danger:true, onClick:function(){ contactsMode="delete"; pipeSel={}; setView("contacts"); }}
           ]);
-        } else setView(t[0]);
+        } else if(t[0]==="brb"){ openComeback(); }
+        else setView(t[0]);
       });
       ntabs.appendChild(b);
     });
@@ -2430,7 +2442,6 @@
     if(navView==="contacts") renderContacts(host);
     else if(navView==="pipeline") renderPipeline(host);
     else if(navView==="dashboard") renderDashboard(host);
-    else if(navView==="brb") renderBRB(host);
     else if(navView==="manage") renderManage(host);
     else renderHome(host);
     host.appendChild(el('<p class="foot">We got you.</p>'));
@@ -2664,22 +2675,36 @@
     m.appendChild(hist);
   }
 
-  // ---------- BRB: the comeback / re-entry ritual (navy popup in a later phase) ----------
-  function renderBRB(m){
+  // ---------- BRB: the comeback / re-entry ritual as a navy popup card ----------
+  function closeComeback(){ var x=document.getElementById("cbModal"); if(x) x.remove(); }
+  function openComeback(){
+    closeComeback();
     var contacts=asContacts();
     var warm=contacts.filter(function(c){ return c.status==="warm"; });
     var away=COMEBACK.away||0;
     var awayTxt = away<=0 ? "You’re here" : (away===1 ? "1 day away" : (away+" days away"));
     var bits=[]; if(warm.length) bits.push(warm.length+" warm "+(warm.length===1?"lead":"leads")+" waiting");
     var st=streakWithBend(); if(st>0) bits.push(st+"-day streak intact");
-    var cb=el('<section class="comeback brb-view">'+
+    var ov=el('<div class="cb-modal" id="cbModal"><div class="cb-card">'+
+      '<button class="cbm-close" id="cbClose" aria-label="Close">&times;</button>'+
       '<h2>Welcome back<span style="color:var(--honey)">.</span></h2>'+
-      '<p class="cb-sub">'+esc(awayTxt)+'. Nothing piled up — no catch-up screen. Pick up right where you left off.</p>'+
-      (state.handoffNote ? '<div class="cb-note">“'+esc(state.handoffNote)+'”</div>' : '<div class="cb-note" style="opacity:.65">No note from last time. Leave one on Home before you go.</div>')+
-      (bits.length ? '<div class="cb-meta">'+bits.join(" · ")+'</div>' : '')+
-      '<button class="cb-back">Take me to today</button></section>');
-    cb.querySelector(".cb-back").addEventListener("click", function(){ comebackDismissed=true; setView("home"); });
-    m.appendChild(cb);
+      '<p class="cbm-sub">'+esc(awayTxt)+'. Nothing piled up — no catch-up screen. Pick up right where you left off.</p>'+
+      (state.handoffNote ? '<div class="cbm-note">“'+esc(state.handoffNote)+'”</div>' : '')+
+      (bits.length ? '<div class="cbm-meta">'+bits.join(" · ")+'</div>' : '')+
+      '<button class="cbm-back" id="cbBack">Take me to today</button>'+
+    '</div></div>');
+    function dismiss(){ comebackDismissed=true; closeComeback(); }
+    ov.querySelector("#cbClose").addEventListener("click", dismiss);
+    ov.querySelector("#cbBack").addEventListener("click", function(){ dismiss(); if(navView!=="home") setView("home"); });
+    ov.addEventListener("click", function(e){ if(e.target===ov) dismiss(); });
+    document.body.appendChild(ov);
+  }
+  // Auto-surface the comeback on return: only when there's something to come
+  // back to (a note or a warm lead) and it hasn't been dismissed this session.
+  function maybeComeback(){
+    if(comebackDismissed) return;
+    var warmNow=asContacts().filter(function(c){ return c.status==="warm"; }).length;
+    if(COMEBACK.show && (state.handoffNote || warmNow)) openComeback();
   }
 
   // ---------- MANAGE: account + data (expanded in a later phase) ----------
