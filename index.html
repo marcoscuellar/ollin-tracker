@@ -322,7 +322,8 @@
   .cb-card .cbm-back:hover{background:#fff;}
   .cb-card .cbm-close{position:absolute;top:16px;right:18px;background:none;border:none;color:rgba(255,255,255,.6);font-size:22px;line-height:1;cursor:pointer;}
   .cb-card .cbm-close:hover{color:#fff;}
-  .cb-card .cbm-lbl{display:block;font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.55);margin:2px 0 8px;}
+  .cb-card .cbm-note-head{font-family:'Geist',sans-serif;font-weight:800;font-size:15px;letter-spacing:-.01em;color:#fff;margin:6px 0 4px;}
+  .cb-card .cbm-note-sub{font-size:12.5px;line-height:1.5;color:rgba(255,255,255,.6);margin:0 0 10px;}
   .cb-card .cbm-note-in{width:100%;background:rgba(255,255,255,.08);border:.5px solid rgba(255,255,255,.2);border-radius:10px;color:#fff;font-family:'Geist',sans-serif;font-size:15px;line-height:1.5;padding:12px 14px;margin-bottom:20px;resize:vertical;}
   .cb-card .cbm-note-in:focus{outline:none;border-color:rgba(255,255,255,.5);}
   .cb-card .cbm-note-in::placeholder{color:rgba(255,255,255,.4);}
@@ -2862,11 +2863,10 @@
     var st=streakWithBend(); if(st>0) bits.push(st+"-day streak intact");
     var ov=el('<div class="cb-modal" id="cbModal"><div class="cb-card">'+
       '<button class="cbm-close" id="cbClose" aria-label="Close">&times;</button>'+
-      '<h2>Welcome back<span style="color:var(--honey)">.</span></h2>'+
-      '<p class="cbm-sub">'+esc(awayTxt)+'. Nothing piled up — no catch-up screen. Pick up right where you left off.</p>'+
+      '<h2>Before you go<span style="color:var(--honey)">.</span></h2>'+
+      '<p class="cbm-sub">One line to your future self. It’s the first thing you’ll see when you’re back — even days later.</p>'+
+      '<textarea class="cbm-note-in" id="cbNote" maxlength="140" rows="2" placeholder="What matters tomorrow?">'+esc(state.handoffNote||"")+'</textarea>'+
       (bits.length ? '<div class="cbm-meta">'+bits.join(" · ")+'</div>' : '')+
-      '<label class="cbm-lbl">Before you leave — one line to your future self</label>'+
-      '<textarea class="cbm-note-in" id="cbNote" maxlength="140" rows="2" placeholder="What matters next time?">'+esc(state.handoffNote||"")+'</textarea>'+
       '<button class="cbm-back" id="cbBack">Take me to today</button>'+
     '</div></div>');
     function dismiss(){ comebackDismissed=true; closeComeback(); }
