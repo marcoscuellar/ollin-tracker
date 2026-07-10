@@ -103,7 +103,8 @@
   .btn-primary{font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;background:var(--ink);color:var(--cream);border:.5px solid var(--ink);padding:12px 20px;cursor:pointer;width:100%;}
   .btn-primary:hover{background:var(--hover);border-color:var(--hover);color:var(--cream);}
   .btn-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;}
-  .btn-mini{font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;background:none;border:.5px solid var(--hairline);color:var(--grey);padding:9px 12px;cursor:pointer;}
+  .btn-mini{display:inline-flex;align-items:center;justify-content:center;gap:6px;font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;background:none;border:.5px solid var(--hairline);color:var(--grey);padding:9px 12px;cursor:pointer;}
+  .btn-mini .ic{width:13px;height:13px;}
   .btn-mini:hover{border-color:var(--ink);color:var(--ink);}
   .btn-mini.pop{background:var(--navy);border-color:var(--navy);color:#fff;font-weight:600;}
   .btn-mini.pop:hover{background:var(--navy-2);border-color:var(--navy-2);color:#fff;}
@@ -293,7 +294,10 @@
   .nav-ava{width:30px;height:30px;border-radius:50%;background:var(--ink);color:var(--card);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;text-transform:uppercase;cursor:pointer;}
   .nav-tab.has-caret::after{content:"▾";font-size:9px;margin-left:5px;opacity:.55;}
   .nav-menu{position:fixed;z-index:200;background:var(--card);border:.5px solid var(--hairline);border-radius:12px;box-shadow:var(--shadow);padding:6px;min-width:190px;}
-  .nav-menu button{display:block;width:100%;text-align:left;background:none;border:none;font-family:inherit;font-size:13.5px;color:var(--ink);padding:9px 12px;border-radius:8px;cursor:pointer;white-space:nowrap;}
+  .nav-menu button{display:flex;align-items:center;gap:9px;width:100%;text-align:left;background:none;border:none;font-family:inherit;font-size:13.5px;color:var(--ink);padding:9px 12px;border-radius:8px;cursor:pointer;white-space:nowrap;}
+  .nm-ic{display:inline-flex;color:var(--grey);}
+  .ic{width:15px;height:15px;flex-shrink:0;display:inline-block;}
+  .strip-btn .ic{width:14px;height:14px;}
   .nav-menu button:hover{background:rgba(45,45,45,.05);}
   .nav-menu button.danger{color:#A5341F;}
   .nav-menu .nm-sep{height:.5px;background:var(--hairline);margin:5px 4px;}
@@ -304,6 +308,9 @@
   .seg-btn{font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--grey);background:none;border:none;cursor:pointer;padding:8px 14px;border-radius:8px;}
   .seg-btn.on{color:var(--ink);background:var(--card);box-shadow:var(--shadow);}
   .cv-list{display:flex;flex-direction:column;gap:8px;}
+  .cv-list .pc-wrap .pcard.clickable{cursor:pointer;transition:box-shadow .15s,transform .1s,border-color .15s;}
+  .cv-list .pc-wrap .pcard.clickable:hover{box-shadow:0 8px 24px rgba(10,31,61,.12);transform:translateY(-2px);border-color:var(--navy);}
+  .cv-list .pc-wrap .pcard.expanded{border-color:var(--navy);}
   /* BRB — the comeback as a full navy-fill popup card (GLVE) */
   .cb-modal{position:fixed;inset:0;z-index:150;display:flex;align-items:center;justify-content:center;padding:24px;background:rgba(10,10,10,.55);}
   .cb-card{position:relative;max-width:480px;width:100%;background:var(--navy);color:#fff;border-radius:20px;box-shadow:0 30px 80px rgba(10,31,61,.5);padding:40px 36px;}
@@ -315,6 +322,10 @@
   .cb-card .cbm-back:hover{background:#fff;}
   .cb-card .cbm-close{position:absolute;top:16px;right:18px;background:none;border:none;color:rgba(255,255,255,.6);font-size:22px;line-height:1;cursor:pointer;}
   .cb-card .cbm-close:hover{color:#fff;}
+  .cb-card .cbm-lbl{display:block;font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.55);margin:2px 0 8px;}
+  .cb-card .cbm-note-in{width:100%;background:rgba(255,255,255,.08);border:.5px solid rgba(255,255,255,.2);border-radius:10px;color:#fff;font-family:'Geist',sans-serif;font-size:15px;line-height:1.5;padding:12px 14px;margin-bottom:20px;resize:vertical;}
+  .cb-card .cbm-note-in:focus{outline:none;border-color:rgba(255,255,255,.5);}
+  .cb-card .cbm-note-in::placeholder{color:rgba(255,255,255,.4);}
   /* Contacts › Add — manual single-contact form */
   .cadd{background:var(--card);border:.5px solid var(--hairline);border-radius:var(--radius);box-shadow:var(--shadow);padding:24px 22px;margin-bottom:16px;}
   .cadd h3{font-family:'Geist',sans-serif;font-weight:800;font-size:16px;margin:0 0 16px;}
@@ -2051,6 +2062,14 @@
   var CH_LABEL = { li:"LinkedIn", em:"Email", call:"Call" };
   var STEP_NAMES = ["Outreach","Follow up","Nudge","Break up","Final attempt"];
   var focusIdx=0, meterRevealed=false, navView="home", focusMode=false, contactsMode="list";
+  // Line-art icons (no emoji anywhere in-app). stroke=currentColor, 24-grid.
+  var ICON={
+    spark:'<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5l1.7 5.4 5.4 1.7-5.4 1.7L12 17.7l-1.7-5.4L4.9 10.6l5.4-1.7z"/></svg>',
+    clock:'<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15.5 14"/></svg>',
+    target:'<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1" fill="currentColor" stroke="none"/></svg>',
+    wind:'<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9h11a3 3 0 1 0-3-3"/><path d="M3 14h13a3 3 0 1 1-3 3"/></svg>',
+    download:'<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v11"/><polyline points="8 10.5 12 14.5 16 10.5"/><path d="M4.5 19.5h15"/></svg>'
+  };
   var pipeSelect=false, pipeSel={};
   function selCount(){ var n=0; for(var k in pipeSel){ if(pipeSel[k]) n++; } return n; }
 
@@ -2422,7 +2441,7 @@
     var menu=el('<div class="nav-menu" id="navMenu"></div>');
     items.forEach(function(it){
       if(it.sep){ menu.appendChild(el('<div class="nm-sep"></div>')); return; }
-      var b=el('<button'+(it.danger?' class="danger"':'')+'>'+esc(it.label)+'</button>');
+      var b=el('<button'+(it.danger?' class="danger"':'')+'>'+(it.icon?'<span class="nm-ic">'+it.icon+'</span>':'')+'<span>'+esc(it.label)+'</span></button>');
       b.addEventListener("click", function(e){ e.stopPropagation(); closeNavMenu(); it.onClick(); });
       menu.appendChild(b);
     });
@@ -2581,11 +2600,11 @@
     strip.appendChild(el('<div class="stat-sep">·</div>'));
     strip.appendChild(buildMeter());
     var sr=el('<div class="strip-right"></div>');
-    var adhdBtn=el('<button class="strip-btn adhd" id="adhdBtn">✦ ADHD moment</button>');
+    var adhdBtn=el('<button class="strip-btn adhd" id="adhdBtn">'+ICON.spark+'ADHD moment</button>');
     adhdBtn.addEventListener("click", function(e){ e.stopPropagation(); openMenu(adhdBtn, [
-      {label:"⏱  Pomodoro — 25 min", onClick: openPomodoro},
-      {label:"🎯  Just do one", onClick: openJustOne},
-      {label:"🌬  Breathe — 30s", onClick: openBreathe}
+      {label:"Pomodoro — 25 min", icon: ICON.clock, onClick: openPomodoro},
+      {label:"Just do one", icon: ICON.target, onClick: openJustOne},
+      {label:"Breathe — 30s", icon: ICON.wind, onClick: openBreathe}
     ]); });
     var fmBtn=el('<button class="strip-btn'+(focusMode?" on":"")+'" id="fmBtn">◎ Focus mode</button>');
     fmBtn.addEventListener("click", function(){ focusMode=!focusMode; document.getElementById("appMain").classList.toggle("focus",focusMode); fmBtn.classList.toggle("on",focusMode); });
@@ -2675,22 +2694,38 @@
     var listWrap=el('<div class="cv-list"></div>');
     contacts.slice().sort(function(a,b){ return (a.name||"").localeCompare(b.name||""); }).forEach(function(c){
       var s=statusLabel(c), key=c.a.id+"|"+c.t.id;
-      var row=el('<div class="pcard'+(del?" selectable":"")+(del&&pipeSel[key]?" selected":"")+'">'+
-        (del?'<div class="pc-check'+(pipeSel[key]?" on":"")+'"></div>':'')+
-        '<div class="pc-ava">'+esc(initials(c.name))+'</div>'+
-        '<div class="pc-main"><div class="pc-name">'+esc(c.name)+'</div><div class="pc-meta">'+esc((c.title||"")+(c.title&&c.account?" · ":"")+(c.account||""))+'</div></div>'+
-        '<div class="pc-status'+(s.gold?" gold":"")+'">'+s.txt+'</div>'+
-        (del?'':'<button class="pc-x" title="Remove">×</button>')+
-      '</div>');
       if(del){
+        var row=el('<div class="pcard selectable'+(pipeSel[key]?" selected":"")+'">'+
+          '<div class="pc-check'+(pipeSel[key]?" on":"")+'"></div>'+
+          '<div class="pc-ava">'+esc(initials(c.name))+'</div>'+
+          '<div class="pc-main"><div class="pc-name">'+esc(c.name)+'</div><div class="pc-meta">'+esc((c.title||"")+(c.title&&c.account?" · ":"")+(c.account||""))+'</div></div>'+
+          '<div class="pc-status'+(s.gold?" gold":"")+'">'+s.txt+'</div>'+
+        '</div>');
         row.addEventListener("click", function(){
           pipeSel[key]=!pipeSel[key]; row.classList.toggle("selected"); row.querySelector(".pc-check").classList.toggle("on");
           var cnt=document.getElementById("cvCount"); if(cnt) cnt.textContent=selCount();
         });
-      } else {
-        row.querySelector(".pc-x").addEventListener("click", function(e){ e.stopPropagation(); removeContact(c); });
+        listWrap.appendChild(row);
+        return;
       }
-      listWrap.appendChild(row);
+      // See mode — same expand-to-card logic as Pipeline
+      var wrap2=el('<div class="pc-wrap">'+
+        '<div class="pcard clickable">'+
+          '<div class="pc-ava">'+esc(initials(c.name))+'</div>'+
+          '<div class="pc-main"><div class="pc-name">'+esc(c.name)+'</div><div class="pc-meta">'+esc((c.title||"")+(c.title&&c.account?" · ":"")+(c.account||""))+'</div></div>'+
+          '<div class="pc-status'+(s.gold?" gold":"")+'">'+s.txt+'</div>'+
+          '<button class="pc-x" title="Remove">×</button>'+
+        '</div>'+
+        '<div class="pc-exec"></div></div>');
+      var pcard=wrap2.querySelector(".pcard"), exec=wrap2.querySelector(".pc-exec");
+      wrap2.querySelector(".pc-x").addEventListener("click", function(e){ e.stopPropagation(); removeContact(c); });
+      pcard.addEventListener("click", function(){
+        if(exec.classList.contains("open")){ exec.classList.remove("open"); exec.innerHTML=""; pcard.classList.remove("expanded"); return; }
+        exec.innerHTML=""; exec.classList.add("open"); pcard.classList.add("expanded");
+        var di=dueInfo(c);
+        exec.appendChild(di ? activeCard({c:c,i:di}, exec, [{c:c,i:di}], contacts.filter(function(x){ return x.status==="warm"; })) : pausedPanel(c));
+      });
+      listWrap.appendChild(wrap2);
     });
     m.appendChild(listWrap);
   }
@@ -2802,7 +2837,7 @@
     });
     m.appendChild(cards);
     // export bar
-    var bar=el('<div class="dash-bar"><span class="dash-total">'+doneList.length+' completed outreach'+(doneList.length===1?"":"es")+' all-time</span><button class="btn-mini pop" id="dlCsv">⤓ Download CSV</button></div>');
+    var bar=el('<div class="dash-bar"><span class="dash-total">'+doneList.length+' completed outreach'+(doneList.length===1?"":"es")+' all-time</span><button class="btn-mini pop" id="dlCsv">'+ICON.download+'Download CSV</button></div>');
     var dl=bar.querySelector("#dlCsv");
     if(!doneList.length) dl.disabled=true; else dl.addEventListener("click", function(){ downloadCompletedCsv(doneList); });
     m.appendChild(bar);
@@ -2829,14 +2864,18 @@
       '<button class="cbm-close" id="cbClose" aria-label="Close">&times;</button>'+
       '<h2>Welcome back<span style="color:var(--honey)">.</span></h2>'+
       '<p class="cbm-sub">'+esc(awayTxt)+'. Nothing piled up — no catch-up screen. Pick up right where you left off.</p>'+
-      (state.handoffNote ? '<div class="cbm-note">“'+esc(state.handoffNote)+'”</div>' : '')+
       (bits.length ? '<div class="cbm-meta">'+bits.join(" · ")+'</div>' : '')+
+      '<label class="cbm-lbl">Before you leave — one line to your future self</label>'+
+      '<textarea class="cbm-note-in" id="cbNote" maxlength="140" rows="2" placeholder="What matters next time?">'+esc(state.handoffNote||"")+'</textarea>'+
       '<button class="cbm-back" id="cbBack">Take me to today</button>'+
     '</div></div>');
     function dismiss(){ comebackDismissed=true; closeComeback(); }
-    ov.querySelector("#cbClose").addEventListener("click", dismiss);
-    ov.querySelector("#cbBack").addEventListener("click", function(){ dismiss(); if(navView!=="home") setView("home"); });
-    ov.addEventListener("click", function(e){ if(e.target===ov) dismiss(); });
+    var noteEl=ov.querySelector("#cbNote");
+    function saveNote(){ var v=(noteEl.value||"").trim(); if(v!==(state.handoffNote||"")){ state.handoffNote=v; scheduleSave(); toast("Saved for next time."); } }
+    noteEl.addEventListener("change", saveNote);
+    ov.querySelector("#cbClose").addEventListener("click", function(){ saveNote(); dismiss(); });
+    ov.querySelector("#cbBack").addEventListener("click", function(){ saveNote(); dismiss(); if(navView!=="home") setView("home"); });
+    ov.addEventListener("click", function(e){ if(e.target===ov){ saveNote(); dismiss(); } });
     document.body.appendChild(ov);
   }
   // Auto-surface the comeback on return: only when there's something to come
