@@ -1780,7 +1780,7 @@
   var SENDER_ASSETS=["Capacity Map","Engineering Capacity Map","Delivery Capacity Map","Talent Map","Blueprint","Cost Analysis"];
   function needsOnboarding(){ return !ACCOUNT || !ACCOUNT.sender || !ACCOUNT.sender.name; }
   // Gate: new users can't reach the app until they've finished onboarding.
-  function enterAppOrOnboard(){ if(needsOnboarding()){ openOnboarding(); } else { showApp(true); render(); maybeComeback(); } }
+  function enterAppOrOnboard(){ if(needsOnboarding()){ openOnboarding(); } else { showApp(true); render(); } }
   function assetOptions(sel){
     var v=sel||"Capacity Map";
     return SENDER_ASSETS.map(function(a){ return '<option'+(a===v?" selected":"")+'>'+esc(a)+'</option>'; }).join("");
