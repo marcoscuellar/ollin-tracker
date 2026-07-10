@@ -340,6 +340,14 @@
   .dash-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:6px;flex-wrap:wrap;}
   .dash-total{font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--grey);}
   @media(max-width:620px){.dash-stat{padding:16px 8px;}.dash-stat .ds-num{font-size:28px;}}
+  /* Manage — account page cards */
+  .mg-card{background:var(--card);border:.5px solid var(--hairline);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px 22px;margin-bottom:14px;}
+  .mg-card h3{font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--grey);margin:0 0 14px;}
+  .mg-row{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;}
+  .mg-row + .mg-row{margin-top:12px;padding-top:12px;border-top:.5px solid var(--hairline);}
+  .mg-label{font-size:14px;color:var(--ink);font-weight:500;}
+  .mg-label .mg-sub{display:block;font-size:12px;color:var(--grey);margin-top:2px;font-weight:400;}
+  .mg-soon{font-family:'Geist Mono',monospace;font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--grey);border:.5px solid var(--hairline);border-radius:6px;padding:5px 9px;white-space:nowrap;}
   /* stat strip + momentum gauge */
   .statstrip{display:flex;align-items:center;background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px 24px;margin-bottom:34px;}
   .stat{display:flex;flex-direction:column;gap:4px;}
@@ -2805,26 +2813,109 @@
 
   // ---------- MANAGE: account + data (expanded in a later phase) ----------
   function renderManage(m){
-    m.appendChild(el('<div class="view-head"><h2 class="view-title">Manage</h2></div>'));
-    var manage=el('<details class="section" id="secManage" open><summary><span class="sum-title">Data &amp; identity</span><span class="sum-count">identity · backup · cleanup</span></summary><div class="btn-row"><button class="btn-mini" id="senderBtn">Outreach identity</button><button class="btn-mini" id="todayBtn">Start everyone today</button><button class="btn-mini" id="expBtn">Export backup</button><button class="btn-mini" id="resBtn">Restore</button><button class="btn-mini" id="dupBtn">Delete duplicates</button><button class="btn-mini danger" id="clrBtn">Clear all</button></div><input type="file" id="resFile" accept="application/json,.json" style="display:none"></details>');
-    if(ACCOUNT && !isUnlimited()){
-      var proBtn=el('<button class="btn-mini gopro" id="goProBtn">★ Get unlimited</button>');
-      proBtn.addEventListener("click", function(){ openUpgrade(); });
-      manage.querySelector(".btn-row").insertBefore(proBtn, manage.querySelector(".btn-row").firstChild);
-    }
-    manage.querySelector("#senderBtn").addEventListener("click", function(){ openSenderForm(); });
-    manage.querySelector("#todayBtn").addEventListener("click", startEveryoneToday);
-    manage.querySelector("#expBtn").addEventListener("click", doExport);
-    manage.querySelector("#dupBtn").addEventListener("click", doDedupe);
-    manage.querySelector("#clrBtn").addEventListener("click", doClear);
-    var rf=manage.querySelector("#resFile");
-    manage.querySelector("#resBtn").addEventListener("click", function(){ rf.click(); });
-    rf.addEventListener("change", function(){ if(rf.files&&rf.files[0]) doRestore(rf.files[0]); rf.value=""; });
-    m.appendChild(manage);
-    // account + logout
-    var acct=el('<div class="btn-row" style="margin-top:14px"><button class="btn-mini" id="mgLogout">Log out</button></div>');
-    acct.querySelector("#mgLogout").addEventListener("click", function(){ logout(); });
+    m.appendChild(el('<div class="view-head"><h2 class="view-title">Account</h2></div>'));
+
+    // ACCOUNT — email + destructive actions
+    var acct=el('<div class="mg-card"><h3>Account</h3>'+
+      '<div class="mg-row"><div class="mg-label">Signed in as<span class="mg-sub">'+esc((ACCOUNT&&ACCOUNT.email)||"")+(ACCOUNT&&ACCOUNT.verified===false?" · unverified":"")+'</span></div><button class="btn-mini" id="mgEmail">Change email</button></div>'+
+      '<div class="mg-row"><div class="mg-label">Delete account<span class="mg-sub">Permanently remove your account and all data.</span></div><button class="btn-mini danger" id="mgDelete">Delete account</button></div>'+
+    '</div>');
+    acct.querySelector("#mgEmail").addEventListener("click", openChangeEmail);
+    acct.querySelector("#mgDelete").addEventListener("click", openDeleteAccount);
     m.appendChild(acct);
+
+    // BILLING — plan + payment (coming soon)
+    var planTxt = isUnlimited() ? "Unlimited" : "Free — first 25 outreaches";
+    var bill=el('<div class="mg-card"><h3>Billing</h3>'+
+      '<div class="mg-row"><div class="mg-label">Plan<span class="mg-sub">'+esc(planTxt)+'</span></div>'+(isUnlimited()?'<span class="mg-soon">Active</span>':'<button class="btn-mini pop" id="mgUpgrade">Get unlimited</button>')+'</div>'+
+      '<div class="mg-row"><div class="mg-label">Payment method<span class="mg-sub">$11/month after your first 25 outreaches.</span></div><span class="mg-soon">Coming soon</span></div>'+
+    '</div>');
+    var up=bill.querySelector("#mgUpgrade"); if(up) up.addEventListener("click", function(){ openUpgrade(); });
+    m.appendChild(bill);
+
+    // OUTREACH IDENTITY
+    var idName=(ACCOUNT&&ACCOUNT.sender&&ACCOUNT.sender.name)||"Not set yet";
+    var idCo=(ACCOUNT&&ACCOUNT.sender&&ACCOUNT.sender.company)||"";
+    var idn=el('<div class="mg-card"><h3>Outreach identity</h3>'+
+      '<div class="mg-row"><div class="mg-label">'+esc(idName)+(idCo?'<span class="mg-sub">'+esc(idCo)+'</span>':'<span class="mg-sub">How AI introduces you</span>')+'</div><button class="btn-mini" id="mgIdentity">Edit</button></div>'+
+    '</div>');
+    idn.querySelector("#mgIdentity").addEventListener("click", function(){ openSenderForm(); });
+    m.appendChild(idn);
+
+    // DATA — backup + cleanup
+    var data=el('<div class="mg-card"><h3>Data</h3><div class="btn-row"><button class="btn-mini" id="todayBtn">Start everyone today</button><button class="btn-mini" id="expBtn">Export backup</button><button class="btn-mini" id="resBtn">Restore</button><button class="btn-mini" id="dupBtn">Delete duplicates</button><button class="btn-mini danger" id="clrBtn">Clear all</button></div><input type="file" id="resFile" accept="application/json,.json" style="display:none"></div>');
+    data.querySelector("#todayBtn").addEventListener("click", startEveryoneToday);
+    data.querySelector("#expBtn").addEventListener("click", doExport);
+    data.querySelector("#dupBtn").addEventListener("click", doDedupe);
+    data.querySelector("#clrBtn").addEventListener("click", doClear);
+    var rf=data.querySelector("#resFile");
+    data.querySelector("#resBtn").addEventListener("click", function(){ rf.click(); });
+    rf.addEventListener("change", function(){ if(rf.files&&rf.files[0]) doRestore(rf.files[0]); rf.value=""; });
+    m.appendChild(data);
+
+    // LOG OUT
+    var out=el('<div class="btn-row" style="margin-top:2px"><button class="btn-mini" id="mgLogout">Log out</button></div>');
+    out.querySelector("#mgLogout").addEventListener("click", function(){ logout(); });
+    m.appendChild(out);
+  }
+  // Change email — collects the new address + password, then hits the
+  // change-email endpoint (added in the backend phase).
+  function openChangeEmail(){
+    var ov=el('<div class="sender-overlay"><div class="sender-card">'+
+      '<button class="sc-close" id="ceClose" aria-label="Close">&times;</button>'+
+      '<h2>Change email</h2>'+
+      '<p class="sc-help">Enter your new email and password. We’ll send a confirmation link to the new address; your login changes once confirmed.</p>'+
+      '<div class="fld"><label>Current email</label><input class="auth-input" value="'+esc((ACCOUNT&&ACCOUNT.email)||"")+'" disabled></div>'+
+      '<div class="fld"><label>New email</label><input class="auth-input" id="ceNew" type="email" placeholder="you@company.com"></div>'+
+      '<div class="fld"><label>Password</label><input class="auth-input" id="cePw" type="password" placeholder="Confirm it’s you"></div>'+
+      '<div class="sc-err" id="ceErr"></div>'+
+      '<button class="btn" id="ceSave">Send confirmation</button>'+
+    '</div></div>');
+    ov.querySelector("#ceClose").addEventListener("click", function(){ ov.remove(); });
+    ov.querySelector("#ceSave").addEventListener("click", async function(){
+      var err=ov.querySelector("#ceErr"); err.textContent="";
+      var email=(ov.querySelector("#ceNew").value||"").trim(), pw=ov.querySelector("#cePw").value||"";
+      if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){ err.textContent="Enter a valid email address."; return; }
+      if(!pw){ err.textContent="Enter your password."; return; }
+      var btn=ov.querySelector("#ceSave"), bl=btn.textContent; btn.disabled=true; btn.textContent="Sending…";
+      try{
+        var r=await fetch("/api/auth?action=change-email",{method:"POST",headers:{"Content-Type":"application/json"},credentials:"same-origin",body:JSON.stringify({email:email,password:pw})});
+        var d=await r.json().catch(function(){ return {}; });
+        if(!r.ok||!d.ok) throw new Error(d.error||"Couldn’t update — try again.");
+        if(ACCOUNT){ ACCOUNT.email=d.email||email; if(d.verified!=null) ACCOUNT.verified=d.verified; }
+        ov.remove(); render(); toast("Almost there — confirm from your new inbox.");
+      }catch(e){ err.textContent=(e&&e.message)||"Couldn’t update — try again."; btn.disabled=false; btn.textContent=bl; }
+    });
+    document.body.appendChild(ov);
+    ov.querySelector("#ceNew").focus();
+  }
+  // Delete account — double confirm (type DELETE + password), then purge.
+  function openDeleteAccount(){
+    var ov=el('<div class="sender-overlay"><div class="sender-card">'+
+      '<button class="sc-close" id="daClose" aria-label="Close">&times;</button>'+
+      '<h2>Delete account</h2>'+
+      '<p class="sc-help">This permanently deletes your account, contacts, drafts, and history. It cannot be undone.</p>'+
+      '<div class="fld"><label>Type DELETE to confirm</label><input class="auth-input" id="daType" placeholder="DELETE" autocomplete="off"></div>'+
+      '<div class="fld"><label>Password</label><input class="auth-input" id="daPw" type="password"></div>'+
+      '<div class="sc-err" id="daErr"></div>'+
+      '<button class="btn" id="daGo" style="background:#A5341F;border-color:#A5341F">Delete my account</button>'+
+    '</div></div>');
+    ov.querySelector("#daClose").addEventListener("click", function(){ ov.remove(); });
+    ov.querySelector("#daGo").addEventListener("click", async function(){
+      var err=ov.querySelector("#daErr"); err.textContent="";
+      var typed=(ov.querySelector("#daType").value||"").trim(), pw=ov.querySelector("#daPw").value||"";
+      if(typed!=="DELETE"){ err.textContent="Type DELETE to confirm."; return; }
+      if(!pw){ err.textContent="Enter your password."; return; }
+      var btn=ov.querySelector("#daGo"), bl=btn.textContent; btn.disabled=true; btn.textContent="Deleting…";
+      try{
+        var r=await fetch("/api/auth?action=delete-account",{method:"POST",headers:{"Content-Type":"application/json"},credentials:"same-origin",body:JSON.stringify({password:pw})});
+        var d=await r.json().catch(function(){ return {}; });
+        if(!r.ok||!d.ok) throw new Error(d.error||"Couldn’t delete — try again.");
+        ov.remove(); ACCOUNT=null; clearState(); comebackDismissed=false; navView="home"; closeComeback(); showApp(false); toast("Your account was deleted.");
+      }catch(e){ err.textContent=(e&&e.message)||"Couldn’t delete — try again."; btn.disabled=false; btn.textContent=bl; }
+    });
+    document.body.appendChild(ov);
+    ov.querySelector("#daType").focus();
   }
 
   wireLanding();
