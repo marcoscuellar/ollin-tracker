@@ -31,6 +31,8 @@ export default async function handler(req, res) {
       case 'resend-verify': return resendVerify(req, res);
       case 'founding': return founding(req, res);
       case 'save-sender': return saveSender(req, res);
+      case 'change-email': return changeEmail(req, res);
+      case 'delete-account': return deleteAccount(req, res);
       default: return send(res, 400, { error: 'unknown action' });
     }
   } catch (e) {
@@ -245,4 +247,58 @@ async function saveSender(req, res) {
   user.sender = sender;
   await kv.set(userKey(s.sub), user);
   return send(res, 200, { ok: true, sender });
+}
+
+// POST (session-gated) { email, password } — change the login email. Requires
+// the current password. Re-keys the email index, marks the account unverified,
+// and sends a fresh verification email to the new address.
+async function changeEmail(req, res) {
+  const s = requireSession(req);
+  if (!s || !s.sub) return send(res, 401, { error: 'unauthorized' });
+  const user = await kv.get(userKey(s.sub));
+  if (!user) return send(res, 401, { error: 'unauthorized' });
+
+  const body = await readJson(req);
+  const email = normalizeEmail(body.email);
+  const password = String(body.password || '');
+  if (!EMAIL_RE.test(email)) return send(res, 400, { error: 'Enter a valid email address.' });
+  if (!verifyPassword(password, user.salt, user.passwordHash)) return send(res, 401, { error: 'Wrong password.' });
+  if (email === normalizeEmail(user.email)) return send(res, 400, { error: 'That’s already your email.' });
+  if (await kv.get(emailKey(email))) return send(res, 409, { error: 'That email is already in use.' });
+
+  const oldEmail = user.email;
+  user.email = email;
+  user.verified = false;
+  await kv.set(userKey(s.sub), user);
+  await kv.set(emailKey(email), s.sub);
+  try { await kv.del(emailKey(oldEmail)); } catch (e) { /* ignore */ }
+  try { await sendVerifyEmail(req, user); } catch (e) { /* ignore */ }
+
+  return send(res, 200, { ok: true, email: user.email, verified: false });
+}
+
+// POST (session-gated) { password } — permanently delete the account and all
+// its data. Requires the current password. Clears the session cookie.
+async function deleteAccount(req, res) {
+  const s = requireSession(req);
+  if (!s || !s.sub) return send(res, 401, { error: 'unauthorized' });
+  const user = await kv.get(userKey(s.sub));
+  if (!user) return send(res, 401, { error: 'unauthorized' });
+
+  const body = await readJson(req);
+  const password = String(body.password || '');
+  if (!verifyPassword(password, user.salt, user.passwordHash)) return send(res, 401, { error: 'Wrong password.' });
+
+  try { await kv.del(entriesKey(s.sub)); } catch (e) { /* ignore */ }
+  try { await kv.del(emailKey(user.email)); } catch (e) { /* ignore */ }
+  try { await kv.del(userKey(s.sub)); } catch (e) { /* ignore */ }
+  // Best-effort: drop them from the founding-interest list too.
+  try {
+    const list = (await kv.get(FOUNDING_LIST_KEY)) || [];
+    const next = list.filter((x) => x && x.email !== user.email);
+    if (next.length !== list.length) await kv.set(FOUNDING_LIST_KEY, next);
+  } catch (e) { /* ignore */ }
+
+  clearCookie(res, SESSION_COOKIE);
+  return send(res, 200, { ok: true });
 }
