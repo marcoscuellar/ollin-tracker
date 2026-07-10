@@ -313,6 +313,22 @@
   .cb-card .cbm-back:hover{background:#fff;}
   .cb-card .cbm-close{position:absolute;top:16px;right:18px;background:none;border:none;color:rgba(255,255,255,.6);font-size:22px;line-height:1;cursor:pointer;}
   .cb-card .cbm-close:hover{color:#fff;}
+  /* Contacts › Add — manual single-contact form */
+  .cadd{background:var(--card);border:.5px solid var(--hairline);border-radius:var(--radius);box-shadow:var(--shadow);padding:24px 22px;margin-bottom:16px;}
+  .cadd h3{font-family:'Geist',sans-serif;font-weight:800;font-size:16px;margin:0 0 16px;}
+  .cadd-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px 14px;}
+  .cadd .fld{margin-bottom:0;}
+  .cadd .fld.full{grid-column:1 / -1;}
+  .cadd label{display:block;font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--grey);margin:0 0 6px;}
+  .cadd label .opt{color:var(--grey2);text-transform:none;letter-spacing:0;}
+  .cadd .auth-input{margin-bottom:0;}
+  .cadd textarea.auth-input{min-height:52px;resize:vertical;}
+  .cadd select.auth-input{cursor:pointer;}
+  .cadd .cadd-err{color:#A5341F;font-size:12.5px;min-height:16px;margin:10px 0 4px;}
+  .cadd .btn-primary{margin-top:6px;}
+  .cadd-or{display:flex;align-items:center;gap:12px;margin:6px 0 14px;color:var(--grey);font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;}
+  .cadd-or::before,.cadd-or::after{content:"";flex:1;height:.5px;background:var(--hairline);}
+  @media(max-width:620px){.cadd-grid{grid-template-columns:1fr;}}
   /* stat strip + momentum gauge */
   .statstrip{display:flex;align-items:center;background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px 24px;margin-bottom:34px;}
   .stat{display:flex;flex-direction:column;gap:4px;}
@@ -2002,7 +2018,7 @@
     var o=el('<div class="lp-overlay" id="upgradeOverlay"><div class="lock-card upgrade-card">'+
       '<button class="lp-close" id="upClose" aria-label="Close">&times;</button>'+
       '<div class="up-eyebrow">Unlimited</div>'+
-      '<h2 class="up-title">Keep drafting — no limits<span style="color:var(--navy)">.</span></h2>'+
+      '<h2 class="up-title">Keep drafting<span style="color:var(--navy)">.</span></h2>'+
       '<p class="up-body">'+esc(lead)+' Your first 25 outreaches are free. After that, it’s <b>$11/month</b> for unlimited AI drafting — no card required to start.</p>'+
       '<ul class="up-list"><li>Unlimited AI-drafted outreach</li><li>Unlimited contacts in cadence</li><li>Every thread and comeback, kept</li></ul>'+
       '<button class="btn" id="upGo" type="button">Continue — no card required</button>'+
@@ -2396,6 +2412,50 @@
     });
     m.appendChild(nav);
   }
+  // Add a single contact from the manual form. Returns an error string, or
+  // null on success. Cap enforcement is handled by the caller.
+  function addOneContact(f){
+    if(!f.name) return "Add the contact’s name.";
+    if(!f.company) return "Add the company.";
+    var a=state.accounts.find(function(x){ return normCompany(x.company)===normCompany(f.company); });
+    if(!a){ a={ id:"a"+Date.now(), company:f.company, start:todayStr(), threads:[] }; state.accounts.push(a); }
+    a.threads=a.threads||[];
+    var entry=Math.max(1, daysBetween(a.start, todayStr())+1); // day 1 = today
+    a.threads.push({ id:"t"+Date.now()+"_"+Math.floor(Math.random()*9999), name:f.name, title:f.title||"", persona:"Additional", entryDay:entry, channel:f.channel||"li", linkedin:f.linkedin||"", email:f.email||"", angle:f.angle||"", status:"active" });
+    persistAccounts();
+    return null;
+  }
+  // Manual "Add a contact" form — used by the Contacts › Add view.
+  function buildManualAdd(){
+    var accts={}; state.accounts.forEach(function(a){ accts[a.company]=1; });
+    var opts=Object.keys(accts).map(function(x){ return '<option value="'+esc(x)+'">'; }).join("");
+    var box=el('<div class="cadd">'+
+      '<h3>Add a contact</h3>'+
+      '<div class="cadd-grid">'+
+        '<div class="fld"><label>Full name</label><input class="auth-input" id="caName" placeholder="Jane Smith"></div>'+
+        '<div class="fld"><label>Company</label><input class="auth-input" id="caCompany" list="caAcctList" placeholder="Northwind Apparel"><datalist id="caAcctList">'+opts+'</datalist></div>'+
+        '<div class="fld"><label>Title <span class="opt">optional</span></label><input class="auth-input" id="caTitle" placeholder="VP Merchandising"></div>'+
+        '<div class="fld"><label>Channel</label><select class="auth-input" id="caChannel"><option value="li">LinkedIn</option><option value="em">Email</option><option value="call">Call</option></select></div>'+
+        '<div class="fld"><label>LinkedIn URL <span class="opt">optional</span></label><input class="auth-input" id="caLi" placeholder="linkedin.com/in/…"></div>'+
+        '<div class="fld"><label>Email <span class="opt">optional</span></label><input class="auth-input" id="caEmail" placeholder="jane@company.com"></div>'+
+        '<div class="fld full"><label>Outreach angle <span class="opt">optional — helps AI write a sharper first line</span></label><textarea class="auth-input" id="caAngle" rows="2" placeholder="e.g. just opened 3 senior backend roles"></textarea></div>'+
+      '</div>'+
+      '<div class="cadd-err" id="caErr"></div>'+
+      '<button class="btn-primary" id="caSave" type="button">Add to cadence</button>'+
+    '</div>');
+    box.querySelector("#caSave").addEventListener("click", function(){
+      var err=box.querySelector("#caErr"); err.textContent="";
+      var f={ name:(box.querySelector("#caName").value||"").trim(), company:(box.querySelector("#caCompany").value||"").trim(), title:(box.querySelector("#caTitle").value||"").trim(), channel:box.querySelector("#caChannel").value, linkedin:(box.querySelector("#caLi").value||"").trim(), email:(box.querySelector("#caEmail").value||"").trim(), angle:(box.querySelector("#caAngle").value||"").trim() };
+      if(!f.name){ err.textContent="Add the contact’s name."; return; }
+      if(!f.company){ err.textContent="Add the company."; return; }
+      if(freeLeft()<=0){ openUpgrade("You’ve reached your "+FREE_CONTACT_CAP+" free contacts."); return; }
+      var e=addOneContact(f);
+      if(e){ err.textContent=e; return; }
+      toast(f.name+" added to cadence.");
+      contactsMode="list"; render();
+    });
+    return box;
+  }
   // Add-contacts panel (upload + by-hand) — used by the Contacts › Add view.
   function buildAddSection(){
     var accts={}; state.accounts.forEach(function(a){ accts[a.company]=1; });
@@ -2451,14 +2511,13 @@
   // ---------- HOME: the daily tracker deck ----------
   function renderHome(m){
     var contacts=asContacts();
-    // PLAN — free users see where they stand + the path to unlimited
+    // PLAN — free users see where they stand + the path to unlimited.
+    // Unlimited/paid accounts get no banner.
     if(ACCOUNT && !isUnlimited()){
       var used=contactCount(), left=Math.max(0,FREE_CONTACT_CAP-used), near=used>=FREE_CONTACT_CAP;
       var pb=el('<div class="planbar'+(near?" full":"")+'"><span class="pb-count">'+used+' / '+FREE_CONTACT_CAP+' free contacts'+(near?" — full":(left<=5?" — "+left+" left":""))+'</span><a id="pbGo">Get unlimited</a></div>');
       pb.querySelector("#pbGo").addEventListener("click", function(){ openUpgrade(); });
       m.appendChild(pb);
-    } else if(ACCOUNT && planName()==="founding"){
-      m.appendChild(el('<div class="planbar founding"><span class="pb-count">Unlimited — no limits. We got you.</span></div>'));
     }
 
     // STAT STRIP + momentum gauge
@@ -2542,7 +2601,12 @@
     });
     m.appendChild(head);
 
-    if(mode==="add"){ m.appendChild(buildAddSection()); return; }
+    if(mode==="add"){
+      m.appendChild(buildManualAdd());
+      m.appendChild(el('<div class="cadd-or">or import a list</div>'));
+      m.appendChild(buildAddSection());
+      return;
+    }
 
     var del = mode==="delete";
     if(!contacts.length){ m.appendChild(el('<p class="hint" style="margin-top:6px">No contacts yet. Use “Add new” to import a list or add a few by hand.</p>')); return; }
