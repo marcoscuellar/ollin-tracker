@@ -103,8 +103,11 @@
   .btn-primary{font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;background:var(--ink);color:var(--cream);border:.5px solid var(--ink);padding:12px 20px;cursor:pointer;width:100%;}
   .btn-primary:hover{background:var(--hover);border-color:var(--hover);color:var(--cream);}
   .btn-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;}
-  .btn-mini{font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;background:none;border:.5px solid var(--hairline);color:var(--grey);padding:9px 12px;cursor:pointer;}
+  .btn-mini{display:inline-flex;align-items:center;justify-content:center;gap:6px;font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;background:none;border:.5px solid var(--hairline);color:var(--grey);padding:9px 12px;cursor:pointer;}
+  .btn-mini .ic{width:13px;height:13px;}
   .btn-mini:hover{border-color:var(--ink);color:var(--ink);}
+  .btn-mini.pop{background:var(--navy);border-color:var(--navy);color:#fff;font-weight:600;}
+  .btn-mini.pop:hover{background:var(--navy-2);border-color:var(--navy-2);color:#fff;}
   .btn-mini.danger:hover{border-color:#A5341F;color:#A5341F;}
 
   .acct{margin-bottom:16px;}
@@ -237,12 +240,12 @@
   .imp-file-row .btn{width:auto;padding:11px 16px;}
   .imp-file-name{font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:.04em;color:var(--grey);}
   .form.drag{outline:2px dashed var(--gold);outline-offset:3px;}
-  .uploadzone{border:1.5px dashed var(--hairline);background:var(--cream);padding:26px 18px;text-align:center;cursor:pointer;transition:border-color .15s,background .15s;margin-bottom:12px;}
-  .uploadzone:hover{border-color:var(--gold);}
-  .uploadzone.drag{border-color:var(--ink);background:var(--panel);}
-  .uz-plus{font-family:'Geist',sans-serif;font-weight:900;font-size:26px;color:var(--gold);line-height:1;}
-  .uz-title{font-family:'Geist',sans-serif;font-weight:900;font-size:16px;text-transform:uppercase;letter-spacing:-.01em;margin-top:8px;}
-  .uz-sub{font-size:12.5px;color:var(--grey);margin-top:5px;}
+  .uploadzone{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;border:1.5px dashed var(--navy);background:rgba(10,31,61,.05);padding:13px 16px;text-align:center;cursor:pointer;transition:border-color .15s,background .15s;margin-bottom:12px;border-radius:10px;}
+  .uploadzone:hover{border-color:var(--navy-2);background:rgba(10,31,61,.09);}
+  .uploadzone.drag{border-color:var(--navy-2);background:rgba(10,31,61,.14);}
+  .uz-plus{font-family:'Geist',sans-serif;font-weight:900;font-size:18px;color:var(--navy);line-height:1;}
+  .uz-title{font-family:'Geist',sans-serif;font-weight:800;font-size:13.5px;letter-spacing:-.01em;}
+  .uz-sub{font-size:12px;color:var(--grey);}
   .mini-add{margin-top:14px;border-top:.5px solid var(--hairline);padding-top:6px;}
   .mini-add>summary{font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--grey);cursor:pointer;list-style:none;padding:6px 0;}
   .mini-add>summary::-webkit-details-marker{display:none;}
@@ -288,7 +291,105 @@
   .nav-lock:hover{color:var(--ink);}
   .nav-bell{position:relative;width:9px;height:9px;border:1.5px solid var(--grey);border-radius:50%;}
   .nav-bell .dot{position:absolute;top:-3px;right:-3px;width:6px;height:6px;background:var(--gold);border-radius:50%;}
-  .nav-ava{width:30px;height:30px;border-radius:50%;background:var(--ink);color:var(--card);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;text-transform:uppercase;}
+  .nav-ava{width:30px;height:30px;border-radius:50%;background:var(--ink);color:var(--card);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;text-transform:uppercase;cursor:pointer;}
+  .nav-tab.has-caret::after{content:"▾";font-size:9px;margin-left:5px;opacity:.55;}
+  .nav-menu{position:fixed;z-index:200;background:var(--card);border:.5px solid var(--hairline);border-radius:12px;box-shadow:var(--shadow);padding:6px;min-width:190px;}
+  .nav-menu button{display:flex;align-items:center;gap:9px;width:100%;text-align:left;background:none;border:none;font-family:inherit;font-size:13.5px;color:var(--ink);padding:9px 12px;border-radius:8px;cursor:pointer;white-space:nowrap;}
+  .nm-ic{display:inline-flex;color:var(--grey);}
+  .ic{width:15px;height:15px;flex-shrink:0;display:inline-block;}
+  .strip-btn .ic{width:14px;height:14px;}
+  .nav-menu button:hover{background:rgba(45,45,45,.05);}
+  .nav-menu button.danger{color:#A5341F;}
+  .nav-menu .nm-sep{height:.5px;background:var(--hairline);margin:5px 4px;}
+  /* view header + segmented control (Contacts / Pipeline / Dashboard / etc.) */
+  .view-head{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:4px 0 18px;flex-wrap:wrap;}
+  .view-title{font-family:'Geist',sans-serif;font-weight:900;font-size:22px;letter-spacing:-.02em;}
+  .seg{display:inline-flex;gap:2px;background:var(--panel);border:.5px solid var(--hairline);border-radius:10px;padding:3px;}
+  .seg-btn{font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--grey);background:none;border:none;cursor:pointer;padding:8px 14px;border-radius:8px;}
+  .seg-btn.on{color:var(--ink);background:var(--card);box-shadow:var(--shadow);}
+  .cv-list{display:flex;flex-direction:column;gap:8px;}
+  .cv-list .pc-wrap .pcard.clickable{cursor:pointer;transition:box-shadow .15s,transform .1s,border-color .15s;}
+  .cv-list .pc-wrap .pcard.clickable:hover{box-shadow:0 8px 24px rgba(10,31,61,.12);transform:translateY(-2px);border-color:var(--navy);}
+  .cv-list .pc-wrap .pcard.expanded{border-color:var(--navy);}
+  /* BRB — the comeback as a full navy-fill popup card (GLVE) */
+  .cb-modal{position:fixed;inset:0;z-index:150;display:flex;align-items:center;justify-content:center;padding:24px;background:rgba(10,10,10,.55);}
+  .cb-card{position:relative;max-width:480px;width:100%;background:var(--navy);color:#fff;border-radius:20px;box-shadow:0 30px 80px rgba(10,31,61,.5);padding:40px 36px;}
+  .cb-card h2{font-family:'Geist',sans-serif;font-weight:900;font-size:26px;letter-spacing:-.02em;margin:0 0 10px;color:#fff;}
+  .cb-card .cbm-sub{font-size:14.5px;line-height:1.6;color:rgba(255,255,255,.72);margin:0 0 20px;}
+  .cb-card .cbm-note{font-family:'Geist',sans-serif;font-size:16px;line-height:1.55;color:#fff;border-left:2px solid var(--honey);padding-left:14px;margin:18px 0;}
+  .cb-card .cbm-meta{font-family:'Geist Mono',monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.55);margin-bottom:22px;}
+  .cb-card .cbm-back{font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;background:var(--cream);color:var(--navy);border:none;border-radius:10px;padding:14px 22px;cursor:pointer;font-weight:600;}
+  .cb-card .cbm-back:hover{background:#fff;}
+  .cb-card .cbm-close{position:absolute;top:16px;right:18px;background:none;border:none;color:rgba(255,255,255,.6);font-size:22px;line-height:1;cursor:pointer;}
+  .cb-card .cbm-close:hover{color:#fff;}
+  .cb-card .cbm-note-head{font-family:'Geist',sans-serif;font-weight:800;font-size:15px;letter-spacing:-.01em;color:#fff;margin:6px 0 4px;}
+  .cb-card .cbm-note-sub{font-size:12.5px;line-height:1.5;color:rgba(255,255,255,.6);margin:0 0 10px;}
+  .cb-card .cbm-note-in{width:100%;background:rgba(255,255,255,.08);border:.5px solid rgba(255,255,255,.2);border-radius:10px;color:#fff;font-family:'Geist',sans-serif;font-size:15px;line-height:1.5;padding:12px 14px;margin-bottom:20px;resize:vertical;}
+  .cb-card .cbm-note-in:focus{outline:none;border-color:rgba(255,255,255,.5);}
+  .cb-card .cbm-note-in::placeholder{color:rgba(255,255,255,.4);}
+  /* Contacts › Add — manual single-contact form */
+  .cadd{background:var(--card);border:.5px solid var(--hairline);border-radius:var(--radius);box-shadow:var(--shadow);padding:24px 22px;margin-bottom:16px;}
+  .cadd h3{font-family:'Geist',sans-serif;font-weight:800;font-size:16px;margin:0 0 16px;}
+  .cadd-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px 14px;}
+  .cadd .fld{margin-bottom:0;}
+  .cadd .fld.full{grid-column:1 / -1;}
+  .cadd label{display:block;font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--grey);margin:0 0 6px;}
+  .cadd label .opt{color:var(--grey2);text-transform:none;letter-spacing:0;}
+  .cadd .auth-input{margin-bottom:0;}
+  .cadd textarea.auth-input{min-height:52px;resize:vertical;}
+  .cadd select.auth-input{cursor:pointer;}
+  .cadd .cadd-err{color:#A5341F;font-size:12.5px;min-height:16px;margin:10px 0 4px;}
+  .cadd .btn-primary{margin-top:6px;}
+  .cadd-or{display:flex;align-items:center;gap:12px;margin:6px 0 14px;color:var(--grey);font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;}
+  .cadd-or::before,.cadd-or::after{content:"";flex:1;height:.5px;background:var(--hairline);}
+  @media(max-width:620px){.cadd-grid{grid-template-columns:1fr;}}
+  .importbox{background:rgba(10,31,61,.04);border:.5px solid rgba(10,31,61,.22);}
+  /* Dashboard — Today/Week/Month counts + CSV export */
+  .dash-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px;}
+  .dash-stat{background:var(--card);border:.5px solid var(--hairline);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px 20px;text-align:center;}
+  .dash-stat .ds-num{font-family:'Geist',sans-serif;font-weight:800;font-size:38px;letter-spacing:-.03em;line-height:1;color:var(--ink);}
+  .dash-stat .ds-lbl{font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--grey);margin-top:8px;}
+  .dash-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:6px;flex-wrap:wrap;}
+  .dash-total{font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--grey);}
+  @media(max-width:620px){.dash-stat{padding:16px 8px;}.dash-stat .ds-num{font-size:28px;}}
+  /* Manage — account page cards */
+  .mg-card{background:var(--card);border:.5px solid var(--hairline);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px 22px;margin-bottom:14px;}
+  .mg-card h3{font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--grey);margin:0 0 14px;}
+  .mg-row{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;}
+  .mg-row + .mg-row{margin-top:12px;padding-top:12px;border-top:.5px solid var(--hairline);}
+  .mg-label{font-size:14px;color:var(--ink);font-weight:500;}
+  .mg-label .mg-sub{display:block;font-size:12px;color:var(--grey);margin-top:2px;font-weight:400;}
+  .mg-soon{font-family:'Geist Mono',monospace;font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--grey);border:.5px solid var(--hairline);border-radius:6px;padding:5px 9px;white-space:nowrap;}
+  /* ADHD moment — button, pomodoro, just-do-one, breathe */
+  .strip-btn.adhd{border-color:var(--navy);color:var(--navy);}
+  .strip-btn.adhd:hover{background:var(--navy);color:#fff;}
+  .pomo{position:fixed;right:20px;bottom:20px;z-index:160;background:var(--navy);color:#fff;border-radius:16px;box-shadow:0 20px 50px rgba(10,31,61,.4);padding:16px 18px;width:184px;text-align:center;}
+  .pomo.brk{background:var(--green-d);}
+  .pomo .pomo-mode{font-family:'Geist Mono',monospace;font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.65);}
+  .pomo .pomo-time{font-family:'Geist',sans-serif;font-weight:800;font-size:40px;letter-spacing:-.03em;line-height:1.1;margin:2px 0 10px;}
+  .pomo .pomo-row{display:flex;gap:6px;justify-content:center;}
+  .pomo .pomo-row button{font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.06em;text-transform:uppercase;background:rgba(255,255,255,.15);color:#fff;border:none;border-radius:7px;padding:7px 10px;cursor:pointer;}
+  .pomo .pomo-row button:hover{background:rgba(255,255,255,.26);}
+  .jo-modal{position:fixed;inset:0;z-index:150;display:flex;align-items:center;justify-content:center;padding:24px;background:rgba(10,10,10,.55);}
+  .jo-card{max-width:440px;width:100%;background:var(--card);border-radius:20px;box-shadow:0 30px 80px rgba(0,0,0,.3);padding:32px 30px;text-align:left;}
+  .jo-card .jo-eyebrow{font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--grey);margin-bottom:6px;}
+  .jo-card h2{font-family:'Geist',sans-serif;font-weight:900;font-size:26px;letter-spacing:-.02em;margin:0 0 14px;}
+  .jo-card .jo-who{font-size:15px;color:var(--ink);}
+  .jo-card .jo-touch{font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--grey);margin:4px 0 12px;}
+  .jo-card .jo-script{width:100%;min-height:120px;background:var(--bg);border:.5px solid var(--hairline);border-radius:10px;padding:12px;font-family:'Geist',sans-serif;font-size:14px;line-height:1.5;color:var(--ink);resize:vertical;}
+  .jo-card .jo-actions{display:flex;gap:10px;margin:14px 0 10px;}
+  .jo-card .jo-copy{font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;background:none;border:.5px solid var(--hairline);color:var(--grey);border-radius:9px;padding:12px 16px;cursor:pointer;}
+  .jo-card .jo-copy:hover{border-color:var(--ink);color:var(--ink);}
+  .jo-card .jo-done{flex:1;font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;background:var(--ink);color:var(--cream);border:none;border-radius:9px;padding:12px;cursor:pointer;font-weight:600;}
+  .jo-card .jo-done:hover{background:var(--hover);}
+  .jo-card .jo-exit{background:none;border:none;color:var(--grey);font-size:12.5px;cursor:pointer;padding:6px 0;width:100%;text-align:center;}
+  .jo-card .jo-exit:hover{color:var(--ink);}
+  .br-card{text-align:center;color:#fff;}
+  .br-ring{width:120px;height:120px;border-radius:50%;border:2px solid rgba(255,255,255,.25);margin:0 auto 22px;display:flex;align-items:center;justify-content:center;animation:breathe 8s ease-in-out infinite;}
+  .br-dot{width:54px;height:54px;border-radius:50%;background:var(--navy-soft,#8FA3B8);}
+  @keyframes breathe{0%,100%{transform:scale(.72)}50%{transform:scale(1.18)}}
+  .br-word{font-family:'Geist',sans-serif;font-weight:800;font-size:22px;letter-spacing:-.01em;}
+  .br-left{font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:.1em;color:rgba(255,255,255,.6);margin:8px 0 18px;}
   /* stat strip + momentum gauge */
   .statstrip{display:flex;align-items:center;background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px 24px;margin-bottom:34px;}
   .stat{display:flex;flex-direction:column;gap:4px;}
@@ -1961,7 +2062,15 @@
   // ================= VAMOS UI (wired to existing accounts/threads/KV) =================
   var CH_LABEL = { li:"LinkedIn", em:"Email", call:"Call" };
   var STEP_NAMES = ["Outreach","Follow up","Nudge","Break up","Final attempt"];
-  var focusIdx=0, meterRevealed=false, navView="home", focusMode=false;
+  var focusIdx=0, meterRevealed=false, navView="home", focusMode=false, contactsMode="list";
+  // Line-art icons (no emoji anywhere in-app). stroke=currentColor, 24-grid.
+  var ICON={
+    spark:'<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5l1.7 5.4 5.4 1.7-5.4 1.7L12 17.7l-1.7-5.4L4.9 10.6l5.4-1.7z"/></svg>',
+    clock:'<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15.5 14"/></svg>',
+    target:'<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1" fill="currentColor" stroke="none"/></svg>',
+    wind:'<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9h11a3 3 0 1 0-3-3"/><path d="M3 14h13a3 3 0 1 1-3 3"/></svg>',
+    download:'<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v11"/><polyline points="8 10.5 12 14.5 16 10.5"/><path d="M4.5 19.5h15"/></svg>'
+  };
   var pipeSelect=false, pipeSel={};
   function selCount(){ var n=0; for(var k in pipeSel){ if(pipeSel[k]) n++; } return n; }
 
@@ -1978,7 +2087,7 @@
     var o=el('<div class="lp-overlay" id="upgradeOverlay"><div class="lock-card upgrade-card">'+
       '<button class="lp-close" id="upClose" aria-label="Close">&times;</button>'+
       '<div class="up-eyebrow">Unlimited</div>'+
-      '<h2 class="up-title">Keep drafting — no limits<span style="color:var(--navy)">.</span></h2>'+
+      '<h2 class="up-title">Keep drafting<span style="color:var(--navy)">.</span></h2>'+
       '<p class="up-body">'+esc(lead)+' Your first 25 outreaches are free. After that, it’s <b>$11/month</b> for unlimited AI drafting — no card required to start.</p>'+
       '<ul class="up-list"><li>Unlimited AI-drafted outreach</li><li>Unlimited contacts in cadence</li><li>Every thread and comeback, kept</li></ul>'+
       '<button class="btn" id="upGo" type="button">Continue — no card required</button>'+
@@ -2323,70 +2432,161 @@
     }
     return p;
   }
-  function navGo(view){
-    if(view==="home"){ try{ window.scrollTo({top:0,behavior:"smooth"}); }catch(e){ window.scrollTo(0,0); } return; }
-    var map={contacts:"addSection",pipeline:"secPipeline",activity:"secActivity",history:"secHistory",manage:"secManage"};
-    var id=map[view]; if(!id) return;
-    var t=document.getElementById(id); if(!t) return;
-    if(t.tagName==="DETAILS") t.open=true;
-    try{ t.scrollIntoView({behavior:"smooth",block:"start"}); }catch(e){}
+  // ---------- app navigation: real page router (one view at a time) ----------
+  function setView(v){ navView=v; closeNavMenu(); try{ window.scrollTo({top:0,behavior:"smooth"}); }catch(e){ window.scrollTo(0,0); } render(); }
+  function closeNavMenu(){ var x=document.getElementById("navMenu"); if(x) x.remove(); document.removeEventListener("click", navMenuOutside, true); }
+  function navMenuOutside(e){ var x=document.getElementById("navMenu"); if(x && !x.contains(e.target)) closeNavMenu(); }
+  function openMenu(anchor, items){
+    closeNavMenu();
+    var r=anchor.getBoundingClientRect();
+    var menu=el('<div class="nav-menu" id="navMenu"></div>');
+    items.forEach(function(it){
+      if(it.sep){ menu.appendChild(el('<div class="nm-sep"></div>')); return; }
+      var b=el('<button'+(it.danger?' class="danger"':'')+'>'+(it.icon?'<span class="nm-ic">'+it.icon+'</span>':'')+'<span>'+esc(it.label)+'</span></button>');
+      b.addEventListener("click", function(e){ e.stopPropagation(); closeNavMenu(); it.onClick(); });
+      menu.appendChild(b);
+    });
+    menu.style.top=(r.bottom+8)+"px";
+    menu.style.left=Math.max(12, Math.min(r.left, window.innerWidth-206))+"px";
+    document.body.appendChild(menu);
+    setTimeout(function(){ document.addEventListener("click", navMenuOutside, true); }, 0);
+  }
+  function buildNav(m){
+    var now=new Date();
+    var TABS=[["home","Home",false],["contacts","Contacts",true],["pipeline","Pipeline",false],["dashboard","Dashboard",false],["brb","BRB",false]];
+    var nav=el('<div class="nav"><div class="nav-logo">VAMOS</div><div class="nav-tabs" id="navTabs"></div><div class="nav-right"><span class="nav-date">'+DOW[now.getDay()]+" "+MON[now.getMonth()]+" "+now.getDate()+'</span><div class="nav-ava" id="navAva" title="Account">'+esc(avaInitial())+'</div></div></div>');
+    var ntabs=nav.querySelector("#navTabs");
+    TABS.forEach(function(t){
+      var b=el('<button class="nav-tab'+(t[2]?" has-caret":"")+(navView===t[0]?" active":"")+'">'+t[1]+'</button>');
+      b.addEventListener("click", function(e){
+        e.stopPropagation();
+        if(t[0]==="contacts"){
+          openMenu(b, [
+            {label:"Add new contact", onClick:function(){ contactsMode="add"; setView("contacts"); }},
+            {label:"See contacts", onClick:function(){ contactsMode="list"; setView("contacts"); }},
+            {label:"Delete contacts", danger:true, onClick:function(){ contactsMode="delete"; pipeSel={}; setView("contacts"); }}
+          ]);
+        } else if(t[0]==="brb"){ openComeback(); }
+        else setView(t[0]);
+      });
+      ntabs.appendChild(b);
+    });
+    nav.querySelector("#navAva").addEventListener("click", function(e){
+      e.stopPropagation();
+      openMenu(this, [
+        {label:"Manage account", onClick:function(){ setView("manage"); }},
+        {sep:true},
+        {label:"Log out", danger:true, onClick:function(){ logout(); }}
+      ]);
+    });
+    m.appendChild(nav);
+  }
+  // Add a single contact from the manual form. Returns an error string, or
+  // null on success. Cap enforcement is handled by the caller.
+  function addOneContact(f){
+    if(!f.name) return "Add the contact’s name.";
+    if(!f.company) return "Add the company.";
+    var a=state.accounts.find(function(x){ return normCompany(x.company)===normCompany(f.company); });
+    if(!a){ a={ id:"a"+Date.now(), company:f.company, start:todayStr(), threads:[] }; state.accounts.push(a); }
+    a.threads=a.threads||[];
+    var entry=Math.max(1, daysBetween(a.start, todayStr())+1); // day 1 = today
+    a.threads.push({ id:"t"+Date.now()+"_"+Math.floor(Math.random()*9999), name:f.name, title:f.title||"", persona:"Additional", entryDay:entry, channel:f.channel||"li", linkedin:f.linkedin||"", email:f.email||"", angle:f.angle||"", status:"active" });
+    persistAccounts();
+    return null;
+  }
+  // Manual "Add a contact" form — used by the Contacts › Add view.
+  function buildManualAdd(){
+    var accts={}; state.accounts.forEach(function(a){ accts[a.company]=1; });
+    var opts=Object.keys(accts).map(function(x){ return '<option value="'+esc(x)+'">'; }).join("");
+    var box=el('<div class="cadd">'+
+      '<h3>Add a contact</h3>'+
+      '<div class="cadd-grid">'+
+        '<div class="fld"><label>Full name</label><input class="auth-input" id="caName" placeholder="Jane Smith"></div>'+
+        '<div class="fld"><label>Company</label><input class="auth-input" id="caCompany" list="caAcctList" placeholder="Northwind Apparel"><datalist id="caAcctList">'+opts+'</datalist></div>'+
+        '<div class="fld"><label>Title <span class="opt">optional</span></label><input class="auth-input" id="caTitle" placeholder="VP Merchandising"></div>'+
+        '<div class="fld"><label>Channel</label><select class="auth-input" id="caChannel"><option value="li">LinkedIn</option><option value="em">Email</option><option value="call">Call</option></select></div>'+
+        '<div class="fld"><label>LinkedIn URL <span class="opt">optional</span></label><input class="auth-input" id="caLi" placeholder="linkedin.com/in/…"></div>'+
+        '<div class="fld"><label>Email <span class="opt">optional</span></label><input class="auth-input" id="caEmail" placeholder="jane@company.com"></div>'+
+        '<div class="fld full"><label>Outreach angle <span class="opt">optional — helps AI write a sharper first line</span></label><textarea class="auth-input" id="caAngle" rows="2" placeholder="e.g. just opened 3 senior backend roles"></textarea></div>'+
+      '</div>'+
+      '<div class="cadd-err" id="caErr"></div>'+
+      '<button class="btn-primary" id="caSave" type="button">Add to cadence</button>'+
+    '</div>');
+    box.querySelector("#caSave").addEventListener("click", function(){
+      var err=box.querySelector("#caErr"); err.textContent="";
+      var f={ name:(box.querySelector("#caName").value||"").trim(), company:(box.querySelector("#caCompany").value||"").trim(), title:(box.querySelector("#caTitle").value||"").trim(), channel:box.querySelector("#caChannel").value, linkedin:(box.querySelector("#caLi").value||"").trim(), email:(box.querySelector("#caEmail").value||"").trim(), angle:(box.querySelector("#caAngle").value||"").trim() };
+      if(!f.name){ err.textContent="Add the contact’s name."; return; }
+      if(!f.company){ err.textContent="Add the company."; return; }
+      if(freeLeft()<=0){ openUpgrade("You’ve reached your "+FREE_CONTACT_CAP+" free contacts."); return; }
+      var e=addOneContact(f);
+      if(e){ err.textContent=e; return; }
+      toast(f.name+" added to cadence.");
+      contactsMode="list"; render();
+    });
+    return box;
+  }
+  // Add-contacts panel (upload + by-hand) — used by the Contacts › Add view.
+  function buildAddSection(){
+    var accts={}; state.accounts.forEach(function(a){ accts[a.company]=1; });
+    var opts=Object.keys(accts).map(function(x){ return '<option value="'+esc(x)+'">'; }).join("");
+    var add=el('<details class="section importbox" id="addSection" open><summary><span class="sum-title">Import a list</span><span class="sum-count">CSV · Excel · Sheet</span></summary>'+
+      '<div class="uploadzone" id="uploadZone">'+
+        '<div class="uz-plus">+</div>'+
+        '<div class="uz-title">Add file</div>'+
+        '<div class="uz-sub">Drop a CSV or Excel file here, or click to browse</div>'+
+        '<input type="file" id="addFileInput" accept=".csv,.xlsx,.xls" hidden>'+
+      '</div>'+
+      '<p class="upload-fields"><b>Required:</b> Name · Company <span class="upload-dim">(Company = the client)</span><br><b>Optional:</b> Title · LinkedIn URL · Email · Touch 1–5 messages <span class="upload-dim">— no messages? VAMOS AI writes them for you (use them or not).</span></p>'+
+      '<div class="btn-row"><button class="btn-mini pop" id="sheetBtn">Import from Google Sheet</button></div>'+
+      '<details class="mini-add"><summary>Or add a few by hand</summary>'+
+        '<div class="form-full" style="margin-top:12px"><input id="acctInput" list="acctList" placeholder="Account (e.g., Skechers)"><datalist id="acctList">'+opts+'</datalist></div>'+
+        '<div class="form-full"><textarea id="bulkInput" rows="4" placeholder="One person per line:&#10;Jane Smith, VP Merchandising&#10;Luis Ortega, Sr Manager DTC"></textarea></div>'+
+        '<p class="hint">Name, Title — one per line. Each person starts the cadence today.</p>'+
+        '<button class="btn-primary" id="addBtn" type="button">Add to cadence</button>'+
+      '</details>'+
+      '<div id="importHost"></div></details>');
+    var fi=add.querySelector("#addFileInput"), uz=add.querySelector("#uploadZone");
+    uz.addEventListener("click", function(){ fi.click(); });
+    fi.addEventListener("change", function(e){ var file=e.target.files&&e.target.files[0]; if(file) handleImportFile(file); fi.value=""; });
+    uz.addEventListener("dragover", function(e){ e.preventDefault(); uz.classList.add("drag"); });
+    uz.addEventListener("dragleave", function(e){ uz.classList.remove("drag"); });
+    uz.addEventListener("drop", function(e){ e.preventDefault(); uz.classList.remove("drag"); var file=e.dataTransfer&&e.dataTransfer.files&&e.dataTransfer.files[0]; if(file) handleImportFile(file); });
+    add.querySelector("#addBtn").addEventListener("click", function(){ if(addQuick(add.querySelector("#acctInput").value, add.querySelector("#bulkInput").value)) setView("contacts"); });
+    add.querySelector("#sheetBtn").addEventListener("click", function(){ showSheetForm(add.querySelector("#importHost")); });
+    return add;
   }
 
   function render(){
     var m=document.getElementById("appMain"); if(!m) return;
     state.extra=state.extra||{};
     m.innerHTML="";
-    var contacts=asContacts();
-    var tk=todayStr(), total=sentToday(), goal=goalVal(), done=total>=goal, now=new Date();
-
-    // NAV
-    var TABS=[["home","Home"],["contacts","Contacts"],["pipeline","Pipeline"],["activity","Activity"],["history","History"],["manage","Manage"]];
-    var nav=el('<div class="nav"><div class="nav-logo">VAMOS</div><div class="nav-tabs" id="navTabs"></div><div class="nav-right"><span class="nav-date">'+DOW[now.getDay()]+" "+MON[now.getMonth()]+" "+now.getDate()+'</span><button class="nav-lock" id="lockBtn">Lock</button><div class="nav-bell"><span class="dot"></span></div><div class="nav-ava">'+esc(avaInitial())+'</div></div></div>');
-    var ntabs=nav.querySelector("#navTabs");
-    TABS.forEach(function(t){
-      var b=el('<button class="nav-tab'+(navView===t[0]?" active":"")+'">'+t[1]+'</button>');
-      b.addEventListener("click", function(){
-        navView=t[0];
-        Array.prototype.forEach.call(ntabs.children,function(x){ x.classList.remove("active"); });
-        b.classList.add("active");
-        navGo(t[0]);
-      });
-      ntabs.appendChild(b);
-    });
-    nav.querySelector("#lockBtn").addEventListener("click", function(){ logout(); });
-    m.appendChild(nav);
-
-    // VERIFY EMAIL — gentle, non-blocking nudge until confirmed
+    buildNav(m);
+    // account-level verify nudge shows on every view until confirmed
     if(ACCOUNT && ACCOUNT.email && ACCOUNT.verified===false){
       var vb=el('<div class="verifybar">Confirm your email to secure your account — check your inbox. <a id="vbResend">Resend</a></div>');
       vb.querySelector("#vbResend").addEventListener("click", resendVerify);
       m.appendChild(vb);
     }
+    var host=el('<div id="viewHost"></div>'); m.appendChild(host);
+    if(navView==="contacts") renderContacts(host);
+    else if(navView==="pipeline") renderPipeline(host);
+    else if(navView==="dashboard") renderDashboard(host);
+    else if(navView==="manage") renderManage(host);
+    else renderHome(host);
+    host.appendChild(el('<p class="foot">We got you.</p>'));
+    m.classList.toggle("focus", focusMode);
+  }
 
-    // PLAN — free users see where they stand + the path to unlimited
+  // ---------- HOME: the daily tracker deck ----------
+  function renderHome(m){
+    var contacts=asContacts();
+    // PLAN — free users see where they stand + the path to unlimited.
+    // Unlimited/paid accounts get no banner.
     if(ACCOUNT && !isUnlimited()){
       var used=contactCount(), left=Math.max(0,FREE_CONTACT_CAP-used), near=used>=FREE_CONTACT_CAP;
       var pb=el('<div class="planbar'+(near?" full":"")+'"><span class="pb-count">'+used+' / '+FREE_CONTACT_CAP+' free contacts'+(near?" — full":(left<=5?" — "+left+" left":""))+'</span><a id="pbGo">Get unlimited</a></div>');
       pb.querySelector("#pbGo").addEventListener("click", function(){ openUpgrade(); });
       m.appendChild(pb);
-    } else if(ACCOUNT && planName()==="founding"){
-      m.appendChild(el('<div class="planbar founding"><span class="pb-count">Unlimited — no limits. We got you.</span></div>'));
-    }
-
-    // COMEBACK — met by your own note, warm leads, and streak. No guilt, no catch-up.
-    var warmNow=contacts.filter(function(c){ return c.status==="warm"; }).length;
-    if(COMEBACK.show && !comebackDismissed && (state.handoffNote || warmNow)){
-      var away=COMEBACK.away, awayTxt = away===1 ? "since yesterday" : (away+" days away");
-      var bits=[]; if(warmNow) bits.push(warmNow+" warm "+(warmNow===1?"lead":"leads")+" waiting");
-      var st=streakWithBend(); if(st>0) bits.push(st+"-day streak intact");
-      var cb=el('<section class="comeback">'+
-        '<h2>Welcome back<span style="color:var(--honey)">.</span></h2>'+
-        '<p class="cb-sub">'+awayTxt+'. Nothing piled up — no catch-up screen. Pick up right where you left off.</p>'+
-        (state.handoffNote ? '<div class="cb-note">“'+esc(state.handoffNote)+'”</div>' : '')+
-        (bits.length ? '<div class="cb-meta">'+bits.join(" · ")+'</div>' : '')+
-        '<button class="cb-back">One tap back in</button></section>');
-      cb.querySelector(".cb-back").addEventListener("click", function(){ comebackDismissed=true; render(); });
-      m.appendChild(cb);
     }
 
     // STAT STRIP + momentum gauge
@@ -2401,9 +2601,15 @@
     strip.appendChild(el('<div class="stat-sep">·</div>'));
     strip.appendChild(buildMeter());
     var sr=el('<div class="strip-right"></div>');
+    var adhdBtn=el('<button class="strip-btn adhd" id="adhdBtn">'+ICON.spark+'ADHD moment</button>');
+    adhdBtn.addEventListener("click", function(e){ e.stopPropagation(); openMenu(adhdBtn, [
+      {label:"Pomodoro — 25 min", icon: ICON.clock, onClick: openPomodoro},
+      {label:"Just do one", icon: ICON.target, onClick: openJustOne},
+      {label:"Breathe — 30s", icon: ICON.wind, onClick: openBreathe}
+    ]); });
     var fmBtn=el('<button class="strip-btn'+(focusMode?" on":"")+'" id="fmBtn">◎ Focus mode</button>');
-    fmBtn.addEventListener("click", function(){ focusMode=!focusMode; m.classList.toggle("focus",focusMode); fmBtn.classList.toggle("on",focusMode); });
-    sr.appendChild(fmBtn); strip.appendChild(sr);
+    fmBtn.addEventListener("click", function(){ focusMode=!focusMode; document.getElementById("appMain").classList.toggle("focus",focusMode); fmBtn.classList.toggle("on",focusMode); });
+    sr.appendChild(adhdBtn); sr.appendChild(fmBtn); strip.appendChild(sr);
     m.appendChild(strip);
 
     // WARM
@@ -2429,7 +2635,7 @@
         '<p style="color:var(--grey);margin:12px auto 22px;max-width:440px;line-height:1.6">Drop in a CSV or Excel list — or add a few by hand — and VAMOS builds your daily queue: who to reach, what to say, when.</p>'+
         '<button class="btn" id="heroAdd" style="width:auto;display:inline-block;padding:14px 28px">Add contacts</button>'+
         '</div></div>');
-      hero.querySelector("#heroAdd").addEventListener("click", function(){ var a=document.getElementById("addSection"); if(a){ a.open=true; try{ a.scrollIntoView({behavior:"smooth",block:"center"}); }catch(e){} } });
+      hero.querySelector("#heroAdd").addEventListener("click", function(){ contactsMode="add"; setView("contacts"); });
       m.appendChild(hero);
     } else {
       var start=el('<div class="starthead"><div><div class="start-title">Start here<span style="color:var(--honey)">.</span></div><div class="start-sub">Everyone due for a touch today, most overdue first. Script, send, done.</div></div><div class="start-due">'+(dueList.length?dueList.length+" due":"all clear")+'</div></div>');
@@ -2437,54 +2643,108 @@
       var deckHost=el('<div id="deckHost"></div>');
       m.appendChild(deckHost);
       renderDeckInto(deckHost, dueList, warm);
+
+      // BEFORE YOU GO — one line to your future self (saved as handoffNote)
+      var ho=el('<section class="handoff"><h2>Before you go</h2><p class="hsub">One line to your future self. It’s the first thing you’ll see when you’re back — even days later.</p>'+
+        '<input id="handoffInput" maxlength="140" placeholder="What matters tomorrow?" value="'+esc(state.handoffNote||"")+'">'+
+        '<p class="hint" id="handoffHint">Saves automatically.</p></section>');
+      (function(){
+        var hi=ho.querySelector("#handoffInput"), hint=ho.querySelector("#handoffHint");
+        function save(){
+          var v=hi.value.trim();
+          if(v===(state.handoffNote||"")) return;
+          state.handoffNote=v; scheduleSave();
+          hint.innerHTML='<span class="saved">Saved. See you tomorrow.</span>';
+        }
+        hi.addEventListener("change", save);
+        hi.addEventListener("blur", save);
+      })();
+      m.appendChild(ho);
+    }
+  }
+
+  // ---------- CONTACTS: add / see / delete ----------
+  function renderContacts(m){
+    var contacts=asContacts();
+    var mode=contactsMode||"list";
+    var head=el('<div class="view-head"><h2 class="view-title">Contacts</h2><div class="seg" id="cSeg"></div></div>');
+    var seg=head.querySelector("#cSeg");
+    [["list","See"],["add","Add new"],["delete","Delete"]].forEach(function(s){
+      var b=el('<button class="seg-btn'+(mode===s[0]?" on":"")+'">'+s[1]+'</button>');
+      b.addEventListener("click", function(){ contactsMode=s[0]; if(s[0]==="delete") pipeSel={}; render(); });
+      seg.appendChild(b);
+    });
+    m.appendChild(head);
+
+    if(mode==="add"){
+      m.appendChild(buildManualAdd());
+      m.appendChild(el('<div class="cadd-or">or import a list</div>'));
+      m.appendChild(buildAddSection());
+      return;
     }
 
-    // ADD CONTACTS
-    var accts={}; state.accounts.forEach(function(a){ accts[a.company]=1; });
-    var opts=Object.keys(accts).map(function(x){ return '<option value="'+esc(x)+'">'; }).join("");
-    var add=el('<details class="section" id="addSection"><summary><span class="sum-title">+ Add contacts</span><span class="sum-count">upload a file</span></summary>'+
-      // PRIMARY — prominent drag-or-click upload
-      '<div class="uploadzone" id="uploadZone">'+
-        '<div class="uz-plus">+</div>'+
-        '<div class="uz-title">Add file</div>'+
-        '<div class="uz-sub">Drop a CSV or Excel file here, or click to browse</div>'+
-        '<input type="file" id="addFileInput" accept=".csv,.xlsx,.xls" hidden>'+
-      '</div>'+
-      '<p class="upload-fields"><b>Required:</b> Name · Company <span class="upload-dim">(Company = the client)</span><br><b>Optional:</b> Title · LinkedIn URL · Email · Touch 1–5 messages <span class="upload-dim">— no messages? VAMOS AI writes them for you (use them or not).</span></p>'+
-      '<div class="btn-row"><button class="btn-mini" id="sheetBtn">Import from Google Sheet</button></div>'+
-      // SECONDARY — type a few by hand
-      '<details class="mini-add"><summary>Or add a few by hand</summary>'+
-        '<div class="form-full" style="margin-top:12px"><input id="acctInput" list="acctList" placeholder="Account (e.g., Skechers)"><datalist id="acctList">'+opts+'</datalist></div>'+
-        '<div class="form-full"><textarea id="bulkInput" rows="4" placeholder="One person per line:&#10;Jane Smith, VP Merchandising&#10;Luis Ortega, Sr Manager DTC"></textarea></div>'+
-        '<p class="hint">Name, Title — one per line. Each person starts the cadence today.</p>'+
-        '<button class="btn-primary" id="addBtn" type="button">Add to cadence</button>'+
-      '</details>'+
-      '<div id="importHost"></div></details>');
-    var fi=add.querySelector("#addFileInput"), uz=add.querySelector("#uploadZone");
-    uz.addEventListener("click", function(){ fi.click(); });
-    fi.addEventListener("change", function(e){ var file=e.target.files&&e.target.files[0]; if(file) handleImportFile(file); fi.value=""; });
-    uz.addEventListener("dragover", function(e){ e.preventDefault(); uz.classList.add("drag"); });
-    uz.addEventListener("dragleave", function(e){ uz.classList.remove("drag"); });
-    uz.addEventListener("drop", function(e){ e.preventDefault(); uz.classList.remove("drag"); var file=e.dataTransfer&&e.dataTransfer.files&&e.dataTransfer.files[0]; if(file) handleImportFile(file); });
-    add.querySelector("#addBtn").addEventListener("click", function(){
-      if(addQuick(add.querySelector("#acctInput").value, add.querySelector("#bulkInput").value)) add.open=true;
-    });
-    add.querySelector("#sheetBtn").addEventListener("click", function(){ showSheetForm(add.querySelector("#importHost")); });
-    add.open = empty; // first-run: the one action that matters is open and prominent
-    m.appendChild(add);
+    var del = mode==="delete";
+    if(!contacts.length){ m.appendChild(el('<p class="hint" style="margin-top:6px">No contacts yet. Use “Add new” to import a list or add a few by hand.</p>')); return; }
 
-    if(!empty){
-    // PIPELINE (grouped by account, with rollups)
+    if(del){
+      var tools=el('<div class="pipe-tools"><button class="btn-mini danger" id="cDel">Delete selected (<span id="cvCount">'+selCount()+'</span>)</button><button class="btn-mini" id="cCancel">Cancel</button></div>');
+      tools.querySelector("#cDel").addEventListener("click", deleteSelected);
+      tools.querySelector("#cCancel").addEventListener("click", function(){ contactsMode="list"; pipeSel={}; render(); });
+      m.appendChild(tools);
+    }
+    var listWrap=el('<div class="cv-list"></div>');
+    contacts.slice().sort(function(a,b){ return (a.name||"").localeCompare(b.name||""); }).forEach(function(c){
+      var s=statusLabel(c), key=c.a.id+"|"+c.t.id;
+      if(del){
+        var row=el('<div class="pcard selectable'+(pipeSel[key]?" selected":"")+'">'+
+          '<div class="pc-check'+(pipeSel[key]?" on":"")+'"></div>'+
+          '<div class="pc-ava">'+esc(initials(c.name))+'</div>'+
+          '<div class="pc-main"><div class="pc-name">'+esc(c.name)+'</div><div class="pc-meta">'+esc((c.title||"")+(c.title&&c.account?" · ":"")+(c.account||""))+'</div></div>'+
+          '<div class="pc-status'+(s.gold?" gold":"")+'">'+s.txt+'</div>'+
+        '</div>');
+        row.addEventListener("click", function(){
+          pipeSel[key]=!pipeSel[key]; row.classList.toggle("selected"); row.querySelector(".pc-check").classList.toggle("on");
+          var cnt=document.getElementById("cvCount"); if(cnt) cnt.textContent=selCount();
+        });
+        listWrap.appendChild(row);
+        return;
+      }
+      // See mode — same expand-to-card logic as Pipeline
+      var wrap2=el('<div class="pc-wrap">'+
+        '<div class="pcard clickable">'+
+          '<div class="pc-ava">'+esc(initials(c.name))+'</div>'+
+          '<div class="pc-main"><div class="pc-name">'+esc(c.name)+'</div><div class="pc-meta">'+esc((c.title||"")+(c.title&&c.account?" · ":"")+(c.account||""))+'</div></div>'+
+          '<div class="pc-status'+(s.gold?" gold":"")+'">'+s.txt+'</div>'+
+          '<button class="pc-x" title="Remove">×</button>'+
+        '</div>'+
+        '<div class="pc-exec"></div></div>');
+      var pcard=wrap2.querySelector(".pcard"), exec=wrap2.querySelector(".pc-exec");
+      wrap2.querySelector(".pc-x").addEventListener("click", function(e){ e.stopPropagation(); removeContact(c); });
+      pcard.addEventListener("click", function(){
+        if(exec.classList.contains("open")){ exec.classList.remove("open"); exec.innerHTML=""; pcard.classList.remove("expanded"); return; }
+        exec.innerHTML=""; exec.classList.add("open"); pcard.classList.add("expanded");
+        var di=dueInfo(c);
+        exec.appendChild(di ? activeCard({c:c,i:di}, exec, [{c:c,i:di}], contacts.filter(function(x){ return x.status==="warm"; })) : pausedPanel(c));
+      });
+      listWrap.appendChild(wrap2);
+    });
+    m.appendChild(listWrap);
+  }
+
+  // ---------- PIPELINE: cadence view grouped by account ----------
+  function renderPipeline(m){
+    var contacts=asContacts();
+    m.appendChild(el('<div class="view-head"><h2 class="view-title">Pipeline</h2></div>'));
+    if(!contacts.length){ m.appendChild(el('<p class="hint" style="margin-top:6px">No contacts yet — add some under Contacts to see the cadence here.</p>')); return; }
     var groups={}; contacts.forEach(function(c){ (groups[c.account]=groups[c.account]||[]).push(c); });
     var totalC=contacts.length, acctN=Object.keys(groups).length;
-    var pipe=el('<details class="section" id="secPipeline"'+(pipeSelect?' open':'')+'><summary><span class="sum-title">Pipeline</span><span class="sum-count">'+(totalC?totalC+" contacts · "+acctN+" accounts":"empty")+'</span></summary><div class="cadence-row" id="cadRow"></div><p class="hint" style="margin-top:0;">The cadence every contact runs. Replies pause it automatically.</p><div id="pipeList"></div></details>');
+    var pipe=el('<details class="section" id="secPipeline" open><summary><span class="sum-title">Pipeline</span><span class="sum-count">'+(totalC?totalC+" contacts · "+acctN+" accounts":"empty")+'</span></summary><div class="cadence-row" id="cadRow"></div><p class="hint" style="margin-top:0;">The cadence every contact runs. Replies pause it automatically.</p><div id="pipeList"></div></details>');
     var cr=pipe.querySelector("#cadRow");
     CADENCE.forEach(function(s,idx){
       cr.appendChild(el('<span class="cad-step">Day '+(s.off+1)+" "+CH_LABEL[s.ch]+'</span>'));
       if(idx<CADENCE.length-1) cr.appendChild(el('<span class="cad-arrow">→</span>'));
     });
     var pl=pipe.querySelector("#pipeList");
-    // select-to-delete toolbar
     var tools=el('<div class="pipe-tools"></div>');
     if(!pipeSelect){
       var selBtn=el('<button class="btn-mini" id="pipeSelBtn">Select to delete</button>');
@@ -2536,7 +2796,7 @@
             if(exec.classList.contains("open")){ exec.classList.remove("open"); exec.innerHTML=""; pcard.classList.remove("expanded"); return; }
             exec.innerHTML=""; exec.classList.add("open"); pcard.classList.add("expanded");
             var di=dueInfo(c);
-            exec.appendChild(di ? activeCard({c:c,i:di}, exec, [{c:c,i:di}], warm) : pausedPanel(c));
+            exec.appendChild(di ? activeCard({c:c,i:di}, exec, [{c:c,i:di}], contacts.filter(function(x){ return x.status==="warm"; })) : pausedPanel(c));
           });
         }
         body.appendChild(wrap2);
@@ -2544,63 +2804,278 @@
       pl.appendChild(det);
     });
     m.appendChild(pipe);
+  }
 
-    // LAST 14 DAYS
-    var fort=el('<details class="section" id="secActivity"><summary><span class="sum-title">Last 14 days</span><span class="sum-count" id="fortCount"></span></summary><div class="day-row" id="dayRow"></div></details>');
-    var dr=fort.querySelector("#dayRow"), hit=0;
-    for(var i2=13;i2>=0;i2--){ var k=keyForOff(i2), t=dayTotal(k), cls="day-sq"; if(t>=goal){cls+=" hit";hit++;} else if(t>0)cls+=" partial"; if(i2===0)cls+=" today-marker"; var sq=el('<div class="'+cls+'"></div>'); sq.title=k+" — "+t+" touches"; dr.appendChild(sq); }
-    fort.querySelector("#fortCount").textContent=hit+" gold";
-    m.appendChild(fort);
-
-    // HISTORY — recent completed touches (date-grouped)
-    var touchMap={}; contacts.forEach(function(c){ (c.touches||[]).forEach(function(t,ix){ touchMap[t.id]={name:c.name,account:c.account,step:STEP_NAMES[ix]||("Touch "+(ix+1)),ch:CADENCE[ix]?CH_LABEL[CADENCE[ix].ch]:""}; }); });
+  // ---------- DASHBOARD: activity heatmap + history (reworked in a later phase) ----------
+  // CSV helpers — quote cells containing commas/quotes/newlines.
+  function csvCell(v){ v=(v==null?"":String(v)); return /[",\n]/.test(v) ? '"'+v.replace(/"/g,'""')+'"' : v; }
+  function downloadCompletedCsv(rowsData){
+    var rows=[["Name","Title","Company","Step","Channel","Completed"]];
+    rowsData.forEach(function(d){ rows.push([d.info.name,d.info.title||"",d.info.account||"",d.info.step,d.info.ch,d.date]); });
+    var csv=rows.map(function(r){ return r.map(csvCell).join(","); }).join("\n");
+    var blob=new Blob([csv],{type:"text/csv;charset=utf-8"});
+    var url=URL.createObjectURL(blob);
+    var a=document.createElement("a"); a.href=url; a.download="vamos-completed-"+todayStr()+".csv";
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
+    toast("CSV downloaded.");
+  }
+  function renderDashboard(m){
+    var contacts=asContacts();
+    m.appendChild(el('<div class="view-head"><h2 class="view-title">Dashboard</h2></div>'));
+    // completed touches (with meta) for counts, list, and export
+    var touchMap={}; contacts.forEach(function(c){ (c.touches||[]).forEach(function(t,ix){ touchMap[t.id]={name:c.name,title:c.title||"",account:c.account,step:STEP_NAMES[ix]||("Touch "+(ix+1)),ch:CADENCE[ix]?CH_LABEL[CADENCE[ix].ch]:""}; }); });
     var doneList=[]; for(var dk in state.done){ if(touchMap[dk]) doneList.push({key:dk,date:state.done[dk],info:touchMap[dk]}); }
     doneList.sort(function(a,b){ return (b.date||"").localeCompare(a.date||""); });
-    var hist=el('<details class="section" id="secHistory"><summary><span class="sum-title">History</span><span class="sum-count">'+(doneList.length?doneList.length+" sent":"empty")+'</span></summary><div id="histList"></div></details>');
-    var hl=hist.querySelector("#histList");
-    if(!doneList.length){ hl.appendChild(el('<p class="hint" style="margin:2px 0 4px;">Nothing marked done yet — completed touches show up here.</p>')); }
-    else { doneList.slice(0,60).forEach(function(d){
-      hl.appendChild(el('<div class="pcard"><div class="pc-ava">'+esc(initials(d.info.name))+'</div><div class="pc-main"><div class="pc-name">'+esc(d.info.name)+'</div><div class="pc-meta">'+esc(d.info.step+(d.info.ch?" · "+d.info.ch:"")+(d.info.account?" · "+d.info.account:""))+'</div></div><div class="pc-status">'+esc(d.date)+'</div></div>'));
-    }); }
-    m.appendChild(hist);
+    // counts: today / this week (from Monday) / this month
+    var today=todayStr(), ym=today.slice(0,7);
+    var weekStart=iso(addDays(today, -((new Date().getDay()+6)%7)));
+    var cToday=0,cWeek=0,cMonth=0;
+    doneList.forEach(function(d){ if(!d.date) return; if(d.date===today)cToday++; if(d.date>=weekStart)cWeek++; if(d.date.slice(0,7)===ym)cMonth++; });
+    var cards=el('<div class="dash-stats"></div>');
+    [["Today",cToday],["This week",cWeek],["This month",cMonth]].forEach(function(s){
+      cards.appendChild(el('<div class="dash-stat"><div class="ds-num">'+s[1]+'</div><div class="ds-lbl">'+s[0]+'</div></div>'));
+    });
+    m.appendChild(cards);
+    // export bar
+    var bar=el('<div class="dash-bar"><span class="dash-total">'+doneList.length+' completed outreach'+(doneList.length===1?"":"es")+' all-time</span><button class="btn-mini pop" id="dlCsv">'+ICON.download+'Download CSV</button></div>');
+    var dl=bar.querySelector("#dlCsv");
+    if(!doneList.length) dl.disabled=true; else dl.addEventListener("click", function(){ downloadCompletedCsv(doneList); });
+    m.appendChild(bar);
+    // recent completed
+    var list=el('<div class="cv-list" style="margin-top:6px"></div>');
+    if(!doneList.length){ list.appendChild(el('<p class="hint">Nothing completed yet — finished outreaches show up here, and export to CSV.</p>')); }
+    else doneList.slice(0,80).forEach(function(d){
+      list.appendChild(el('<div class="pcard"><div class="pc-ava">'+esc(initials(d.info.name))+'</div><div class="pc-main"><div class="pc-name">'+esc(d.info.name)+'</div><div class="pc-meta">'+esc(d.info.step+(d.info.ch?" · "+d.info.ch:"")+(d.info.account?" · "+d.info.account:""))+'</div></div><div class="pc-status">'+esc(d.date)+'</div></div>'));
+    });
+    m.appendChild(list);
+  }
 
-    // BEFORE YOU GO — one line to your future self (saved as handoffNote)
-    var ho=el('<section class="handoff"><h2>Before you go</h2><p class="hsub">One line to your future self. It’s the first thing you’ll see when you’re back — even days later.</p>'+
-      '<input id="handoffInput" maxlength="140" placeholder="What matters tomorrow?" value="'+esc(state.handoffNote||"")+'">'+
-      '<p class="hint" id="handoffHint">Saves automatically.</p></section>');
-    (function(){
-      var hi=ho.querySelector("#handoffInput"), hint=ho.querySelector("#handoffHint");
-      function save(){
-        var v=hi.value.trim();
-        if(v===(state.handoffNote||"")) return;
-        state.handoffNote=v; scheduleSave();
-        hint.innerHTML='<span class="saved">Saved. See you tomorrow.</span>';
-      }
-      hi.addEventListener("change", save);
-      hi.addEventListener("blur", save);
-    })();
-    m.appendChild(ho);
-    } // end !empty — Pipeline / Last-14 / History / handoff only show once there's data
+  // ---------- BRB: the comeback / re-entry ritual as a navy popup card ----------
+  function closeComeback(){ var x=document.getElementById("cbModal"); if(x) x.remove(); }
+  function openComeback(){
+    closeComeback();
+    var contacts=asContacts();
+    var warm=contacts.filter(function(c){ return c.status==="warm"; });
+    var away=COMEBACK.away||0;
+    var awayTxt = away<=0 ? "You’re here" : (away===1 ? "1 day away" : (away+" days away"));
+    var bits=[]; if(warm.length) bits.push(warm.length+" warm "+(warm.length===1?"lead":"leads")+" waiting");
+    var st=streakWithBend(); if(st>0) bits.push(st+"-day streak intact");
+    var ov=el('<div class="cb-modal" id="cbModal"><div class="cb-card">'+
+      '<button class="cbm-close" id="cbClose" aria-label="Close">&times;</button>'+
+      '<h2>Before you go<span style="color:var(--honey)">.</span></h2>'+
+      '<p class="cbm-sub">One line to your future self. It’s the first thing you’ll see when you’re back — even days later.</p>'+
+      '<textarea class="cbm-note-in" id="cbNote" maxlength="140" rows="2" placeholder="What matters tomorrow?">'+esc(state.handoffNote||"")+'</textarea>'+
+      (bits.length ? '<div class="cbm-meta">'+bits.join(" · ")+'</div>' : '')+
+      '<button class="cbm-back" id="cbBack">Take me to today</button>'+
+    '</div></div>');
+    function dismiss(){ comebackDismissed=true; closeComeback(); }
+    var noteEl=ov.querySelector("#cbNote");
+    function saveNote(){ var v=(noteEl.value||"").trim(); if(v!==(state.handoffNote||"")){ state.handoffNote=v; scheduleSave(); toast("Saved for next time."); } }
+    noteEl.addEventListener("change", saveNote);
+    ov.querySelector("#cbClose").addEventListener("click", function(){ saveNote(); dismiss(); });
+    ov.querySelector("#cbBack").addEventListener("click", function(){ saveNote(); dismiss(); if(navView!=="home") setView("home"); });
+    ov.addEventListener("click", function(e){ if(e.target===ov){ saveNote(); dismiss(); } });
+    document.body.appendChild(ov);
+  }
+  // Auto-surface the comeback on return: only when there's something to come
+  // back to (a note or a warm lead) and it hasn't been dismissed this session.
+  function maybeComeback(){
+    if(comebackDismissed) return;
+    var warmNow=asContacts().filter(function(c){ return c.status==="warm"; }).length;
+    if(COMEBACK.show && (state.handoffNote || warmNow)) openComeback();
+  }
 
-    // MANAGE + FOOT
-    var manage=el('<details class="section" id="secManage"><summary><span class="sum-title">Manage</span><span class="sum-count">identity · backup · cleanup</span></summary><div class="btn-row"><button class="btn-mini" id="senderBtn">Outreach identity</button><button class="btn-mini" id="todayBtn">Start everyone today</button><button class="btn-mini" id="expBtn">Export backup</button><button class="btn-mini" id="resBtn">Restore</button><button class="btn-mini" id="dupBtn">Delete duplicates</button><button class="btn-mini danger" id="clrBtn">Clear all</button></div><input type="file" id="resFile" accept="application/json,.json" style="display:none"></details>');
-    if(ACCOUNT && !isUnlimited()){
-      var proBtn=el('<button class="btn-mini gopro" id="goProBtn">★ Get unlimited</button>');
-      proBtn.addEventListener("click", function(){ openUpgrade(); });
-      manage.querySelector(".btn-row").insertBefore(proBtn, manage.querySelector(".btn-row").firstChild);
+  // ---------- ADHD moment: pomodoro · just-do-one · breathe ----------
+  var POMO=null;
+  function fmtClock(s){ var m=Math.floor(s/60), ss=s%60; return m+":"+(ss<10?"0":"")+ss; }
+  function pomoRender(){
+    var w=document.getElementById("pomo"); if(!w||!POMO) return;
+    w.querySelector(".pomo-time").textContent=fmtClock(POMO.remaining);
+    w.querySelector(".pomo-mode").textContent=POMO.mode==="work"?"Focus block":"Break";
+    w.classList.toggle("brk", POMO.mode==="break");
+    w.querySelector(".pomo-toggle").textContent=POMO.running?"Pause":"Start";
+  }
+  function pomoTick(){
+    if(!POMO||!POMO.running) return;
+    POMO.remaining--;
+    if(POMO.remaining<=0){
+      var wasWork=POMO.mode==="work";
+      POMO.mode=wasWork?"break":"work";
+      POMO.remaining=wasWork?5*60:25*60;
+      POMO.running=false; // wait for them to choose to start the next block
+      toast(wasWork?"Time. Take 5 — step away.":"Break’s over. One block, that’s it.");
     }
-    manage.querySelector("#senderBtn").addEventListener("click", function(){ openSenderForm(); });
-    manage.querySelector("#todayBtn").addEventListener("click", startEveryoneToday);
-    manage.querySelector("#expBtn").addEventListener("click", doExport);
-    manage.querySelector("#dupBtn").addEventListener("click", doDedupe);
-    manage.querySelector("#clrBtn").addEventListener("click", doClear);
-    var rf=manage.querySelector("#resFile");
-    manage.querySelector("#resBtn").addEventListener("click", function(){ rf.click(); });
-    rf.addEventListener("change", function(){ if(rf.files&&rf.files[0]) doRestore(rf.files[0]); rf.value=""; });
-    m.appendChild(manage);
+    pomoRender();
+  }
+  function closePomodoro(){ if(POMO&&POMO.id) clearInterval(POMO.id); POMO=null; var w=document.getElementById("pomo"); if(w) w.remove(); }
+  function openPomodoro(){
+    if(document.getElementById("pomo")){ return; }
+    POMO={remaining:25*60, running:true, mode:"work", id:setInterval(pomoTick,1000)};
+    var w=el('<div class="pomo" id="pomo"><div class="pomo-mode">Focus block</div><div class="pomo-time">25:00</div><div class="pomo-row"><button class="pomo-toggle">Pause</button><button class="pomo-reset">Reset</button><button class="pomo-close">✕</button></div></div>');
+    w.querySelector(".pomo-toggle").addEventListener("click", function(){ POMO.running=!POMO.running; pomoRender(); });
+    w.querySelector(".pomo-reset").addEventListener("click", function(){ POMO.mode="work"; POMO.remaining=25*60; POMO.running=true; pomoRender(); });
+    w.querySelector(".pomo-close").addEventListener("click", closePomodoro);
+    document.body.appendChild(w);
+    pomoRender();
+  }
+  // Just do one — show a single due card, big and alone. Finishing offers "one more".
+  function closeJustOne(){ var x=document.getElementById("joModal"); if(x) x.remove(); }
+  function openJustOne(){
+    closeJustOne();
+    var contacts=asContacts(), due=[];
+    contacts.forEach(function(c){ var i=dueInfo(c); if(i&&i.overdueDays>=0) due.push({c:c,i:i}); });
+    due.sort(function(x,y){ return y.i.overdueDays-x.i.overdueDays; });
+    if(!due.length){ toast("Nothing due — you’re clear. Breathe."); return; }
+    var it=due[0], c=it.c, i=it.i;
+    var scriptVal=state.notes[i.touch.id] || fillTemplate(TEMPLATES[i.ch], c);
+    var ov=el('<div class="jo-modal" id="joModal"><div class="jo-card">'+
+      '<div class="jo-eyebrow">One thing · '+due.length+' due</div>'+
+      '<h2>Just this one<span style="color:var(--honey)">.</span></h2>'+
+      '<div class="jo-who"><b>'+esc(c.name)+'</b> · '+esc((c.title||"")+(c.title?" · ":"")+(c.account||""))+'</div>'+
+      '<div class="jo-touch">'+CH_LABEL[i.ch]+' · Touch '+i.stepNum+' of '+c.touches.length+'</div>'+
+      '<textarea class="jo-script">'+esc(scriptVal)+'</textarea>'+
+      '<div class="jo-actions"><button class="jo-copy">Copy</button><button class="jo-done">I did it ✓</button></div>'+
+      '<button class="jo-exit">That’s enough for now</button>'+
+    '</div></div>');
+    var ta=ov.querySelector(".jo-script");
+    ta.addEventListener("change", function(){ state.notes[i.touch.id]=ta.value; persistNotes(); });
+    ov.querySelector(".jo-copy").addEventListener("click", function(){ copy(ta.value||""); });
+    ov.querySelector(".jo-done").addEventListener("click", function(){
+      completeTouch(c); // marks done + re-renders the app underneath
+      closeJustOne();
+      var left=asContacts().filter(function(x){ var di=dueInfo(x); return di&&di.overdueDays>=0; }).length;
+      if(left>0){ toast("Nice. One more?"); setTimeout(openJustOne, 90); }
+      else toast("That’s the list. Huge.");
+    });
+    ov.querySelector(".jo-exit").addEventListener("click", closeJustOne);
+    ov.addEventListener("click", function(e){ if(e.target===ov) closeJustOne(); });
+    document.body.appendChild(ov);
+  }
+  // Breathe — a 30s guided box-breath.
+  function openBreathe(){
+    var x=document.getElementById("brModal"); if(x) x.remove();
+    var left=30, id=null;
+    var ov=el('<div class="jo-modal" id="brModal"><div class="br-card"><div class="br-ring"><div class="br-dot"></div></div><div class="br-word">Breathe in…</div><div class="br-left">30s</div><button class="jo-exit" style="color:rgba(255,255,255,.7)">I’m good</button></div></div>');
+    function stop(){ if(id) clearInterval(id); var e=document.getElementById("brModal"); if(e) e.remove(); }
+    var words=["Breathe in…","Hold…","Breathe out…","Hold…"];
+    ov.querySelector(".jo-exit").addEventListener("click", stop);
+    ov.addEventListener("click", function(e){ if(e.target===ov) stop(); });
+    document.body.appendChild(ov);
+    var wEl=ov.querySelector(".br-word"), lEl=ov.querySelector(".br-left");
+    id=setInterval(function(){
+      left--;
+      if(left<=0){ stop(); toast("Back. One small thing now."); return; }
+      lEl.textContent=left+"s";
+      wEl.textContent=words[Math.floor((30-left)/4)%4];
+    },1000);
+  }
 
-    m.appendChild(el('<p class="foot">We got you.</p>'));
-    m.classList.toggle("focus", focusMode);
+  // ---------- MANAGE: account + data (expanded in a later phase) ----------
+  function renderManage(m){
+    m.appendChild(el('<div class="view-head"><h2 class="view-title">Account</h2></div>'));
+
+    // ACCOUNT — email + destructive actions
+    var acct=el('<div class="mg-card"><h3>Account</h3>'+
+      '<div class="mg-row"><div class="mg-label">Signed in as<span class="mg-sub">'+esc((ACCOUNT&&ACCOUNT.email)||"")+(ACCOUNT&&ACCOUNT.verified===false?" · unverified":"")+'</span></div><button class="btn-mini" id="mgEmail">Change email</button></div>'+
+      '<div class="mg-row"><div class="mg-label">Delete account<span class="mg-sub">Permanently remove your account and all data.</span></div><button class="btn-mini danger" id="mgDelete">Delete account</button></div>'+
+    '</div>');
+    acct.querySelector("#mgEmail").addEventListener("click", openChangeEmail);
+    acct.querySelector("#mgDelete").addEventListener("click", openDeleteAccount);
+    m.appendChild(acct);
+
+    // BILLING — plan + payment (coming soon)
+    var planTxt = isUnlimited() ? "Unlimited" : "Free — first 25 outreaches";
+    var bill=el('<div class="mg-card"><h3>Billing</h3>'+
+      '<div class="mg-row"><div class="mg-label">Plan<span class="mg-sub">'+esc(planTxt)+'</span></div>'+(isUnlimited()?'<span class="mg-soon">Active</span>':'<button class="btn-mini pop" id="mgUpgrade">Get unlimited</button>')+'</div>'+
+      '<div class="mg-row"><div class="mg-label">Payment method<span class="mg-sub">$11/month after your first 25 outreaches.</span></div><span class="mg-soon">Coming soon</span></div>'+
+    '</div>');
+    var up=bill.querySelector("#mgUpgrade"); if(up) up.addEventListener("click", function(){ openUpgrade(); });
+    m.appendChild(bill);
+
+    // OUTREACH IDENTITY
+    var idName=(ACCOUNT&&ACCOUNT.sender&&ACCOUNT.sender.name)||"Not set yet";
+    var idCo=(ACCOUNT&&ACCOUNT.sender&&ACCOUNT.sender.company)||"";
+    var idn=el('<div class="mg-card"><h3>Outreach identity</h3>'+
+      '<div class="mg-row"><div class="mg-label">'+esc(idName)+(idCo?'<span class="mg-sub">'+esc(idCo)+'</span>':'<span class="mg-sub">How AI introduces you</span>')+'</div><button class="btn-mini" id="mgIdentity">Edit</button></div>'+
+    '</div>');
+    idn.querySelector("#mgIdentity").addEventListener("click", function(){ openSenderForm(); });
+    m.appendChild(idn);
+
+    // DATA — backup + cleanup
+    var data=el('<div class="mg-card"><h3>Data</h3><div class="btn-row"><button class="btn-mini" id="todayBtn">Start everyone today</button><button class="btn-mini" id="expBtn">Export backup</button><button class="btn-mini" id="resBtn">Restore</button><button class="btn-mini" id="dupBtn">Delete duplicates</button><button class="btn-mini danger" id="clrBtn">Clear all</button></div><input type="file" id="resFile" accept="application/json,.json" style="display:none"></div>');
+    data.querySelector("#todayBtn").addEventListener("click", startEveryoneToday);
+    data.querySelector("#expBtn").addEventListener("click", doExport);
+    data.querySelector("#dupBtn").addEventListener("click", doDedupe);
+    data.querySelector("#clrBtn").addEventListener("click", doClear);
+    var rf=data.querySelector("#resFile");
+    data.querySelector("#resBtn").addEventListener("click", function(){ rf.click(); });
+    rf.addEventListener("change", function(){ if(rf.files&&rf.files[0]) doRestore(rf.files[0]); rf.value=""; });
+    m.appendChild(data);
+
+    // LOG OUT
+    var out=el('<div class="btn-row" style="margin-top:2px"><button class="btn-mini" id="mgLogout">Log out</button></div>');
+    out.querySelector("#mgLogout").addEventListener("click", function(){ logout(); });
+    m.appendChild(out);
+  }
+  // Change email — collects the new address + password, then hits the
+  // change-email endpoint (added in the backend phase).
+  function openChangeEmail(){
+    var ov=el('<div class="sender-overlay"><div class="sender-card">'+
+      '<button class="sc-close" id="ceClose" aria-label="Close">&times;</button>'+
+      '<h2>Change email</h2>'+
+      '<p class="sc-help">Enter your new email and password. We’ll send a confirmation link to the new address; your login changes once confirmed.</p>'+
+      '<div class="fld"><label>Current email</label><input class="auth-input" value="'+esc((ACCOUNT&&ACCOUNT.email)||"")+'" disabled></div>'+
+      '<div class="fld"><label>New email</label><input class="auth-input" id="ceNew" type="email" placeholder="you@company.com"></div>'+
+      '<div class="fld"><label>Password</label><input class="auth-input" id="cePw" type="password" placeholder="Confirm it’s you"></div>'+
+      '<div class="sc-err" id="ceErr"></div>'+
+      '<button class="btn" id="ceSave">Send confirmation</button>'+
+    '</div></div>');
+    ov.querySelector("#ceClose").addEventListener("click", function(){ ov.remove(); });
+    ov.querySelector("#ceSave").addEventListener("click", async function(){
+      var err=ov.querySelector("#ceErr"); err.textContent="";
+      var email=(ov.querySelector("#ceNew").value||"").trim(), pw=ov.querySelector("#cePw").value||"";
+      if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){ err.textContent="Enter a valid email address."; return; }
+      if(!pw){ err.textContent="Enter your password."; return; }
+      var btn=ov.querySelector("#ceSave"), bl=btn.textContent; btn.disabled=true; btn.textContent="Sending…";
+      try{
+        var r=await fetch("/api/auth?action=change-email",{method:"POST",headers:{"Content-Type":"application/json"},credentials:"same-origin",body:JSON.stringify({email:email,password:pw})});
+        var d=await r.json().catch(function(){ return {}; });
+        if(!r.ok||!d.ok) throw new Error(d.error||"Couldn’t update — try again.");
+        if(ACCOUNT){ ACCOUNT.email=d.email||email; if(d.verified!=null) ACCOUNT.verified=d.verified; }
+        ov.remove(); render(); toast("Almost there — confirm from your new inbox.");
+      }catch(e){ err.textContent=(e&&e.message)||"Couldn’t update — try again."; btn.disabled=false; btn.textContent=bl; }
+    });
+    document.body.appendChild(ov);
+    ov.querySelector("#ceNew").focus();
+  }
+  // Delete account — double confirm (type DELETE + password), then purge.
+  function openDeleteAccount(){
+    var ov=el('<div class="sender-overlay"><div class="sender-card">'+
+      '<button class="sc-close" id="daClose" aria-label="Close">&times;</button>'+
+      '<h2>Delete account</h2>'+
+      '<p class="sc-help">This permanently deletes your account, contacts, drafts, and history. It cannot be undone.</p>'+
+      '<div class="fld"><label>Type DELETE to confirm</label><input class="auth-input" id="daType" placeholder="DELETE" autocomplete="off"></div>'+
+      '<div class="fld"><label>Password</label><input class="auth-input" id="daPw" type="password"></div>'+
+      '<div class="sc-err" id="daErr"></div>'+
+      '<button class="btn" id="daGo" style="background:#A5341F;border-color:#A5341F">Delete my account</button>'+
+    '</div></div>');
+    ov.querySelector("#daClose").addEventListener("click", function(){ ov.remove(); });
+    ov.querySelector("#daGo").addEventListener("click", async function(){
+      var err=ov.querySelector("#daErr"); err.textContent="";
+      var typed=(ov.querySelector("#daType").value||"").trim(), pw=ov.querySelector("#daPw").value||"";
+      if(typed!=="DELETE"){ err.textContent="Type DELETE to confirm."; return; }
+      if(!pw){ err.textContent="Enter your password."; return; }
+      var btn=ov.querySelector("#daGo"), bl=btn.textContent; btn.disabled=true; btn.textContent="Deleting…";
+      try{
+        var r=await fetch("/api/auth?action=delete-account",{method:"POST",headers:{"Content-Type":"application/json"},credentials:"same-origin",body:JSON.stringify({password:pw})});
+        var d=await r.json().catch(function(){ return {}; });
+        if(!r.ok||!d.ok) throw new Error(d.error||"Couldn’t delete — try again.");
+        ov.remove(); ACCOUNT=null; clearState(); comebackDismissed=false; navView="home"; closeComeback(); showApp(false); toast("Your account was deleted.");
+      }catch(e){ err.textContent=(e&&e.message)||"Couldn’t delete — try again."; btn.disabled=false; btn.textContent=bl; }
+    });
+    document.body.appendChild(ov);
+    ov.querySelector("#daType").focus();
   }
 
   wireLanding();
