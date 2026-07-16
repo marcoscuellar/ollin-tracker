@@ -851,26 +851,6 @@
   .upgrade-card .up-list li::before{color:var(--navy);}
   .upgrade-card .btn{background:var(--navy);border-color:var(--navy);color:#fff;}
   .upgrade-card .btn:hover{background:var(--navy-2);border-color:var(--navy-2);color:#fff;}
-  /* Today card — Linear-black active deck card. Colors only; fonts/layout unchanged. */
-  .dc.dark{background:#0A0A0A;color:#fff;}
-  .dc.dark .dc-meta{color:rgba(255,255,255,.6);}
-  .dc.dark .dc-touch span{color:rgba(255,255,255,.6);}
-  .dc.dark .dc-due{background:rgba(255,255,255,.1);color:#fff;border-color:rgba(255,255,255,.16);}
-  .dc.dark .dc-due.over{background:rgba(224,169,58,.16);color:var(--honey);border-color:rgba(224,169,58,.4);}
-  .dc.dark .tl-arrow{color:rgba(255,255,255,.55);}
-  .dc.dark .tl-arrow:hover{color:#fff;}
-  .dc.dark .tl-node{background:transparent;border-color:rgba(255,255,255,.28);color:rgba(255,255,255,.55);}
-  .dc.dark .tl-step.done .tl-node,.dc.dark .tl-step.active .tl-node{background:var(--honey);border-color:var(--honey);color:#1c0a00;}
-  .dc.dark .tl-line{background:rgba(255,255,255,.18);}
-  .dc.dark .tl-step.done .tl-line{background:var(--honey);}
-  .dc.dark .tl-label{color:rgba(255,255,255,.5);}
-  .dc.dark .tl-step.active .tl-label{color:#fff;}
-  .dc.dark .eyebrow{color:rgba(255,255,255,.55);}
-  .dc.dark .dc-script{border-top-color:rgba(255,255,255,.14);}
-  .dc.dark .copy-btn{color:rgba(255,255,255,.6);border-color:rgba(255,255,255,.18);}
-  .dc.dark .copy-btn:hover{color:#fff;border-color:rgba(255,255,255,.4);}
-  .dc.dark .dc-act.done{background:var(--honey);border-color:var(--honey);color:#1c0a00;}
-  .dc.dark .dc-act.done:hover{background:var(--amber-d);border-color:var(--amber-d);color:#1c0a00;}
 
   /* ===================== VAMOS landing · GLVE / Marcos Cuellar system ===================== */
   .site{
@@ -2365,7 +2345,7 @@
     var over = i.overdueDays>0 ? " over" : "";
     var scriptVal = state.notes[i.touch.id] || fillTemplate(TEMPLATES[i.ch], c);
     var sub = i.stepNum===1 ? "First outreach due — script, send, done." : "Touch "+i.stepNum+" — script, send, done.";
-    var card=el('<div class="dc deckcard active dark">'+
+    var card=el('<div class="dc deckcard active">'+
       '<div class="dc-head"><div class="dc-ava">'+esc(initials(c.name))+'</div><div><div class="dc-name">'+esc(c.name)+'</div><div class="dc-meta">'+esc((c.title||"")+(c.title&&c.account?" · ":"")+(c.account||""))+'</div></div><div class="dc-due'+over+'">'+duePill(i)+'</div></div>'+
       '<div class="dc-navrow"><div class="dc-touch"><b>Touch '+i.stepNum+' of '+c.touches.length+'</b><span>'+sub+'</span></div></div>'+
       '<div class="tl-row"><button class="tl-arrow" id="dcBack" title="Previous contact">‹</button>'+timelineHTML(c,false)+'<button class="tl-arrow" id="dcNext" title="Next contact">›</button></div>'+
