@@ -2266,6 +2266,40 @@
     };
     reader.readAsText(file);
   }
+  // Pulls whatever this browser saved to localStorage before/outside login
+  // (a separate key namespace apiSave() never touches) and merges it into
+  // the signed-in account's cloud data, skipping accounts already present by id.
+  async function doUploadLocal(){
+    var raw=await sGet("tracker:accounts");
+    var localAccounts=[]; try{ localAccounts=JSON.parse(raw)||[]; }catch(e){}
+    if(!localAccounts.length){ toast("No local data found on this device"); return; }
+
+    var localDone={}, localNotes={}, localExtra={};
+    try{ localDone=JSON.parse(await sGet("tracker:done"))||{}; }catch(e){}
+    try{ localNotes=JSON.parse(await sGet("tracker:notes"))||{}; }catch(e){}
+    try{ localExtra=JSON.parse(await sGet("tracker:extra"))||{}; }catch(e){}
+    var localSheetUrl=(await sGet("tracker:sheetUrl"))||"";
+    var localHandoff=(await sGet("tracker:handoffNote"))||"";
+
+    if(!confirm("Found "+localAccounts.length+" account(s) saved on this device. Add them to your VAMOS account? Existing cloud data is kept — matching accounts are skipped.")) return;
+
+    var existingIds={}; state.accounts.forEach(function(x){ existingIds[x.id]=true; });
+    var added=0;
+    localAccounts.forEach(function(acc){
+      if(existingIds[acc.id]) return;
+      state.accounts.push(acc); added++;
+    });
+    Object.keys(localDone).forEach(function(k){ if(!(k in state.done)) state.done[k]=localDone[k]; });
+    Object.keys(localNotes).forEach(function(k){ if(!(k in state.notes)) state.notes[k]=localNotes[k]; });
+    Object.keys(localExtra).forEach(function(k){ if(!(k in state.extra)) state.extra[k]=localExtra[k]; });
+    if(!state.sheetUrl && localSheetUrl) state.sheetUrl=localSheetUrl;
+    if(!state.handoffNote && localHandoff) state.handoffNote=localHandoff;
+    if(!state.activeId && state.accounts.length) state.activeId=state.accounts[0].id;
+    state.seeded=true;
+
+    persistAccounts(); render();
+    toast(added ? ("Uploaded "+added+" account(s) from this device") : "Already up to date — nothing new to add");
+  }
   function doDedupe(){
     var c=countDuplicates();
     if(!c.accounts && !c.threads){ toast("No duplicates found"); return; }
@@ -2815,6 +2849,23 @@
   // ---------- DASHBOARD: activity heatmap + history (reworked in a later phase) ----------
   // CSV helpers — quote cells containing commas/quotes/newlines.
   function csvCell(v){ v=(v==null?"":String(v)); return /[",\n]/.test(v) ? '"'+v.replace(/"/g,'""')+'"' : v; }
+  function doExportContactsCsv(){
+    var rows=[["Company","Name","Title","Persona","LinkedIn","Email","Start date"]], n=0;
+    state.accounts.forEach(function(a){
+      (a.threads||[]).forEach(function(t){
+        rows.push([a.company||"", t.name||"", t.title||"", t.persona||"", t.linkedin||"", t.email||"", a.start||""]);
+        n++;
+      });
+    });
+    if(!n){ toast("No contacts to export"); return; }
+    var csv=rows.map(function(r){ return r.map(csvCell).join(","); }).join("\n");
+    var blob=new Blob([csv],{type:"text/csv;charset=utf-8"});
+    var url=URL.createObjectURL(blob);
+    var a=document.createElement("a"); a.href=url; a.download="vamos-contacts-"+todayStr()+".csv";
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
+    toast("Contacts CSV downloaded ("+n+")");
+  }
   function downloadCompletedCsv(rowsData){
     var rows=[["Name","Title","Company","Step","Channel","Completed"]];
     rowsData.forEach(function(d){ rows.push([d.info.name,d.info.title||"",d.info.account||"",d.info.step,d.info.ch,d.date]); });
@@ -3009,9 +3060,11 @@
     m.appendChild(idn);
 
     // DATA — backup + cleanup
-    var data=el('<div class="mg-card"><h3>Data</h3><div class="btn-row"><button class="btn-mini" id="todayBtn">Start everyone today</button><button class="btn-mini" id="expBtn">Export backup</button><button class="btn-mini" id="resBtn">Restore</button><button class="btn-mini" id="dupBtn">Delete duplicates</button><button class="btn-mini danger" id="clrBtn">Clear all</button></div><input type="file" id="resFile" accept="application/json,.json" style="display:none"></div>');
+    var data=el('<div class="mg-card"><h3>Data</h3><div class="btn-row"><button class="btn-mini" id="todayBtn">Start everyone today</button><button class="btn-mini" id="expBtn">Export backup</button><button class="btn-mini" id="expCsvBtn">Export contacts (CSV)</button><button class="btn-mini" id="resBtn">Restore</button><button class="btn-mini" id="upLocalBtn">Upload local data</button><button class="btn-mini" id="dupBtn">Delete duplicates</button><button class="btn-mini danger" id="clrBtn">Clear all</button></div><input type="file" id="resFile" accept="application/json,.json" style="display:none"></div>');
     data.querySelector("#todayBtn").addEventListener("click", startEveryoneToday);
     data.querySelector("#expBtn").addEventListener("click", doExport);
+    data.querySelector("#expCsvBtn").addEventListener("click", doExportContactsCsv);
+    data.querySelector("#upLocalBtn").addEventListener("click", doUploadLocal);
     data.querySelector("#dupBtn").addEventListener("click", doDedupe);
     data.querySelector("#clrBtn").addEventListener("click", doClear);
     var rf=data.querySelector("#resFile");
