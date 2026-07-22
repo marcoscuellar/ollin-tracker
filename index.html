@@ -901,6 +901,11 @@
   .lp-login-row input:focus{border-color:var(--ollin-maroon);}
   .lp-login-row button{display:flex;align-items:center;justify-content:center;width:44px;height:44px;border:none;border-radius:var(--r-3);background:var(--ollin-maroon);color:#fff;cursor:pointer;flex-shrink:0;}
   .lp-login-row button:hover{background:var(--honey-d);}
+  .lp-login-row input.hide{display:none;}
+  .lp-login-group{display:flex;flex-direction:column;align-items:center;gap:12px;}
+  .lp-err{font-size:12.5px;color:var(--ollin-maroon);min-height:1em;}
+  .lp-signup{font-size:13px;color:var(--ink-3);}
+  .lp-signup a{color:var(--ollin-maroon);font-weight:600;text-decoration:underline;cursor:pointer;}
   .lp-contact{font-size:13px;color:var(--ink-3);}
   .lp-contact a{color:var(--ollin-maroon);font-weight:600;text-decoration:underline;}
   /* --- buttons --- */
@@ -1075,10 +1080,15 @@
   <div class="site">
     <div class="lp-splash">
       <div class="gl-mark brandmark"><svg viewBox="0 0 72 62" width="52" height="45"><circle cx="36" cy="36" r="21" stroke="#16130F" stroke-width="2.5" fill="none"/><circle cx="36" cy="6" r="5" fill="#1E9DA8"/><circle class="mv-dot" cx="61.98" cy="51" r="9" fill="#A83246"/><circle cx="10.02" cy="51" r="5" fill="#F5B700"/></svg><span class="bm-word">ōllin</span><span class="bm-tag">Movement</span></div>
-      <div class="lp-login-row">
-        <label for="lpEmailInput">Login:</label>
-        <input type="email" id="lpEmailInput" placeholder="you@work.com" aria-label="Email address">
-        <button type="button" id="lpLoginGo" aria-label="Log in"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
+      <div class="lp-login-group">
+        <form id="lpLoginForm" class="lp-login-row" autocomplete="on">
+          <label for="lpEmailInput">Login:</label>
+          <input type="email" id="lpEmailInput" name="email" autocomplete="username" placeholder="you@work.com" aria-label="Email address">
+          <input type="password" id="lpPassInput" name="password" autocomplete="current-password" placeholder="Password" aria-label="Password" class="hide">
+          <button type="submit" id="lpLoginGo" aria-label="Log in"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
+        </form>
+        <p class="lp-err" id="lpErr"></p>
+        <p class="lp-signup">New to <span class="bm-word" style="font-size:15px">öllin</span>? <a id="lpSignupLink">Create an account</a></p>
       </div>
       <p class="lp-contact">For more info email <a href="mailto:marcosmcuellar@gmail.com">Marcos Cuellar</a></p>
     </div>
@@ -1741,11 +1751,37 @@
   function closeAuth(){ document.getElementById("authOverlay").classList.add("hide"); }
   function wireLanding(){
     var by=function(x){ return document.getElementById(x); };
-    // Splash email field → carry the address straight into the login modal.
-    var go=by("lpLoginGo"), ei=by("lpEmailInput");
-    function toLogin(){ openAuth("login", ei ? ei.value : ""); }
-    if(go) go.addEventListener("click", toLogin);
-    if(ei) ei.addEventListener("keydown", function(e){ if(e.key==="Enter"){ e.preventDefault(); toLogin(); } });
+    // Splash IS the login form — no popup. Step 1: email → reveal password. Step 2: submit logs in directly.
+    var form=by("lpLoginForm"), ei=by("lpEmailInput"), pi=by("lpPassInput"), go=by("lpLoginGo"), errEl=by("lpErr");
+    function showLpErr(m){ if(errEl) errEl.textContent=m||""; }
+    if(form) form.addEventListener("submit", async function(e){
+      e.preventDefault();
+      var email=(ei.value||"").trim();
+      if(!email){ showLpErr("Enter your email."); ei.focus(); return; }
+      if(pi.classList.contains("hide")){
+        showLpErr("");
+        pi.classList.remove("hide");
+        pi.focus();
+        return;
+      }
+      var password=pi.value||"";
+      if(!password){ showLpErr("Enter your password."); return; }
+      showLpErr("");
+      go.disabled=true;
+      try{
+        var r=await fetch("/api/auth?action=login",{method:"POST",headers:{"Content-Type":"application/json"},credentials:"same-origin",body:JSON.stringify({email:email,password:password})});
+        var d=await r.json().catch(function(){ return {}; });
+        if(!r.ok || !d.ok) throw new Error(d.error||"Wrong email or password.");
+        ACCOUNT={email:d.email,plan:d.plan,verified:d.verified,sender:d.sender||null};
+        await afterAuthLoad();
+        computeComeback();
+        enterAppOrOnboard();
+      }catch(err){
+        showLpErr((err&&err.message)||"Something went wrong. Try again.");
+      }
+      go.disabled=false;
+    });
+    var su=by("lpSignupLink"); if(su) su.addEventListener("click", function(){ openAuth("signup"); });
     if(by("authClose")) by("authClose").addEventListener("click", closeAuth);
     var ov=by("authOverlay"); if(ov) ov.addEventListener("click", function(e){ if(e.target===ov) closeAuth(); });
   }
