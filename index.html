@@ -1,9 +1,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>VAMOS. — Tracker</title>
+<title>öllin movement — Tracker</title>
+<link rel="icon" type="image/svg+xml" href="assets/ollin-mark.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800;900&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800;900&family=Geist+Mono:wght@400;500;600&family=Sora:wght@500;700;800&display=swap" rel="stylesheet">
 <style>
   :root{
     --ink:#0a0a0a; --cream:#FFFFFF; --card:#FFFFFF; --gold:#0a0a0a; --blue:#1B2E52; --blue900:#1B2E52; --honey:#E0A93A; --grey:#6B6B6B; --tint:#E9EBF1;
@@ -12,6 +13,8 @@
     --hairline:rgba(17,17,16,.12); --panel:#F5F5F5;
     /* vertical accents (reserved for future) */
     --cobalt:#3B77C2; --magenta:#B8438A; --verde:#3E9B4F;
+    /* öllin movement brand mark */
+    --ollin-ink:#16130F; --ollin-teal:#1E9DA8; --ollin-maroon:#A83246; --ollin-gold:#F5B700;
   }
   *{margin:0;padding:0;box-sizing:border-box;}
   html,body{background:var(--bg);color:var(--ink);}
@@ -281,6 +284,10 @@
   .pc-wrap .pcard.selected{border-color:var(--ink);background:var(--panel);}
   .nav-logo{font-family:'Geist',sans-serif;font-weight:900;font-size:19px;letter-spacing:-.03em;}
   .nav-logo .way{color:var(--honey);}
+  .brandmark{display:inline-flex;align-items:center;gap:8px;}
+  .brandmark svg{display:block;flex-shrink:0;}
+  .brandmark .bm-word{font-family:'Sora',sans-serif;font-weight:800;letter-spacing:-.04em;color:var(--ollin-ink);}
+  .brandmark .bm-tag{font-family:var(--mono, 'Geist Mono', monospace);font-weight:600;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ollin-maroon);margin-left:2px;}
   .nav-tabs{display:flex;align-items:center;gap:2px;}
   .nav-tab{font-size:14px;color:var(--grey);background:none;border:none;cursor:pointer;padding:9px 15px;border-radius:9px;font-family:inherit;white-space:nowrap;}
   .nav-tab:hover{color:var(--ink);background:rgba(45,45,45,.04);}
@@ -1048,7 +1055,7 @@
 <div class="lock hide" id="lockScreen">
   <div class="site">
     <header class="gl-head"><div class="wrap gl-bar">
-      <div class="gl-mark">VAMOS<span class="m">· we got you.</span></div>
+      <div class="gl-mark brandmark"><svg viewBox="0 0 72 62" width="26" height="22"><circle cx="36" cy="36" r="21" stroke="#16130F" stroke-width="2.5" fill="none"/><circle cx="36" cy="6" r="5" fill="#1E9DA8"/><circle cx="61.98" cy="51" r="9" fill="#A83246"/><circle cx="10.02" cy="51" r="5" fill="#F5B700"/></svg><span class="bm-word">ōllin</span><span class="m">· we got you.</span></div>
       <div style="display:flex;align-items:center;gap:20px;">
         <span class="statuspill live"><span class="dot"></span>Early access · live</span>
         <button class="btn-m" id="lpLogin">Log in</button>
@@ -1271,7 +1278,7 @@
     <div class="lock-card">
       <button class="lp-close" id="authClose" aria-label="Close">&times;</button>
       <div class="logo-lockup">
-        <div class="ll-word">VAMOS</div>
+        <div class="ll-word brandmark"><svg viewBox="0 0 72 62" width="52" height="45"><circle cx="36" cy="36" r="21" stroke="#16130F" stroke-width="2.5" fill="none"/><circle cx="36" cy="6" r="5" fill="#1E9DA8"/><circle cx="61.98" cy="51" r="9" fill="#A83246"/><circle cx="10.02" cy="51" r="5" fill="#F5B700"/></svg><span class="bm-word">ōllin</span></div>
         <div class="ll-rule"></div>
         <div class="ll-tag">We got you.</div>
       </div>
@@ -2510,7 +2517,7 @@
   function buildNav(m){
     var now=new Date();
     var TABS=[["home","Home",false],["contacts","Contacts",true],["pipeline","Pipeline",false],["dashboard","Dashboard",false],["brb","BRB",false]];
-    var nav=el('<div class="nav"><div class="nav-logo">VAMOS</div><div class="nav-tabs" id="navTabs"></div><div class="nav-right"><span class="nav-date">'+DOW[now.getDay()]+" "+MON[now.getMonth()]+" "+now.getDate()+'</span><div class="nav-ava" id="navAva" title="Account">'+esc(avaInitial())+'</div></div></div>');
+    var nav=el('<div class="nav"><div class="nav-logo brandmark"><svg viewBox="0 0 72 62" width="22" height="19"><circle cx="36" cy="36" r="21" stroke="#16130F" stroke-width="2.5" fill="none"/><circle cx="36" cy="6" r="5" fill="#1E9DA8"/><circle cx="61.98" cy="51" r="9" fill="#A83246"/><circle cx="10.02" cy="51" r="5" fill="#F5B700"/></svg><span class="bm-word">ōllin</span></div><div class="nav-tabs" id="navTabs"></div><div class="nav-right"><span class="nav-date">'+DOW[now.getDay()]+" "+MON[now.getMonth()]+" "+now.getDate()+'</span><div class="nav-ava" id="navAva" title="Account">'+esc(avaInitial())+'</div></div></div>');
     var ntabs=nav.querySelector("#navTabs");
     TABS.forEach(function(t){
       var b=el('<button class="nav-tab'+(t[2]?" has-caret":"")+(navView===t[0]?" active":"")+'">'+t[1]+'</button>');

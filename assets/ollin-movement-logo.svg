@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="360" height="300" viewBox="0 0 360 300" fill="none">
+  <rect width="360" height="300" fill="#ffffff"></rect>
+  
+  <g transform="translate(120 20) scale(1.6667)">
+    <circle cx="36" cy="36" r="21" stroke="#16130F" stroke-width="2.5" fill="none"></circle>
+    <circle cx="36" cy="6" r="5" fill="#1E9DA8"></circle>
+    <circle cx="36" cy="6" r="9" fill="#A83246" transform="rotate(120 36 36)"></circle>
+    <circle cx="36" cy="6" r="5" fill="#F5B700" transform="rotate(240 36 36)"></circle>
+  </g>
+  
+  <g transform="translate(180 210)">
+    <text x="0" y="0" text-anchor="middle" font-family="Sora, sans-serif" font-weight="800" font-size="52" letter-spacing="-2.3" fill="#16130F">ollin</text>
+    
+    <rect x="-59" y="-46" width="22" height="4.5" rx="1.5" fill="#16130F"></rect>
+  </g>
+  <text x="180" y="248" text-anchor="middle" font-family="Sora, sans-serif" font-weight="500" font-size="17" letter-spacing="7" fill="#A83246">MOVEMENT</text>
+</svg>
