@@ -890,6 +890,19 @@
   .gl-bar{display:flex;align-items:center;justify-content:space-between;padding:20px 0;gap:16px;}
   .gl-mark{font-weight:700;font-size:22px;letter-spacing:-.04em;}
   .gl-mark .m{font-family:var(--mono);font-weight:600;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);margin-left:14px;}
+  /* minimal splash: logo, login, contact — the entire logged-out landing page */
+  .lp-splash{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:34px;padding:24px;text-align:center;}
+  .lp-splash .gl-mark{font-size:34px;}
+  .lp-splash .gl-mark svg{width:52px;height:45px;}
+  .lp-splash .bm-tag{font-size:13px;}
+  .lp-login-row{display:flex;align-items:center;gap:10px;}
+  .lp-login-row label{font-family:var(--mono);font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);}
+  .lp-login-row input{font-family:var(--font);font-size:15px;padding:12px 16px;border:1px solid var(--line);border-radius:var(--r-3);width:220px;outline:none;transition:border-color .15s;}
+  .lp-login-row input:focus{border-color:var(--ollin-maroon);}
+  .lp-login-row button{display:flex;align-items:center;justify-content:center;width:44px;height:44px;border:none;border-radius:var(--r-3);background:var(--ollin-maroon);color:#fff;cursor:pointer;flex-shrink:0;}
+  .lp-login-row button:hover{background:var(--honey-d);}
+  .lp-contact{font-size:13px;color:var(--ink-3);}
+  .lp-contact a{color:var(--ollin-maroon);font-weight:600;text-decoration:underline;}
   /* --- buttons --- */
   .btn-p,.btn-s,.btn-a,.btn-m{display:inline-flex;align-items:center;gap:10px;font-family:var(--font);font-weight:600;letter-spacing:-.01em;cursor:pointer;border:none;text-decoration:none;transition:all .25s var(--ease);font-size:14px;}
   .btn-p{background:var(--ink);color:#fff;padding:16px 26px;border-radius:var(--r-3);}
@@ -1060,224 +1073,15 @@
 
 <div class="lock hide" id="lockScreen">
   <div class="site">
-    <header class="gl-head"><div class="wrap gl-bar">
-      <div class="gl-mark brandmark"><svg viewBox="0 0 72 62" width="26" height="22"><circle cx="36" cy="36" r="21" stroke="#16130F" stroke-width="2.5" fill="none"/><circle cx="36" cy="6" r="5" fill="#1E9DA8"/><circle class="mv-dot" cx="61.98" cy="51" r="9" fill="#A83246"/><circle cx="10.02" cy="51" r="5" fill="#F5B700"/></svg><span class="bm-word">ōllin</span><span class="m">· we got you.</span></div>
-      <div style="display:flex;align-items:center;gap:20px;">
-        <span class="statuspill live"><span class="dot"></span>Early access · live</span>
-        <button class="btn-m" id="lpLogin">Log in</button>
+    <div class="lp-splash">
+      <div class="gl-mark brandmark"><svg viewBox="0 0 72 62" width="52" height="45"><circle cx="36" cy="36" r="21" stroke="#16130F" stroke-width="2.5" fill="none"/><circle cx="36" cy="6" r="5" fill="#1E9DA8"/><circle class="mv-dot" cx="61.98" cy="51" r="9" fill="#A83246"/><circle cx="10.02" cy="51" r="5" fill="#F5B700"/></svg><span class="bm-word">ōllin</span><span class="bm-tag">Movement</span></div>
+      <div class="lp-login-row">
+        <label for="lpEmailInput">Login:</label>
+        <input type="email" id="lpEmailInput" placeholder="you@work.com" aria-label="Email address">
+        <button type="button" id="lpLoginGo" aria-label="Log in"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
       </div>
-    </div></header>
-
-    <main>
-      <!-- HERO -->
-      <section class="gl-hero"><div class="wrap">
-        <div class="eyebrow">[ Daily outreach · built for ADHD brains ]</div>
-        <h1 class="gl-h1">You bring the list.<span class="light"> VAMOS works the plan.</span></h1>
-        <p class="gl-sub">From client intel to campaigns, scripts, replies, and follow-ups — VAMOS keeps the whole outreach loop in one place so you can come back and keep moving.</p>
-        <div class="gl-cta">
-          <button class="btn-p lp-open">Try it free<svg class="btn-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
-          <a class="btn-s" href="#how">See how it works</a>
-        </div>
-        <div class="gl-hero-note statuspill"><span class="mono" style="color:var(--ink-3);font-size:11px;">First 25 contacts free. No card required.</span></div>
-      </div></section>
-
-      <!-- THREAD SECTION -->
-      <section class="gl-thread"><div class="wrap"><div class="t-inner">
-        <div class="eyebrow" style="margin-bottom:24px;">[ The thread ]</div>
-        <h2 class="t-head"><span class="l1">The day didn't fall apart.</span><span class="l2">The thread did.</span></h2>
-        <div class="t-story">
-          <p>You were in motion. Coffee was hitting. The list was open. You knew the next move.</p>
-          <p>Then Slack. A call. One tiny interruption.</p>
-          <p>Now you're back, staring at the same list like it belongs to someone else.</p>
-          <p class="t-beat">It's 9:16am. You're already tired.</p>
-        </div>
-        <p class="t-turn">VAMOS keeps the thread for you.</p>
-        <p class="t-close">It gathers the client intel, builds the campaign, writes the scripts, tracks replies, and keeps the next step ready — <b>so one interruption doesn't erase the whole plan.</b></p>
-      </div></div></section>
-
-      <!-- IMPACT BAR -->
-      <div class="wrap"><div class="impactbar">
-        <div class="ib-head">
-          <div class="eyebrow">[ What VAMOS gives back ]</div>
-          <h2 class="gl-h2">Less restarting.<span class="light"> More vámonos.</span></h2>
-        </div>
-        <div class="ib-grid">
-          <div class="ib"><div class="ib-lbl">Thread</div><div class="ib-val">1</div><div class="ib-desc">Kept together across contacts, campaigns, replies, and follow-ups.</div></div>
-          <div class="ib"><div class="ib-lbl">Rebuilds</div><div class="ib-val">0</div><div class="ib-desc">When Slack, calls, or life pull you away.</div></div>
-          <div class="ib"><div class="ib-lbl">Free sendouts</div><div class="ib-val">25</div><div class="ib-desc">To try outreach without the mental reset.</div></div>
-        </div>
-      </div></div>
-
-      <!-- CONFESSIONAL -->
-      <section class="gl-sec"><div class="wrap">
-        <div class="gl-sec-head">
-          <div class="eyebrow">[ Things we've all heard ]</div>
-          <h2 class="gl-h2">You've heard the advice.<span class="light"> It never worked.</span></h2>
-        </div>
-        <div class="gl-said">
-          <ul class="gl-said-list">
-            <li>"Just try harder."</li>
-            <li>"It's not that hard."</li>
-            <li>"Just focus."</li>
-          </ul>
-          <div>
-            <div class="gl-said-card">I tried the "ADHD-friendly" apps. Most of them felt like they were built by people guessing. So I stopped waiting for the right tool and built the one I needed — the one that keeps up with the way my brain actually moves. Turns out, it works.</div>
-            <div class="gl-said-tag"><span class="tag standalone">— Marcos, founder</span></div>
-          </div>
-        </div>
-      </div></section>
-
-      <!-- ENGINES -->
-      <section class="gl-sec" id="how"><div class="wrap">
-        <div class="gl-sec-head">
-          <div class="eyebrow">[ The system ]</div>
-          <h2 class="gl-h2">Six moving parts.<span class="light"> One screen to run them.</span></h2>
-          <p class="gl-lead">Every part exists for one reason: reduce the decisions, keep the momentum. Load your list once — VAMOS handles the cadence, the script, and the queue.</p>
-        </div>
-        <div class="gl-engines">
-          <article class="enginecard"><div class="ec-top"><span class="ec-num">01</span><span class="tag pipeline">Daily</span></div>
-            <svg class="ec-icon" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><polygon points="22,2 2,9.5 10,13.5 14,22"/><line x1="10" y1="13.5" x2="22" y2="2"/></svg>
-            <h3>The daily card</h3><p>Open to one contact, one card — name, title, step, and the script, ready to send. Review it, skip it, or log it. Then the next card.</p>
-            <div class="ec-foot">Start here →</div></article>
-          <article class="enginecard"><div class="ec-top"><span class="ec-num">02</span><span class="tag pipeline">Cadence</span></div>
-            <svg class="ec-icon" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="12,4 10.5,9.5 12,11 13.5,9.5"/><polygon points="12,20 10.5,14.5 12,13 13.5,14.5"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg>
-            <h3>The 5-touch cadence</h3><p>Outreach → Follow up → Nudge → Break up → Final attempt. Every contact runs it automatically; the queue rebuilds each morning, most overdue first.</p>
-            <div class="ec-foot">See the flow →</div></article>
-          <article class="enginecard amber"><div class="ec-top"><span class="ec-num">03</span><span class="tag amber">AI</span></div>
-            <svg class="ec-icon" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="1,12.5 5.5,12.5 8,5.5 10.5,19.5 13,12.5 23,12.5"/><circle cx="8" cy="5.5" r="1.2" fill="currentColor" stroke="none"/></svg>
-            <h3>Drafts that don't read like AI</h3><p>Every message opens about them, leads with a real question, and ends with a specific ask — no "just following up," no clichés. Rewrite it shorter, warmer, or a whole new angle in one tap. You edit or send.</p>
-            <div class="ec-foot">Draft it →</div></article>
-          <article class="enginecard navy"><div class="ec-top"><span class="ec-num">04</span><span class="tag navy">On demand</span></div>
-            <svg class="ec-icon" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="10.5" cy="10.5" r="7"/><line x1="15.5" y1="15.5" x2="21.5" y2="21.5"/><circle cx="10.5" cy="10.5" r="2.5"/></svg>
-            <h3>The comeback, built in</h3><p>Step away for a day — or a week. Come back to your own note, your warm leads, and a streak that bent instead of breaking. One button back in.</p>
-            <div class="ec-foot">Pick up →</div></article>
-          <article class="enginecard"><div class="ec-top"><span class="ec-num">05</span><span class="tag pipeline">Proof</span></div>
-            <svg class="ec-icon" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9,11 12,14 22,4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
-            <h3>Receipts, daily</h3><p>Every touch logged, every day stacked. When someone asks whether you're "applying yourself," you'll have the number — not a feeling.</p>
-            <div class="ec-foot"><span class="statuspill live" style="font-size:11px;"><span class="dot"></span>Sent today</span></div></article>
-          <article class="enginecard"><div class="ec-top"><span class="ec-num">06</span><span class="tag pipeline">Signals</span></div>
-            <svg class="ec-icon" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><circle cx="12" cy="3" r="1.8"/><circle cx="21" cy="7.5" r="1.8"/><circle cx="21" cy="16.5" r="1.8"/><circle cx="3" cy="7.5" r="1.8"/><circle cx="3" cy="16.5" r="1.8"/><line x1="12" y1="9" x2="12" y2="4.8"/><line x1="14.6" y1="10.2" x2="19.3" y2="8.3"/><line x1="14.6" y1="13.8" x2="19.3" y2="15.7"/><line x1="9.4" y1="10.2" x2="4.7" y2="8.3"/><line x1="9.4" y1="13.8" x2="4.7" y2="15.7"/></svg>
-            <h3>They reply, they jump the queue</h3><p>The second a prospect responds, they move to the top and the cadence pauses. No chasing cold leads while a warm one sits waiting.</p>
-            <div class="ec-foot">Catch it →</div></article>
-        </div>
-      </div></section>
-
-      <!-- DARK FLOW -->
-      <section class="gl-sec"><div class="wrap">
-        <div class="darkflow">
-          <div class="df-eye">[ The daily flow ]</div>
-          <h3>Load it once.<span class="light"> Work it every morning.</span></h3>
-          <div class="df-row">
-            <div class="df-pill"><span class="n">01</span> Upload list</div><span class="df-arrow">→</span>
-            <div class="df-pill"><span class="n">02</span> Today's queue</div><span class="df-arrow">→</span>
-            <div class="df-pill"><span class="n">03</span> Script it</div><span class="df-arrow">→</span>
-            <div class="df-pill"><span class="n">04</span> Log it</div><span class="df-arrow">→</span>
-            <div class="df-pill"><span class="n">05</span> Next</div>
-          </div>
-          <div class="df-note">Someone replies? They jump to the top — automatically.</div>
-        </div>
-      </div></section>
-
-      <!-- DAILY CARD DEMO -->
-      <section class="gl-sec"><div class="wrap">
-        <div class="gl-sec-head">
-          <div class="eyebrow">[ The daily card ]</div>
-          <h2 class="gl-h2">The script's already written.<span class="light"> And it's good.</span></h2>
-          <p class="gl-lead">Every draft opens about them, leads with a real question, and ends with a specific ask — the way a sharp rep writes, not the way AI usually does. Tweak it or send it.</p>
-        </div>
-        <div class="gl-demo-wrap"><div class="gl-demo">
-          <div class="gl-demo-head"><div class="gl-demo-ava">AB</div><div><div class="gl-demo-name">Amelia Bedelia</div><div class="gl-demo-meta">VP of Ecommerce · Northwind Apparel</div></div><div style="margin-left:auto;"><span class="tag pipeline">Touch 1 · LinkedIn</span></div></div>
-          <div class="gl-demo-touch"><b>Touch 1 of 5</b> — First outreach due. Script, send, done.</div>
-          <p class="gl-demo-script">Hi Amelia — saw Northwind's DTC push this quarter. I'm Marcos; I place senior nearshore engineers with retail teams your size, minus the agency markup. Curious how you're covering the eng load behind that launch — want me to send over a quick talent map for your stack?</p>
-          <div class="gl-demo-airow"><button class="btn-a" style="padding:11px 18px;font-size:12px;font-family:var(--mono);text-transform:uppercase;letter-spacing:.04em;">✦ Rewrite with AI</button><span class="gl-demo-ainote">Tap a suggestion —</span></div>
-          <div class="gl-demo-chips">
-            <span class="gl-demo-chip">Make it shorter</span><span class="gl-demo-chip">More conversational</span><span class="gl-demo-chip">Warmer</span><span class="gl-demo-chip">Push nearshore</span><span class="gl-demo-chip">Different angle</span>
-          </div>
-          <div class="gl-demo-acts"><div class="gl-demo-act">LinkedIn</div><div class="gl-demo-act">Replied</div><div class="gl-demo-act">Script</div><div class="gl-demo-act done">✓ Done</div></div>
-        </div></div>
-      </div></section>
-
-      <!-- COMEBACK (navy) -->
-      <section class="gl-sec"><div class="wrap">
-        <div class="gl-sec-head">
-          <div class="eyebrow">[ On demand · the comeback ]</div>
-          <h2 class="gl-h2">The comeback is built in.<span class="light"> No restarting from zero.</span></h2>
-        </div>
-        <div class="gl-comeback">
-          <div class="gl-cb-copy">
-            <p>Starting isn't the hard part for ADHD brains — <b>restarting is.</b> At the end of each day, VAMOS asks one question: <b>"What matters tomorrow?"</b> One line, to your future self.</p>
-            <p>Step away for a day or a week, and you're met with your own note, your warm leads still waiting, and a streak that <b>bent instead of breaking.</b> One button back in.</p>
-            <div class="gl-cb-quote"><p>"The hardest part of ADHD isn't doing the work. It's getting back into it after life interrupts you."</p></div>
-          </div>
-          <div class="wyo">
-            <div class="wyo-lbl">While you were out</div>
-            <div class="wyo-note">"Call Karin first. Don't overthink the Foot Locker email."</div>
-            <div class="wyo-row"><span>Warm leads waiting</span><b>3</b></div>
-            <div class="wyo-row"><span>Streak</span><b>Bent, not broken</b></div>
-            <button class="wyo-cta lp-open">Pick up where you left off</button>
-          </div>
-        </div>
-      </div></section>
-
-      <!-- FOUNDER -->
-      <section class="gl-sec"><div class="wrap">
-        <div class="founder">
-          <div class="f-photo"><img src="assets/founder-marcos-cuellar.jpg" alt="Marcos Cuellar"></div>
-          <div>
-            <div class="f-eye">[ Founder · built by the operator ]</div>
-            <h3>Marcos Cuellar<span class="light">Founder — VAMOS</span></h3>
-            <p>I built VAMOS in 2022 as a personal tool before it was a product.</p>
-            <p>I had heard it all: "just do it," "stay consistent," "try harder," "use a better system."</p>
-            <p>So I kept looking. I tried the planners, the trackers, the CRMs, and every "ADHD-friendly" productivity tool that promised to fix the problem.</p>
-            <p>But most of them were just productivity tools with ADHD marketing on top.</p>
-            <div class="f-punch">
-              <p class="f-emph">They could hold my tasks.</p>
-              <p class="f-emph">They couldn't hold the thread.</p>
-            </div>
-            <p>I knew what I needed: one place for the list, the client intel, the script, the reply, and the next move.</p>
-            <p>So I built it.</p>
-            <p class="f-line">One screen. One card. One honest next step at a time.</p>
-            <p>VAMOS is for people who already care, already try, and already know what they need to do — they just need a system that helps them come back without starting over.</p>
-            <div class="f-stamps">
-              <span class="tag standalone">Operator, not VC-built</span>
-              <span class="tag pipeline">Built 2022</span>
-              <span class="tag pipeline">Recruiter · Spyglass Partners</span>
-            </div>
-          </div>
-        </div>
-      </div></section>
-
-      <!-- FAQ -->
-      <section class="gl-sec"><div class="wrap">
-        <div class="gl-sec-head">
-          <div class="eyebrow">[ Questions ]</div>
-          <h2 class="gl-h2">Before you ask.</h2>
-        </div>
-        <div class="gl-faq">
-          <details><summary>Is this another CRM I have to maintain?</summary><div class="a">No — and that's the point. VAMOS is <b>one screen that tells you who to touch today.</b> No pipelines to groom, no fields to fill, no dashboard to configure.</div></details>
-          <details><summary>What happens when I fall off for a few days?</summary><div class="a">You come back to <b>your own note, your warm leads, and a streak that bent instead of breaking.</b> The comeback is a designed feature, not a failure state.</div></details>
-          <details><summary>Do I have to use the AI-written scripts?</summary><div class="a">No. <b>AI drafts every message — personalized to the contact and their step — but it's editable right in the card.</b> Use it, tweak it, or write your own.</div></details>
-          <details><summary>Can neurotypicals use it?</summary><div class="a"><b>Yes. We made it simple enough for them.</b></div></details>
-          <details><summary>What does it cost?</summary><div class="a"><b>Your first 25 outreaches are free — no card required to start.</b> After that, it's $11/month for unlimited AI drafting.</div></details>
-        </div>
-      </div></section>
-
-      <!-- SIGNUP -->
-      <section class="gl-signup" id="signup"><div class="wrap">
-        <div class="eyebrow" style="margin-bottom:14px;">[ Give it a shot ]</div>
-        <h2 class="gl-h2" style="margin:0 auto;max-width:18ch;">Who's up today?<span class="light"> Let's find out.</span></h2>
-        <div class="gl-signup-form">
-          <input type="email" id="emailInput" placeholder="you@work.com" aria-label="Email address">
-          <button type="button" id="signupBtn">Try it free</button>
-        </div>
-        <p class="gl-signup-note">First 25 contacts free · No card · We got you.</p>
-      </div></section>
-    </main>
-
-    <footer class="gl-footer"><div class="wrap gl-foot">
-      <span>VAMOS — for sales. Built by the operator.</span>
-      <span>Built with ADHD, out of spite.</span>
-    </div></footer>
+      <p class="lp-contact">For more info email <a href="mailto:marcosmcuellar@gmail.com">Marcos Cuellar</a></p>
+    </div>
   </div>
 
   <div class="lp-overlay hide" id="authOverlay">
@@ -1937,14 +1741,11 @@
   function closeAuth(){ document.getElementById("authOverlay").classList.add("hide"); }
   function wireLanding(){
     var by=function(x){ return document.getElementById(x); };
-    if(by("lpLogin")) by("lpLogin").addEventListener("click", function(){ openAuth("login"); });
-    // Every "Try it free" / "Pick up where you left off" CTA opens the signup modal.
-    Array.prototype.forEach.call(document.querySelectorAll(".lp-open"), function(b){ b.addEventListener("click", function(){ openAuth("signup"); }); });
-    // Hero email field → carry the address straight into the signup modal.
-    var sb=by("signupBtn"), ei=by("emailInput");
-    function fromHero(){ openAuth("signup", ei ? ei.value : ""); }
-    if(sb) sb.addEventListener("click", fromHero);
-    if(ei) ei.addEventListener("keydown", function(e){ if(e.key==="Enter"){ e.preventDefault(); fromHero(); } });
+    // Splash email field → carry the address straight into the login modal.
+    var go=by("lpLoginGo"), ei=by("lpEmailInput");
+    function toLogin(){ openAuth("login", ei ? ei.value : ""); }
+    if(go) go.addEventListener("click", toLogin);
+    if(ei) ei.addEventListener("keydown", function(e){ if(e.key==="Enter"){ e.preventDefault(); toLogin(); } });
     if(by("authClose")) by("authClose").addEventListener("click", closeAuth);
     var ov=by("authOverlay"); if(ov) ov.addEventListener("click", function(e){ if(e.target===ov) closeAuth(); });
   }
