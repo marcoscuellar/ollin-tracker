@@ -1,7 +1,7 @@
 // Read/write the tracker blob for the logged-in user (entries:<userId>).
 import { kv, readJson, send, requireSession, entriesKey } from './_lib.js';
 
-const EMPTY = { accounts: [], done: {}, notes: {}, active: null, seeded: false, sheetUrl: '', dailyGoal: 50, handoffNote: '', extra: {} };
+const EMPTY = { accounts: [], done: {}, notes: {}, reschedule: {}, active: null, seeded: false, sheetUrl: '', dailyGoal: 50, handoffNote: '', extra: {} };
 
 export default async function handler(req, res) {
   const s = requireSession(req);
@@ -19,6 +19,7 @@ export default async function handler(req, res) {
       accounts: Array.isArray(body.accounts) ? body.accounts : [],
       done: body.done && typeof body.done === 'object' ? body.done : {},
       notes: body.notes && typeof body.notes === 'object' ? body.notes : {},
+      reschedule: body.reschedule && typeof body.reschedule === 'object' ? body.reschedule : {},
       active: body.active || null,
       seeded: !!body.seeded,
       sheetUrl: typeof body.sheetUrl === 'string' ? body.sheetUrl : '',
