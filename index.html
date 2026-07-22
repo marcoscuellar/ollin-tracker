@@ -2461,6 +2461,19 @@
     return box;
   }
   // Add-contacts panel (upload + by-hand) — used by the Contacts › Add view.
+  // A tiny canned "list" run through the real import path — lets a demo
+  // visitor see the upload-a-list flow work with zero effort on their part.
+  function useFakeList(){
+    var rows=[
+      ["Name","Company","Title","LinkedIn URL","Email","Persona"],
+      ["Taylor Brooks","Meridian Logistics (sample)","VP Operations","linkedin.com/in/sample-taylor","taylor@example.com","Economic Buyer"],
+      ["Riley Chen","Meridian Logistics (sample)","Engineering Manager","linkedin.com/in/sample-riley","riley@example.com","Champion"],
+      ["Morgan Diaz","Meridian Logistics (sample)","Staff Engineer","linkedin.com/in/sample-morgan","","Technical Evaluator"]
+    ];
+    applyImportRows(rows);
+    contactsMode="list";
+    setView("contacts");
+  }
   function buildAddSection(){
     var accts={}; state.accounts.forEach(function(a){ accts[a.company]=1; });
     var opts=Object.keys(accts).map(function(x){ return '<option value="'+esc(x)+'">'; }).join("");
@@ -2471,6 +2484,7 @@
         '<div class="uz-sub">Drop a CSV or Excel file here, or click to browse</div>'+
         '<input type="file" id="addFileInput" accept=".csv,.xlsx,.xls" hidden>'+
       '</div>'+
+      (DEMO?'<div class="btn-row"><button class="btn-mini pop" id="fakeListBtn" type="button">Use a fake list — one click</button></div>':'')+
       '<p class="upload-fields"><b>Required:</b> Name · Company <span class="upload-dim">(Company = the client)</span><br><b>Optional:</b> Title · LinkedIn URL · Email · Touch 1–5 messages <span class="upload-dim">— no messages? VAMOS AI writes them for you (use them or not).</span></p>'+
       '<div class="btn-row"><button class="btn-mini pop" id="sheetBtn">Import from Google Sheet</button></div>'+
       '<details class="mini-add"><summary>Or add a few by hand</summary>'+
@@ -2488,6 +2502,7 @@
     uz.addEventListener("drop", function(e){ e.preventDefault(); uz.classList.remove("drag"); var file=e.dataTransfer&&e.dataTransfer.files&&e.dataTransfer.files[0]; if(file) handleImportFile(file); });
     add.querySelector("#addBtn").addEventListener("click", function(){ if(addQuick(add.querySelector("#acctInput").value, add.querySelector("#bulkInput").value)) setView("contacts"); });
     add.querySelector("#sheetBtn").addEventListener("click", function(){ showSheetForm(add.querySelector("#importHost")); });
+    var flb=add.querySelector("#fakeListBtn"); if(flb) flb.addEventListener("click", useFakeList);
     return add;
   }
 
