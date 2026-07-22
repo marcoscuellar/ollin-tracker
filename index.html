@@ -449,6 +449,10 @@
   .dc-touch{text-align:center;}
   .dc-touch b{font-family:'Geist Mono',monospace;font-size:12px;letter-spacing:.14em;text-transform:uppercase;}
   .dc-touch span{display:block;font-size:12.5px;color:var(--grey);margin-top:3px;}
+  /* client intel — the outreach angle, surfaced right on the card */
+  .dc-angle{border:.5px solid var(--hairline);border-radius:10px;background:var(--panel);padding:12px 14px;margin-bottom:16px;}
+  .dc-angle .eyebrow{color:var(--ollin-maroon);margin-bottom:5px;}
+  .dc-angle p:last-child{font-size:14px;font-weight:600;line-height:1.4;color:var(--ink);}
   .dc-btn{display:flex;align-items:center;gap:8px;font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;background:none;border:.5px solid var(--hairline);border-radius:9px;padding:10px 16px;cursor:pointer;color:var(--ink);}
   .dc-btn.dark{background:var(--ink);color:var(--card);border-color:var(--ink);}
   .dc-btn:disabled{opacity:.3;cursor:default;}
@@ -2282,6 +2286,7 @@
     var card=el('<div class="dc deckcard active">'+
       '<div class="dc-head"><div class="dc-ava">'+esc(initials(c.name))+'</div><div><div class="dc-name">'+esc(c.name)+'</div><div class="dc-meta">'+esc((c.title||"")+(c.title&&c.account?" · ":"")+(c.account||""))+'</div></div><div class="dc-due'+over+'">'+duePill(i)+'</div></div>'+
       '<div class="dc-navrow"><div class="dc-touch"><b>Touch '+i.stepNum+' of '+c.touches.length+'</b><span>'+sub+'</span></div></div>'+
+      ((c.t&&c.t.angle) ? '<div class="dc-angle"><p class="eyebrow">The angle</p><p>'+esc(c.t.angle)+'</p></div>' : '')+
       '<div class="tl-row"><button class="tl-arrow" id="dcBack" title="Previous contact">‹</button>'+timelineHTML(c,false)+'<button class="tl-arrow" id="dcNext" title="Next contact">›</button></div>'+
       '<div class="dc-mid"><button class="mi" id="miReview"><div><div class="mi-t">Review / Verify</div><div class="mi-s">Check the script before you send</div></div></button><button class="mi" id="miSkip"><div><div class="mi-t">Skip for now</div><div class="mi-s">Come back to this one later</div></div></button></div>'+
       '<div class="dc-actions"><button class="dc-act" id="aChan">'+CH_LABEL[i.ch]+'</button><button class="dc-act" id="aReplied">Replied</button><button class="dc-act" id="aScript">Script</button><button class="dc-act done" id="aDone">✓ Done</button></div>'+
