@@ -2377,7 +2377,7 @@
     var html='<div class="timeline"'+(mini?' style="margin:14px 0 0"':'')+'>';
     for(var s=0;s<5;s++){
       var cls="tl-step"+(s<c.step?" done":(s===c.step?" active":""));
-      var inner = s<c.step ? "✓" : (s+1);
+      var inner = s+1;
       var nodeStyle = mini ? ' style="width:22px;height:22px;font-size:10px"' : '';
       html+='<div class="'+cls+'"><div class="tl-line"></div><div class="tl-node"'+nodeStyle+'>'+inner+'</div>'+(mini?'':'<div class="tl-label">'+STEP_NAMES[s]+'</div>')+'</div>';
     }
