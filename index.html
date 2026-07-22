@@ -208,6 +208,8 @@
   .sc-price .sc-then b{font-weight:700;}
   .sc-price .sc-fine{font-size:12.5px;color:var(--grey);margin-top:12px;line-height:1.5;}
   .verifybar{border:.5px solid var(--hairline);border-left:3px solid var(--gold);background:var(--cream);padding:10px 14px;margin-bottom:14px;font-size:12.5px;line-height:1.5;color:var(--grey);}
+  .demobar{border:.5px solid var(--ollin-maroon);border-left:3px solid var(--ollin-maroon);background:rgba(168,50,70,.06);padding:10px 14px;margin-bottom:14px;font-size:12.5px;line-height:1.5;color:var(--ink);max-width:840px;margin-left:auto;margin-right:auto;border-radius:var(--radius);}
+  .demobar a{color:var(--ollin-maroon);font-weight:600;text-decoration:underline;cursor:pointer;margin-left:6px;}
   .verifybar a{color:var(--gold);font-weight:600;cursor:pointer;text-decoration:underline;}
   /* plan / founding-member gating */
   .planbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;border:.5px solid var(--hairline);border-left:3px solid var(--blue);background:var(--cream);padding:10px 14px;margin-bottom:14px;font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:.06em;color:var(--grey);}
@@ -1089,6 +1091,7 @@
         </form>
         <p class="lp-err" id="lpErr"></p>
         <p class="lp-signup">New to <span class="bm-word" style="font-size:15px">öllin</span>? <a id="lpSignupLink">Create an account</a></p>
+        <p class="lp-signup"><a href="?demo=1">Watch demo — upload a list &amp; make a reach out</a></p>
       </div>
       <p class="lp-contact">For more info email <a href="mailto:marcosmcuellar@gmail.com">Marcos Cuellar</a></p>
     </div>
@@ -1143,6 +1146,7 @@
 
   var state = { accounts:[], done:{}, notes:{}, reschedule:{}, activeId:null, view:"today", seeded:false, sheetUrl:"", dailyGoal:50, handoffNote:"", extra:{} };
   var MODE = { api:false }; // api=true once the Vercel /api + KV backend is detected
+  var DEMO = false; // ?demo=1 — public, unauthenticated walkthrough; nothing persists
   var ALL = "__all__"; // sentinel activeId meaning "show every account combined"
 
   // ---------- date helpers (local, no tz drift) ----------
@@ -1234,7 +1238,7 @@
         .catch(function(){ toast("Save failed — check connection"); });
     },300);
   }
-  function scheduleSave(){ if(MODE.api) apiSave(); else localSave(); }
+  function scheduleSave(){ if(DEMO) return; if(MODE.api) apiSave(); else localSave(); }
   // optimistic: update UI now, persist in the background
   function persistAccounts(){ scheduleSave(); return Promise.resolve(); }
   function persistDone(){ scheduleSave(); return Promise.resolve(); }
@@ -1251,6 +1255,23 @@
       ]
     }];
     state.activeId="demo";
+  }
+  // Public, unauthenticated walkthrough (?demo=1) — obviously-fake sample data, never persisted.
+  function seedPublicDemo(){
+    var t = todayStr();
+    state.accounts = [
+      { id:"demoA", company:"Northwind Retail (sample)", start:t, threads:[
+        {id:"na1", name:"Jordan Blake", title:"VP Engineering", persona:"Economic Buyer", entryDay:1, channel:"em", linkedin:"linkedin.com/in/sample-jordan", email:"jordan@example.com", angle:"Owns the budget — leads with the cost math for a 5-person nearshore pod."},
+        {id:"na2", name:"Sam Rivera", title:"Director of Data Platform", persona:"Champion", entryDay:1, channel:"li", linkedin:"linkedin.com/in/sample-sam", email:"sam@example.com", angle:"Posted 6 open data-eng reqs in the last 30 days — feels the hiring pain daily."},
+        {id:"na3", name:"Casey Nguyen", title:"Staff Engineer", persona:"Technical Evaluator", entryDay:1, channel:"li", linkedin:"linkedin.com/in/sample-casey", email:"", angle:"Vets the stack fit — worth a Talent Map for their exact tooling."}
+      ]},
+      { id:"demoB", company:"Aster Health (sample)", start:t, threads:[
+        {id:"ab1", name:"Priya Shah", title:"CTO", persona:"Economic Buyer", entryDay:1, channel:"em", linkedin:"", email:"priya@example.com", angle:"Compliance deadline in Q3 is forcing a hiring decision now."},
+        {id:"ab2", name:"Marcus Webb", title:"Eng Manager", persona:"Champion", entryDay:1, channel:"li", linkedin:"linkedin.com/in/sample-marcus", email:"", angle:"Team has been re-posting the same senior role for 90+ days."}
+      ]}
+    ];
+    state.activeId="demoA";
+    state.seeded=true;
   }
 
   // ---------- toast ----------
@@ -1896,6 +1917,14 @@
     var params=new URLSearchParams(location.search);
     var rst=params.get("reset");
     if(rst){ showApp(false); openAuth(); renderResetForm(rst); return; }
+    if(params.get("demo")){
+      DEMO=true;
+      seedPublicDemo();
+      navView="home";
+      showApp(true);
+      render();
+      return;
+    }
     try{
       var r=await fetch("/api/auth?action=status",{credentials:"same-origin"});
       var d=r.ok ? await r.json() : {};
@@ -2467,6 +2496,11 @@
     state.extra=state.extra||{};
     m.innerHTML="";
     buildNav(m);
+    if(DEMO){
+      var db=el('<div class="demobar">You\'re viewing a live demo with sample data — nothing here is saved. <a id="demoExit">Exit demo</a></div>');
+      db.querySelector("#demoExit").addEventListener("click", function(){ location.href=location.pathname; });
+      m.appendChild(db);
+    }
     // account-level verify nudge shows on every view until confirmed
     if(ACCOUNT && ACCOUNT.email && ACCOUNT.verified===false){
       var vb=el('<div class="verifybar">Confirm your email to secure your account — check your inbox. <a id="vbResend">Resend</a></div>');
