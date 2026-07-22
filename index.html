@@ -282,15 +282,18 @@
   .pc-check.on::after{content:"\2713";color:var(--cream);font-size:11px;line-height:1;}
   .pc-wrap .pcard.selectable{cursor:pointer;}
   .pc-wrap .pcard.selected{border-color:var(--ink);background:var(--panel);}
-  .nav-logo{font-family:'Geist',sans-serif;font-weight:900;font-size:19px;letter-spacing:-.03em;}
+  .nav-logo{font-family:'Geist',sans-serif;font-weight:900;font-size:26px;letter-spacing:-.03em;}
+  .nav-logo.brandmark{gap:11px;}
+  .nav-logo .bm-tag{font-size:11px;}
   .nav-logo .way{color:var(--honey);}
   .brandmark{display:inline-flex;align-items:center;gap:8px;}
   .brandmark svg{display:block;flex-shrink:0;}
   .brandmark .bm-word{font-family:'Sora',sans-serif;font-weight:800;letter-spacing:-.04em;color:var(--ollin-ink);}
   .brandmark .bm-tag{font-family:var(--mono, 'Geist Mono', monospace);font-weight:600;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ollin-maroon);margin-left:2px;}
-  .brandmark svg .mv-dot{transform-box:view-box;transform-origin:36px 36px;animation:mv-orbit 7s linear infinite;}
+  /* Motion is landing-page only — the in-app nav and login modal keep a static mark */
+  .gl-mark svg .mv-dot{transform-box:view-box;transform-origin:36px 36px;animation:mv-orbit 7s linear infinite;}
   @keyframes mv-orbit{from{transform:rotate(120deg);}to{transform:rotate(480deg);}}
-  @media (prefers-reduced-motion: reduce){ .brandmark svg .mv-dot{animation:none;} }
+  @media (prefers-reduced-motion: reduce){ .gl-mark svg .mv-dot{animation:none;} }
   .nav-tabs{display:flex;align-items:center;gap:2px;}
   .nav-tab{font-size:14px;color:var(--grey);background:none;border:none;cursor:pointer;padding:9px 15px;border-radius:9px;font-family:inherit;white-space:nowrap;}
   .nav-tab:hover{color:var(--ink);background:rgba(45,45,45,.04);}
@@ -812,9 +815,9 @@
 
   /* ============ VAMOS app · GLVE accents: amber=AI, navy=comeback, green=status ============ */
   /* AI affordances -> amber */
-  .script-actions button.ai-btn{color:var(--amber-d);border-color:var(--amber);}
-  .script-actions button.ai-btn:hover{background:var(--amber);border-color:var(--amber);color:#1c0a00;}
-  .script-actions button.ai-btn[disabled]:hover{background:none;color:var(--amber-d);}
+  .script-actions button.ai-btn{color:var(--ollin-maroon);border-color:var(--ollin-maroon);}
+  .script-actions button.ai-btn:hover{background:var(--ollin-maroon);border-color:var(--ollin-maroon);color:#fff;}
+  .script-actions button.ai-btn[disabled]:hover{background:none;color:var(--ollin-maroon);}
   .ai-steer{border-color:var(--amber);background:rgba(245,158,11,.06);}
   .ai-steer-lead{color:var(--amber-d);}
   .ai-chip:hover{border-color:var(--amber);color:var(--amber-d);}
@@ -843,16 +846,14 @@
   .btn:hover{background:var(--hover);border-color:var(--hover);color:#fff;}
   .dc-due{background:var(--panel);color:var(--ink);border-color:var(--hairline);}
   .dc-due.over{background:var(--ink);color:var(--cream);border-color:var(--ink);}
-  .tl-step.active .tl-node{background:var(--ink);border-color:var(--ink);}
+  .tl-step.active .tl-node{background:var(--ollin-maroon);border-color:var(--ollin-maroon);}
   /* Review/Skip: neutral band with a dividing line between the two items */
   .dc-mid{background:var(--panel);border:none;border-radius:12px;padding:4px 8px;}
   .dc-mid .mi{padding:16px 18px;}
   .dc-mid .mi + .mi{border-left:1px solid var(--hairline);}
   .dc-mid .mi-t{color:var(--ink);} .dc-mid .mi-s{color:var(--grey);} .dc-mid .mi:hover .mi-t{color:var(--ink);}
-  .dc-act.done{background:var(--ink);border-color:var(--ink);color:#fff;}
-  .dc-act.done:hover{background:var(--hover);border-color:var(--hover);color:#fff;}
-  /* The action call gets the only drop shadow — burgundy, so it reads as the one thing to press */
-  .dc-act.done{box-shadow:0 3px 8px rgba(168,50,70,.28),0 12px 28px rgba(168,50,70,.24);}
+  .dc-act.done{background:var(--ollin-maroon);border-color:var(--ollin-maroon);color:#fff;}
+  .dc-act.done:hover{background:var(--honey-d);border-color:var(--honey-d);color:#fff;}
   /* Unlimited / upgrade -> navy (AI, secondary lead); active plan = green status */
   .planbar{border-left-color:var(--navy);}
   .planbar a{color:var(--navy);} .planbar a:hover{color:var(--navy-2);}
@@ -2522,7 +2523,7 @@
   function buildNav(m){
     var now=new Date();
     var TABS=[["home","Home",false],["contacts","Contacts",true],["pipeline","Pipeline",false],["dashboard","Dashboard",false],["brb","BRB",false]];
-    var nav=el('<div class="nav"><div class="nav-logo brandmark"><svg viewBox="0 0 72 62" width="22" height="19"><circle cx="36" cy="36" r="21" stroke="#16130F" stroke-width="2.5" fill="none"/><circle cx="36" cy="6" r="5" fill="#1E9DA8"/><circle class="mv-dot" cx="61.98" cy="51" r="9" fill="#A83246"/><circle cx="10.02" cy="51" r="5" fill="#F5B700"/></svg><span class="bm-word">ōllin</span><span class="bm-tag">Movement</span></div><div class="nav-tabs" id="navTabs"></div><div class="nav-right"><span class="nav-date">'+DOW[now.getDay()]+" "+MON[now.getMonth()]+" "+now.getDate()+'</span><div class="nav-ava" id="navAva" title="Account">'+esc(avaInitial())+'</div></div></div>');
+    var nav=el('<div class="nav"><div class="nav-logo brandmark"><svg viewBox="0 0 72 62" width="35" height="30"><circle cx="36" cy="36" r="21" stroke="#16130F" stroke-width="2.5" fill="none"/><circle cx="36" cy="6" r="5" fill="#1E9DA8"/><circle class="mv-dot" cx="61.98" cy="51" r="9" fill="#A83246"/><circle cx="10.02" cy="51" r="5" fill="#F5B700"/></svg><span class="bm-word">ōllin</span><span class="bm-tag">Movement</span></div><div class="nav-tabs" id="navTabs"></div><div class="nav-right"><span class="nav-date">'+DOW[now.getDay()]+" "+MON[now.getMonth()]+" "+now.getDate()+'</span><div class="nav-ava" id="navAva" title="Account">'+esc(avaInitial())+'</div></div></div>');
     var ntabs=nav.querySelector("#navTabs");
     TABS.forEach(function(t){
       var b=el('<button class="nav-tab'+(t[2]?" has-caret":"")+(navView===t[0]?" active":"")+'">'+t[1]+'</button>');
