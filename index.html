@@ -383,6 +383,47 @@
   .o2-ai-chip{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.5px;text-transform:uppercase;border:1px solid var(--o2-hairline);background:#fff;color:var(--o2-slate);padding:5px 9px;cursor:pointer;}
   .o2-ai-chip:hover{border-color:var(--o2-accent);color:var(--o2-graphite);}
 
+  /* ---- Contacts: command-bar search (phase 2) ---- */
+  .o2-view{font-family:'Archivo',sans-serif;display:grid;grid-template-columns:minmax(0,1fr) minmax(300px,400px);min-height:calc(100vh - 158px);}
+  .o2-view-left{padding:44px 44px 60px;border-right:1px solid var(--o2-ink);}
+  .o2-view-title{font-family:'Archivo Expanded',sans-serif;font-weight:900;font-size:64px;letter-spacing:-2px;line-height:1;margin:0 0 10px;color:var(--o2-ink);}
+  .o2-view-sub{font-size:17px;line-height:1.5;color:var(--o2-slate);margin:0 0 26px;max-width:520px;}
+  .o2-cmdwrap{max-width:560px;}
+  .o2-cmdbar{border:1.5px solid var(--o2-ink);display:flex;align-items:center;gap:14px;padding:18px 20px;}
+  .o2-cmdbar.focused{border-color:var(--o2-accent);}
+  .o2-cmd-caret{font-family:'IBM Plex Mono',monospace;font-size:19px;color:var(--o2-mute);line-height:1;}
+  .o2-cmdbar.focused .o2-cmd-caret{color:var(--o2-accent);animation:o2-blink 1s step-end infinite;}
+  .o2-cmd-input{flex:1;min-width:0;border:none;outline:none;background:transparent;font-family:'Archivo',sans-serif;font-size:21px;font-weight:600;color:var(--o2-ink);}
+  .o2-cmd-clear{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:1px;background:none;border:1px solid var(--o2-hairline);color:var(--o2-slate);padding:7px 11px;cursor:pointer;white-space:nowrap;flex:none;}
+  .o2-cmd-count{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:1.5px;color:var(--o2-mute);white-space:nowrap;flex:none;}
+  .o2-cmd-panel{border:1.5px solid var(--o2-ink);border-top:none;}
+  .o2-cmd-panel-lbl{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--o2-mute);padding:14px 20px 9px;}
+  .o2-crow{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:15px 20px;border-top:1px solid var(--o2-hairline);cursor:pointer;background:#fff;}
+  .o2-crow:hover{background:var(--o2-hoverbg);}
+  .o2-crow-l{display:flex;align-items:center;gap:13px;min-width:0;}
+  .o2-crow-key{font-family:'IBM Plex Mono',monospace;font-size:15px;color:var(--o2-mute);flex:none;width:15px;}
+  .o2-crow-label{font-family:'Archivo',sans-serif;font-weight:600;font-size:17px;color:var(--o2-ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .o2-crow-hint{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:1px;color:var(--o2-mute);white-space:nowrap;}
+  .o2-crow-arrow{font-family:'IBM Plex Mono',monospace;font-size:14px;color:var(--o2-ink);flex:none;}
+  .o2-cresult-name{font-family:'Archivo',sans-serif;font-weight:700;font-size:19px;color:var(--o2-ink);min-width:0;}
+  .o2-cresult-meta{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:1px;color:var(--o2-mute);margin-top:4px;}
+  .o2-cresult-state{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:1px;color:var(--o2-slate);white-space:nowrap;flex:none;}
+  .o2-cresult-state.done{color:var(--o2-ink);font-weight:600;}
+  .o2-noresults{padding:32px 16px;text-align:center;}
+  .o2-noresults .glyph{font-family:'IBM Plex Mono',monospace;font-size:17px;letter-spacing:2px;margin-bottom:8px;color:var(--o2-mute);}
+  .o2-noresults .msg{font-weight:700;font-size:15px;color:var(--o2-ink);}
+
+  /* ---- shared right rail: TODAY'S LIST (Contacts + Pipeline) ---- */
+  .o2-todo-row{display:flex;gap:12px;align-items:center;padding:14px 24px;border-bottom:1px solid var(--o2-hairline);}
+  .o2-todo-box{width:20px;height:20px;flex:none;border:1.5px solid var(--o2-ink);background:#fff;color:#fff;font-family:'IBM Plex Mono',monospace;font-size:11px;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;}
+  .o2-todo-box.on{background:var(--o2-ink);}
+  .o2-todo-label{font-family:'Archivo',sans-serif;font-size:15px;line-height:1.35;color:var(--o2-ink);flex:1;}
+  .o2-todo-label.done{color:var(--o2-mute);text-decoration:line-through;}
+  .o2-todo-x{background:none;border:none;color:var(--o2-navidle);font-family:'IBM Plex Mono',monospace;font-size:15px;cursor:pointer;padding:0 2px;flex:none;}
+  .o2-todo-add{border-top:1px solid var(--o2-ink);padding:14px 24px;display:flex;gap:10px;align-items:center;}
+  .o2-todo-add span{font-family:'IBM Plex Mono',monospace;font-size:15px;color:var(--o2-mute);flex:none;}
+  .o2-todo-add input{flex:1;min-width:0;border:none;outline:none;background:transparent;font-family:'Archivo',sans-serif;font-size:15px;color:var(--o2-ink);}
+
   .o2-tab{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:1px;padding:9px 16px;border:1px solid var(--o2-ink);cursor:pointer;background:#fff;color:var(--o2-slate);}
   .o2-tab.on{background:var(--o2-ink);color:#fff;}
   .o2-tab.linkedin{border-left:none;}
@@ -1270,7 +1311,7 @@
   var PERSONA_ENTRY = { "Champion":1, "Technical Evaluator":3, "Economic Buyer":5, "Additional":8, "Blocker":0 };
   var PERSONAS = ["Champion","Technical Evaluator","Economic Buyer","Additional","Blocker"];
 
-  var state = { accounts:[], done:{}, notes:{}, reschedule:{}, activeId:null, view:"today", seeded:false, sheetUrl:"", dailyGoal:50, handoffNote:"", extra:{} };
+  var state = { accounts:[], done:{}, notes:{}, reschedule:{}, todos:[], activeId:null, view:"today", seeded:false, sheetUrl:"", dailyGoal:50, handoffNote:"", extra:{} };
   var MODE = { api:false }; // api=true once the Vercel /api + KV backend is detected
   var DEMO = false; // ?demo=1 — public, unauthenticated walkthrough; nothing persists
   var ALL = "__all__"; // sentinel activeId meaning "show every account combined"
@@ -1321,6 +1362,7 @@
     var d = await sGet("tracker:done");
     var n = await sGet("tracker:notes");
     var rs = await sGet("tracker:reschedule");
+    var td = await sGet("tracker:todos");
     var act = await sGet("tracker:active");
     var seeded = await sGet("tracker:seeded");
     state.sheetUrl = (await sGet("tracker:sheetUrl")) || "";
@@ -1331,6 +1373,7 @@
     if(d){ try{ state.done = JSON.parse(d); }catch(e){} }
     if(n){ try{ state.notes = JSON.parse(n); }catch(e){} }
     if(rs){ try{ state.reschedule = JSON.parse(rs); }catch(e){} }
+    if(td){ try{ state.todos = JSON.parse(td); }catch(e){} }
     state.seeded = !!seeded;
     if(!state.seeded && (!state.accounts || state.accounts.length===0)){
       seed();
@@ -1349,6 +1392,7 @@
     sSet("tracker:done", JSON.stringify(state.done));
     sSet("tracker:notes", JSON.stringify(state.notes));
     sSet("tracker:reschedule", JSON.stringify(state.reschedule||{}));
+    sSet("tracker:todos", JSON.stringify(state.todos||[]));
     sSet("tracker:seeded", state.seeded?"1":"");
     sSet("tracker:sheetUrl", state.sheetUrl||"");
     sSet("tracker:dailyGoal", String(state.dailyGoal||50));
@@ -1359,7 +1403,7 @@
     if(saveTimer) clearTimeout(saveTimer);
     saveTimer=setTimeout(function(){
       fetch("/api/entries",{method:"POST",headers:{"Content-Type":"application/json"},credentials:"same-origin",
-        body:JSON.stringify({accounts:state.accounts,done:state.done,notes:state.notes,reschedule:state.reschedule||{},active:state.activeId,seeded:!!state.seeded,sheetUrl:state.sheetUrl||"",dailyGoal:state.dailyGoal||50,handoffNote:state.handoffNote||"",extra:state.extra||{}})})
+        body:JSON.stringify({accounts:state.accounts,done:state.done,notes:state.notes,reschedule:state.reschedule||{},todos:state.todos||[],active:state.activeId,seeded:!!state.seeded,sheetUrl:state.sheetUrl||"",dailyGoal:state.dailyGoal||50,handoffNote:state.handoffNote||"",extra:state.extra||{}})})
         .then(function(r){ if(!r.ok) throw new Error("save"); })
         .catch(function(){ toast("Save failed — check connection"); });
     },300);
@@ -2041,13 +2085,13 @@
       var r=await fetch("/api/entries",{credentials:"same-origin"});
       if(r.ok){
         var d=await r.json();
-        state.accounts=d.accounts||[]; state.done=d.done||{}; state.notes=d.notes||{}; state.reschedule=d.reschedule||{}; state.seeded=!!d.seeded; state.sheetUrl=d.sheetUrl||""; state.dailyGoal=parseInt(d.dailyGoal,10)||50; state.handoffNote=d.handoffNote||""; state.extra=d.extra||{};
+        state.accounts=d.accounts||[]; state.done=d.done||{}; state.notes=d.notes||{}; state.reschedule=d.reschedule||{}; state.todos=Array.isArray(d.todos)?d.todos:[]; state.seeded=!!d.seeded; state.sheetUrl=d.sheetUrl||""; state.dailyGoal=parseInt(d.dailyGoal,10)||50; state.handoffNote=d.handoffNote||""; state.extra=d.extra||{};
         state.activeId=((d.active===ALL && state.accounts.length) || (d.active && state.accounts.some(function(a){return a.id===d.active;})))?d.active:((state.accounts[0]&&state.accounts[0].id)||null);
         if(!state.seeded){ state.seeded=true; apiSave(); } // new users start empty → guided onboarding
       }
     }catch(e){}
   }
-  function clearState(){ state.accounts=[]; state.done={}; state.notes={}; state.reschedule={}; state.extra={}; state.handoffNote=""; state.activeId=null; state.seeded=false; }
+  function clearState(){ state.accounts=[]; state.done={}; state.notes={}; state.reschedule={}; state.todos=[]; state.extra={}; state.handoffNote=""; state.activeId=null; state.seeded=false; }
   async function logout(){
     try{ await fetch("/api/auth?action=logout",{method:"POST",credentials:"same-origin"}); }catch(e){}
     ACCOUNT=null; clearState(); comebackDismissed=false; closeAuth(); showApp(false);
@@ -2294,7 +2338,7 @@
   // ---- backup / restore / cleanup ----
   function doExport(){
     if(!state.accounts.length){ toast("Nothing to back up"); return; }
-    var data={ app:"anyway", version:1, exportedAt:new Date().toISOString(), accounts:state.accounts, done:state.done, notes:state.notes, reschedule:state.reschedule||{}, extra:state.extra||{} };
+    var data={ app:"anyway", version:1, exportedAt:new Date().toISOString(), accounts:state.accounts, done:state.done, notes:state.notes, reschedule:state.reschedule||{}, todos:state.todos||[], extra:state.extra||{} };
     var blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
     var url=URL.createObjectURL(blob); var a=document.createElement("a"); a.href=url; a.download="anyway-backup-"+todayStr()+".json";
     document.body.appendChild(a); a.click(); a.remove(); setTimeout(function(){ URL.revokeObjectURL(url); },1000); toast("Backup downloaded");
@@ -2305,7 +2349,7 @@
       var data; try{ data=JSON.parse(reader.result); }catch(e){ toast("Not a valid backup"); return; }
       if(!data || !Array.isArray(data.accounts)){ toast("Not an VAMOS backup"); return; }
       if(!confirm("Restore this backup? Replaces current accounts, touches and messages.")) return;
-      state.accounts=data.accounts||[]; state.done=data.done||{}; state.notes=data.notes||{}; state.reschedule=data.reschedule||{}; state.extra=data.extra||{}; state.seeded=true;
+      state.accounts=data.accounts||[]; state.done=data.done||{}; state.notes=data.notes||{}; state.reschedule=data.reschedule||{}; state.todos=Array.isArray(data.todos)?data.todos:(state.todos||[]); state.extra=data.extra||{}; state.seeded=true;
       persistAccounts(); render(); toast("Backup restored");
     };
     reader.readAsText(file);
@@ -2542,6 +2586,35 @@
     noteEl.addEventListener("change", saveNote);
     noteEl.addEventListener("blur", saveNote);
     wrap.appendChild(bfyg);
+    return wrap;
+  }
+  // ---- shared right rail: TODAY'S LIST (Contacts + Pipeline) — a small,
+  // account-agnostic checklist, separate from the contact cadence itself.
+  function buildTodayList(){
+    var wrap=el('<div class="o2-right"></div>');
+    var todos=state.todos||[];
+    var doneN=todos.filter(function(t){ return t.done; }).length;
+    wrap.appendChild(el('<div class="o2-rail-head"><span>TODAY’S LIST</span><span>'+doneN+' / '+todos.length+' DONE</span></div>'));
+    wrap.appendChild(el('<div class="o2-track"><div class="o2-track-fill" style="width:'+(todos.length?(doneN/todos.length*100):0)+'%"></div></div>'));
+    var scroller=el('<div class="o2-rail-scroll"></div>');
+    todos.forEach(function(t){
+      var row=el('<div class="o2-todo-row"><button class="o2-todo-box'+(t.done?" on":"")+'">'+(t.done?"✓":"")+'</button><span class="o2-todo-label'+(t.done?" done":"")+'">'+esc(t.text)+'</span><button class="o2-todo-x">×</button></div>');
+      row.querySelector(".o2-todo-box").addEventListener("click", function(){ t.done=!t.done; scheduleSave(); render(); });
+      row.querySelector(".o2-todo-x").addEventListener("click", function(){ state.todos=(state.todos||[]).filter(function(x){ return x!==t; }); scheduleSave(); render(); });
+      scroller.appendChild(row);
+    });
+    wrap.appendChild(scroller);
+    var addRow=el('<div class="o2-todo-add"><span>+</span><input placeholder="Add a move — Enter to save"></div>');
+    var addInput=addRow.querySelector("input");
+    addInput.addEventListener("keydown", function(e){
+      if(e.key==="Enter"){
+        e.preventDefault();
+        var text=addInput.value.trim(); if(!text) return;
+        state.todos=state.todos||[]; state.todos.push({id:"td"+Date.now()+Math.floor(Math.random()*999), text:text, done:false});
+        scheduleSave(); render();
+      }
+    });
+    wrap.appendChild(addRow);
     return wrap;
   }
   function activeCard(item, host, dueList, warm){
@@ -2886,72 +2959,123 @@
     }
   }
 
-  // ---------- CONTACTS: add / see / delete ----------
+  // ---------- CONTACTS: command-bar search (list) / add / delete ----------
   function renderContacts(m){
     var contacts=asContacts();
     var mode=contactsMode||"list";
-    var head=el('<div class="view-head"><h2 class="view-title">Contacts</h2><div class="seg" id="cSeg"></div></div>');
-    var seg=head.querySelector("#cSeg");
-    [["list","See"],["add","Add new"],["delete","Delete"]].forEach(function(s){
-      var b=el('<button class="seg-btn'+(mode===s[0]?" on":"")+'">'+s[1]+'</button>');
-      b.addEventListener("click", function(){ contactsMode=s[0]; if(s[0]==="delete") pipeSel={}; render(); });
-      seg.appendChild(b);
-    });
-    m.appendChild(head);
 
     if(mode==="add"){
+      m.appendChild(el('<div class="view-head"><h2 class="view-title">Contacts</h2></div>'));
+      var backA=el('<a class="o2-reset" style="display:inline-block;margin-bottom:14px" id="backToSearch">← Back to search</a>');
+      backA.addEventListener("click", function(){ contactsMode="list"; render(); });
+      m.appendChild(backA);
       m.appendChild(buildManualAdd());
       m.appendChild(el('<div class="cadd-or">or import a list</div>'));
       m.appendChild(buildAddSection());
       return;
     }
 
-    var del = mode==="delete";
-    if(!contacts.length){ m.appendChild(el('<p class="hint" style="margin-top:6px">No contacts yet. Use “Add new” to import a list or add a few by hand.</p>')); return; }
-
-    if(del){
+    if(mode==="delete"){
+      m.appendChild(el('<div class="view-head"><h2 class="view-title">Contacts</h2></div>'));
+      if(!contacts.length){ m.appendChild(el('<p class="hint" style="margin-top:6px">No contacts yet.</p>')); return; }
       var tools=el('<div class="pipe-tools"><button class="btn-mini danger" id="cDel">Delete selected (<span id="cvCount">'+selCount()+'</span>)</button><button class="btn-mini" id="cCancel">Cancel</button></div>');
       tools.querySelector("#cDel").addEventListener("click", deleteSelected);
       tools.querySelector("#cCancel").addEventListener("click", function(){ contactsMode="list"; pipeSel={}; render(); });
       m.appendChild(tools);
+      renderDeleteList(m, contacts);
+      return;
     }
+
+    renderContactsSearch(m, contacts);
+  }
+  function renderDeleteList(m, contacts){
+    var listWrap=el('<div class="cv-list"></div>');
     var listWrap=el('<div class="cv-list"></div>');
     contacts.slice().sort(function(a,b){ return (a.name||"").localeCompare(b.name||""); }).forEach(function(c){
       var s=statusLabel(c), key=c.a.id+"|"+c.t.id;
-      if(del){
-        var row=el('<div class="pcard selectable'+(pipeSel[key]?" selected":"")+'">'+
-          '<div class="pc-check'+(pipeSel[key]?" on":"")+'"></div>'+
-          '<div class="pc-ava">'+esc(initials(c.name))+'</div>'+
-          '<div class="pc-main"><div class="pc-name">'+esc(c.name)+'</div><div class="pc-meta">'+esc((c.title||"")+(c.title&&c.account?" · ":"")+(c.account||""))+'</div></div>'+
-          '<div class="pc-status'+(s.gold?" gold":"")+'">'+s.txt+'</div>'+
-        '</div>');
-        row.addEventListener("click", function(){
-          pipeSel[key]=!pipeSel[key]; row.classList.toggle("selected"); row.querySelector(".pc-check").classList.toggle("on");
-          var cnt=document.getElementById("cvCount"); if(cnt) cnt.textContent=selCount();
-        });
-        listWrap.appendChild(row);
-        return;
-      }
-      // See mode — same expand-to-card logic as Pipeline
-      var wrap2=el('<div class="pc-wrap">'+
-        '<div class="pcard clickable">'+
-          '<div class="pc-ava">'+esc(initials(c.name))+'</div>'+
-          '<div class="pc-main"><div class="pc-name">'+esc(c.name)+'</div><div class="pc-meta">'+esc((c.title||"")+(c.title&&c.account?" · ":"")+(c.account||""))+'</div></div>'+
-          '<div class="pc-status'+(s.gold?" gold":"")+'">'+s.txt+'</div>'+
-          '<button class="pc-x" title="Remove">×</button>'+
-        '</div>'+
-        '<div class="pc-exec"></div></div>');
-      var pcard=wrap2.querySelector(".pcard"), exec=wrap2.querySelector(".pc-exec");
-      wrap2.querySelector(".pc-x").addEventListener("click", function(e){ e.stopPropagation(); removeContact(c); });
-      pcard.addEventListener("click", function(){
-        if(exec.classList.contains("open")){ exec.classList.remove("open"); exec.innerHTML=""; pcard.classList.remove("expanded"); return; }
-        exec.innerHTML=""; exec.classList.add("open"); pcard.classList.add("expanded");
-        var di=dueInfo(c);
-        exec.appendChild(di ? activeCard({c:c,i:di}, exec, [{c:c,i:di}], contacts.filter(function(x){ return x.status==="warm"; })) : pausedPanel(c));
+      var row=el('<div class="pcard selectable'+(pipeSel[key]?" selected":"")+'">'+
+        '<div class="pc-check'+(pipeSel[key]?" on":"")+'"></div>'+
+        '<div class="pc-ava">'+esc(initials(c.name))+'</div>'+
+        '<div class="pc-main"><div class="pc-name">'+esc(c.name)+'</div><div class="pc-meta">'+esc((c.title||"")+(c.title&&c.account?" · ":"")+(c.account||""))+'</div></div>'+
+        '<div class="pc-status'+(s.gold?" gold":"")+'">'+s.txt+'</div>'+
+      '</div>');
+      row.addEventListener("click", function(){
+        pipeSel[key]=!pipeSel[key]; row.classList.toggle("selected"); row.querySelector(".pc-check").classList.toggle("on");
+        var cnt=document.getElementById("cvCount"); if(cnt) cnt.textContent=selCount();
       });
-      listWrap.appendChild(wrap2);
+      listWrap.appendChild(row);
     });
     m.appendChild(listWrap);
+  }
+  // Loads a contact into Today if they're actually due; otherwise sends the
+  // rep to Pipeline, since Today's queue only ever holds due/overdue people.
+  function goToContactFromSearch(c){
+    var dueList=[]; asContacts().forEach(function(cc){ var ii=dueInfo(cc); if(ii && ii.overdueDays>=0) dueList.push({c:cc,i:ii}); });
+    var idx=dueList.findIndex(function(x){ return x.c.a.id===c.a.id && x.c.t.id===c.t.id; });
+    if(idx>=0){ focusIdx=idx; setView("home"); }
+    else { toast(c.complete ? (firstName(c.name)+"’s cadence is complete") : "Not due yet — see Pipeline for status"); setView("pipeline"); }
+  }
+  function renderContactsSearch(m, contacts){
+    var grid=el('<div class="o2-view"></div>');
+    var left=el('<div class="o2-view-left"></div>');
+    left.appendChild(el('<h1 class="o2-view-title">Contacts</h1>'));
+    left.appendChild(el('<p class="o2-view-sub">Everyone Ōllin tracks. Search a name, or run a command.</p>'));
+    var cmdwrap=el('<div class="o2-cmdwrap"></div>');
+    var bar=el('<div class="o2-cmdbar" id="cmdBar"><span class="o2-cmd-caret">&gt;</span><input class="o2-cmd-input" id="cmdInput" placeholder="Search or run a command…" autocomplete="off"><button class="o2-cmd-clear" id="cmdClear" style="display:none">CLEAR ×</button><span class="o2-cmd-count" id="cmdCount"></span></div>');
+    cmdwrap.appendChild(bar);
+    var panelHost=el('<div id="cmdPanelHost"></div>');
+    cmdwrap.appendChild(panelHost);
+    left.appendChild(cmdwrap);
+    grid.appendChild(left);
+    grid.appendChild(buildTodayList());
+    m.appendChild(grid);
+
+    var input=bar.querySelector("#cmdInput"), clearBtn=bar.querySelector("#cmdClear"), countEl=bar.querySelector("#cmdCount");
+    var query="", focused=false;
+    // Updates only the dropdown panel — never calls the app-wide render(),
+    // since that would rebuild the DOM and drop focus out of the input on
+    // every keystroke.
+    function updatePanel(){
+      panelHost.innerHTML="";
+      clearBtn.style.display=query?"inline-flex":"none";
+      var q=query.trim().toLowerCase();
+      var matches=contacts.filter(function(c){ return !q || (c.name+" "+c.account+" "+(c.title||"")).toLowerCase().indexOf(q)>-1; });
+      countEl.textContent=matches.length+" OF "+contacts.length;
+      if(!q){
+        countEl.textContent="";
+        if(!focused) return;
+        var panel=el('<div class="o2-cmd-panel"><div class="o2-cmd-panel-lbl">QUICK ACTIONS</div></div>');
+        [
+          {key:"+", label:"Add contact", hint:"ONE PERSON, STRAIGHT INTO A CADENCE", go:function(){ contactsMode="add"; setView("contacts"); }},
+          {key:"⇪", label:"Add a group of contacts", hint:"IMPORT FROM CSV", go:function(){ contactsMode="add"; setView("contacts"); }},
+          {key:"−", label:"Remove contacts", hint:"PULL PEOPLE OUT OF CADENCE", go:function(){ contactsMode="delete"; pipeSel={}; setView("contacts"); }},
+          {key:"▤", label:"See pipeline", hint:"EVERY DEAL BY STAGE", go:function(){ setView("pipeline"); }}
+        ].forEach(function(a){
+          var row=el('<div class="o2-crow"><div class="o2-crow-l"><span class="o2-crow-key">'+a.key+'</span><span class="o2-crow-label">'+esc(a.label)+'</span><span class="o2-crow-hint">'+a.hint+'</span></div><span class="o2-crow-arrow">→</span></div>');
+          row.addEventListener("mousedown", function(e){ e.preventDefault(); a.go(); });
+          panel.appendChild(row);
+        });
+        panelHost.appendChild(panel);
+        return;
+      }
+      var panel=el('<div class="o2-cmd-panel"></div>');
+      if(!matches.length){
+        panel.appendChild(el('<div class="o2-noresults"><div class="glyph">▚ ▚ ▚</div><div class="msg">Nothing matches.</div></div>'));
+      } else {
+        matches.forEach(function(c){
+          var s=statusLabel(c);
+          var row=el('<div class="o2-crow"><div style="min-width:0"><div class="o2-cresult-name">'+esc(c.name)+'</div><div class="o2-cresult-meta">'+esc((c.account||"").toUpperCase())+' · '+esc((c.title||"").toUpperCase())+'</div></div><span class="o2-cresult-state'+(c.complete?" done":"")+'">'+esc(s.txt.toUpperCase())+'</span></div>');
+          row.addEventListener("mousedown", function(e){ e.preventDefault(); goToContactFromSearch(c); });
+          panel.appendChild(row);
+        });
+      }
+      panelHost.appendChild(panel);
+    }
+    input.addEventListener("input", function(){ query=input.value; updatePanel(); });
+    input.addEventListener("focus", function(){ focused=true; bar.classList.add("focused"); updatePanel(); });
+    input.addEventListener("blur", function(){ focused=false; bar.classList.remove("focused"); updatePanel(); });
+    clearBtn.addEventListener("mousedown", function(e){ e.preventDefault(); query=""; input.value=""; input.focus(); updatePanel(); });
+    updatePanel();
   }
 
   // ---------- PIPELINE: cadence view grouped by account ----------
