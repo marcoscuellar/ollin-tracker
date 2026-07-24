@@ -4,12 +4,12 @@
 <link rel="icon" type="image/svg+xml" href="assets/ollin-mark.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800;900&family=Geist+Mono:wght@400;500;600&family=Sora:wght@500;700;800&family=Archivo:wght@400;500;600;700;800;900&family=Archivo+Expanded:wght@700;800;900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800;900&family=Geist+Mono:wght@400;500;600&family=Sora:wght@500;700;800&family=Archivo:wdth,wght@100,400;100,500;100,600;100,700;100,800;100,900;125,900&family=Archivo+Expanded:wght@700;800;900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
     --ink:#0a0a0a; --cream:#FFFFFF; --card:#FFFFFF; --gold:#0a0a0a; --blue:#1B2E52; --blue900:#1B2E52; --honey:#A83246; --honey-d:#7A2536; --grey:#6B6B6B; --tint:#E9EBF1;
     --amber:#f59e0b; --amber-d:#d97706; --navy:#0A1F3D; --green:#10b981; --green-d:#059669;
-    --bg:#F2F2F2; --grey2:#A6A6A6; --hover:#2A2A2A;
+    --bg:#FFFFFF; --grey2:#A6A6A6; --hover:#2A2A2A;
     --hairline:rgba(17,17,16,.12); --panel:#F5F5F5;
     /* vertical accents (reserved for future) */
     --cobalt:#3B77C2; --magenta:#B8438A; --verde:#3E9B4F;
@@ -334,7 +334,7 @@
 
   .o2-stage-top{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;}
   .o2-eyebrow{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:2px;color:var(--o2-mute);margin-bottom:10px;}
-  .o2-name{font-family:'Archivo Expanded',sans-serif;font-weight:900;font-size:clamp(40px,5.4vw,88px);line-height:.92;letter-spacing:-3px;margin:0;overflow-wrap:break-word;color:var(--o2-ink);}
+  .o2-name{font-family:'Archivo',sans-serif;font-weight:900;font-variation-settings:'wdth' 125;font-size:clamp(40px,5.4vw,88px);line-height:.92;letter-spacing:-3px;margin:0;overflow-wrap:break-word;color:var(--o2-ink);text-transform:uppercase;}
   .o2-title{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:1.5px;color:var(--o2-slate);margin-top:14px;}
   .o2-overdue{font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;letter-spacing:1.5px;padding:6px 10px;white-space:nowrap;flex:none;border:1px solid var(--o2-hairline);background:#fff;color:var(--o2-slate);}
   .o2-overdue.urgent{background:var(--o2-ink);border-color:var(--o2-ink);color:#fff;}
@@ -1433,13 +1433,13 @@
     var t = todayStr();
     state.accounts = [
       { id:"demoA", company:"Northwind Retail (sample)", start:t, threads:[
-        {id:"na1", name:"Jordan Blake", title:"VP Engineering", persona:"Economic Buyer", entryDay:1, channel:"em", linkedin:"linkedin.com/in/sample-jordan", email:"jordan@example.com", angle:"Owns the budget — leads with the cost math for a 5-person nearshore pod.", signal:"Promoted to VP — 6 days ago", signalSrc:"LinkedIn"},
-        {id:"na2", name:"Sam Rivera", title:"Director of Data Platform", persona:"Champion", entryDay:1, channel:"li", linkedin:"linkedin.com/in/sample-sam", email:"sam@example.com", angle:"Posted 6 open data-eng reqs in the last 30 days — feels the hiring pain daily."},
-        {id:"na3", name:"Casey Nguyen", title:"Staff Engineer", persona:"Technical Evaluator", entryDay:1, channel:"li", linkedin:"linkedin.com/in/sample-casey", email:"", angle:"Vets the stack fit — worth a Talent Map for their exact tooling."}
+        {id:"na1", name:"Jordan Blake", title:"VP Engineering", persona:"Economic Buyer", entryDay:1, channel:"em", linkedin:"linkedin.com/in/sample-jordan", email:"jordan@example.com", angle:"Owns the budget — leads with the cost math for a 5-person nearshore pod.", signal:"Promoted to VP — 6 days ago", signalSrc:"LinkedIn", pulledAt:Date.now()-4*60*1000},
+        {id:"na2", name:"Sam Rivera", title:"Director of Data Platform", persona:"Champion", entryDay:1, channel:"li", linkedin:"linkedin.com/in/sample-sam", email:"sam@example.com", angle:"Posted 6 open data-eng reqs in the last 30 days — feels the hiring pain daily.", pulledAt:Date.now()-45*60*1000},
+        {id:"na3", name:"Casey Nguyen", title:"Staff Engineer", persona:"Technical Evaluator", entryDay:1, channel:"li", linkedin:"linkedin.com/in/sample-casey", email:"", angle:"Vets the stack fit — worth a Talent Map for their exact tooling.", pulledAt:Date.now()-3*3600*1000}
       ]},
       { id:"demoB", company:"Aster Health (sample)", start:t, threads:[
-        {id:"ab1", name:"Priya Shah", title:"CTO", persona:"Economic Buyer", entryDay:1, channel:"em", linkedin:"", email:"priya@example.com", angle:"Compliance deadline in Q3 is forcing a hiring decision now."},
-        {id:"ab2", name:"Marcus Webb", title:"Eng Manager", persona:"Champion", entryDay:1, channel:"li", linkedin:"linkedin.com/in/sample-marcus", email:"", angle:"Team has been re-posting the same senior role for 90+ days."}
+        {id:"ab1", name:"Priya Shah", title:"CTO", persona:"Economic Buyer", entryDay:1, channel:"em", linkedin:"", email:"priya@example.com", angle:"Compliance deadline in Q3 is forcing a hiring decision now.", pulledAt:Date.now()-2*3600*1000},
+        {id:"ab2", name:"Marcus Webb", title:"Eng Manager", persona:"Champion", entryDay:1, channel:"li", linkedin:"", email:"", angle:"Team has been re-posting the same senior role for 90+ days.", pulledAt:Date.now()-26*3600*1000}
       ]}
     ];
     state.activeId="demoA";
@@ -1550,6 +1550,18 @@
     for(var i=0;i<SIGNAL_SOURCES.length;i++){ if(SIGNAL_SOURCES[i].toLowerCase()===s) return SIGNAL_SOURCES[i]; }
     return "";
   }
+  // honest "last pulled" label — real record timestamp, never a fabricated freshness claim
+  function timeAgo(ms){
+    if(!ms) return "—";
+    var diff=Date.now()-ms; if(diff<0) diff=0;
+    var min=Math.round(diff/60000);
+    if(min<1) return "JUST NOW";
+    if(min<60) return min+" MIN AGO";
+    var hr=Math.round(min/60);
+    if(hr<24) return hr+(hr===1?" HR AGO":" HRS AGO");
+    var day=Math.round(hr/24);
+    return day+(day===1?" DAY AGO":" DAYS AGO");
+  }
 
   function importEngine7(text){
     var rows=parseCSV(text);
@@ -1572,7 +1584,8 @@
         channel:channelFrom(get(cm.chan)),
         linkedin:get(cm.li), email:get(cm.email),
         angle:get(cm.angle),
-        signal:get(cm.signal), signalSrc:normSignalSource(get(cm.signalsrc))
+        signal:get(cm.signal), signalSrc:normSignalSource(get(cm.signalsrc)),
+        pulledAt:Date.now()
       };
       if(!thread.signalSrc) thread.signal=""; // no valid, real source → not tracked, never shown
       // capture per-touch message copy (maps to the 5-touch cadence i=0..4)
@@ -1626,7 +1639,8 @@
         name:name, title:get(cm.title), persona:persona,
         entryDay: persona==="Blocker"?0:dayFrom(get(cm.seq), persona),
         channel:channelFrom(get(cm.chan)), linkedin:get(cm.li), email:get(cm.email), angle:get(cm.angle),
-        signal: signalSrc?get(cm.signal):"", signalSrc: signalSrc
+        signal: signalSrc?get(cm.signal):"", signalSrc: signalSrc,
+        pulledAt: Date.now()
       };
       var msgs = { 0:get(cm.t1), 1:withSubjG(get(cm.t2subj),get(cm.t2)), 2:get(cm.t3), 3:withSubjG(get(cm.t4subj),get(cm.t4)), 4:get(cm.t5) };
       var acct = state.accounts.find(function(a){ return normCompany(a.company)===normCompany(company); });
@@ -1637,7 +1651,7 @@
       if(thread){
         thread.name=fields.name; thread.title=fields.title; thread.persona=fields.persona; thread.entryDay=fields.entryDay;
         thread.channel=fields.channel; thread.linkedin=fields.linkedin; thread.email=fields.email; thread.angle=fields.angle;
-        thread.signal=fields.signal; thread.signalSrc=fields.signalSrc;
+        thread.signal=fields.signal; thread.signalSrc=fields.signalSrc; thread.pulledAt=fields.pulledAt;
         updated++;
       } else {
         if(added>=budget){ skipped++; continue; } // over the free cap — hold this one back
@@ -2464,13 +2478,13 @@
     var stage=el('<div class="o2-stage"></div>');
     stage.appendChild(el('<div class="o2-stage-top"><div><div class="o2-eyebrow">'+esc((c.account||"").toUpperCase())+' · TOUCH '+i.stepNum+' OF 5</div><h1 class="o2-name">'+esc(c.name)+'</h1><div class="o2-title">'+esc((c.title||"").toUpperCase())+'</div></div><span class="o2-overdue'+(urgent?" urgent":"")+'">'+esc(duePill(i).toUpperCase())+'</span></div>'));
 
-    stage.appendChild(el('<div class="o2-intel-head"><span>CLIENT INTELLIGENCE</span><span>ACCOUNT NOTES</span></div>'));
+    stage.appendChild(el('<div class="o2-intel-head"><span>CLIENT INTELLIGENCE</span><span>PULLED '+esc(timeAgo(c.t.pulledAt))+'</span></div>'));
     var intel=el('<div class="o2-intel"></div>');
     function intelRow(label,tracked,fact,src,quiet){
       return '<div class="o2-intel-row'+(tracked?"":" untracked")+'"><span class="o2-intel-label">'+label+'</span><span class="o2-intel-fact'+(!tracked?"":(quiet?" quiet":""))+'">'+(tracked?esc(fact):"—")+'</span><span class="o2-intel-src'+(tracked?"":" untracked")+'">'+(tracked?esc(src.toUpperCase()):"NOT TRACKED")+'</span></div>';
     }
     intel.appendChild(el(intelRow("SIGNAL", hasSignal, hasSignal?c.t.signal:"", hasSignal?c.t.signalSrc:"", false)));
-    intel.appendChild(el(intelRow("WHY NOW", hasWhy, hasWhy?c.t.angle:"", hasWhy?"NOTES":"", false)));
+    intel.appendChild(el(intelRow("WHY NOW", hasWhy, hasWhy?c.t.angle:"", hasWhy?"Call Notes":"", false)));
     intel.appendChild(el(intelRow("LAST TOUCH", true, lastTouch?(fmtLong(lastTouch)+" · "+CH_LABEL[i.ch]):"Never contacted", "CADENCE", true)));
     stage.appendChild(intel);
 
@@ -2757,10 +2771,7 @@
   }
   function buildNav(m){
     var now=new Date();
-    // TODAY / CONTACTS / PIPELINE per the redesign spec; DASHBOARD kept reachable in the
-    // same mono style. BRB is gone as a tab — its job (leave a note) now lives in
-    // Today's own "BEFORE YOU GO" rail footer.
-    var TABS=[["home","TODAY",false],["contacts","CONTACTS",true],["pipeline","PIPELINE",false],["dashboard","DASHBOARD",false]];
+    var TABS=[["home","TODAY",false],["contacts","CONTACTS",true],["pipeline","PIPELINE",false]];
     var nav=el('<div class="o2-head"><div class="o2-lockup"><span class="o2-word">ŌLLIN</span><span class="o2-sub">TRACKER</span></div><div class="o2-navlinks" id="navTabs"></div><div class="o2-headright"><span>'+DOW[now.getDay()]+" "+MON[now.getMonth()]+" "+now.getDate()+'</span><div class="o2-ava" id="navAva" title="Account">'+esc(avaInitial())+'</div></div></div>');
     var ntabs=nav.querySelector("#navTabs");
     TABS.forEach(function(t){
@@ -2796,7 +2807,7 @@
     if(!a){ a={ id:"a"+Date.now(), company:f.company, start:todayStr(), threads:[] }; state.accounts.push(a); }
     a.threads=a.threads||[];
     var entry=Math.max(1, daysBetween(a.start, todayStr())+1); // day 1 = today
-    a.threads.push({ id:"t"+Date.now()+"_"+Math.floor(Math.random()*9999), name:f.name, title:f.title||"", persona:"Additional", entryDay:entry, channel:f.channel||"li", linkedin:f.linkedin||"", email:f.email||"", angle:f.angle||"", signal:f.signalSrc?(f.signal||""):"", signalSrc:f.signalSrc||"", status:"active" });
+    a.threads.push({ id:"t"+Date.now()+"_"+Math.floor(Math.random()*9999), name:f.name, title:f.title||"", persona:"Additional", entryDay:entry, channel:f.channel||"li", linkedin:f.linkedin||"", email:f.email||"", angle:f.angle||"", signal:f.signalSrc?(f.signal||""):"", signalSrc:f.signalSrc||"", pulledAt:Date.now(), status:"active" });
     persistAccounts();
     return null;
   }
@@ -2930,19 +2941,9 @@
     ledger.appendChild(el('<div><div class="o2-lnum">'+dayTotal(todayStr())+'</div><div class="o2-llbl">CLEARED</div></div>'));
     ledger.appendChild(el('<div><div class="o2-lnum">'+inCadence+'</div><div class="o2-llbl">IN CADENCE</div></div>'));
     var lastZone=el('<div></div>');
-    var todayBtn=el('<button class="o2-lbtn quiet'+(todayOnly?" on":"")+'" id="todayBtn">TODAY ONLY</button>');
-    todayBtn.addEventListener("click", function(){ todayOnly=!todayOnly; focusIdx=0; render(); });
-    var adhdBtn=el('<button class="o2-lbtn quiet" id="adhdBtn">✦ ADHD</button>');
-    adhdBtn.addEventListener("click", function(e){ e.stopPropagation(); openMenu(adhdBtn, [
-      {label:"Pomodoro — 25 min", icon: ICON.clock, onClick: openPomodoro},
-      {label:"Just do one", icon: ICON.target, onClick: openJustOne},
-      {label:"Breathe — 30s", icon: ICON.wind, onClick: openBreathe}
-    ]); });
     var fmBtn=el('<button class="o2-lbtn'+(focusMode?" on":"")+'" id="fmBtn">'+(focusMode?"◉ FOCUS ON":"◎ FOCUS MODE")+'</button>');
     fmBtn.addEventListener("click", function(){ focusMode=!focusMode; document.getElementById("appMain").classList.toggle("focus",focusMode); render(); });
-    var goalBtn=el('<button class="o2-lbtn quiet" id="goalBtn" title="Change your daily touch goal">GOAL '+goalVal()+'</button>');
-    goalBtn.addEventListener("click", editGoal);
-    lastZone.appendChild(adhdBtn); lastZone.appendChild(todayBtn); lastZone.appendChild(fmBtn); lastZone.appendChild(goalBtn);
+    lastZone.appendChild(fmBtn);
     if(overdueCount>0){
       var restoreBtn=el('<button class="o2-lbtn quiet" id="restoreBtn" title="Move every overdue touch to be due today">RESTORE</button>');
       restoreBtn.addEventListener("click", function(){ if(confirm("Move "+overdueCount+" overdue touch"+(overdueCount>1?"es":"")+" to be due today?")) restoreOverdueToToday(); });
