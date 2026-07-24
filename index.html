@@ -4,7 +4,7 @@
 <link rel="icon" type="image/svg+xml" href="assets/ollin-mark.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800;900&family=Geist+Mono:wght@400;500;600&family=Sora:wght@500;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800;900&family=Geist+Mono:wght@400;500;600&family=Sora:wght@500;700;800&family=Archivo:wght@400;500;600;700;800;900&family=Archivo+Expanded:wght@700;800;900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
     --ink:#0a0a0a; --cream:#FFFFFF; --card:#FFFFFF; --gold:#0a0a0a; --blue:#1B2E52; --blue900:#1B2E52; --honey:#A83246; --honey-d:#7A2536; --grey:#6B6B6B; --tint:#E9EBF1;
@@ -15,6 +15,10 @@
     --cobalt:#3B77C2; --magenta:#B8438A; --verde:#3E9B4F;
     /* öllin movement brand mark */
     --ollin-ink:#16130F; --ollin-teal:#1E9DA8; --ollin-maroon:#A83246; --ollin-gold:#F5B700;
+    /* Ōllin Tracker monochrome-editorial redesign (Today screen + global chrome) */
+    --o2-ink:#0A0A0A; --o2-graphite:#2A2A2A; --o2-slate:#767676; --o2-mute:#A3A3A3;
+    --o2-hairline:#E6E6E6; --o2-navidle:#C9C9C9; --o2-paper:#FFFFFF; --o2-hoverbg:#FAFAFA;
+    --o2-accent:#C9A227;
   }
   *{margin:0;padding:0;box-sizing:border-box;}
   html,body{background:var(--bg);color:var(--ink);}
@@ -150,8 +154,6 @@
   .handoff input{width:100%;background:var(--cream);border:.5px solid var(--hairline);font-family:'Geist',sans-serif;font-size:14.5px;padding:12px;color:var(--ink);margin-top:10px;}
   .handoff .hint{margin-top:8px;}
   .handoff .saved{color:var(--gold);}
-  .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:20px;background:var(--ink);color:var(--cream);font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:.1em;padding:10px 18px;opacity:0;pointer-events:none;transition:opacity .25s;text-transform:uppercase;z-index:90;}
-  .toast.show{opacity:1;}
 
   /* lock screen (passkey) — VAMOS styling */
   .lock{position:fixed;inset:0;z-index:80;background:var(--bg);overflow-y:auto;}
@@ -269,25 +271,19 @@
   .upload-fields{font-size:13px;color:var(--ink);line-height:1.7;}
   .upload-fields b{font-weight:600;}
   .upload-dim{color:var(--grey);}
-  @media (prefers-reduced-motion:reduce){.mini-square,.toast{transition:none;}}
+  @media (prefers-reduced-motion:reduce){.mini-square{transition:none;}}
   @media (max-width:430px){.qmain{flex-wrap:wrap;}.qactions{width:100%;justify-content:flex-end;}}
 
   /* ===================== REFRESHED DESKTOP FACE ===================== */
   :root{ --radius:12px; --shadow:0 2px 5px rgba(17,17,17,.06),0 14px 40px rgba(17,17,17,.14); }
   .app{max-width:1180px;padding:0 24px 90px;}
   /* top nav */
-  .nav{display:flex;align-items:center;gap:20px;padding:16px 0 22px;position:relative;}
-  .nav-tabs{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);}
   .pipe-tools{display:flex;gap:8px;margin-bottom:12px;}
   .pc-check{width:18px;height:18px;border:1.5px solid var(--hairline);border-radius:5px;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
   .pc-check.on{background:var(--ink);border-color:var(--ink);}
   .pc-check.on::after{content:"\2713";color:var(--cream);font-size:11px;line-height:1;}
   .pc-wrap .pcard.selectable{cursor:pointer;}
   .pc-wrap .pcard.selected{border-color:var(--ink);background:var(--panel);}
-  .nav-logo{font-family:'Geist',sans-serif;font-weight:900;font-size:26px;letter-spacing:-.03em;}
-  .nav-logo.brandmark{gap:11px;}
-  .nav-logo .bm-tag{font-size:11px;}
-  .nav-logo .way{color:var(--honey);}
   .brandmark{display:inline-flex;align-items:center;gap:8px;}
   .brandmark svg{display:block;flex-shrink:0;}
   .brandmark .bm-word{font-family:'Sora',sans-serif;font-weight:800;letter-spacing:-.04em;color:var(--ollin-ink);}
@@ -296,18 +292,144 @@
   .gl-mark svg .mv-dot{transform-box:view-box;transform-origin:36px 36px;animation:mv-orbit 7s linear infinite;}
   @keyframes mv-orbit{from{transform:rotate(120deg);}to{transform:rotate(480deg);}}
   @media (prefers-reduced-motion: reduce){ .gl-mark svg .mv-dot{animation:none;} }
-  .nav-tabs{display:flex;align-items:center;gap:2px;}
-  .nav-tab{font-size:14px;color:var(--grey);background:none;border:none;cursor:pointer;padding:9px 15px;border-radius:9px;font-family:inherit;white-space:nowrap;}
-  .nav-tab:hover{color:var(--ink);background:rgba(45,45,45,.04);}
-  .nav-tab.active{color:var(--ink);background:var(--card);box-shadow:var(--shadow);font-weight:500;border-bottom:2px solid var(--ollin-maroon);}
-  .nav-right{margin-left:auto;display:flex;align-items:center;gap:16px;}
-  .nav-date{font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:.12em;color:var(--grey);}
-  .nav-lock{font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:.12em;color:var(--grey);background:none;border:none;cursor:pointer;}
-  .nav-lock:hover{color:var(--ink);}
-  .nav-bell{position:relative;width:9px;height:9px;border:1.5px solid var(--grey);border-radius:50%;}
-  .nav-bell .dot{position:absolute;top:-3px;right:-3px;width:6px;height:6px;background:var(--gold);border-radius:50%;}
-  .nav-ava{width:30px;height:30px;border-radius:50%;background:var(--ink);color:var(--card);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;text-transform:uppercase;cursor:pointer;}
-  .nav-tab.has-caret::after{content:"▾";font-size:9px;margin-left:5px;opacity:.55;}
+  /* ===================================================================
+     ŌLLIN TRACKER — monochrome editorial redesign (global chrome + Today)
+     Design tokens: --o2-ink/graphite/slate/mute/hairline/navidle/paper/hoverbg/accent
+     Fonts: Archivo, Archivo Expanded, IBM Plex Mono. Radius: 0 everywhere.
+     =================================================================== */
+  .o2-head{display:flex;align-items:center;justify-content:space-between;padding:18px 40px;border-bottom:1px solid var(--o2-ink);font-family:'Archivo',sans-serif;}
+  .o2-lockup{display:inline-flex;flex-direction:column;align-items:flex-start;line-height:.86;}
+  .o2-lockup .o2-word{font-family:'Archivo Expanded',sans-serif;font-weight:800;font-size:17px;letter-spacing:.5px;color:var(--o2-ink);}
+  .o2-lockup .o2-sub{font-family:'IBM Plex Mono',monospace;font-size:6.5px;letter-spacing:3.5px;color:var(--o2-mute);margin-top:2px;}
+  .o2-navlinks{display:flex;align-items:center;gap:28px;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:1.5px;}
+  .o2-nav-item{background:none;border:none;padding:0 0 3px;cursor:pointer;font:inherit;color:var(--o2-slate);border-bottom:2px solid transparent;transition:color .18s,border-color .18s,transform .16s;}
+  .o2-nav-item.active{color:var(--o2-ink);border-bottom-color:var(--o2-ink);}
+  .o2-nav-item:hover{color:var(--o2-accent);border-bottom-color:var(--o2-accent);transform:translateX(3px);}
+  .o2-nav-item.has-caret::after{content:"▾";font-size:9px;margin-left:4px;opacity:.6;}
+  .o2-headright{display:flex;align-items:center;gap:16px;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:1.5px;color:var(--o2-slate);}
+  .o2-ava{width:26px;height:26px;border:1px solid var(--o2-ink);color:var(--o2-ink);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:11px;}
+
+  /* ledger strip (Today only) */
+  .o2-ledger{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid var(--o2-ink);}
+  .o2-ledger>div{padding:20px 26px;border-right:1px solid var(--o2-hairline);}
+  .o2-ledger>div:first-child{padding-left:40px;}
+  .o2-ledger>div:last-child{border-right:none;padding-right:40px;display:flex;align-items:center;justify-content:flex-end;gap:10px;}
+  .o2-lnum{font-family:'Archivo Expanded',sans-serif;font-weight:900;font-size:38px;line-height:1;color:var(--o2-ink);}
+  .o2-llbl{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--o2-mute);margin-top:6px;}
+  .o2-lbtn{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:1px;background:var(--o2-paper);border:1px solid var(--o2-ink);color:var(--o2-ink);padding:10px 14px;cursor:pointer;white-space:nowrap;}
+  .o2-lbtn.on{background:var(--o2-ink);color:#fff;}
+  .o2-lbtn.quiet{border-color:var(--o2-hairline);color:var(--o2-slate);}
+
+  /* two-column Today grid */
+  .o2-today{display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,380px);min-height:calc(100vh - 158px);font-family:'Archivo',sans-serif;}
+  .o2-left{border-right:1px solid var(--o2-ink);padding:44px 48px 48px;}
+  .o2-startrow{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:36px;}
+  .o2-starthere{display:flex;align-items:baseline;gap:14px;}
+  .o2-starthere span:first-child{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:2px;color:var(--o2-mute);}
+  .o2-starthere span:last-child{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:1.5px;color:var(--o2-ink);}
+  .o2-arrows{display:flex;}
+  .o2-arrow{width:34px;height:34px;border:1px solid var(--o2-ink);background:#fff;color:var(--o2-ink);font-family:'IBM Plex Mono',monospace;font-size:14px;cursor:pointer;}
+  .o2-arrow+.o2-arrow{border-left:none;}
+  .o2-arrow:disabled{opacity:.35;cursor:default;}
+
+  .o2-stage-top{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;}
+  .o2-eyebrow{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:2px;color:var(--o2-mute);margin-bottom:10px;}
+  .o2-name{font-family:'Archivo Expanded',sans-serif;font-weight:900;font-size:clamp(40px,5.4vw,88px);line-height:.92;letter-spacing:-3px;margin:0;overflow-wrap:break-word;color:var(--o2-ink);}
+  .o2-title{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:1.5px;color:var(--o2-slate);margin-top:14px;}
+  .o2-overdue{font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;letter-spacing:1.5px;padding:6px 10px;white-space:nowrap;flex:none;border:1px solid var(--o2-hairline);background:#fff;color:var(--o2-slate);}
+  .o2-overdue.urgent{background:var(--o2-ink);border-color:var(--o2-ink);color:#fff;}
+
+  .o2-intel-head{display:flex;justify-content:space-between;align-items:baseline;margin-top:34px;padding-bottom:8px;}
+  .o2-intel-head span{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--o2-mute);}
+  .o2-intel{border-top:1px solid var(--o2-ink);}
+  .o2-intel-row{display:flex;gap:16px;align-items:baseline;padding:13px 0;border-bottom:1px solid var(--o2-hairline);}
+  .o2-intel-row:last-child{border-bottom:none;}
+  .o2-intel-label{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:1.5px;color:var(--o2-mute);width:78px;flex:none;}
+  .o2-intel-fact{font-size:15px;flex:1;color:var(--o2-ink);}
+  .o2-intel-fact.quiet{color:var(--o2-slate);}
+  .o2-intel-src{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:1px;color:var(--o2-slate);border:1px solid var(--o2-hairline);padding:3px 7px;flex:none;}
+
+  .o2-stepper{display:flex;gap:6px;margin-top:30px;}
+  .o2-step{flex:1;}
+  .o2-step-bar{height:6px;background:var(--o2-hairline);}
+  .o2-step-bar.done{background:var(--o2-ink);opacity:.45;}
+  .o2-step-bar.active{background:var(--o2-ink);opacity:1;}
+  .o2-step-label{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:1px;margin-top:8px;color:var(--o2-mute);}
+  .o2-step-label.active{color:var(--o2-ink);font-weight:600;}
+
+  .o2-bottom{margin-top:38px;}
+  .o2-bottom.composer-open{display:grid;grid-template-columns:minmax(0,4fr) minmax(0,1fr);gap:18px;align-items:stretch;}
+  .o2-composer{border:1px solid var(--o2-ink);display:flex;flex-direction:column;min-width:0;}
+  .o2-composer-head{display:flex;align-items:center;justify-content:space-between;gap:12px;border-bottom:1px solid var(--o2-ink);padding:10px 12px;}
+  .o2-composer-head-l{display:flex;align-items:center;gap:12px;}
+  .o2-composer-hint{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:1px;color:var(--o2-mute);}
+  .o2-composer-x{background:none;border:none;color:var(--o2-mute);font-family:'IBM Plex Mono',monospace;font-size:15px;cursor:pointer;}
+  .o2-composer textarea{width:100%;flex:1;min-height:210px;border:none;outline:none;resize:vertical;padding:18px;font-family:'Archivo',sans-serif;font-size:15px;line-height:1.65;color:var(--o2-ink);background:#fff;display:block;}
+  .o2-composer-foot{display:flex;align-items:center;gap:14px;padding:11px 14px;border-top:1px solid var(--o2-hairline);flex-wrap:wrap;}
+  .o2-composer-foot span{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:1px;color:var(--o2-mute);}
+  .o2-reset{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:1px;background:none;border:none;color:var(--o2-ink);cursor:pointer;padding:0;text-decoration:underline;white-space:nowrap;}
+  .o2-ai-btn{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:1px;background:none;border:1px solid var(--o2-accent);color:var(--o2-graphite);padding:8px 12px;cursor:pointer;}
+  .o2-ai-btn:hover{background:var(--o2-accent);color:#fff;}
+  .o2-ai-btn[disabled]{opacity:.5;cursor:default;}
+  .o2-ai-hint{display:none;margin:10px 14px 0;font-size:11px;line-height:1.4;color:var(--o2-slate);border-left:2px solid var(--o2-accent);padding:6px 10px;}
+  .o2-ai-hint.show{display:block;}
+  .o2-ai-steer{display:none;margin:0 14px 14px;border:1px solid var(--o2-accent);padding:12px;}
+  .o2-ai-steer.open{display:block;}
+  .o2-ai-lead{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:1px;color:var(--o2-graphite);margin:0 0 8px;}
+  .o2-ai-row{display:flex;gap:8px;}
+  .o2-ai-row input{flex:1;min-width:0;border:1px solid var(--o2-hairline);padding:9px 10px;font-family:'Archivo',sans-serif;font-size:13px;color:var(--o2-ink);}
+  .o2-ai-draft{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:1px;background:var(--o2-accent);color:#fff;border:1px solid var(--o2-accent);padding:9px 14px;cursor:pointer;white-space:nowrap;}
+  .o2-ai-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;}
+  .o2-ai-chip{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.5px;text-transform:uppercase;border:1px solid var(--o2-hairline);background:#fff;color:var(--o2-slate);padding:5px 9px;cursor:pointer;}
+  .o2-ai-chip:hover{border-color:var(--o2-accent);color:var(--o2-graphite);}
+
+  .o2-tab{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:1px;padding:9px 16px;border:1px solid var(--o2-ink);cursor:pointer;background:#fff;color:var(--o2-slate);}
+  .o2-tab.on{background:var(--o2-ink);color:#fff;}
+  .o2-tab.linkedin{border-left:none;}
+
+  .o2-actioncol{display:flex;flex-direction:column;gap:12px;min-width:0;}
+  .o2-actioncol.boxed{gap:14px;border:1px solid var(--o2-hairline);padding:18px;}
+  .o2-channelrow{display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+  .o2-channelrow.hidden{display:none;}
+  .o2-channellbl{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--o2-mute);}
+  .o2-tabgroup{display:inline-flex;}
+  .o2-actionrow{display:flex;flex-wrap:wrap;gap:10px;}
+  .o2-actionrow.stacked{flex-direction:column;}
+  .o2-btn{font-family:'IBM Plex Mono',monospace;font-size:13px;letter-spacing:.5px;padding:15px 10px;cursor:pointer;white-space:nowrap;flex:1 1 0;transition:transform .16s;}
+  .o2-btn:hover{transform:translateY(-3px);}
+  .o2-btn-primary{background:var(--o2-ink);border:1px solid var(--o2-ink);color:#fff;font-weight:600;}
+  .o2-btn-secondary{background:#fff;border:1px solid var(--o2-ink);color:var(--o2-ink);}
+  .o2-btn-quiet{background:#fff;border:1px solid var(--o2-hairline);color:var(--o2-slate);}
+  .o2-btn-done{background:#fff;border:1.5px solid var(--o2-ink);color:var(--o2-ink);font-weight:600;}
+
+  .o2-right{display:flex;flex-direction:column;}
+  .o2-rail-head{padding:22px 24px 14px;border-bottom:1px solid var(--o2-ink);display:flex;justify-content:space-between;align-items:baseline;}
+  .o2-rail-head span:first-child{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:2px;color:var(--o2-mute);}
+  .o2-rail-head span:last-child{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:1px;color:var(--o2-slate);}
+  .o2-track{height:2px;background:var(--o2-hairline);}
+  .o2-track-fill{height:100%;background:var(--o2-ink);transition:width .62s cubic-bezier(.22,1,.28,1);}
+  .o2-rail-scroll{flex:1;overflow-y:auto;min-height:0;}
+  .o2-qrow{padding:16px 24px;border-bottom:1px solid var(--o2-hairline);border-left:3px solid transparent;background:#fff;cursor:pointer;}
+  .o2-qrow.active{border-left-color:var(--o2-ink);background:var(--o2-hoverbg);}
+  .o2-qrow.cleared{opacity:.45;}
+  .o2-qrow-top{display:flex;align-items:baseline;justify-content:space-between;gap:10px;}
+  .o2-qname{font-family:'Archivo',sans-serif;font-weight:700;font-size:16px;color:var(--o2-ink);}
+  .o2-qrow.cleared .o2-qname{text-decoration:line-through;}
+  .o2-qstate{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:1px;color:var(--o2-mute);flex:none;}
+  .o2-qmeta{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:1px;color:var(--o2-mute);margin-top:5px;}
+  .o2-bfyg{border-top:1px solid var(--o2-ink);padding:20px 24px 24px;}
+  .o2-bfyg-lbl{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--o2-mute);margin-bottom:10px;}
+  .o2-bfyg textarea{width:100%;min-height:88px;border:1px solid var(--o2-ink);outline:none;resize:vertical;padding:12px;font-family:'Archivo',sans-serif;font-size:14px;line-height:1.55;color:var(--o2-ink);background:#fff;display:block;}
+  .o2-bfyg-save{display:flex;align-items:center;gap:6px;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:1px;color:var(--o2-mute);margin-top:9px;}
+  .o2-cursor{display:inline-block;width:7px;height:11px;background:var(--o2-ink);animation:o2-blink 1s step-end infinite;}
+  @keyframes o2-blink{0%,49%{opacity:1;}50%,100%{opacity:0;}}
+  @media (prefers-reduced-motion:reduce){ .o2-cursor{animation:none;} .o2-nav-item{transition:none;} .o2-btn{transition:none;} }
+
+  /* notification stack — replaces the old single #toast */
+  .o2-stack{position:fixed;right:24px;bottom:24px;display:flex;flex-direction:column;gap:10px;align-items:flex-end;z-index:200;pointer-events:none;}
+  .o2-note{display:flex;align-items:center;gap:10px;background:var(--o2-ink);color:#fff;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:1.2px;padding:13px 18px;white-space:nowrap;transform-origin:right bottom;transition:transform .3s cubic-bezier(.16,1,.3,1),filter .3s ease,opacity .3s ease;}
+  .o2-note .dot{width:7px;height:7px;background:var(--o2-accent);flex:none;}
+
   .nav-menu{position:fixed;z-index:200;background:var(--card);border:.5px solid var(--hairline);border-radius:12px;box-shadow:var(--shadow);padding:6px;min-width:190px;}
   .nav-menu button{display:flex;align-items:center;gap:9px;width:100%;text-align:left;background:none;border:none;font-family:inherit;font-size:13.5px;color:var(--ink);padding:9px 12px;border-radius:8px;cursor:pointer;white-space:nowrap;}
   .nm-ic{display:inline-flex;color:var(--grey);}
@@ -1115,7 +1237,7 @@
   </div>
 </div>
 
-<div class="toast" id="toast"></div>
+<div class="o2-stack" id="o2Stack"></div>
 
 <script>
 (function(){
@@ -1278,9 +1400,28 @@
     state.seeded=true;
   }
 
-  // ---------- toast ----------
-  var toastT;
-  function toast(msg){ var el=document.getElementById("toast"); el.textContent=msg; el.classList.add("show"); clearTimeout(toastT); toastT=setTimeout(function(){el.classList.remove("show");},1600); }
+  // ---------- notification stack (max 4, newest full-scale, older ones scale/dim behind it) ----------
+  function toast(msg){
+    var stack=document.getElementById("o2Stack"); if(!stack) return;
+    var note=el('<div class="o2-note"><span class="dot"></span><span></span></div>');
+    note.lastChild.textContent=msg;
+    stack.appendChild(note);
+    while(stack.children.length>4) stack.removeChild(stack.firstChild);
+    restackNotes();
+    setTimeout(function(){
+      note.style.opacity="0"; note.style.transform="translateY(-10px)";
+      setTimeout(function(){ if(note.parentNode) note.parentNode.removeChild(note); restackNotes(); },200);
+    },2600);
+  }
+  function restackNotes(){
+    var stack=document.getElementById("o2Stack"); if(!stack) return;
+    var kids=Array.prototype.slice.call(stack.children);
+    kids.forEach(function(el,i){
+      var depth=kids.length-1-i;
+      el.style.transform="scale("+(1-depth*.035)+")";
+      el.style.filter=depth?("opacity("+(1-depth*.28)+")"):"none";
+    });
+  }
   function el(html){ var d=document.createElement("div"); d.innerHTML=html.trim(); return d.firstChild; }
   function esc(s){ return (s||"").replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];}); }
   function extUrl(u){
@@ -1948,7 +2089,8 @@
   // ================= VAMOS UI (wired to existing accounts/threads/KV) =================
   var CH_LABEL = { li:"LinkedIn", em:"Email", call:"Call" };
   var STEP_NAMES = ["Outreach","Follow up","Nudge","Break up","Final attempt"];
-  var focusIdx=0, meterRevealed=false, navView="home", focusMode=false, contactsMode="list", todayOnly=false;
+  var focusIdx=0, navView="home", focusMode=false, contactsMode="list", todayOnly=false;
+  var oneMoveChannel="em", oneMoveComposer="draft"; // the Today "one move" channel toggle + composer state
   // Line-art icons (no emoji anywhere in-app). stroke=currentColor, 24-grid.
   var ICON={
     spark:'<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5l1.7 5.4 5.4 1.7-5.4 1.7L12 17.7l-1.7-5.4L4.9 10.6l5.4-1.7z"/></svg>',
@@ -2220,28 +2362,6 @@
 
   // ---- render ----
   // ---- momentum gauge: fills up, number hidden until tapped ----
-  function buildMeter(){
-    var SEG=16, wrap=el('<div class="stat meter-stat" title="Tap to see the number"></div>');
-    function draw(){
-      var goal=goalVal(), sent=sentToday(), full=sent>=goal;
-      var on=goal>0?Math.min(SEG,Math.round(sent/goal*SEG)):0; if(sent>0&&on===0)on=1;
-      wrap.innerHTML="";
-      if(meterRevealed){
-        wrap.appendChild(el('<div class="meter-num" style="'+(full?"color:var(--blue)":"")+'">'+sent+'</div>'));
-        var sub=el('<div class="lbl2">of <button id="mGoal" style="background:none;border:none;color:var(--grey);text-decoration:underline;cursor:pointer;font:inherit;letter-spacing:inherit">'+goal+'</button> · sent today</div>');
-        wrap.appendChild(sub);
-        sub.querySelector("#mGoal").addEventListener("click", function(e){ e.stopPropagation(); editGoal(); });
-      } else {
-        var mtr=el('<div class="meter'+(full?" full":"")+'"></div>');
-        for(var k=0;k<SEG;k++) mtr.appendChild(el('<i class="'+(k<on?"on":"")+'"></i>'));
-        wrap.appendChild(mtr);
-        wrap.appendChild(el('<div class="lbl2">sent today</div>'));
-      }
-    }
-    draw();
-    wrap.addEventListener("click", function(){ meterRevealed=!meterRevealed; draw(); });
-    return wrap;
-  }
   // ---- step timeline (5 touches, human names) ----
   function timelineHTML(c, mini){
     var html='<div class="timeline"'+(mini?' style="margin:14px 0 0"':'')+'>';
@@ -2254,29 +2374,175 @@
     return html+'</div>';
   }
   function duePill(i){ return i.overdueDays>0 ? (i.overdueDays===1?"Due yesterday":i.overdueDays+"d overdue") : "Due today"; }
-  // ---- carousel deck ----
-  function renderDeckInto(host, dueList, warm){
-    host.innerHTML="";
-    if(!dueList.length){
-      host.appendChild(el('<div class="deck"><div class="dc deckcard active" style="text-align:center;padding:50px 34px"><div class="start-title" style="font-size:28px">Queue clear<span style="color:var(--honey)">.</span></div><p style="color:var(--grey);margin-top:10px">Nobody’s due. Add contacts below, or take the win.</p></div></div>'));
-      return;
-    }
+  var OM_STEP_LABELS=["OUTREACH","FOLLOW UP","NUDGE","BREAK UP","FINAL"];
+  var oneMoveLastTouchId=null;
+  // ---- Today: "the one move" (left column) ----
+  function buildOneMove(dueList){
     if(focusIdx>=dueList.length) focusIdx=dueList.length-1;
     if(focusIdx<0) focusIdx=0;
-    var deck=el('<div class="deck"></div>');
-    if(focusIdx>0) deck.appendChild(peekCard(dueList[focusIdx-1],"left",focusIdx-1,host,dueList,warm));
-    deck.appendChild(activeCard(dueList[focusIdx],host,dueList,warm));
-    if(focusIdx<dueList.length-1) deck.appendChild(peekCard(dueList[focusIdx+1],"right",focusIdx+1,host,dueList,warm));
-    host.appendChild(deck);
+    if(!dueList.length){
+      return el('<div class="o2-left"><div class="o2-eyebrow">START HERE</div><h1 class="o2-name" style="font-size:clamp(28px,4vw,52px)">Queue clear.</h1><p class="o2-title" style="text-transform:none;letter-spacing:0;font-size:15px;margin-top:16px">Nobody’s due. Add contacts, or take the win.</p></div>');
+    }
+    var item=dueList[focusIdx], c=item.c, i=item.i;
+    if(i.touch.id!==oneMoveLastTouchId){
+      oneMoveLastTouchId=i.touch.id;
+      oneMoveChannel = i.ch==="li" ? "li" : "em";
+      oneMoveComposer = oneMoveChannel==="em" ? "draft" : null;
+    }
+    var urgent=i.overdueDays>0;
+    var scriptVal = state.notes[i.touch.id] || fillTemplate(TEMPLATES[i.ch], c);
+    var lastTouch = lastDoneDate(c);
+    var hasWhy = !!(c.t && c.t.angle);
+
+    var wrap=el('<div class="o2-left"></div>');
+    var head=el('<div class="o2-startrow"><div class="o2-starthere"><span>START HERE</span><span>'+(focusIdx+1)+' / '+dueList.length+'</span></div><div class="o2-arrows"><button class="o2-arrow" id="omPrev" title="Previous contact">‹</button><button class="o2-arrow" id="omNext" title="Next contact">›</button></div></div>');
+    wrap.appendChild(head);
+
+    var stage=el('<div class="o2-stage"></div>');
+    stage.appendChild(el('<div class="o2-stage-top"><div><div class="o2-eyebrow">'+esc((c.account||"").toUpperCase())+' · TOUCH '+i.stepNum+' OF 5</div><h1 class="o2-name">'+esc(c.name)+'</h1><div class="o2-title">'+esc((c.title||"").toUpperCase())+'</div></div><span class="o2-overdue'+(urgent?" urgent":"")+'">'+esc(duePill(i).toUpperCase())+'</span></div>'));
+
+    if(hasWhy || lastTouch){
+      stage.appendChild(el('<div class="o2-intel-head"><span>CLIENT INTELLIGENCE</span><span>ACCOUNT NOTES</span></div>'));
+      var intel=el('<div class="o2-intel"></div>');
+      if(hasWhy) intel.appendChild(el('<div class="o2-intel-row"><span class="o2-intel-label">WHY NOW</span><span class="o2-intel-fact">'+esc(c.t.angle)+'</span><span class="o2-intel-src">NOTES</span></div>'));
+      intel.appendChild(el('<div class="o2-intel-row"><span class="o2-intel-label">LAST TOUCH</span><span class="o2-intel-fact quiet">'+(lastTouch?esc(fmtLong(lastTouch)+" · "+CH_LABEL[i.ch]):"Never contacted")+'</span><span class="o2-intel-src">CADENCE</span></div>'));
+      stage.appendChild(intel);
+    }
+
+    var stepper=el('<div class="o2-stepper"></div>');
+    OM_STEP_LABELS.forEach(function(label,idx){
+      var done=idx<c.step, active=idx===c.step;
+      stepper.appendChild(el('<div class="o2-step"><div class="o2-step-bar'+(done?" done":(active?" active":""))+'"></div><div class="o2-step-label'+(active?" active":"")+'">'+label+'</div></div>'));
+    });
+    stage.appendChild(stepper);
+
+    var composerOpen = !!oneMoveComposer;
+    var channelHint = oneMoveChannel==="li" ? "jumps straight to their profile" : "opens the draft so you can rewrite it";
+    var primaryLabel = oneMoveChannel==="li" ? "OPEN LINKEDIN ↗" : (oneMoveComposer==="draft" ? "SEND IT →" : "WRITE THE EMAIL →");
+    var tabsHtml='<div class="o2-tabgroup"><button class="o2-tab'+(oneMoveChannel==="em"?" on":"")+'" id="omEmail">EMAIL</button><button class="o2-tab linkedin'+(oneMoveChannel==="li"?" on":"")+'" id="omLinkedin">LINKEDIN</button></div>';
+
+    var bottom=el('<div class="o2-bottom'+(composerOpen?" composer-open":"")+'"></div>');
+    if(composerOpen){
+      var composer=el('<div class="o2-composer">'+
+        '<div class="o2-composer-head"><div class="o2-composer-head-l">'+tabsHtml+'<span class="o2-composer-hint">'+channelHint+'</span></div><button class="o2-composer-x" id="omClose">×</button></div>'+
+        '<textarea>'+esc(scriptVal)+'</textarea>'+
+        '<div class="o2-composer-foot"><span>ŌLLIN DREW THE FIRST PASS — YOURS TO REWRITE</span><button class="o2-reset" id="omResetDraft">RESET DRAFT</button>'+
+        '<button class="o2-ai-btn" id="omAiBtn">✦ REWRITE WITH OLLIN</button><button class="o2-reset" id="omCopy">COPY</button></div>'+
+        '<div class="o2-ai-hint" id="omAiHint"></div>'+
+        '<div class="o2-ai-steer" id="omAiSteer">'+
+          '<p class="o2-ai-lead">TELL OLLIN HOW TO WRITE IT</p>'+
+          '<div class="o2-ai-row"><input id="omAiInput" placeholder="e.g. mention their new store openings…" maxlength="240"><button class="o2-ai-draft" id="omAiDraft">DRAFT IT</button></div>'+
+          '<div class="o2-ai-chips">'+
+            '<button class="o2-ai-chip" data-s="Lean into our nearshore capabilities">Push nearshore</button>'+
+            '<button class="o2-ai-chip" data-s="Make it more conversational and human">More conversational</button>'+
+            '<button class="o2-ai-chip" data-s="Make it shorter and punchier">Shorter</button>'+
+            '<button class="o2-ai-chip" data-s="Make it warmer and more personal">Warmer</button>'+
+            '<button class="o2-ai-chip" data-s="Try a completely different angle">Different angle</button>'+
+          '</div>'+
+        '</div>'+
+      '</div>');
+      bottom.appendChild(composer);
+    }
+    var actioncol=el('<div class="o2-actioncol'+(composerOpen?" boxed":"")+'"></div>');
+    actioncol.appendChild(el('<div class="o2-channelrow'+(composerOpen?" hidden":"")+'"><span class="o2-channellbl">CHANNEL</span>'+tabsHtml+'<span class="o2-composer-hint">'+channelHint+'</span></div>'));
+    var actionrow=el('<div class="o2-actionrow'+(composerOpen?" stacked":"")+'">'+
+      '<button class="o2-btn o2-btn-primary" id="omPrimary">'+primaryLabel+'</button>'+
+      '<button class="o2-btn o2-btn-secondary" id="omScript">SCRIPT</button>'+
+      '<button class="o2-btn o2-btn-quiet" id="omReplied">REPLIED</button>'+
+      '<button class="o2-btn o2-btn-quiet" id="omSkip">SKIP</button>'+
+      '<button class="o2-btn o2-btn-done" id="omDone">✓ DONE</button>'+
+    '</div>');
+    actioncol.appendChild(actionrow);
+    bottom.appendChild(actioncol);
+    stage.appendChild(bottom);
+    wrap.appendChild(stage);
+
+    // ---- wire it up ----
+    var prev=wrap.querySelector("#omPrev"), next=wrap.querySelector("#omNext");
+    prev.disabled = focusIdx<=0; next.disabled = focusIdx>=dueList.length-1;
+    prev.addEventListener("click", function(){ if(focusIdx>0){ focusIdx--; render(); } });
+    next.addEventListener("click", function(){ if(focusIdx<dueList.length-1){ focusIdx++; render(); } });
+    function setChannel(ch){ oneMoveChannel=ch; oneMoveComposer = ch==="em" ? "draft" : null; render(); }
+    Array.prototype.forEach.call(wrap.querySelectorAll("#omEmail"), function(b){ b.addEventListener("click", function(){ setChannel("em"); }); });
+    Array.prototype.forEach.call(wrap.querySelectorAll("#omLinkedin"), function(b){ b.addEventListener("click", function(){ setChannel("li"); }); });
+    var closeBtn=wrap.querySelector("#omClose"); if(closeBtn) closeBtn.addEventListener("click", function(){ oneMoveComposer=null; render(); });
+    wrap.querySelector("#omScript").addEventListener("click", function(){ oneMoveComposer = oneMoveComposer ? null : "draft"; render(); });
+    wrap.querySelector("#omReplied").addEventListener("click", function(){ setStatus(c,"warm", firstName(c.name)+" moved to WARM"); });
+    wrap.querySelector("#omSkip").addEventListener("click", function(){ if(focusIdx<dueList.length-1){ focusIdx++; render(); } else toast("That’s the last one due."); });
+    wrap.querySelector("#omDone").addEventListener("click", function(){ completeTouch(c); });
+    wrap.querySelector("#omPrimary").addEventListener("click", function(){
+      if(oneMoveChannel==="li"){
+        var li=((c.t&&c.t.linkedin)||"").trim();
+        window.open(isLinkedInUrl(li)?normUrl(li):liSearch(c), "_blank", "noopener");
+        toast("Opening "+firstName(c.name)+" on LinkedIn ↗");
+      } else if(oneMoveComposer==="draft"){
+        completeTouch(c);
+      } else {
+        oneMoveComposer="draft"; render();
+      }
+    });
+    var ta=wrap.querySelector("textarea");
+    if(ta){
+      ta.addEventListener("change", function(){ state.notes[i.touch.id]=ta.value; persistNotes(); });
+      wrap.querySelector("#omResetDraft").addEventListener("click", function(){ delete state.notes[i.touch.id]; persistNotes(); render(); toast("Draft reset to Ōllin’s first pass"); });
+      wrap.querySelector("#omCopy").addEventListener("click", function(){ copy(ta.value||""); });
+      (function(){
+        var aiBtn=wrap.querySelector("#omAiBtn"), steer=wrap.querySelector("#omAiSteer"),
+            steerInput=wrap.querySelector("#omAiInput"), draftBtn=wrap.querySelector("#omAiDraft"),
+            hint=wrap.querySelector("#omAiHint");
+        aiBtn.addEventListener("click", function(){ steer.classList.toggle("open"); if(steer.classList.contains("open")) steerInput.focus(); });
+        function setHint(msg){ if(msg){ hint.textContent=msg; hint.classList.add("show"); } else { hint.textContent=""; hint.classList.remove("show"); } }
+        function generate(steerText){
+          setHint("");
+          draftBtn.disabled=true; aiBtn.disabled=true;
+          var dl=draftBtn.textContent; draftBtn.textContent="WRITING…";
+          fetch("/api/write",{method:"POST",headers:{"Content-Type":"application/json"},
+            body:JSON.stringify({name:c.name,title:c.title||"",company:c.account||"",angle:(c.t&&c.t.angle)||"",channel:i.ch,step:i.stepNum,steer:steerText||""})})
+            .then(function(r){ return r.json().then(function(d){ return {ok:r.ok,d:d}; }); })
+            .then(function(res){ if(!res.ok||!res.d||!res.d.text){ toast((res.d&&res.d.error)||"Ollin couldn’t draft that — try again"); return; }
+              ta.value=res.d.text; state.notes[i.touch.id]=res.d.text; persistNotes();
+              setHint(res.d.angleWarning||"");
+              toast(steerText?"Redrafted with your direction.":"Drafted. Yours to edit."); })
+            .catch(function(){ toast("Network hiccup — try again"); })
+            .then(function(){ draftBtn.disabled=false; aiBtn.disabled=false; draftBtn.textContent=dl; });
+        }
+        draftBtn.addEventListener("click", function(){ generate(steerInput.value.trim()); });
+        steerInput.addEventListener("keydown", function(e){ if(e.key==="Enter"){ e.preventDefault(); generate(steerInput.value.trim()); } });
+        Array.prototype.forEach.call(wrap.querySelectorAll(".o2-ai-chip"), function(chip){
+          chip.addEventListener("click", function(){ var s=chip.getAttribute("data-s"); steerInput.value=s; generate(s); });
+        });
+      })();
+    }
+    return wrap;
   }
-  function peekCard(item, side, idx, host, dueList, warm){
-    var c=item.c;
-    var card=el('<div class="dc deckcard peek '+side+'">'+
-      '<div class="pk-head"><div class="pk-ava">'+esc(initials(c.name))+'</div><div style="min-width:0"><div class="pk-name">'+esc(c.name)+'</div><div class="pk-meta">'+esc((c.title||"")+(c.title&&c.account?" · ":"")+(c.account||""))+'</div></div></div>'+
-      '<div class="pk-due">'+duePill(item.i)+'</div>'+
-      timelineHTML(c,true)+'</div>');
-    card.addEventListener("click", function(){ focusIdx=idx; renderDeckInto(host,dueList,warm); });
-    return card;
+  // ---- Today: "the queue" (right column) ----
+  function buildQueueRail(dueList){
+    var wrap=el('<div class="o2-right"></div>');
+    // "cleared" = touches actually completed today (real data); the denominator is
+    // that plus what's still left in the live queue — dueList itself only ever
+    // holds pending items, since completed touches drop out of it on the next render.
+    var clearedToday=dayTotal(todayStr()), totalToday=clearedToday+dueList.length;
+    wrap.appendChild(el('<div class="o2-rail-head"><span>THE QUEUE</span><span>'+clearedToday+' / '+totalToday+' CLEARED</span></div>'));
+    var track=el('<div class="o2-track"><div class="o2-track-fill" style="width:'+(totalToday?(clearedToday/totalToday*100):0)+'%"></div></div>');
+    wrap.appendChild(track);
+    var scroller=el('<div class="o2-rail-scroll"></div>');
+    dueList.forEach(function(item,idx){
+      var c=item.c, active=idx===focusIdx;
+      var row=el('<div class="o2-qrow'+(active?" active":"")+'"><div class="o2-qrow-top"><span class="o2-qname">'+esc(c.name)+'</span><span class="o2-qstate">'+esc(duePill(item.i).toUpperCase())+'</span></div><div class="o2-qmeta">'+esc((c.account||"").toUpperCase())+' · TOUCH '+item.i.stepNum+' OF 5</div></div>');
+      row.addEventListener("click", function(){ focusIdx=idx; render(); });
+      scroller.appendChild(row);
+    });
+    wrap.appendChild(scroller);
+    // before you go
+    var bfyg=el('<div class="o2-bfyg"><div class="o2-bfyg-lbl">BEFORE YOU GO</div>'+
+      '<textarea id="omNote" maxlength="140" placeholder="One line to your future self — the first thing you’ll see when you’re back.">'+esc(state.handoffNote||"")+'</textarea>'+
+      '<div class="o2-bfyg-save"><span class="o2-cursor"></span><span id="omNoteHint">SAVES AUTOMATICALLY</span></div></div>');
+    var noteEl=bfyg.querySelector("#omNote"), hintEl=bfyg.querySelector("#omNoteHint");
+    function saveNote(){ var v=noteEl.value.trim(); if(v===(state.handoffNote||"")) return; state.handoffNote=v; scheduleSave(); hintEl.textContent="SAVED. SEE YOU TOMORROW."; }
+    noteEl.addEventListener("change", saveNote);
+    noteEl.addEventListener("blur", saveNote);
+    wrap.appendChild(bfyg);
+    return wrap;
   }
   function activeCard(item, host, dueList, warm){
     var c=item.c, i=item.i;
@@ -2308,10 +2574,14 @@
     '</div>');
     var scr=card.querySelector("#dcScript"), ta=card.querySelector("textarea");
     var back=card.querySelector("#dcBack"), next=card.querySelector("#dcNext");
-    back.disabled = focusIdx<=0; next.disabled = focusIdx>=dueList.length-1;
-    back.addEventListener("click", function(){ if(focusIdx>0){ focusIdx--; renderDeckInto(host,dueList,warm); } });
-    next.addEventListener("click", function(){ if(focusIdx<dueList.length-1){ focusIdx++; renderDeckInto(host,dueList,warm); } });
-    card.querySelector("#miSkip").addEventListener("click", function(){ if(focusIdx<dueList.length-1){ focusIdx++; renderDeckInto(host,dueList,warm); } else toast("That’s the last one due."); });
+    // Local carousel index into THIS dueList — decoupled from Today's global focusIdx,
+    // since this card is now also reused standalone (Contacts inline-expand, always a
+    // single-item list).
+    var localIdx=dueList.indexOf(item); if(localIdx<0) localIdx=0;
+    back.disabled = localIdx<=0; next.disabled = localIdx>=dueList.length-1;
+    back.addEventListener("click", function(){ if(localIdx>0){ host.innerHTML=""; host.appendChild(activeCard(dueList[localIdx-1],host,dueList,warm)); } });
+    next.addEventListener("click", function(){ if(localIdx<dueList.length-1){ host.innerHTML=""; host.appendChild(activeCard(dueList[localIdx+1],host,dueList,warm)); } });
+    card.querySelector("#miSkip").addEventListener("click", function(){ if(localIdx<dueList.length-1){ host.innerHTML=""; host.appendChild(activeCard(dueList[localIdx+1],host,dueList,warm)); } else toast("That’s the last one due."); });
     card.querySelector("#miReview").addEventListener("click", function(){ scr.classList.toggle("open"); });
     card.querySelector("#aScript").addEventListener("click", function(){ scr.classList.toggle("open"); });
     card.querySelector("#aChan").addEventListener("click", function(){
@@ -2393,11 +2663,14 @@
   }
   function buildNav(m){
     var now=new Date();
-    var TABS=[["home","Home",false],["contacts","Contacts",true],["pipeline","Pipeline",false],["dashboard","Dashboard",false],["brb","BRB",false]];
-    var nav=el('<div class="nav"><div class="nav-logo brandmark"><svg viewBox="0 0 72 62" width="35" height="30"><circle cx="36" cy="36" r="21" stroke="#16130F" stroke-width="2.5" fill="none"/><circle cx="36" cy="6" r="5" fill="#1E9DA8"/><circle class="mv-dot" cx="61.98" cy="51" r="9" fill="#A83246"/><circle cx="10.02" cy="51" r="5" fill="#F5B700"/></svg><span class="bm-word">ōllin</span><span class="bm-tag">Movement</span></div><div class="nav-tabs" id="navTabs"></div><div class="nav-right"><span class="nav-date">'+DOW[now.getDay()]+" "+MON[now.getMonth()]+" "+now.getDate()+'</span><div class="nav-ava" id="navAva" title="Account">'+esc(avaInitial())+'</div></div></div>');
+    // TODAY / CONTACTS / PIPELINE per the redesign spec; DASHBOARD kept reachable in the
+    // same mono style. BRB is gone as a tab — its job (leave a note) now lives in
+    // Today's own "BEFORE YOU GO" rail footer.
+    var TABS=[["home","TODAY",false],["contacts","CONTACTS",true],["pipeline","PIPELINE",false],["dashboard","DASHBOARD",false]];
+    var nav=el('<div class="o2-head"><div class="o2-lockup"><span class="o2-word">ŌLLIN</span><span class="o2-sub">TRACKER</span></div><div class="o2-navlinks" id="navTabs"></div><div class="o2-headright"><span>'+DOW[now.getDay()]+" "+MON[now.getMonth()]+" "+now.getDate()+'</span><div class="o2-ava" id="navAva" title="Account">'+esc(avaInitial())+'</div></div></div>');
     var ntabs=nav.querySelector("#navTabs");
     TABS.forEach(function(t){
-      var b=el('<button class="nav-tab'+(t[2]?" has-caret":"")+(navView===t[0]?" active":"")+'">'+t[1]+'</button>');
+      var b=el('<button class="o2-nav-item'+(t[2]?" has-caret":"")+(navView===t[0]?" active":"")+'">'+t[1]+'</button>');
       b.addEventListener("click", function(e){
         e.stopPropagation();
         if(t[0]==="contacts"){
@@ -2406,8 +2679,7 @@
             {label:"See contacts", onClick:function(){ contactsMode="list"; setView("contacts"); }},
             {label:"Delete contacts", danger:true, onClick:function(){ contactsMode="delete"; pipeSel={}; setView("contacts"); }}
           ]);
-        } else if(t[0]==="brb"){ openComeback(); }
-        else setView(t[0]);
+        } else setView(t[0]);
       });
       ntabs.appendChild(b);
     });
@@ -2533,7 +2805,7 @@
     else if(navView==="dashboard") renderDashboard(host);
     else if(navView==="manage") renderManage(host);
     else renderHome(host);
-    host.appendChild(el('<p class="foot">We got you.</p>'));
+    if(navView!=="home") host.appendChild(el('<p class="foot">We got you.</p>'));
     m.classList.toggle("focus", focusMode);
   }
 
@@ -2541,7 +2813,6 @@
   function renderHome(m){
     var contacts=asContacts();
     // PLAN — free users see where they stand + the path to unlimited.
-    // Unlimited/paid accounts get no banner.
     if(ACCOUNT && !isUnlimited()){
       var used=contactCount(), left=Math.max(0,FREE_CONTACT_CAP-used), near=used>=FREE_CONTACT_CAP;
       var pb=el('<div class="planbar'+(near?" full":"")+'"><span class="pb-count">'+used+' / '+FREE_CONTACT_CAP+' free contacts'+(near?" — full":(left<=5?" — "+left+" left":""))+'</span><a id="pbGo">Get unlimited</a></div>');
@@ -2549,48 +2820,48 @@
       m.appendChild(pb);
     }
 
-    // STAT STRIP + momentum gauge
     var dueList=[];
     contacts.forEach(function(c){ var i=dueInfo(c); if(i && i.overdueDays>=0) dueList.push({c:c,i:i}); });
     dueList.sort(function(x,y){ return y.i.overdueDays - x.i.overdueDays; });
-    // "Today only" hides the late/overdue ones, leaving just what's due exactly today.
     var deckList = todayOnly ? dueList.filter(function(x){ return x.i.overdueDays===0; }) : dueList;
     var inCadence=contacts.filter(function(c){ return c.status==="active" && !c.complete; }).length;
-    var strip=el('<div class="statstrip"></div>');
-    strip.appendChild(el('<div class="stat"><b>'+dueList.length+'</b><div class="lbl2">Due today</div></div>'));
-    strip.appendChild(el('<div class="stat-sep">·</div>'));
-    strip.appendChild(el('<div class="stat"><b>'+inCadence+'</b><div class="lbl2">In cadence</div></div>'));
-    strip.appendChild(el('<div class="stat-sep">·</div>'));
-    strip.appendChild(buildMeter());
-    var sr=el('<div class="strip-right"></div>');
-    var adhdBtn=el('<button class="strip-btn adhd" id="adhdBtn">'+ICON.spark+'ADHD moment</button>');
+    var overdueCount=dueList.filter(function(x){ return x.i.overdueDays>0; }).length;
+
+    // LEDGER STRIP (Today only, per the redesign spec)
+    var ledger=el('<div class="o2-ledger"></div>');
+    ledger.appendChild(el('<div><div class="o2-lnum">'+dueList.length+'</div><div class="o2-llbl">LEFT TODAY</div></div>'));
+    ledger.appendChild(el('<div><div class="o2-lnum">'+dayTotal(todayStr())+'</div><div class="o2-llbl">CLEARED</div></div>'));
+    ledger.appendChild(el('<div><div class="o2-lnum">'+inCadence+'</div><div class="o2-llbl">IN CADENCE</div></div>'));
+    var lastZone=el('<div></div>');
+    var todayBtn=el('<button class="o2-lbtn quiet'+(todayOnly?" on":"")+'" id="todayBtn">TODAY ONLY</button>');
+    todayBtn.addEventListener("click", function(){ todayOnly=!todayOnly; focusIdx=0; render(); });
+    var adhdBtn=el('<button class="o2-lbtn quiet" id="adhdBtn">✦ ADHD</button>');
     adhdBtn.addEventListener("click", function(e){ e.stopPropagation(); openMenu(adhdBtn, [
       {label:"Pomodoro — 25 min", icon: ICON.clock, onClick: openPomodoro},
       {label:"Just do one", icon: ICON.target, onClick: openJustOne},
       {label:"Breathe — 30s", icon: ICON.wind, onClick: openBreathe}
     ]); });
-    var todayBtn=el('<button class="strip-btn'+(todayOnly?" on":"")+'" id="todayBtn">'+ICON.today+'Today only</button>');
-    todayBtn.addEventListener("click", function(){ todayOnly=!todayOnly; focusIdx=0; render(); });
-    var fmBtn=el('<button class="strip-btn'+(focusMode?" on":"")+'" id="fmBtn">◎ Focus mode</button>');
-    fmBtn.addEventListener("click", function(){ focusMode=!focusMode; document.getElementById("appMain").classList.toggle("focus",focusMode); fmBtn.classList.toggle("on",focusMode); });
-    sr.appendChild(adhdBtn); sr.appendChild(todayBtn); sr.appendChild(fmBtn);
-    var overdueCount=dueList.filter(function(x){ return x.i.overdueDays>0; }).length;
+    var fmBtn=el('<button class="o2-lbtn'+(focusMode?" on":"")+'" id="fmBtn">'+(focusMode?"◉ FOCUS ON":"◎ FOCUS MODE")+'</button>');
+    fmBtn.addEventListener("click", function(){ focusMode=!focusMode; document.getElementById("appMain").classList.toggle("focus",focusMode); render(); });
+    var goalBtn=el('<button class="o2-lbtn quiet" id="goalBtn" title="Change your daily touch goal">GOAL '+goalVal()+'</button>');
+    goalBtn.addEventListener("click", editGoal);
+    lastZone.appendChild(adhdBtn); lastZone.appendChild(todayBtn); lastZone.appendChild(fmBtn); lastZone.appendChild(goalBtn);
     if(overdueCount>0){
-      var restoreBtn=el('<button class="strip-btn" id="restoreBtn" title="Move every overdue touch to be due today">'+ICON.restore+'Restore all to today</button>');
+      var restoreBtn=el('<button class="o2-lbtn quiet" id="restoreBtn" title="Move every overdue touch to be due today">RESTORE</button>');
       restoreBtn.addEventListener("click", function(){ if(confirm("Move "+overdueCount+" overdue touch"+(overdueCount>1?"es":"")+" to be due today?")) restoreOverdueToToday(); });
-      sr.appendChild(restoreBtn);
+      lastZone.appendChild(restoreBtn);
     }
-    strip.appendChild(sr);
-    m.appendChild(strip);
+    ledger.appendChild(lastZone);
+    m.appendChild(ledger);
 
-    // WARM
+    // WARM — restyled in place via CSS, same markup/behavior
     var warm=contacts.filter(function(c){ return c.status==="warm"; });
     if(warm.length){
       var ws=el('<section class="warm"><h2 class="warm-title">Warm — your move</h2><p class="warm-sub">They answered. This beats every cold touch on the list.</p><div id="warmList"></div></section>');
       var wl=ws.querySelector("#warmList");
       warm.forEach(function(c){
         var card=el('<div class="wcard"><div class="wname">'+esc(c.name)+'</div><div class="wmeta">'+esc(c.title||"")+(c.title?" · ":"")+esc(c.account)+' · cadence paused</div><div class="wactions"><button class="wbtn gold" data-a="meeting">Meeting booked</button><button class="wbtn" data-a="touch">Log a reply touch</button><button class="wbtn quiet" data-a="lost">Not interested</button></div></div>');
-        card.querySelector('[data-a="meeting"]').addEventListener("click", function(){ setStatus(c,"meeting","Meeting booked. VAMOS."); });
+        card.querySelector('[data-a="meeting"]').addEventListener("click", function(){ setStatus(c,"meeting","Meeting booked. Ollin."); });
         card.querySelector('[data-a="touch"]').addEventListener("click", function(){ logWarmTouch(c); });
         card.querySelector('[data-a="lost"]').addEventListener("click", function(){ setStatus(c,"lost","Marked not interested"); });
         wl.appendChild(card);
@@ -2598,40 +2869,20 @@
       m.appendChild(ws);
     }
 
-    // START HERE — carousel deck, or first-run onboarding when empty
     var empty = contacts.length===0;
     if(empty){
-      var hero=el('<div class="deck"><div class="dc deckcard active" style="text-align:center;padding:46px 34px">'+
-        '<div class="start-title" style="font-size:29px">Add your first contacts<span style="color:var(--honey)">.</span></div>'+
-        '<p style="color:var(--grey);margin:12px auto 22px;max-width:440px;line-height:1.6">Drop in a CSV or Excel list — or add a few by hand — and VAMOS builds your daily queue: who to reach, what to say, when.</p>'+
-        '<button class="btn" id="heroAdd" style="width:auto;display:inline-block;padding:14px 28px">Add contacts</button>'+
+      var hero=el('<div class="o2-today" style="grid-template-columns:1fr"><div class="o2-left" style="border-right:none;text-align:center;padding:60px 34px">'+
+        '<h1 class="o2-name" style="font-size:clamp(28px,4vw,44px)">Add your first contacts.</h1>'+
+        '<p style="font-family:\'Archivo\',sans-serif;color:var(--o2-slate);margin:16px auto 22px;max-width:440px;line-height:1.6">Drop in a CSV or Excel list — or add a few by hand — and Ōllin builds your daily queue: who to reach, what to say, when.</p>'+
+        '<button class="o2-btn o2-btn-primary" id="heroAdd" style="flex:none;display:inline-block;padding:15px 28px">ADD CONTACTS</button>'+
         '</div></div>');
       hero.querySelector("#heroAdd").addEventListener("click", function(){ contactsMode="add"; setView("contacts"); });
       m.appendChild(hero);
     } else {
-      var startSub = todayOnly ? "Only what’s due today — the late ones are tucked away." : "Everyone due for a touch today, most overdue first. Script, send, done.";
-      var start=el('<div class="starthead"><div><div class="start-title">Start here<span style="color:var(--honey)">.</span></div><div class="start-sub">'+startSub+'</div></div><div class="start-due">'+(deckList.length?deckList.length+" due":"all clear")+'</div></div>');
-      m.appendChild(start);
-      var deckHost=el('<div id="deckHost"></div>');
-      m.appendChild(deckHost);
-      renderDeckInto(deckHost, deckList, warm);
-
-      // BEFORE YOU GO — one line to your future self (saved as handoffNote)
-      var ho=el('<section class="handoff"><h2>Before you go</h2><p class="hsub">One line to your future self. It’s the first thing you’ll see when you’re back — even days later.</p>'+
-        '<input id="handoffInput" maxlength="140" placeholder="What matters tomorrow?" value="'+esc(state.handoffNote||"")+'">'+
-        '<p class="hint" id="handoffHint">Saves automatically.</p></section>');
-      (function(){
-        var hi=ho.querySelector("#handoffInput"), hint=ho.querySelector("#handoffHint");
-        function save(){
-          var v=hi.value.trim();
-          if(v===(state.handoffNote||"")) return;
-          state.handoffNote=v; scheduleSave();
-          hint.innerHTML='<span class="saved">Saved. See you tomorrow.</span>';
-        }
-        hi.addEventListener("change", save);
-        hi.addEventListener("blur", save);
-      })();
-      m.appendChild(ho);
+      var grid=el('<div class="o2-today"></div>');
+      grid.appendChild(buildOneMove(deckList));
+      grid.appendChild(buildQueueRail(deckList));
+      m.appendChild(grid);
     }
   }
 
