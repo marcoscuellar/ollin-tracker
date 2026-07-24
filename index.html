@@ -347,7 +347,9 @@
   .o2-intel-label{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:1.5px;color:var(--o2-mute);width:78px;flex:none;}
   .o2-intel-fact{font-size:15px;flex:1;color:var(--o2-ink);}
   .o2-intel-fact.quiet{color:var(--o2-slate);}
-  .o2-intel-src{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:1px;color:var(--o2-slate);border:1px solid var(--o2-hairline);padding:3px 7px;flex:none;}
+  .o2-intel-row.untracked .o2-intel-fact{color:var(--o2-mute);}
+  .o2-intel-src{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:1px;color:var(--o2-slate);border:1px solid var(--o2-hairline);padding:3px 7px;flex:none;white-space:nowrap;}
+  .o2-intel-src.untracked{color:var(--o2-mute);}
 
   .o2-stepper{display:flex;gap:6px;margin-top:30px;}
   .o2-step{flex:1;}
@@ -1431,7 +1433,7 @@
     var t = todayStr();
     state.accounts = [
       { id:"demoA", company:"Northwind Retail (sample)", start:t, threads:[
-        {id:"na1", name:"Jordan Blake", title:"VP Engineering", persona:"Economic Buyer", entryDay:1, channel:"em", linkedin:"linkedin.com/in/sample-jordan", email:"jordan@example.com", angle:"Owns the budget — leads with the cost math for a 5-person nearshore pod."},
+        {id:"na1", name:"Jordan Blake", title:"VP Engineering", persona:"Economic Buyer", entryDay:1, channel:"em", linkedin:"linkedin.com/in/sample-jordan", email:"jordan@example.com", angle:"Owns the budget — leads with the cost math for a 5-person nearshore pod.", signal:"Promoted to VP — 6 days ago", signalSrc:"LinkedIn"},
         {id:"na2", name:"Sam Rivera", title:"Director of Data Platform", persona:"Champion", entryDay:1, channel:"li", linkedin:"linkedin.com/in/sample-sam", email:"sam@example.com", angle:"Posted 6 open data-eng reqs in the last 30 days — feels the hiring pain daily."},
         {id:"na3", name:"Casey Nguyen", title:"Staff Engineer", persona:"Technical Evaluator", entryDay:1, channel:"li", linkedin:"linkedin.com/in/sample-casey", email:"", angle:"Vets the stack fit — worth a Talent Map for their exact tooling."}
       ]},
@@ -1517,6 +1519,8 @@
       seq:find("sequence day","entry day","day"),
       chan:find("first touch channel","channel","first channel"),
       angle:find("outreach angle","angle","why this person"),
+      signal:find("signal","buying signal"),
+      signalsrc:find("signal source","source"),
       status:find("lead status","status"),
       t1:pick(find("touch 1 copy","touch 1","touch1 copy","linkedin 1","touch 1 message"), findC("outreach 1"), findC("linkedin","day 1")),
       t2subj:pick(find("touch 2 subject","email 1 subject","touch2 subject"), findC("email","subject")),
@@ -1537,6 +1541,15 @@
   }
   function channelFrom(s){ s=(s||"").toLowerCase(); if(s.indexOf("email")>-1)return"em"; if(s.indexOf("call")>-1)return"call"; return "li"; }
   function dayFrom(s, persona){ var m=(s||"").match(/\d+/); if(m) return parseInt(m[0],10); return 1; } // no Sequence Day column → start today
+  // Client intelligence provenance is the trust mechanic of the whole feature —
+  // a signal is only ever shown alongside one of these exact, real source types.
+  // Anything that doesn't match stays untracked rather than showing a made-up tag.
+  var SIGNAL_SOURCES = ["LinkedIn","CRM","Email Log","Job Boards","Product Data","Call Notes"];
+  function normSignalSource(s){
+    s=(s||"").trim().toLowerCase();
+    for(var i=0;i<SIGNAL_SOURCES.length;i++){ if(SIGNAL_SOURCES[i].toLowerCase()===s) return SIGNAL_SOURCES[i]; }
+    return "";
+  }
 
   function importEngine7(text){
     var rows=parseCSV(text);
@@ -1558,8 +1571,10 @@
         entryDay: persona==="Blocker"?0:dayFrom(get(cm.seq), persona),
         channel:channelFrom(get(cm.chan)),
         linkedin:get(cm.li), email:get(cm.email),
-        angle:get(cm.angle)
+        angle:get(cm.angle),
+        signal:get(cm.signal), signalSrc:normSignalSource(get(cm.signalsrc))
       };
+      if(!thread.signalSrc) thread.signal=""; // no valid, real source → not tracked, never shown
       // capture per-touch message copy (maps to the 5-touch cadence i=0..4)
       function withSubj(subj, body){ subj=(subj||"").trim(); body=(body||"").trim(); if(!body && !subj) return ""; return subj ? ("Subject: "+subj+"\n\n"+body) : body; }
       thread._msgs = {
@@ -1606,10 +1621,12 @@
       if(!name) continue;
       var company = get(cm.company) || "Imported account";
       var persona = personaFrom(get(cm.thread), get(cm.status));
+      var signalSrc=normSignalSource(get(cm.signalsrc));
       var fields = {
         name:name, title:get(cm.title), persona:persona,
         entryDay: persona==="Blocker"?0:dayFrom(get(cm.seq), persona),
-        channel:channelFrom(get(cm.chan)), linkedin:get(cm.li), email:get(cm.email), angle:get(cm.angle)
+        channel:channelFrom(get(cm.chan)), linkedin:get(cm.li), email:get(cm.email), angle:get(cm.angle),
+        signal: signalSrc?get(cm.signal):"", signalSrc: signalSrc
       };
       var msgs = { 0:get(cm.t1), 1:withSubjG(get(cm.t2subj),get(cm.t2)), 2:get(cm.t3), 3:withSubjG(get(cm.t4subj),get(cm.t4)), 4:get(cm.t5) };
       var acct = state.accounts.find(function(a){ return normCompany(a.company)===normCompany(company); });
@@ -1620,6 +1637,7 @@
       if(thread){
         thread.name=fields.name; thread.title=fields.title; thread.persona=fields.persona; thread.entryDay=fields.entryDay;
         thread.channel=fields.channel; thread.linkedin=fields.linkedin; thread.email=fields.email; thread.angle=fields.angle;
+        thread.signal=fields.signal; thread.signalSrc=fields.signalSrc;
         updated++;
       } else {
         if(added>=budget){ skipped++; continue; } // over the free cap — hold this one back
@@ -2437,6 +2455,7 @@
     var scriptVal = state.notes[i.touch.id] || fillTemplate(TEMPLATES[i.ch], c);
     var lastTouch = lastDoneDate(c);
     var hasWhy = !!(c.t && c.t.angle);
+    var hasSignal = !!(c.t && c.t.signal && c.t.signalSrc);
 
     var wrap=el('<div class="o2-left"></div>');
     var head=el('<div class="o2-startrow"><div class="o2-starthere"><span>START HERE</span><span>'+(focusIdx+1)+' / '+dueList.length+'</span></div><div class="o2-arrows"><button class="o2-arrow" id="omPrev" title="Previous contact">‹</button><button class="o2-arrow" id="omNext" title="Next contact">›</button></div></div>');
@@ -2445,13 +2464,15 @@
     var stage=el('<div class="o2-stage"></div>');
     stage.appendChild(el('<div class="o2-stage-top"><div><div class="o2-eyebrow">'+esc((c.account||"").toUpperCase())+' · TOUCH '+i.stepNum+' OF 5</div><h1 class="o2-name">'+esc(c.name)+'</h1><div class="o2-title">'+esc((c.title||"").toUpperCase())+'</div></div><span class="o2-overdue'+(urgent?" urgent":"")+'">'+esc(duePill(i).toUpperCase())+'</span></div>'));
 
-    if(hasWhy || lastTouch){
-      stage.appendChild(el('<div class="o2-intel-head"><span>CLIENT INTELLIGENCE</span><span>ACCOUNT NOTES</span></div>'));
-      var intel=el('<div class="o2-intel"></div>');
-      if(hasWhy) intel.appendChild(el('<div class="o2-intel-row"><span class="o2-intel-label">WHY NOW</span><span class="o2-intel-fact">'+esc(c.t.angle)+'</span><span class="o2-intel-src">NOTES</span></div>'));
-      intel.appendChild(el('<div class="o2-intel-row"><span class="o2-intel-label">LAST TOUCH</span><span class="o2-intel-fact quiet">'+(lastTouch?esc(fmtLong(lastTouch)+" · "+CH_LABEL[i.ch]):"Never contacted")+'</span><span class="o2-intel-src">CADENCE</span></div>'));
-      stage.appendChild(intel);
+    stage.appendChild(el('<div class="o2-intel-head"><span>CLIENT INTELLIGENCE</span><span>ACCOUNT NOTES</span></div>'));
+    var intel=el('<div class="o2-intel"></div>');
+    function intelRow(label,tracked,fact,src,quiet){
+      return '<div class="o2-intel-row'+(tracked?"":" untracked")+'"><span class="o2-intel-label">'+label+'</span><span class="o2-intel-fact'+(!tracked?"":(quiet?" quiet":""))+'">'+(tracked?esc(fact):"—")+'</span><span class="o2-intel-src'+(tracked?"":" untracked")+'">'+(tracked?esc(src.toUpperCase()):"NOT TRACKED")+'</span></div>';
     }
+    intel.appendChild(el(intelRow("SIGNAL", hasSignal, hasSignal?c.t.signal:"", hasSignal?c.t.signalSrc:"", false)));
+    intel.appendChild(el(intelRow("WHY NOW", hasWhy, hasWhy?c.t.angle:"", hasWhy?"NOTES":"", false)));
+    intel.appendChild(el(intelRow("LAST TOUCH", true, lastTouch?(fmtLong(lastTouch)+" · "+CH_LABEL[i.ch]):"Never contacted", "CADENCE", true)));
+    stage.appendChild(intel);
 
     var stepper=el('<div class="o2-stepper"></div>');
     OM_STEP_LABELS.forEach(function(label,idx){
@@ -2775,7 +2796,7 @@
     if(!a){ a={ id:"a"+Date.now(), company:f.company, start:todayStr(), threads:[] }; state.accounts.push(a); }
     a.threads=a.threads||[];
     var entry=Math.max(1, daysBetween(a.start, todayStr())+1); // day 1 = today
-    a.threads.push({ id:"t"+Date.now()+"_"+Math.floor(Math.random()*9999), name:f.name, title:f.title||"", persona:"Additional", entryDay:entry, channel:f.channel||"li", linkedin:f.linkedin||"", email:f.email||"", angle:f.angle||"", status:"active" });
+    a.threads.push({ id:"t"+Date.now()+"_"+Math.floor(Math.random()*9999), name:f.name, title:f.title||"", persona:"Additional", entryDay:entry, channel:f.channel||"li", linkedin:f.linkedin||"", email:f.email||"", angle:f.angle||"", signal:f.signalSrc?(f.signal||""):"", signalSrc:f.signalSrc||"", status:"active" });
     persistAccounts();
     return null;
   }
@@ -2793,15 +2814,18 @@
         '<div class="fld"><label>LinkedIn URL <span class="opt">optional</span></label><input class="auth-input" id="caLi" placeholder="linkedin.com/in/…"></div>'+
         '<div class="fld"><label>Email <span class="opt">optional</span></label><input class="auth-input" id="caEmail" placeholder="jane@company.com"></div>'+
         '<div class="fld full"><label>Outreach angle <span class="opt">optional — helps AI write a sharper first line</span></label><textarea class="auth-input" id="caAngle" rows="2" placeholder="e.g. just opened 3 senior backend roles"></textarea></div>'+
+        '<div class="fld"><label>Signal <span class="opt">optional — a real, sourced fact</span></label><input class="auth-input" id="caSignal" placeholder="e.g. Promoted to VP — 6 days ago"></div>'+
+        '<div class="fld"><label>Signal source <span class="opt">required if signal is set</span></label><select class="auth-input" id="caSignalSrc"><option value="">— Not tracked —</option>'+SIGNAL_SOURCES.map(function(s){ return '<option value="'+esc(s)+'">'+esc(s)+'</option>'; }).join("")+'</select></div>'+
       '</div>'+
       '<div class="cadd-err" id="caErr"></div>'+
       '<button class="btn-primary" id="caSave" type="button">Add to cadence</button>'+
     '</div>');
     box.querySelector("#caSave").addEventListener("click", function(){
       var err=box.querySelector("#caErr"); err.textContent="";
-      var f={ name:(box.querySelector("#caName").value||"").trim(), company:(box.querySelector("#caCompany").value||"").trim(), title:(box.querySelector("#caTitle").value||"").trim(), channel:box.querySelector("#caChannel").value, linkedin:(box.querySelector("#caLi").value||"").trim(), email:(box.querySelector("#caEmail").value||"").trim(), angle:(box.querySelector("#caAngle").value||"").trim() };
+      var f={ name:(box.querySelector("#caName").value||"").trim(), company:(box.querySelector("#caCompany").value||"").trim(), title:(box.querySelector("#caTitle").value||"").trim(), channel:box.querySelector("#caChannel").value, linkedin:(box.querySelector("#caLi").value||"").trim(), email:(box.querySelector("#caEmail").value||"").trim(), angle:(box.querySelector("#caAngle").value||"").trim(), signal:(box.querySelector("#caSignal").value||"").trim(), signalSrc:box.querySelector("#caSignalSrc").value };
       if(!f.name){ err.textContent="Add the contact’s name."; return; }
       if(!f.company){ err.textContent="Add the company."; return; }
+      if(f.signal && !f.signalSrc){ err.textContent="A signal needs a source — pick where it came from, or clear the signal."; return; }
       if(freeLeft()<=0){ openUpgrade("You’ve reached your "+FREE_CONTACT_CAP+" free contacts."); return; }
       var e=addOneContact(f);
       if(e){ err.textContent=e; return; }
