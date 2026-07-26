@@ -19,6 +19,13 @@
     --o2-ink:#0A0A0A; --o2-slate:#767676; --o2-mute:#A3A3A3;
     --o2-hairline:#E6E6E6; --o2-paper:#FFFFFF; --o2-hoverbg:#FAFAFA;
     --o2-accent:#C9A227;
+    /* Ōllin Tracker — light/electric-blue system (full redesign, replaces o2-*) */
+    --lt-paper:#EFEFF2; --lt-surface:#FFFFFF; --lt-ink:#121218; --lt-ink2:#35353D;
+    --lt-mute:#5A5A63; --lt-dim:#78787F; --lt-rule:#E1E1E6; --lt-rule2:#D6D6DD;
+    --lt-accent:#1B4DFF; --lt-accent-deep:#0B33CC; --lt-accent-alt:#2A44B8;
+    --lt-accent-wash-a:rgba(27,77,255,.14); --lt-accent-wash-b:rgba(27,77,255,.10);
+    --lt-ai-surface:#F1F4FF; --lt-ai-rule:#BCCBFF; --lt-ai-rule2:#D8E0FF;
+    --lt-poster-bg:#0B0B09; --lt-poster-fg:#F4F2ED; --lt-row-hover:#F7F7FA;
   }
   *{margin:0;padding:0;box-sizing:border-box;}
   html,body{background:var(--bg);color:var(--ink);}
@@ -297,17 +304,6 @@
      Design tokens: --o2-ink/graphite/slate/mute/hairline/navidle/paper/hoverbg/accent
      Fonts: Archivo (variable, wdth axis for display type), IBM Plex Mono. Radius: 0 everywhere.
      =================================================================== */
-  .o2-display{font-family:'Archivo',sans-serif;font-weight:900;font-variation-settings:'wdth' 125,'wght' 900;font-stretch:125%;}
-  .o2-head{display:flex;align-items:center;justify-content:space-between;padding:18px 40px;border-bottom:1px solid var(--o2-ink);font-family:'Archivo',sans-serif;}
-  .o2-lockup{display:inline-flex;flex-direction:column;align-items:flex-start;line-height:.86;}
-  .o2-lockup .o2-word{font-family:'Archivo',sans-serif;font-weight:800;font-variation-settings:'wdth' 125,'wght' 800;font-stretch:125%;font-size:17px;letter-spacing:.5px;color:var(--o2-ink);}
-  .o2-lockup .o2-sub{font-family:'IBM Plex Mono',monospace;font-size:6.5px;letter-spacing:3.5px;color:var(--o2-mute);margin-top:2px;}
-  .o2-navlinks{display:flex;align-items:center;gap:28px;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:1.5px;}
-  .o2-nav-item{background:none;border:none;padding:0 0 3px;cursor:pointer;font:inherit;color:var(--o2-slate);border-bottom:2px solid transparent;transition:color .18s,border-color .18s,transform .16s;}
-  .o2-nav-item.active{color:var(--o2-ink);border-bottom-color:var(--o2-ink);}
-  .o2-nav-item:hover{color:var(--o2-accent);border-bottom-color:var(--o2-accent);transform:translateX(3px);}
-  .o2-headright{display:flex;align-items:center;gap:16px;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:1.5px;color:var(--o2-slate);}
-  .o2-ava{width:26px;height:26px;border:1px solid var(--o2-ink);color:var(--o2-ink);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:11px;}
 
   /* ledger strip (Today only) */
   .o2-ledger{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid var(--o2-ink);}
@@ -376,6 +372,82 @@
   .o2-ai-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;}
   .o2-ai-chip{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.5px;text-transform:uppercase;border:1px solid var(--o2-hairline);background:#fff;color:var(--o2-slate);padding:5px 9px;cursor:pointer;}
   .o2-ai-chip:hover{border-color:var(--o2-accent);color:var(--o2-slate);}
+
+  /* ===================================================================
+     Ōllin Tracker — light/electric-blue redesign (full replacement)
+     Design tokens: --lt-*. Two families: Archivo (sans, human), IBM Plex
+     Mono (labels/counts/system voice). Radius 6px everywhere. Replaces
+     the monochrome-editorial (--o2-*) system screen by screen.
+     =================================================================== */
+  .lt-app{font-family:'Archivo',Helvetica,Arial,sans-serif;background:var(--lt-paper);color:var(--lt-ink);padding-bottom:48px;}
+  .lt-head{background:var(--lt-surface);display:flex;align-items:center;justify-content:space-between;padding:20px 40px;border-bottom:1px solid var(--lt-rule);font-family:'Archivo',sans-serif;}
+  .lt-head-l{display:flex;align-items:center;gap:36px;}
+  .lt-logo{cursor:pointer;}
+  .lt-word-wrap{height:11px;overflow:hidden;}
+  .lt-word-top{font-size:23px;font-weight:800;letter-spacing:-.04em;line-height:1;color:var(--lt-ink);}
+  .lt-word-cut{transform:translateX(4px);height:11px;overflow:hidden;transition:transform .3s var(--lt-ease,cubic-bezier(.2,.8,.2,1));}
+  .lt-word-bottom{margin-top:-11px;font-size:23px;font-weight:800;letter-spacing:-.04em;line-height:1;color:var(--lt-accent);}
+  .lt-logo:hover .lt-word-cut{transform:translateX(13px);}
+  .lt-navlinks{display:flex;gap:26px;font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.14em;}
+  .lt-nav-item{background:none;border:none;padding:0 0 3px;cursor:pointer;font:inherit;color:var(--lt-dim);border-bottom:2px solid transparent;transition:color .18s,border-color .18s;}
+  .lt-nav-item.active{color:var(--lt-ink);border-bottom-color:var(--lt-accent);}
+  .lt-nav-item:hover{color:var(--lt-ink);}
+  .lt-head-r{display:flex;align-items:center;gap:20px;}
+  .lt-headtime{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.12em;color:var(--lt-dim);}
+  .lt-ava{box-sizing:border-box;border-radius:6px;width:28px;height:28px;border:1px solid var(--lt-rule2);font-family:'IBM Plex Mono',monospace;font-size:10px;display:flex;align-items:center;justify-content:center;color:var(--lt-mute);cursor:pointer;}
+
+  .lt-home-grid{padding:26px 40px 0;display:grid;grid-template-columns:minmax(280px,352px) minmax(560px,1fr);gap:22px;align-items:stretch;max-width:1456px;margin:0 auto;}
+  .lt-next{background:var(--lt-surface);border-radius:6px;border:1px solid var(--lt-rule);position:relative;overflow:hidden;padding:30px;display:flex;flex-direction:column;min-height:470px;cursor:pointer;transition:transform .26s var(--lt-ease,cubic-bezier(.2,.8,.2,1)),border-color .26s;}
+  .lt-next:hover{transform:translateY(-5px);border-color:var(--lt-rule2);}
+  .lt-next-wash{opacity:.7;position:absolute;inset:0;background:radial-gradient(120% 90% at 12% 0%,var(--lt-accent-wash-a),transparent 62%);transition:opacity .26s;pointer-events:none;}
+  .lt-next:hover .lt-next-wash{opacity:1;}
+  .lt-next-top{position:relative;display:flex;align-items:flex-start;justify-content:space-between;}
+  .lt-next-sub{margin-top:6px;font-family:'IBM Plex Mono',monospace;font-size:8px;font-weight:500;letter-spacing:.34em;color:var(--lt-dim);}
+  .lt-next-today{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.14em;color:var(--lt-dim);}
+  .lt-next-mid{position:relative;margin-top:44px;}
+  .lt-next-label{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.18em;color:var(--lt-accent);}
+  .lt-next-title{margin-top:14px;font-size:36px;font-weight:800;letter-spacing:-.035em;line-height:1.04;}
+  .lt-next-body{margin-top:16px;font-size:16px;line-height:1.55;color:var(--lt-mute);}
+  .lt-next-bottom{position:relative;margin-top:auto;display:flex;flex-direction:column;gap:16px;}
+  .lt-next-meta{display:flex;align-items:center;gap:12px;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.1em;color:var(--lt-dim);}
+  .lt-next-metadiv{width:1px;height:11px;background:var(--lt-rule2);}
+  .lt-next-cta{border-radius:6px;background:var(--lt-ink);color:#FAF9F6;text-align:center;padding:15px;font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;letter-spacing:.16em;}
+
+  .lt-poster{color:var(--lt-poster-fg);border-radius:6px;background:var(--lt-poster-bg);border:1px solid var(--lt-poster-bg);padding:34px 40px 30px;display:flex;flex-direction:column;min-height:470px;cursor:pointer;}
+  .lt-poster-top{display:flex;align-items:baseline;justify-content:space-between;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.16em;color:#7A7A74;}
+  .lt-poster-mid{margin-top:auto;margin-bottom:auto;padding:34px 0;font-size:clamp(34px,4.4vw,92px);font-weight:800;letter-spacing:-.05em;line-height:1.0;text-transform:uppercase;}
+  .lt-poster-lwrap{overflow:hidden;padding-bottom:8px;}
+  .lt-poster-l3{overflow:hidden;padding-bottom:8px;display:flex;align-items:baseline;gap:.24em;}
+  .lt-poster-knock{background:var(--lt-poster-fg);color:var(--lt-poster-bg);padding:.04em .12em .1em;}
+  .lt-poster-bottom{display:flex;align-items:flex-end;justify-content:space-between;}
+  .lt-poster-word{font-size:19px;font-weight:800;letter-spacing:-.04em;line-height:1;}
+  .lt-poster-sub{margin-top:5px;font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.34em;color:#7A7A74;}
+  .lt-poster-tag{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.16em;color:#7A7A74;}
+
+  .lt-num-grid{padding:22px 40px 40px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(300px,352px);gap:20px;align-items:stretch;max-width:1456px;margin:0 auto;}
+  .lt-card{background:var(--lt-surface);border-radius:6px;border:1px solid var(--lt-rule);padding:26px;}
+  .lt-card-lbl{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.14em;color:var(--lt-dim);}
+  .lt-vbars{margin-top:22px;display:flex;align-items:flex-end;gap:12px;height:96px;}
+  .lt-vbar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:9px;}
+  .lt-vbar{border-radius:5px 5px 0 0;width:100%;background:var(--lt-rule2);transition:height .7s var(--lt-ease,cubic-bezier(.2,.8,.2,1));}
+  .lt-vbar.today{background:var(--lt-accent);}
+  .lt-vbar-lbl{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--lt-dim);}
+  .lt-vbar-lbl.today{color:var(--lt-ink);}
+  .lt-stage-rows{margin-top:22px;display:flex;flex-direction:column;gap:13px;}
+  .lt-stage-row{display:grid;grid-template-columns:104px minmax(0,1fr) 34px;gap:12px;align-items:center;}
+  .lt-stage-lbl{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--lt-mute);}
+  .lt-stage-lbl.live{color:var(--lt-ink);}
+  .lt-stage-track{height:5px;border-radius:3px;background:#E6E3DC;}
+  .lt-stage-fill{height:5px;border-radius:3px;background:var(--lt-mute);transition:width .7s var(--lt-ease,cubic-bezier(.2,.8,.2,1));}
+  .lt-stage-fill.live{background:var(--lt-accent);}
+  .lt-stage-count{font-family:'IBM Plex Mono',monospace;font-size:11px;text-align:right;color:var(--lt-mute);}
+  .lt-stage-count.live{color:var(--lt-accent);}
+  .lt-min-body{margin-top:12px;font-size:15px;line-height:1.5;color:var(--lt-ink2);}
+  .lt-min-btns{margin-top:18px;display:flex;flex-direction:column;gap:8px;}
+  .lt-min-btn{border-radius:6px;border:1px solid var(--lt-rule2);padding:12px 14px;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.12em;color:var(--lt-ink);cursor:pointer;background:none;text-align:left;transition:opacity .16s;}
+  .lt-min-btn:hover{opacity:.76;}
+  .lt-min-foot{margin-top:auto;padding-top:18px;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.12em;color:var(--lt-dim);}
+  .lt-card.lt-min-card{display:flex;flex-direction:column;}
 
   /* ---- Contacts: command-bar search (phase 2) ---- */
   .o2-view{font-family:'Archivo',sans-serif;display:grid;grid-template-columns:minmax(0,1fr) minmax(300px,400px);min-height:calc(100vh - 158px);}
@@ -450,7 +522,7 @@
   .o2-bfyg-save{display:flex;align-items:center;gap:6px;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:1px;color:var(--o2-mute);margin-top:9px;}
   .o2-cursor{display:inline-block;width:7px;height:11px;background:var(--o2-ink);animation:o2-blink 1s step-end infinite;}
   @keyframes o2-blink{0%,49%{opacity:1;}50%,100%{opacity:0;}}
-  @media (prefers-reduced-motion:reduce){ .o2-cursor{animation:none;} .o2-nav-item{transition:none;} .o2-btn{transition:none;} }
+  @media (prefers-reduced-motion:reduce){ .o2-cursor{animation:none;} .o2-btn{transition:none;} .lt-nav-item{transition:none;} .lt-next{transition:none;} .lt-word-cut{transition:none;} }
 
   /* notification stack — replaces the old single #toast */
   .o2-stack{position:fixed;right:24px;bottom:24px;display:flex;flex-direction:column;gap:10px;align-items:flex-end;z-index:200;pointer-events:none;}
@@ -2112,7 +2184,7 @@
     if(params.get("demo")){
       DEMO=true;
       seedPublicDemo();
-      navView="home";
+      navView="landing";
       showApp(true);
       render();
       return;
@@ -2136,7 +2208,7 @@
   // ================= VAMOS UI (wired to existing accounts/threads/KV) =================
   var CH_LABEL = { li:"LinkedIn", em:"Email", call:"Call" };
   var STEP_NAMES = ["Outreach","Follow up","Nudge","Break up","Final attempt"];
-  var focusIdx=0, navView="home", focusMode=false, contactsMode="list", todayOnly=false;
+  var focusIdx=0, navView="landing", focusMode=false, contactsMode="list", todayOnly=false, ltPosterIndex=null;
   var oneMoveChannel="em", oneMoveComposer="draft"; // the Today "one move" channel toggle + composer state
   // Line-art icons (no emoji anywhere in-app). stroke=currentColor, 24-grid.
   var ICON={
@@ -2218,6 +2290,8 @@
   function liSearch(c){ return "https://www.linkedin.com/search/results/people/?keywords="+encodeURIComponent(((c.name||"")+" "+(c.account||"")).trim()); }
   function isLinkedInUrl(u){ return /linkedin\.com/i.test((u||"").trim()); }
   var DOW=["SUN","MON","TUE","WED","THU","FRI","SAT"], MON=["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
+  var DOW_FULL=["SUNDAY","MONDAY","TUESDAY","WEDNESDAY","THURSDAY","FRIDAY","SATURDAY"];
+  var MON_FULL=["JANUARY","FEBRUARY","MARCH","APRIL","MAY","JUNE","JULY","AUGUST","SEPTEMBER","OCTOBER","NOVEMBER","DECEMBER"];
   var TEMPLATES = {
     li: "Hi {first} — saw your work leading {account}'s team and wanted to connect. I work with mid-market brands on engineering and data hiring (onshore + nearshore). No pitch — just building my corner of the industry. — Marcos",
     em: "Subject: {account} — quick one\n\nHi {first},\n\nReaching out because {account} keeps coming up in my world — I help teams like yours add engineering and data talent without the big-firm overhead, onshore or nearshore.\n\nWorth 15 minutes to compare notes? If not now, no sweat — I'll be around.\n\nMarcos",
@@ -2728,13 +2802,14 @@
   }
   function buildNav(m){
     var now=new Date();
-    var TABS=[["home","TODAY"],["contacts","CONTACTS"],["pipeline","PIPELINE"]];
+    var TABS=[["landing","HOME"],["home","TODAY"],["contacts","CONTACTS"],["pipeline","PIPELINE"]];
     var hh=String(now.getHours()).padStart(2,"0"), mm=String(now.getMinutes()).padStart(2,"0");
     var nowStr=DOW[now.getDay()]+" · "+now.getDate()+" "+MON[now.getMonth()]+" · "+hh+":"+mm;
-    var nav=el('<div class="o2-head"><div class="o2-lockup"><span class="o2-word">ŌLLIN</span><span class="o2-sub">TRACKER</span></div><div class="o2-navlinks" id="navTabs"></div><div class="o2-headright"><span>'+nowStr+'</span><div class="o2-ava" id="navAva" title="Account">'+esc(avaInitial())+'</div></div></div>');
+    var nav=el('<div class="lt-head"><div class="lt-head-l"><div class="lt-logo"><div class="lt-word-wrap"><div class="lt-word-top">ŌLLIN</div></div><div class="lt-word-cut"><div class="lt-word-bottom">ŌLLIN</div></div></div><div class="lt-navlinks" id="navTabs"></div></div><div class="lt-head-r"><span class="lt-headtime">'+nowStr+'</span><div class="lt-ava" id="navAva" title="Account">'+esc(avaInitial())+'</div></div></div>');
+    nav.querySelector(".lt-logo").addEventListener("click", function(){ setView("landing"); });
     var ntabs=nav.querySelector("#navTabs");
     TABS.forEach(function(t){
-      var b=el('<button class="o2-nav-item'+(navView===t[0]?" active":"")+'">'+t[1]+'</button>');
+      var b=el('<button class="lt-nav-item'+(navView===t[0]?" active":"")+'">'+t[1]+'</button>');
       b.addEventListener("click", function(e){
         e.stopPropagation();
         if(t[0]==="contacts") contactsMode="list";
@@ -2862,16 +2937,142 @@
       m.appendChild(vb);
     }
     var host=el('<div id="viewHost"></div>'); m.appendChild(host);
-    if(navView==="contacts") renderContacts(host);
+    if(navView==="landing"){ host.classList.add("lt-app"); renderLanding(host); }
+    else if(navView==="contacts") renderContacts(host);
     else if(navView==="pipeline") renderPipeline(host);
     else if(navView==="dashboard") renderDashboard(host);
     else if(navView==="manage") renderManage(host);
     else renderHome(host);
-    if(navView!=="home") host.appendChild(el('<p class="foot">We got you.</p>'));
+    if(navView!=="home" && navView!=="landing") host.appendChild(el('<p class="foot">We got you.</p>'));
     m.classList.toggle("focus", focusMode);
   }
 
   // ---------- HOME: the daily tracker deck ----------
+  // ---------- HOME (landing) — light/electric-blue redesign ----------
+  var LT_STATE_POSTERS = {
+    clear:{l1:"Nothing",l2:"waiting.",l3:"Go",knock:"outside.",tag:"INBOX CLEAR"},
+    last:{l1:"One",l2:"left.",l3:"Then",knock:"you\u2019re done.",tag:"ALMOST THERE"},
+    many:{l1:"The next",l2:"move,",l3:"made",knock:"clear.",tag:"AGENTIC SALES ENGINE"},
+    cold:{l1:"Three",l2:"going",l3:"cold.",knock:"Not today.",tag:"WORTH A NUDGE"}
+  };
+  var LT_DAILY_POSTERS = [
+    {l1:"Still",l2:"here.",l3:"Still",knock:"moving.",tag:"ŌLLIN TRACKER"},
+    {l1:"You don\u2019t",l2:"need",l3:"a whole",knock:"strategy.",tag:"ONE MESSAGE"},
+    {l1:"Momentum",l2:"beats",l3:"a perfect",knock:"plan.",tag:"ŌLLIN TRACKER"},
+    {l1:"Start",l2:"where you",l3:"left",knock:"off.",tag:"NO REBUILDING"},
+    {l1:"Small",l2:"moves,",l3:"kept",knock:"going.",tag:"MOVEMENT"},
+    {l1:"No streak",l2:"to",l3:"protect",knock:"here.",tag:"NO SCOLDING"},
+    {l1:"The work",l2:"is",l3:"the",knock:"follow-up.",tag:"ŌLLIN TRACKER"},
+    {l1:"Say",l2:"the true",l3:"thing",knock:"first.",tag:"DIRECT"}
+  ];
+  function ltPickPoster(waiting, cold){
+    if(waiting===0) return LT_STATE_POSTERS.clear;
+    if(waiting===1) return LT_STATE_POSTERS.last;
+    if(cold>=3) return LT_STATE_POSTERS.cold;
+    if(waiting>=5) return LT_STATE_POSTERS.many;
+    return LT_DAILY_POSTERS[new Date().getDate() % LT_DAILY_POSTERS.length];
+  }
+  function ltMonday(d){ var day=d.getDay(); var diff=(day===0?-6:1-day); var m=new Date(d); m.setDate(d.getDate()+diff); return m; }
+  function ltNextMoveBody(item){
+    var c=item.c;
+    if(c.t && c.t.signal && c.t.signalSrc) return esc(c.t.signal)+" — worth reaching out on that.";
+    if(c.t && c.t.angle) return esc(c.t.angle);
+    return "Nothing new on this one — just their next touch in the cadence, due today.";
+  }
+  function renderLanding(m){
+    var contacts=asContacts();
+    var dueList=[];
+    contacts.forEach(function(c){ var i=dueInfo(c); if(i && i.overdueDays>=0) dueList.push({c:c,i:i}); });
+    dueList.sort(function(x,y){ return y.i.overdueDays - x.i.overdueDays; });
+    var goingCold=dueList.filter(function(x){ return x.i.overdueDays>=7; }).length;
+
+    var grid=el('<div class="lt-home-grid"></div>');
+    var now=new Date();
+    var hh=String(now.getHours()).padStart(2,"0"), mm=String(now.getMinutes()).padStart(2,"0");
+
+    // ---- YOUR NEXT MOVE ----
+    var next=el('<div class="lt-next"></div>');
+    next.appendChild(el('<div class="lt-next-wash"></div>'));
+    var topRow=el('<div class="lt-next-top"></div>');
+    topRow.appendChild(el('<div><div class="lt-word-wrap"><div class="lt-word-top" style="font-size:21px;">ŌLLIN</div></div><div class="lt-word-cut" style="font-size:21px;"><div class="lt-word-bottom" style="font-size:21px;">ŌLLIN</div></div><div class="lt-next-sub">TRACKER</div></div>'));
+    topRow.appendChild(el('<div class="lt-next-today">TODAY</div>'));
+    next.appendChild(topRow);
+    if(dueList.length){
+      var item=dueList[0], c=item.c, i=item.i;
+      var lastTouch=lastDoneDate(c);
+      var daysQuiet = lastTouch ? daysBetween(lastTouch, todayStr()) : null;
+      var mid=el('<div class="lt-next-mid"><div class="lt-next-label">YOUR NEXT MOVE</div><div class="lt-next-title">Message '+esc(firstName(c.name))+' at '+esc(c.account)+'</div><div class="lt-next-body">'+ltNextMoveBody(item)+'</div></div>');
+      next.appendChild(mid);
+      var bottom=el('<div class="lt-next-bottom"></div>');
+      var meta=el('<div class="lt-next-meta"><div>TOUCH '+(c.step+1)+'/5</div><div class="lt-next-metadiv"></div><div>'+(daysQuiet===null?"NEVER CONTACTED":daysQuiet+" DAYS QUIET")+'</div></div>');
+      bottom.appendChild(meta);
+      bottom.appendChild(el('<div class="lt-next-cta">MAKE THE MOVE →</div>'));
+      next.appendChild(bottom);
+      next.addEventListener("click", function(){ focusIdx=0; setView("home"); });
+    } else {
+      var mid2=el('<div class="lt-next-mid"><div class="lt-next-label">YOUR NEXT MOVE</div><div class="lt-next-title">Nothing\u2019s waiting.</div><div class="lt-next-body">Every contact in cadence is handled for today. Add people, or take the win.</div></div>');
+      next.appendChild(mid2);
+      var bottom2=el('<div class="lt-next-bottom"><div class="lt-next-cta" id="ltAddContacts">ADD CONTACTS →</div></div>');
+      next.appendChild(bottom2);
+    }
+    grid.appendChild(next);
+
+    // ---- POSTER ----
+    var poster = (ltPosterIndex===null) ? ltPickPoster(dueList.length, goingCold) : LT_DAILY_POSTERS[ltPosterIndex % LT_DAILY_POSTERS.length];
+    var posterEl=el('<div class="lt-poster">'+
+      '<div class="lt-poster-top"><div>'+DOW_FULL[now.getDay()]+" · "+now.getDate()+" "+MON_FULL[now.getMonth()]+" · "+hh+":"+mm+'</div><div>C:\\ŌLLIN&gt;</div></div>'+
+      '<div class="lt-poster-mid">'+
+        '<div class="lt-poster-lwrap"><div>'+esc(poster.l1)+'</div></div>'+
+        '<div class="lt-poster-lwrap"><div>'+esc(poster.l2)+'</div></div>'+
+        '<div class="lt-poster-l3"><div>'+esc(poster.l3)+'</div><div class="lt-poster-knock">'+esc(poster.knock)+'</div></div>'+
+      '</div>'+
+      '<div class="lt-poster-bottom"><div><div class="lt-poster-word">ŌLLIN</div><div class="lt-poster-sub">TRACKER</div></div><div class="lt-poster-tag">'+esc(poster.tag)+'</div></div>'+
+    '</div>');
+    posterEl.addEventListener("click", function(){ ltPosterIndex = (ltPosterIndex===null) ? 0 : ltPosterIndex+1; render(); });
+    grid.appendChild(posterEl);
+    m.appendChild(grid);
+
+    // ---- NUMBERS STRIP ----
+    var numGrid=el('<div class="lt-num-grid"></div>');
+    var reach=el('<div class="lt-card"><div class="lt-card-lbl">REACH-OUTS · MON–FRI</div><div class="lt-vbars"></div></div>');
+    var vbars=reach.querySelector(".lt-vbars");
+    var monday=ltMonday(now);
+    var weekVals=[], weekIsToday=[];
+    for(var d=0; d<5; d++){ var ds=iso(addDays(iso(monday), d)); var v=dayTotal(ds); weekVals.push(v); weekIsToday.push(ds===todayStr()); }
+    var maxV=Math.max(1, Math.max.apply(null, weekVals));
+    ["MON","TUE","WED","THU","FRI"].forEach(function(lbl,idx){
+      var v=weekVals[idx], isToday=weekIsToday[idx];
+      var h=Math.max(4, Math.round(v/maxV*96));
+      var col=el('<div class="lt-vbar-col"><div class="lt-vbar'+(isToday?" today":"")+'" style="height:'+h+'px;"></div><div class="lt-vbar-lbl'+(isToday?" today":"")+'">'+lbl+" "+v+'</div></div>');
+      vbars.appendChild(col);
+    });
+    numGrid.appendChild(reach);
+
+    var opened=contacts.filter(function(c){ return c.status==="active" && c.step>=1 && !c.complete; }).length;
+    var replied=contacts.filter(function(c){ return c.status==="warm"; }).length;
+    var inConvo=contacts.filter(function(c){ return c.status==="meeting"; }).length;
+    var met=0; // not tracked separately from "meeting" yet — honest zero, not fabricated
+    var stageMax=Math.max(1, opened, replied, inConvo, met);
+    function stageRow(label, count, live){
+      var pct=Math.round(count/stageMax*100);
+      return '<div class="lt-stage-row"><div class="lt-stage-lbl'+(live?" live":"")+'">'+label+'</div><div class="lt-stage-track"><div class="lt-stage-fill'+(live?" live":"")+'" style="width:'+pct+'%;"></div></div><div class="lt-stage-count'+(live?" live":"")+'">'+count+'</div></div>';
+    }
+    var stageCard=el('<div class="lt-card"><div class="lt-card-lbl">PIPELINE BY STAGE</div><div class="lt-stage-rows">'+
+      stageRow("OPENED",opened,false)+stageRow("REPLIED",replied,false)+stageRow("IN CONVO",inConvo,true)+stageRow("MET",met,false)+
+      '</div></div>');
+    numGrid.appendChild(stageCard);
+
+    var minCard=el('<div class="lt-card lt-min-card"><div class="lt-card-lbl">NEED A MINUTE?</div><div class="lt-min-body">Pick one. No streak, no scolding.</div>'+
+      '<div class="lt-min-btns"><button class="lt-min-btn" id="ltFocus25">FOCUS 25 →</button><button class="lt-min-btn" id="ltJustOne">JUST DO ONE →</button><button class="lt-min-btn" id="ltBreathe">BREATHE →</button></div>'+
+      '<div class="lt-min-foot">WE GOT YOU.</div></div>');
+    numGrid.appendChild(minCard);
+    m.appendChild(numGrid);
+
+    var addBtn=m.querySelector("#ltAddContacts"); if(addBtn) addBtn.addEventListener("click", function(e){ e.stopPropagation(); contactsMode="add"; setView("contacts"); });
+    m.querySelector("#ltFocus25").addEventListener("click", openPomodoro);
+    m.querySelector("#ltJustOne").addEventListener("click", openJustOne);
+    m.querySelector("#ltBreathe").addEventListener("click", openBreathe);
+  }
   function renderHome(m){
     var contacts=asContacts();
     // PLAN — free users see where they stand + the path to unlimited.
@@ -3416,7 +3617,7 @@
         var r=await fetch("/api/auth?action=delete-account",{method:"POST",headers:{"Content-Type":"application/json"},credentials:"same-origin",body:JSON.stringify({password:pw})});
         var d=await r.json().catch(function(){ return {}; });
         if(!r.ok||!d.ok) throw new Error(d.error||"Couldn’t delete — try again.");
-        ov.remove(); ACCOUNT=null; clearState(); comebackDismissed=false; navView="home"; closeComeback(); showApp(false); toast("Your account was deleted.");
+        ov.remove(); ACCOUNT=null; clearState(); comebackDismissed=false; navView="landing"; closeComeback(); showApp(false); toast("Your account was deleted.");
       }catch(e){ err.textContent=(e&&e.message)||"Couldn’t delete — try again."; btn.disabled=false; btn.textContent=bl; }
     });
     document.body.appendChild(ov);
