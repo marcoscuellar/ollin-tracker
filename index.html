@@ -449,6 +449,116 @@
   .lt-min-foot{margin-top:auto;padding-top:18px;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.12em;color:var(--lt-dim);}
   .lt-card.lt-min-card{display:flex;flex-direction:column;}
 
+  /* ---- TODAY: greeting + carousel + brief ---- */
+  .lt-greet{padding:40px 40px 30px;display:grid;grid-template-columns:minmax(560px,1fr) minmax(300px,460px);gap:44px;align-items:end;max-width:1456px;margin:0 auto;}
+  .lt-greet-date{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.18em;color:var(--lt-dim);}
+  .lt-greet-title{margin-top:16px;font-size:clamp(38px,4.2vw,56px);font-weight:800;letter-spacing:-.04em;line-height:1.06;}
+  .lt-greet-body{margin-top:16px;font-size:17px;line-height:1.55;color:var(--lt-mute);max-width:46ch;}
+  .lt-counters{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
+  .lt-counter-num{margin-top:12px;font-family:'IBM Plex Mono',monospace;font-size:34px;color:var(--lt-ink);line-height:1;}
+  .lt-counter-num.accent{color:var(--lt-accent);}
+  .lt-counter-sub{margin-top:8px;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--lt-dim);}
+
+  .lt-cards-wrap{padding:0 40px;max-width:1456px;margin:0 auto;}
+  .lt-cards-head{display:flex;align-items:baseline;justify-content:space-between;padding-bottom:18px;}
+  .lt-cards-title{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.18em;color:var(--lt-dim);}
+  .lt-cards-ctrl{display:flex;align-items:center;gap:14px;}
+  .lt-dots{display:flex;gap:6px;}
+  .lt-dot{width:22px;height:3px;background:var(--lt-rule2);cursor:pointer;transition:background .2s;}
+  .lt-dot.on{background:var(--lt-accent);}
+  .lt-arrows{display:flex;gap:8px;}
+  .lt-arrow{box-sizing:border-box;border-radius:6px;width:34px;height:34px;border:1px solid var(--lt-rule2);display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--lt-ink);cursor:pointer;background:#fff;user-select:none;}
+  .lt-arrow:disabled{opacity:.35;cursor:default;}
+  .lt-drag-lbl{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.12em;color:var(--lt-dim);}
+  .lt-viewport{overflow:hidden;cursor:grab;touch-action:pan-y;outline:none;}
+  .lt-viewport.grabbing{cursor:grabbing;}
+  .lt-track{display:flex;gap:20px;will-change:transform;transition:transform .38s cubic-bezier(.2,.8,.2,1);}
+  .lt-track.dragging{transition:none;}
+  .lt-slide{background:var(--lt-surface);box-sizing:border-box;width:424px;flex:none;position:relative;overflow:hidden;border-radius:6px;border:1px solid var(--lt-rule);padding:26px;display:flex;flex-direction:column;gap:18px;min-height:320px;cursor:pointer;}
+  .lt-slide-wash{opacity:.7;position:absolute;inset:0;background:radial-gradient(120% 90% at 15% 0%,var(--lt-accent-wash-a),transparent 62%);pointer-events:none;}
+  .lt-slide-top{position:relative;display:flex;align-items:flex-start;justify-content:space-between;}
+  .lt-slide-eyebrow{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.14em;color:var(--lt-dim);}
+  .lt-slide-eyebrow.accent{color:var(--lt-accent);}
+  .lt-slide-touch{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--lt-dim);}
+  .lt-slide-name{position:relative;font-size:26px;font-weight:700;letter-spacing:-.025em;line-height:1.08;}
+  .lt-slide-title{margin-top:5px;font-size:14px;color:var(--lt-mute);}
+  .lt-slide-body{position:relative;font-size:15px;line-height:1.5;color:var(--lt-ink2);}
+  .lt-slide-bottom{position:relative;margin-top:auto;display:flex;flex-direction:column;gap:14px;}
+  .lt-slide-track{height:5px;border-radius:3px;background:#E6E3DC;}
+  .lt-slide-fill{height:5px;border-radius:3px;background:var(--lt-mute);}
+  .lt-slide-fill.accent{background:var(--lt-accent);}
+  .lt-slide-actions{display:flex;gap:9px;}
+  .lt-slide-open{flex:1;text-align:center;padding:12px;border-radius:6px;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;letter-spacing:.12em;border:1px solid var(--lt-ink);color:var(--lt-ink);}
+  .lt-slide-open.solid{background:var(--lt-accent);border-color:var(--lt-accent);color:#FAF9F6;}
+  .lt-slide-later{border-radius:6px;padding:12px 14px;border:1px solid var(--lt-rule2);color:var(--lt-mute);font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.12em;}
+  .lt-overflow{margin-top:14px;display:flex;align-items:center;justify-content:space-between;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;color:var(--lt-dim);}
+  .lt-overflow-btn{border-radius:6px;padding:9px 14px;border:1px solid var(--lt-rule2);color:var(--lt-ink);cursor:pointer;background:#fff;}
+
+  .lt-brief-wrap{padding:26px 40px 0;max-width:1456px;margin:0 auto;}
+  .lt-brief{border-radius:6px;border:1px solid var(--lt-rule);overflow:hidden;background:var(--lt-surface);}
+  .lt-brief-head{position:relative;overflow:hidden;padding:34px 34px 28px;border-bottom:1px solid #E6E3DC;}
+  .lt-brief-wash{position:absolute;inset:0;background:radial-gradient(90% 130% at 8% 0%,var(--lt-accent-wash-b),transparent 60%);pointer-events:none;}
+  .lt-brief-headrow{position:relative;display:flex;align-items:flex-start;justify-content:space-between;gap:32px;}
+  .lt-brief-eyebrow{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.16em;color:var(--lt-accent);}
+  .lt-brief-name{margin-top:12px;font-size:clamp(40px,6vw,76px);font-weight:800;letter-spacing:-.045em;line-height:.94;overflow-wrap:break-word;}
+  .lt-brief-title{margin-top:10px;font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.14em;color:var(--lt-mute);}
+  .lt-brief-headctrl{display:flex;align-items:center;gap:10px;flex:none;}
+  .lt-brief-state{color:var(--lt-accent-deep);padding:9px 2px;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;border-bottom:1px solid var(--lt-accent);}
+  .lt-brief-close{border-radius:6px;padding:9px 13px;border:1px solid var(--lt-rule2);color:var(--lt-mute);font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;cursor:pointer;background:#fff;}
+  .lt-brief-body{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.24fr);gap:0;}
+  .lt-brief-left{border-right:1px solid #E6E3DC;}
+  .lt-know{background:var(--lt-ai-surface);border-bottom:1px solid var(--lt-rule2);padding:24px 30px 26px;}
+  .lt-know-lbl{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.18em;color:var(--lt-accent);}
+  .lt-krow{display:grid;grid-template-columns:86px 1fr auto;gap:14px;align-items:center;padding:13px 0;border-top:1px solid var(--lt-rule2);}
+  .lt-krow:first-of-type{margin-top:18px;}
+  .lt-krow-lbl{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.12em;color:var(--lt-accent-alt);}
+  .lt-krow-fact{font-size:16px;line-height:1.4;color:var(--lt-ink);}
+  .lt-krow-fact.untracked{color:var(--lt-dim);}
+  .lt-krow-src{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.14em;color:var(--lt-accent-alt);white-space:nowrap;}
+  .lt-krow-src.untracked{color:var(--lt-dim);}
+  .lt-company{padding:24px 30px 30px;}
+  .lt-company-top{display:flex;align-items:baseline;justify-content:space-between;}
+  .lt-company-name{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.18em;color:var(--lt-mute);}
+  .lt-company-pulled{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.12em;color:var(--lt-dim);}
+  .lt-frow{display:grid;grid-template-columns:86px 1fr auto;gap:14px;align-items:center;padding:13px 0;border-top:1px solid #E6E3DC;}
+  .lt-frow-lbl{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.12em;color:var(--lt-dim);}
+  .lt-frow-fact{font-size:15px;line-height:1.4;color:var(--lt-ink);}
+  .lt-frow-src{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.14em;color:var(--lt-accent-alt);white-space:nowrap;}
+  .lt-brief-right{padding:24px 30px 30px;display:flex;flex-direction:column;gap:16px;}
+  .lt-chan2{display:grid;border-radius:6px;grid-template-columns:1fr 1fr;border:1px solid var(--lt-rule2);overflow:hidden;}
+  .lt-chan2-btn{text-align:center;padding:13px;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.16em;color:var(--lt-mute);cursor:pointer;background:#fff;}
+  .lt-chan2-btn.on{background:var(--lt-accent);color:#FAF9F6;}
+  .lt-draftbox2{border-radius:6px;border:1px solid var(--lt-rule2);display:flex;flex-direction:column;flex:1;}
+  .lt-draftbox2-head{display:flex;justify-content:space-between;padding:12px 16px;border-bottom:1px solid #E6E3DC;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.14em;color:var(--lt-dim);}
+  .lt-draftbox2-head.pass2{color:var(--lt-accent);}
+  .lt-draftbox2-subj{display:flex;gap:12px;align-items:baseline;padding:13px 16px;border-bottom:1px solid #E6E3DC;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.12em;color:var(--lt-dim);}
+  .lt-draftbox2-subj span:last-child{font-size:15px;color:var(--lt-ink);font-family:'Archivo',sans-serif;letter-spacing:0;}
+  .lt-draftbox2-body{padding:18px 16px;display:flex;flex-direction:column;gap:14px;font-size:15px;line-height:1.62;color:var(--lt-ink2);}
+  .lt-draftbox2-body textarea{width:100%;border:none;outline:none;resize:vertical;font:inherit;color:inherit;background:transparent;min-height:140px;}
+  .lt-brief-actrow{display:flex;gap:10px;}
+  .lt-act-copy{flex:1;background:var(--lt-accent);color:#FAF9F6;text-align:center;padding:14px;border-radius:6px;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;letter-spacing:.14em;cursor:pointer;}
+  .lt-act-ai{flex:1;border:1px solid var(--lt-ink);color:var(--lt-ink);text-align:center;padding:14px;border-radius:6px;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;letter-spacing:.14em;cursor:pointer;background:#fff;}
+  .lt-act-done{border-radius:6px;padding:14px 16px;border:1px solid var(--lt-rule2);color:var(--lt-mute);font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.12em;cursor:pointer;background:#fff;}
+  .lt-ai-panel{border-radius:6px;border:1px solid var(--lt-ai-rule);background:var(--lt-ai-surface);display:flex;flex-direction:column;}
+  .lt-ai-head{display:flex;align-items:center;justify-content:space-between;padding:13px 16px;border-bottom:1px solid var(--lt-ai-rule2);}
+  .lt-ai-head-l{display:flex;align-items:center;gap:9px;}
+  .lt-ai-dot{width:7px;height:7px;border-radius:50%;background:var(--lt-accent);animation:lt-pulse 1.8s infinite;}
+  @keyframes lt-pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.25;transform:scale(1.5);}}
+  .lt-ai-name{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;color:var(--lt-accent);}
+  .lt-ai-close{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.12em;color:var(--lt-accent-alt);cursor:pointer;}
+  .lt-ai-msgs{padding:16px;display:flex;flex-direction:column;gap:15px;}
+  .lt-ai-msg{display:flex;gap:12px;}
+  .lt-ai-msg-who{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.12em;color:var(--lt-accent);width:34px;flex:none;padding-top:4px;}
+  .lt-ai-msg-who.you{color:var(--lt-dim);}
+  .lt-ai-msg-text{font-size:15px;line-height:1.55;color:var(--lt-ink2);}
+  .lt-ai-hint2{margin:0 16px 14px;font-size:13px;line-height:1.4;color:var(--lt-accent-alt);}
+  .lt-ai-steer2{padding:0 16px 14px;display:flex;flex-direction:column;gap:10px;}
+  .lt-ai-steer2 input{border:1px solid var(--lt-ai-rule);border-radius:6px;padding:10px 12px;font-family:'Archivo',sans-serif;font-size:14px;color:var(--lt-ink);background:#fff;}
+  .lt-ai-chips2{display:flex;flex-wrap:wrap;gap:8px;}
+  .lt-ai-chip2{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.08em;text-transform:uppercase;border-bottom:1px solid var(--lt-ai-rule);color:var(--lt-accent-alt);padding:6px 2px;cursor:pointer;background:none;}
+  .lt-ai-row2{display:flex;align-items:center;gap:12px;padding:13px 16px;border-top:1px solid var(--lt-ai-rule2);}
+  .lt-ai-send{background:var(--lt-accent);color:#FAF9F6;padding:9px 13px;border-radius:6px;font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;letter-spacing:.12em;cursor:pointer;border:none;}
+
   /* ---- Contacts: command-bar search (phase 2) ---- */
   .o2-view{font-family:'Archivo',sans-serif;display:grid;grid-template-columns:minmax(0,1fr) minmax(300px,400px);min-height:calc(100vh - 158px);}
   .o2-view-left{padding:44px 44px 60px;border-right:1px solid var(--o2-ink);}
@@ -1578,6 +1688,14 @@
       signal:find("signal","buying signal"),
       signalsrc:find("signal source","source"),
       status:find("lead status","status"),
+      sector:find("sector","industry"),
+      place:find("place","location","hq"),
+      size:find("company size","employee count","size"),
+      revenue:find("revenue","company revenue"),
+      hiring:find("hiring"), hiringsrc:find("hiring source"),
+      building:find("building"), buildingsrc:find("building source"),
+      stack:find("stack","tech stack"), stacksrc:find("stack source"),
+      money:find("money","funding"), moneysrc:find("money source"),
       t1:pick(find("touch 1 copy","touch 1","touch1 copy","linkedin 1","touch 1 message"), findC("outreach 1"), findC("linkedin","day 1")),
       t2subj:pick(find("touch 2 subject","email 1 subject","touch2 subject"), findC("email","subject")),
       t2:pick(find("touch 2 copy","touch 2","touch2 copy","email 1 body","touch 2 message"), findC("outreach 2","body"), findC("email","body")),
@@ -1606,12 +1724,40 @@
     for(var i=0;i<SIGNAL_SOURCES.length;i++){ if(SIGNAL_SOURCES[i].toLowerCase()===s) return SIGNAL_SOURCES[i]; }
     return "";
   }
+  // Company-level intel (hiring/building/stack/money) — same honesty rule as a
+  // contact signal: a claim without one of these real source types stays untracked.
+  var COMPANY_FACT_SOURCES = ["LinkedIn","Press","Job Board","Earnings","CRM","Product Data"];
+  function normCompanyFactSource(s){
+    s=(s||"").trim().toLowerCase();
+    for(var i=0;i<COMPANY_FACT_SOURCES.length;i++){ if(COMPANY_FACT_SOURCES[i].toLowerCase()===s) return COMPANY_FACT_SOURCES[i]; }
+    return "";
+  }
+  // Reads whichever company-intel columns are present on a CSV row. A
+  // hiring/building/stack/money claim without a real source is dropped —
+  // sector/place/size/revenue are plain directory facts, no source needed.
+  function readCompanyFacts(get, cm){
+    var f={};
+    var sector=get(cm.sector); if(sector) f.sector=sector;
+    var place=get(cm.place); if(place) f.place=place;
+    var size=get(cm.size); if(size) f.size=size;
+    var revenue=get(cm.revenue); if(revenue) f.revenue=revenue;
+    var hiring=get(cm.hiring), hiringSrc=normCompanyFactSource(get(cm.hiringsrc));
+    if(hiring && hiringSrc){ f.hiring=hiring; f.hiringSrc=hiringSrc; }
+    var building=get(cm.building), buildingSrc=normCompanyFactSource(get(cm.buildingsrc));
+    if(building && buildingSrc){ f.building=building; f.buildingSrc=buildingSrc; }
+    var stack=get(cm.stack), stackSrc=normCompanyFactSource(get(cm.stacksrc));
+    if(stack && stackSrc){ f.stack=stack; f.stackSrc=stackSrc; }
+    var money=get(cm.money), moneySrc=normCompanyFactSource(get(cm.moneysrc));
+    if(money && moneySrc){ f.money=money; f.moneySrc=moneySrc; }
+    return f;
+  }
+  function applyCompanyFacts(acct, facts){ for(var k in facts){ acct[k]=facts[k]; } }
   function importEngine7(text){
     var rows=parseCSV(text);
     if(rows.length<2) return {ok:false,msg:"No data rows found"};
     var cm=colMap(rows[0]);
     if(cm.name<0 && cm.first<0) return {ok:false,msg:"No Name column found — include a header row with Name and Company"};
-    var byCompany={};
+    var byCompany={}, factsByCompany={};
     var imported=0;
     for(var i=1;i<rows.length;i++){
       var r=rows[i];
@@ -1641,6 +1787,9 @@
         4: get(cm.t5)
       };
       (byCompany[company]=byCompany[company]||[]).push(thread);
+      var rowFacts=readCompanyFacts(get, cm);
+      factsByCompany[company]=factsByCompany[company]||{};
+      for(var fk in rowFacts) factsByCompany[company][fk]=rowFacts[fk];
       imported++;
     }
     var lastId=null;
@@ -1649,6 +1798,7 @@
       var acctId, threadsToAdd=byCompany[company];
       if(existing){ existing.threads=(existing.threads||[]).concat(threadsToAdd); acctId=existing.id; }
       else { acctId="a"+Date.now()+"_"+Math.floor(Math.random()*999); state.accounts.push({id:acctId, company:company, start:todayStr(), threads:threadsToAdd}); }
+      applyCompanyFacts(state.accounts.find(function(a){return a.id===acctId;}), factsByCompany[company]||{});
       // now that account id is known, drop any captured message copy into the matching touch slots
       threadsToAdd.forEach(function(t){
         if(t._msgs){
@@ -1688,6 +1838,7 @@
       var msgs = { 0:get(cm.t1), 1:withSubjG(get(cm.t2subj),get(cm.t2)), 2:get(cm.t3), 3:withSubjG(get(cm.t4subj),get(cm.t4)), 4:get(cm.t5) };
       var acct = state.accounts.find(function(a){ return normCompany(a.company)===normCompany(company); });
       if(!acct){ acct={ id:"a"+Date.now()+"_"+i+"_"+Math.floor(Math.random()*999), company:company, start:todayStr(), threads:[] }; state.accounts.push(acct); }
+      applyCompanyFacts(acct, readCompanyFacts(get, cm));
       acct.threads=acct.threads||[];
       var thread=null;
       if(upsert){ var key=normContact(fields); if(key) thread=acct.threads.find(function(t){ return normContact(t)===key; }); }
@@ -2208,8 +2359,7 @@
   // ================= VAMOS UI (wired to existing accounts/threads/KV) =================
   var CH_LABEL = { li:"LinkedIn", em:"Email", call:"Call" };
   var STEP_NAMES = ["Outreach","Follow up","Nudge","Break up","Final attempt"];
-  var focusIdx=0, navView="landing", focusMode=false, contactsMode="list", todayOnly=false, ltPosterIndex=null;
-  var oneMoveChannel="em", oneMoveComposer="draft"; // the Today "one move" channel toggle + composer state
+  var navView="landing", contactsMode="list", ltPosterIndex=null;
   // Line-art icons (no emoji anywhere in-app). stroke=currentColor, 24-grid.
   var ICON={
     spark:'<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5l1.7 5.4 5.4 1.7-5.4 1.7L12 17.7l-1.7-5.4L4.9 10.6l5.4-1.7z"/></svg>',
@@ -2495,165 +2645,6 @@
     return html+'</div>';
   }
   function duePill(i){ return i.overdueDays>0 ? (i.overdueDays===1?"Due yesterday":i.overdueDays+"d overdue") : "Due today"; }
-  var OM_STEP_LABELS=["OUTREACH","FOLLOW UP","NUDGE","BREAK UP","FINAL"];
-  var oneMoveLastTouchId=null;
-  // ---- Today: "the one move" (left column) ----
-  function buildOneMove(dueList){
-    if(focusIdx>=dueList.length) focusIdx=dueList.length-1;
-    if(focusIdx<0) focusIdx=0;
-    if(!dueList.length){
-      return el('<div class="o2-left"><div class="o2-eyebrow">START HERE</div><h1 class="o2-name" style="font-size:clamp(28px,4vw,52px)">Queue clear.</h1><p class="o2-title" style="text-transform:none;letter-spacing:0;font-size:15px;margin-top:16px">Nobody’s due. Add contacts, or take the win.</p></div>');
-    }
-    var item=dueList[focusIdx], c=item.c, i=item.i;
-    if(i.touch.id!==oneMoveLastTouchId){
-      oneMoveLastTouchId=i.touch.id;
-      oneMoveChannel = i.ch==="li" ? "li" : "em";
-      oneMoveComposer = oneMoveChannel==="em" ? "draft" : null;
-    }
-    var urgent=i.overdueDays>0;
-    var scriptVal = state.notes[i.touch.id] || fillTemplate(TEMPLATES[i.ch], c);
-    var lastTouch = lastDoneDate(c);
-    var hasWhy = !!(c.t && c.t.angle);
-    var hasSignal = !!(c.t && c.t.signal && c.t.signalSrc);
-
-    var wrap=el('<div class="o2-left"></div>');
-
-    var stage=el('<div class="o2-stage"></div>');
-    stage.appendChild(el('<div class="o2-stage-top"><div><div class="o2-eyebrow">'+esc((c.account||"").toUpperCase())+' · TOUCH '+i.stepNum+' OF 5</div><h1 class="o2-name">'+esc(c.name)+'</h1><div class="o2-title">'+esc((c.title||"").toUpperCase())+'</div></div><span class="o2-overdue'+(urgent?" urgent":"")+'">'+esc(duePill(i).toUpperCase())+'</span></div>'));
-
-    var intel=el('<div class="o2-intel"></div>');
-    function intelRow(label,tracked,fact,src,quiet){
-      var srcHtml='<span class="o2-intel-src'+(tracked?"":" untracked")+'">'+(tracked?esc(src.toUpperCase()):"NOT TRACKED")+'</span>';
-      return '<div class="o2-intel-row'+(tracked?"":" untracked")+'"><span class="o2-intel-label">'+label+'</span><span class="o2-intel-value'+(!tracked?"":(quiet?" quiet":""))+'">'+(tracked?esc(fact):"—")+srcHtml+'</span></div>';
-    }
-    intel.appendChild(el(intelRow("SIGNAL", hasSignal, hasSignal?c.t.signal:"", hasSignal?c.t.signalSrc:"", false)));
-    intel.appendChild(el(intelRow("WHY NOW", hasWhy, hasWhy?c.t.angle:"", hasWhy?"Call Notes":"", false)));
-    intel.appendChild(el(intelRow("LAST TOUCH", true, lastTouch?(fmtLong(lastTouch)+" · "+CH_LABEL[i.ch]):"Never contacted", "CADENCE", true)));
-    stage.appendChild(intel);
-
-    var stepper=el('<div class="o2-stepper"></div>');
-    OM_STEP_LABELS.forEach(function(label,idx){
-      var done=idx<c.step, active=idx===c.step;
-      stepper.appendChild(el('<div class="o2-step"><div class="o2-step-bar'+(done?" done":(active?" active":""))+'"></div><div class="o2-step-label'+(active?" active":"")+'">'+label+'</div></div>'));
-    });
-    stage.appendChild(stepper);
-
-    var composerOpen = !!oneMoveComposer;
-    var channelHint = oneMoveChannel==="li" ? "jumps straight to their profile" : "opens the draft so you can rewrite it";
-    var primaryLabel = oneMoveChannel==="li" ? "OPEN LINKEDIN ↗" : (oneMoveComposer==="draft" ? "SEND IT →" : "WRITE THE EMAIL →");
-    var tabsHtml='<div class="o2-tabgroup"><button class="o2-tab'+(oneMoveChannel==="em"?" on":"")+'" id="omEmail">EMAIL</button><button class="o2-tab linkedin'+(oneMoveChannel==="li"?" on":"")+'" id="omLinkedin">LINKEDIN</button></div>';
-
-    var bottom=el('<div class="o2-bottom'+(composerOpen?" composer-open":"")+'"></div>');
-    var moveLeft=el('<div class="o2-move-left"></div>');
-    moveLeft.appendChild(el('<div class="o2-channelrow"><span class="o2-channellbl">CHANNEL</span>'+tabsHtml+'<span class="o2-composer-hint">'+channelHint+'</span></div>'));
-    if(composerOpen) moveLeft.appendChild(el('<textarea class="o2-draft">'+esc(scriptVal)+'</textarea>'));
-    moveLeft.appendChild(el('<button class="o2-btn-send" id="omPrimary">'+primaryLabel+'</button>'));
-    moveLeft.appendChild(el('<div class="o2-secondrow"><button id="omScript">SCRIPT</button><button id="omReplied">REPLIED</button><button id="omSkip">SKIP</button></div>'));
-    bottom.appendChild(moveLeft);
-    if(composerOpen){
-      var aibox=el('<div class="o2-aibox">'+
-        '<div class="o2-composer-foot"><span>ŌLLIN DREW THE FIRST PASS — YOURS TO REWRITE</span><button class="o2-reset" id="omResetDraft">RESET DRAFT</button>'+
-        '<button class="o2-ai-btn" id="omAiBtn">✦ REWRITE WITH OLLIN</button><button class="o2-reset" id="omCopy">COPY</button></div>'+
-        '<div class="o2-ai-hint" id="omAiHint"></div>'+
-        '<div class="o2-ai-steer" id="omAiSteer">'+
-          '<p class="o2-ai-lead">TELL OLLIN HOW TO WRITE IT</p>'+
-          '<div class="o2-ai-row"><input id="omAiInput" placeholder="e.g. mention their new store openings…" maxlength="240"><button class="o2-ai-draft" id="omAiDraft">DRAFT IT</button></div>'+
-          '<div class="o2-ai-chips">'+
-            '<button class="o2-ai-chip" data-s="Lean into our nearshore capabilities">Push nearshore</button>'+
-            '<button class="o2-ai-chip" data-s="Make it more conversational and human">More conversational</button>'+
-            '<button class="o2-ai-chip" data-s="Make it shorter and punchier">Shorter</button>'+
-            '<button class="o2-ai-chip" data-s="Make it warmer and more personal">Warmer</button>'+
-            '<button class="o2-ai-chip" data-s="Try a completely different angle">Different angle</button>'+
-          '</div>'+
-        '</div>'+
-      '</div>');
-      bottom.appendChild(aibox);
-    }
-    stage.appendChild(bottom);
-    wrap.appendChild(stage);
-
-    // ---- wire it up ----
-    function setChannel(ch){ oneMoveChannel=ch; oneMoveComposer = ch==="em" ? "draft" : null; render(); }
-    Array.prototype.forEach.call(wrap.querySelectorAll("#omEmail"), function(b){ b.addEventListener("click", function(){ setChannel("em"); }); });
-    Array.prototype.forEach.call(wrap.querySelectorAll("#omLinkedin"), function(b){ b.addEventListener("click", function(){ setChannel("li"); }); });
-    wrap.querySelector("#omScript").addEventListener("click", function(){ oneMoveComposer = oneMoveComposer ? null : "draft"; render(); });
-    wrap.querySelector("#omReplied").addEventListener("click", function(){ setStatus(c,"warm", firstName(c.name)+" moved to WARM"); });
-    wrap.querySelector("#omSkip").addEventListener("click", function(){ if(focusIdx<dueList.length-1){ focusIdx++; render(); } else toast("That’s the last one due."); });
-    wrap.querySelector("#omPrimary").addEventListener("click", function(){
-      if(oneMoveChannel==="li"){
-        var li=((c.t&&c.t.linkedin)||"").trim();
-        window.open(isLinkedInUrl(li)?normUrl(li):liSearch(c), "_blank", "noopener");
-        toast("Opening "+firstName(c.name)+" on LinkedIn ↗");
-        completeTouch(c);
-      } else if(oneMoveComposer==="draft"){
-        completeTouch(c);
-      } else {
-        oneMoveComposer="draft"; render();
-      }
-    });
-    var ta=wrap.querySelector("textarea");
-    if(ta){
-      ta.addEventListener("change", function(){ state.notes[i.touch.id]=ta.value; persistNotes(); });
-      wrap.querySelector("#omResetDraft").addEventListener("click", function(){ delete state.notes[i.touch.id]; persistNotes(); render(); toast("Draft reset to Ōllin’s first pass"); });
-      wrap.querySelector("#omCopy").addEventListener("click", function(){ copy(ta.value||""); });
-      (function(){
-        var aiBtn=wrap.querySelector("#omAiBtn"), steer=wrap.querySelector("#omAiSteer"),
-            steerInput=wrap.querySelector("#omAiInput"), draftBtn=wrap.querySelector("#omAiDraft"),
-            hint=wrap.querySelector("#omAiHint");
-        aiBtn.addEventListener("click", function(){ steer.classList.toggle("open"); if(steer.classList.contains("open")) steerInput.focus(); });
-        function setHint(msg){ if(msg){ hint.textContent=msg; hint.classList.add("show"); } else { hint.textContent=""; hint.classList.remove("show"); } }
-        function generate(steerText){
-          setHint("");
-          draftBtn.disabled=true; aiBtn.disabled=true;
-          var dl=draftBtn.textContent; draftBtn.textContent="WRITING…";
-          fetch("/api/write",{method:"POST",headers:{"Content-Type":"application/json"},
-            body:JSON.stringify({name:c.name,title:c.title||"",company:c.account||"",angle:(c.t&&c.t.angle)||"",channel:i.ch,step:i.stepNum,steer:steerText||""})})
-            .then(function(r){ return r.json().then(function(d){ return {ok:r.ok,d:d}; }); })
-            .then(function(res){ if(!res.ok||!res.d||!res.d.text){ toast((res.d&&res.d.error)||"Ollin couldn’t draft that — try again"); return; }
-              ta.value=res.d.text; state.notes[i.touch.id]=res.d.text; persistNotes();
-              setHint(res.d.angleWarning||"");
-              toast(steerText?"Redrafted with your direction.":"Drafted. Yours to edit."); })
-            .catch(function(){ toast("Network hiccup — try again"); })
-            .then(function(){ draftBtn.disabled=false; aiBtn.disabled=false; draftBtn.textContent=dl; });
-        }
-        draftBtn.addEventListener("click", function(){ generate(steerInput.value.trim()); });
-        steerInput.addEventListener("keydown", function(e){ if(e.key==="Enter"){ e.preventDefault(); generate(steerInput.value.trim()); } });
-        Array.prototype.forEach.call(wrap.querySelectorAll(".o2-ai-chip"), function(chip){
-          chip.addEventListener("click", function(){ var s=chip.getAttribute("data-s"); steerInput.value=s; generate(s); });
-        });
-      })();
-    }
-    return wrap;
-  }
-  // ---- Today: "the queue" (right column) ----
-  function buildQueueRail(dueList){
-    var wrap=el('<div class="o2-right"></div>');
-    // "cleared" = touches actually completed today (real data); the denominator is
-    // that plus what's still left in the live queue — dueList itself only ever
-    // holds pending items, since completed touches drop out of it on the next render.
-    var clearedToday=dayTotal(todayStr()), totalToday=clearedToday+dueList.length;
-    wrap.appendChild(el('<div class="o2-rail-head"><span>THE QUEUE</span><span>'+clearedToday+' / '+totalToday+' CLEARED</span></div>'));
-    var track=el('<div class="o2-track"><div class="o2-track-fill" style="width:'+(totalToday?(clearedToday/totalToday*100):0)+'%"></div></div>');
-    wrap.appendChild(track);
-    var scroller=el('<div class="o2-rail-scroll"></div>');
-    dueList.forEach(function(item,idx){
-      var c=item.c, active=idx===focusIdx;
-      var row=el('<div class="o2-qrow'+(active?" active":"")+'"><div class="o2-qrow-top"><span class="o2-qname">'+esc(c.name)+'</span><span class="o2-qstate">'+esc(duePill(item.i).toUpperCase())+'</span></div><div class="o2-qmeta">'+esc((c.account||"").toUpperCase())+' · TOUCH '+item.i.stepNum+' OF 5</div></div>');
-      row.addEventListener("click", function(){ focusIdx=idx; render(); });
-      scroller.appendChild(row);
-    });
-    wrap.appendChild(scroller);
-    // before you go
-    var bfyg=el('<div class="o2-bfyg"><div class="o2-bfyg-lbl">BEFORE YOU GO</div>'+
-      '<textarea id="omNote" maxlength="140" placeholder="One line to your future self — the first thing you’ll see when you’re back.">'+esc(state.handoffNote||"")+'</textarea>'+
-      '<div class="o2-bfyg-save"><span class="o2-cursor"></span><span id="omNoteHint">SAVES AUTOMATICALLY</span></div></div>');
-    var noteEl=bfyg.querySelector("#omNote"), hintEl=bfyg.querySelector("#omNoteHint");
-    function saveNote(){ var v=noteEl.value.trim(); if(v===(state.handoffNote||"")) return; state.handoffNote=v; scheduleSave(); hintEl.textContent="SAVED. SEE YOU TOMORROW."; }
-    noteEl.addEventListener("change", saveNote);
-    noteEl.addEventListener("blur", saveNote);
-    wrap.appendChild(bfyg);
-    return wrap;
-  }
   // ---- shared right rail: TODAY'S LIST (Contacts + Pipeline) — a small,
   // account-agnostic checklist, separate from the contact cadence itself.
   function buildTodayList(){
@@ -2713,9 +2704,8 @@
     '</div>');
     var scr=card.querySelector("#dcScript"), ta=card.querySelector("textarea");
     var back=card.querySelector("#dcBack"), next=card.querySelector("#dcNext");
-    // Local carousel index into THIS dueList — decoupled from Today's global focusIdx,
-    // since this card is now also reused standalone (Contacts inline-expand, always a
-    // single-item list).
+    // Local index into THIS dueList — this card is reused standalone for the
+    // Contacts inline-expand, always a single-item list.
     var localIdx=dueList.indexOf(item); if(localIdx<0) localIdx=0;
     back.disabled = localIdx<=0; next.disabled = localIdx>=dueList.length-1;
     back.addEventListener("click", function(){ if(localIdx>0){ host.innerHTML=""; host.appendChild(activeCard(dueList[localIdx-1],host,dueList,warm)); } });
@@ -2942,9 +2932,8 @@
     else if(navView==="pipeline") renderPipeline(host);
     else if(navView==="dashboard") renderDashboard(host);
     else if(navView==="manage") renderManage(host);
-    else renderHome(host);
+    else { host.classList.add("lt-app"); renderToday(host); }
     if(navView!=="home" && navView!=="landing") host.appendChild(el('<p class="foot">We got you.</p>'));
-    m.classList.toggle("focus", focusMode);
   }
 
   // ---------- HOME: the daily tracker deck ----------
@@ -2973,6 +2962,18 @@
     return LT_DAILY_POSTERS[new Date().getDate() % LT_DAILY_POSTERS.length];
   }
   function ltMonday(d){ var day=d.getDay(); var diff=(day===0?-6:1-day); var m=new Date(d); m.setDate(d.getDate()+diff); return m; }
+  // honest "last pulled" label — real record timestamp, never a fabricated freshness claim
+  function ltTimeAgo(ms){
+    if(!ms) return "—";
+    var diff=Date.now()-ms; if(diff<0) diff=0;
+    var min=Math.round(diff/60000);
+    if(min<1) return "JUST NOW";
+    if(min<60) return min+" MIN AGO";
+    var hr=Math.round(min/60);
+    if(hr<24) return hr+(hr===1?" HR AGO":" HRS AGO");
+    var day=Math.round(hr/24);
+    return day+(day===1?" DAY AGO":" DAYS AGO");
+  }
   function ltNextMoveBody(item){
     var c=item.c;
     if(c.t && c.t.signal && c.t.signalSrc) return esc(c.t.signal)+" — worth reaching out on that.";
@@ -3008,7 +3009,12 @@
       bottom.appendChild(meta);
       bottom.appendChild(el('<div class="lt-next-cta">MAKE THE MOVE →</div>'));
       next.appendChild(bottom);
-      next.addEventListener("click", function(){ focusIdx=0; setView("home"); });
+      next.addEventListener("click", function(){
+        var waiting=ltWaitingList();
+        var idx=waiting.findIndex(function(x){ return x.c.a.id===c.a.id && x.c.t.id===c.t.id; });
+        ltOpenIdx = idx>=0 ? idx : null; ltBriefChannel = i.ch||"em"; ltAiOpen=false;
+        setView("home");
+      });
     } else {
       var mid2=el('<div class="lt-next-mid"><div class="lt-next-label">YOUR NEXT MOVE</div><div class="lt-next-title">Nothing\u2019s waiting.</div><div class="lt-next-body">Every contact in cadence is handled for today. Add people, or take the win.</div></div>');
       next.appendChild(mid2);
@@ -3073,9 +3079,159 @@
     m.querySelector("#ltJustOne").addEventListener("click", openJustOne);
     m.querySelector("#ltBreathe").addEventListener("click", openBreathe);
   }
-  function renderHome(m){
+
+  // ---------- TODAY — six-card carousel + expandable brief ----------
+  var ltCarIdx=0, ltOpenIdx=null, ltBriefChannel="em", ltAiOpen=false;
+  function ltWaitingList(){
     var contacts=asContacts();
-    // PLAN — free users see where they stand + the path to unlimited.
+    var dueList=[];
+    contacts.forEach(function(c){ var i=dueInfo(c); if(i && i.overdueDays>=0) dueList.push({c:c,i:i}); });
+    dueList.sort(function(x,y){ return y.i.overdueDays - x.i.overdueDays; });
+    var warm=contacts.filter(function(c){ return c.status==="warm"; }).map(function(c){ return {c:c,i:null}; });
+    return warm.concat(dueList);
+  }
+  function ltCardEyebrow(item){
+    var c=item.c, i=item.i;
+    if(c.status==="warm") return "THEY REPLIED";
+    if(i && i.overdueDays>=7) return "GOING COLD · "+i.overdueDays+" DAYS";
+    if(c.t && c.t.signal && c.t.signalSrc) return "NEWS ON YOUR ACCOUNTS";
+    if(c.step===0) return "NEW · NEVER CONTACTED";
+    return "FOLLOW-UP DUE";
+  }
+  function ltCardBody(item){
+    var c=item.c;
+    if(c.t && c.t.signal && c.t.signalSrc) return esc(c.t.signal)+".";
+    if(c.t && c.t.angle) return esc(c.t.angle);
+    if(c.status==="warm") return "They replied — pick up the thread.";
+    return "Their next touch in the cadence is due.";
+  }
+  function ltTouchIdOf(item){
+    var c=item.c, i=item.i;
+    if(i) return i.touch.id;
+    var t=c.touches && c.touches[c.step];
+    return t ? t.id : null;
+  }
+  function ltCompanyFactRow(label, fact, src){
+    var tracked=!!(fact && src);
+    return '<div class="lt-frow"><div class="lt-frow-lbl">'+label+'</div><div class="lt-frow-fact'+(tracked?"":" untracked")+'">'+(tracked?esc(fact):"—")+'</div><div class="lt-frow-src">'+(tracked?"↳ "+esc(src.toUpperCase()):"NOT TRACKED")+'</div></div>';
+  }
+  function buildLtBrief(waiting, idx){
+    var item=waiting[idx], c=item.c, i=item.i;
+    var touchId=ltTouchIdOf(item);
+    var wrap=el('<div class="lt-brief-wrap"></div>');
+    var brief=el('<div class="lt-brief"></div>');
+
+    var stateLabel = c.status==="warm" ? "THEY REPLIED" : (i? duePill(i).toUpperCase() : "IN CADENCE");
+    var head=el('<div class="lt-brief-head"><div class="lt-brief-wash"></div><div class="lt-brief-headrow"><div style="min-width:0;"><div class="lt-brief-eyebrow">'+esc((c.account||"").toUpperCase())+' · TOUCH '+(c.step+1)+' OF 5</div><div class="lt-brief-name">'+esc(c.name)+'</div><div class="lt-brief-title">'+esc((c.title||"").toUpperCase())+'</div></div><div class="lt-brief-headctrl"><div class="lt-brief-state">'+stateLabel+'</div><button class="lt-arrow" id="ltPagerPrev">←</button><button class="lt-arrow" id="ltPagerNext">→</button><button class="lt-brief-close" id="ltBriefClose">CLOSE ✕</button></div></div></div>');
+    brief.appendChild(head);
+
+    var body=el('<div class="lt-brief-body"></div>');
+
+    // LEFT — what Ollin knows + company
+    var left=el('<div class="lt-brief-left"></div>');
+    var hasSignal=!!(c.t && c.t.signal && c.t.signalSrc);
+    var hasWhy=!!(c.t && c.t.angle);
+    var know=el('<div class="lt-know"><div class="lt-know-lbl">WHAT ŌLLIN KNOWS ABOUT '+esc(firstName(c.name).toUpperCase())+'</div>'+
+      '<div class="lt-krow"><div class="lt-krow-lbl">SIGNAL</div><div class="lt-krow-fact'+(hasSignal?"":" untracked")+'">'+(hasSignal?esc(c.t.signal):"—")+'</div><div class="lt-krow-src'+(hasSignal?"":" untracked")+'">'+(hasSignal?"↳ "+esc(c.t.signalSrc.toUpperCase()):"NOT TRACKED")+'</div></div>'+
+      '<div class="lt-krow"><div class="lt-krow-lbl">WHY NOW</div><div class="lt-krow-fact'+(hasWhy?"":" untracked")+'">'+(hasWhy?esc(c.t.angle):"—")+'</div><div class="lt-krow-src'+(hasWhy?"":" untracked")+'">'+(hasWhy?"↳ CALL NOTES":"NOT TRACKED")+'</div></div>'+
+      '</div>');
+    left.appendChild(know);
+
+    var acct=c.a||{};
+    var metaParts=[acct.sector,acct.place,acct.size,acct.revenue].filter(Boolean);
+    var roomTotal=(acct.threads||[]).length, roomReplied=(acct.threads||[]).filter(function(t){ return t.status==="warm"; }).length;
+    var company=el('<div class="lt-company"></div>');
+    company.innerHTML =
+      '<div class="lt-company-top"><div class="lt-company-name">'+esc((c.account||"").toUpperCase())+'</div><div class="lt-company-pulled">PULLED '+esc(ltTimeAgo(c.t.pulledAt))+'</div></div>'+
+      (metaParts.length ? '<div style="margin-top:14px;display:flex;flex-wrap:wrap;align-items:center;gap:12px;font-family:\'IBM Plex Mono\',monospace;font-size:10px;letter-spacing:.06em;color:'+"var(--lt-ink2)"+';">'+metaParts.map(esc).join('<span style="width:1px;height:11px;background:var(--lt-rule2);display:inline-block;"></span>')+'</div>' : '')+
+      ltCompanyFactRow("HIRING", acct.hiring, acct.hiringSrc)+
+      ltCompanyFactRow("BUILDING", acct.building, acct.buildingSrc)+
+      ltCompanyFactRow("STACK", acct.stack, acct.stackSrc)+
+      ltCompanyFactRow("MONEY", acct.money, acct.moneySrc)+
+      ltCompanyFactRow("IN THE ROOM", roomTotal+" contact"+(roomTotal===1?"":"s")+" in cadence"+(roomReplied?" · "+roomReplied+" replied":""), "Ollin");
+    left.appendChild(company);
+    body.appendChild(left);
+
+    // RIGHT — the draft
+    var right=el('<div class="lt-brief-right"></div>');
+    var chan=el('<div class="lt-chan2"><button class="lt-chan2-btn'+(ltBriefChannel==="li"?" on":"")+'" id="ltChanLi">LINKEDIN</button><button class="lt-chan2-btn'+(ltBriefChannel==="em"?" on":"")+'" id="ltChanEm">EMAIL</button></div>');
+    right.appendChild(chan);
+    right.appendChild(el('<div style="display:flex;gap:22px;border-bottom:1px solid #E6E3DC;"><div style="border-bottom:2px solid var(--lt-accent);color:var(--lt-accent-deep);padding:8px 2px;font-family:\'IBM Plex Mono\',monospace;font-size:10px;letter-spacing:.12em;">THE GAP</div></div>'));
+
+    var scriptVal = (touchId && state.notes[touchId]) || fillTemplate(TEMPLATES[ltBriefChannel], c);
+    function wordCount(s){ return (s||"").trim().split(/\s+/).filter(Boolean).length; }
+    var draftbox=el('<div class="lt-draftbox2"><div class="lt-draftbox2-head"><span>ŌLLIN FIRST PASS</span><span id="ltWordCount">'+wordCount(scriptVal)+' WORDS</span></div><div class="lt-draftbox2-body"><textarea id="ltDraftTa">'+esc(scriptVal)+'</textarea></div></div>');
+    right.appendChild(draftbox);
+    var ta=draftbox.querySelector("#ltDraftTa"), wordsEl=draftbox.querySelector("#ltWordCount");
+
+    var actrow=el('<div class="lt-brief-actrow"><button class="lt-act-copy" id="ltCopy">COPY DRAFT</button><button class="lt-act-ai" id="ltAiToggle">ŌLLIN AI</button><button class="lt-act-done" id="ltDone">THAT’S DONE ✓</button></div>');
+    right.appendChild(actrow);
+
+    if(ltAiOpen){
+      var panel=el('<div class="lt-ai-panel">'+
+        '<div class="lt-ai-head"><div class="lt-ai-head-l"><div class="lt-ai-dot"></div><div class="lt-ai-name">ŌLLIN AI</div></div><div class="lt-ai-close" id="ltAiClose">HIDE ✕</div></div>'+
+        '<div class="lt-ai-msgs"><div class="lt-ai-msg"><div class="lt-ai-msg-who">ŌLLIN</div><div class="lt-ai-msg-text">How can I help?</div></div></div>'+
+        '<div class="lt-ai-hint2" id="ltAiHint" style="display:none;"></div>'+
+        '<div class="lt-ai-steer2"><input id="ltAiInput" placeholder="e.g. mention their new store openings…" maxlength="240">'+
+          '<div class="lt-ai-chips2">'+
+            '<button class="lt-ai-chip2" data-s="Lean into our nearshore capabilities">Push nearshore</button>'+
+            '<button class="lt-ai-chip2" data-s="Make it more conversational and human">More conversational</button>'+
+            '<button class="lt-ai-chip2" data-s="Make it shorter and punchier">Shorter</button>'+
+            '<button class="lt-ai-chip2" data-s="Try a completely different angle">Different angle</button>'+
+          '</div></div>'+
+      '</div>');
+      right.appendChild(panel);
+
+      function setHint(msg){ var h=panel.querySelector("#ltAiHint"); if(msg){ h.textContent=msg; h.style.display="block"; } else h.style.display="none"; }
+      function generate(steerText){
+        setHint("");
+        var input=panel.querySelector("#ltAiInput");
+        input.disabled=true;
+        fetch("/api/write",{method:"POST",headers:{"Content-Type":"application/json"},
+          body:JSON.stringify({name:c.name,title:c.title||"",company:c.account||"",angle:(c.t&&c.t.angle)||"",channel:ltBriefChannel,step:c.step,steer:steerText||""})})
+          .then(function(r){ return r.json().then(function(d){ return {ok:r.ok,d:d}; }); })
+          .then(function(res){
+            if(!res.ok||!res.d||!res.d.text){ toast((res.d&&res.d.error)||"Ollin couldn’t draft that — try again"); return; }
+            ta.value=res.d.text; if(touchId){ state.notes[touchId]=res.d.text; persistNotes(); }
+            wordsEl.textContent=wordCount(res.d.text)+" WORDS";
+            setHint(res.d.angleWarning||"");
+            toast(steerText?"Redrafted with your direction.":"Drafted. Yours to edit.");
+          })
+          .catch(function(){ toast("Network hiccup — try again"); })
+          .then(function(){ input.disabled=false; input.value=""; });
+      }
+      panel.querySelector("#ltAiInput").addEventListener("keydown", function(e){ if(e.key==="Enter"){ e.preventDefault(); generate(e.target.value.trim()); } });
+      Array.prototype.forEach.call(panel.querySelectorAll(".lt-ai-chip2"), function(chip){
+        chip.addEventListener("click", function(){ generate(chip.getAttribute("data-s")); });
+      });
+      panel.querySelector("#ltAiClose").addEventListener("click", function(){ ltAiOpen=false; render(); });
+    }
+
+    body.appendChild(right);
+    brief.appendChild(body);
+    wrap.appendChild(brief);
+
+    head.querySelector("#ltBriefClose").addEventListener("click", function(){ ltOpenIdx=null; render(); });
+    head.querySelector("#ltPagerPrev").addEventListener("click", function(){ ltOpenIdx=(idx-1+waiting.length)%waiting.length; ltAiOpen=false; render(); });
+    head.querySelector("#ltPagerNext").addEventListener("click", function(){ ltOpenIdx=(idx+1)%waiting.length; ltAiOpen=false; render(); });
+    chan.querySelector("#ltChanLi").addEventListener("click", function(){ ltBriefChannel="li"; render(); });
+    chan.querySelector("#ltChanEm").addEventListener("click", function(){ ltBriefChannel="em"; render(); });
+    ta.addEventListener("change", function(){ if(touchId){ state.notes[touchId]=ta.value; persistNotes(); } wordsEl.textContent=wordCount(ta.value)+" WORDS"; });
+    actrow.querySelector("#ltCopy").addEventListener("click", function(){ copy(ta.value||""); toast("Copied."); });
+    actrow.querySelector("#ltAiToggle").addEventListener("click", function(){ ltAiOpen=!ltAiOpen; render(); });
+    actrow.querySelector("#ltDone").addEventListener("click", function(){
+      if(c.status==="warm") logWarmTouch(c); else completeTouch(c);
+      ltOpenIdx=null;
+    });
+    return wrap;
+  }
+  function renderToday(m){
+    var waiting=ltWaitingList();
+    var shown=waiting.slice(0,6);
+    var overflow=Math.max(0, waiting.length-6);
+    if(ltCarIdx>=shown.length) ltCarIdx=Math.max(0, shown.length-1);
+    if(ltOpenIdx!==null && !waiting[ltOpenIdx]) ltOpenIdx=null;
+
     if(ACCOUNT && !isUnlimited()){
       var used=contactCount(), left=Math.max(0,FREE_CONTACT_CAP-used), near=used>=FREE_CONTACT_CAP;
       var pb=el('<div class="planbar'+(near?" full":"")+'"><span class="pb-count">'+used+' / '+FREE_CONTACT_CAP+' free contacts'+(near?" — full":(left<=5?" — "+left+" left":""))+'</span><a id="pbGo">Get unlimited</a></div>');
@@ -3083,59 +3239,119 @@
       m.appendChild(pb);
     }
 
-    var dueList=[];
-    contacts.forEach(function(c){ var i=dueInfo(c); if(i && i.overdueDays>=0) dueList.push({c:c,i:i}); });
-    dueList.sort(function(x,y){ return y.i.overdueDays - x.i.overdueDays; });
-    var deckList = todayOnly ? dueList.filter(function(x){ return x.i.overdueDays===0; }) : dueList;
-    var inCadence=contacts.filter(function(c){ return c.status==="active" && !c.complete; }).length;
-    var overdueCount=dueList.filter(function(x){ return x.i.overdueDays>0; }).length;
+    var now=new Date();
+    function ltWeekTotal(mondayDate){ var sum=0, mIso=iso(mondayDate); for(var d=0; d<7; d++){ sum+=dayTotal(iso(addDays(mIso,d))); } return sum; }
+    var thisMonday=ltMonday(now);
+    var thisWeekDone=ltWeekTotal(thisMonday);
+    var lastWeekDone=ltWeekTotal(addDays(iso(thisMonday), -7));
+    var doneToday=dayTotal(todayStr());
+    var inCadence=asContacts().filter(function(c){ return c.status==="active" && !c.complete; }).length;
 
-    // LEDGER STRIP (Today only, per the redesign spec)
-    var ledger=el('<div class="o2-ledger"></div>');
-    ledger.appendChild(el('<div><div class="o2-lnum">'+dueList.length+'</div><div class="o2-llbl">LEFT TODAY</div></div>'));
-    ledger.appendChild(el('<div><div class="o2-lnum">'+dayTotal(todayStr())+'</div><div class="o2-llbl">CLEARED</div></div>'));
-    ledger.appendChild(el('<div><div class="o2-lnum">'+inCadence+'</div><div class="o2-llbl">IN CADENCE</div></div>'));
-    var lastZone=el('<div></div>');
-    var fmBtn=el('<button class="o2-lbtn'+(focusMode?" on":"")+'" id="fmBtn">'+(focusMode?"FOCUS ON":"FOCUS MODE")+'</button>');
-    fmBtn.addEventListener("click", function(){ focusMode=!focusMode; document.getElementById("appMain").classList.toggle("focus",focusMode); render(); });
-    lastZone.appendChild(fmBtn);
-    if(overdueCount>0){
-      var restoreBtn=el('<button class="o2-lbtn quiet" id="restoreBtn" title="Move every overdue touch to be due today">RESTORE</button>');
-      restoreBtn.addEventListener("click", function(){ if(confirm("Move "+overdueCount+" overdue touch"+(overdueCount>1?"es":"")+" to be due today?")) restoreOverdueToToday(); });
-      lastZone.appendChild(restoreBtn);
-    }
-    ledger.appendChild(lastZone);
-    m.appendChild(ledger);
+    var greet=el('<div class="lt-greet"></div>');
+    var titleText = waiting.length===0 ? "Nothing’s waiting." : (waiting.length===1 ? "One person is waiting on you." : waiting.length+" people are waiting on you.");
+    var bodyText = thisWeekDone>0 ? ("Start with one. "+thisWeekDone+" already went out this week.") : "Start with one.";
+    var greetLeft=el('<div><div class="lt-greet-date">'+DOW_FULL[now.getDay()]+" · "+now.getDate()+" "+MON_FULL[now.getMonth()]+'</div><div class="lt-greet-title">'+esc(titleText)+'</div><div class="lt-greet-body">'+esc(bodyText)+'</div></div>');
+    greet.appendChild(greetLeft);
+    var counters=el('<div class="lt-counters">'+
+      '<div class="lt-card"><div class="lt-card-lbl">DONE TODAY</div><div class="lt-counter-num accent">'+doneToday+'</div><div class="lt-counter-sub">/ '+shown.length+' QUEUED</div></div>'+
+      '<div class="lt-card"><div class="lt-card-lbl">THIS WEEK</div><div class="lt-counter-num">'+thisWeekDone+'</div><div class="lt-counter-sub">LAST WEEK '+lastWeekDone+'</div></div>'+
+      '<div class="lt-card"><div class="lt-card-lbl">IN CADENCE</div><div class="lt-counter-num">'+inCadence+'</div><div class="lt-counter-sub">'+contactCount()+' CONTACTS</div></div>'+
+    '</div>');
+    greet.appendChild(counters);
+    m.appendChild(greet);
 
-    // WARM — restyled in place via CSS, same markup/behavior
-    var warm=contacts.filter(function(c){ return c.status==="warm"; });
-    if(warm.length){
-      var ws=el('<section class="warm"><h2 class="warm-title">Warm — your move</h2><p class="warm-sub">They answered. This beats every cold touch on the list.</p><div id="warmList"></div></section>');
-      var wl=ws.querySelector("#warmList");
-      warm.forEach(function(c){
-        var card=el('<div class="wcard"><div class="wname">'+esc(c.name)+'</div><div class="wmeta">'+esc(c.title||"")+(c.title?" · ":"")+esc(c.account)+' · cadence paused</div><div class="wactions"><button class="wbtn gold" data-a="meeting">Meeting booked</button><button class="wbtn" data-a="touch">Log a reply touch</button><button class="wbtn quiet" data-a="lost">Not interested</button></div></div>');
-        card.querySelector('[data-a="meeting"]').addEventListener("click", function(){ setStatus(c,"meeting","Meeting booked. Ollin."); });
-        card.querySelector('[data-a="touch"]').addEventListener("click", function(){ logWarmTouch(c); });
-        card.querySelector('[data-a="lost"]').addEventListener("click", function(){ setStatus(c,"lost","Marked not interested"); });
-        wl.appendChild(card);
+    var cardsWrap=el('<div class="lt-cards-wrap"></div>');
+    var head=el('<div class="lt-cards-head"><div class="lt-cards-title">&gt; TODAY’S LIST · '+shown.length+'</div><div class="lt-cards-ctrl"><div class="lt-dots" id="ltDots"></div><div class="lt-arrows"><button class="lt-arrow" id="ltPrev">←</button><button class="lt-arrow" id="ltNext">→</button></div><div class="lt-drag-lbl">DRAG</div></div></div>');
+    cardsWrap.appendChild(head);
+
+    if(shown.length){
+      var viewport=el('<div class="lt-viewport" tabindex="0"></div>');
+      var track=el('<div class="lt-track"></div>');
+      shown.forEach(function(item,idx){
+        var c=item.c, i=item.i, isFirst=idx===0;
+        var progress=Math.max(4, Math.round((c.step/5)*100));
+        var slide=el('<div class="lt-slide"></div>');
+        if(isFirst) slide.appendChild(el('<div class="lt-slide-wash"></div>'));
+        slide.appendChild(el('<div class="lt-slide-top"><div class="lt-slide-eyebrow'+(isFirst?" accent":"")+'">'+ltCardEyebrow(item)+'</div><div class="lt-slide-touch">TOUCH '+(c.step+1)+'/5</div></div>'));
+        slide.appendChild(el('<div><div class="lt-slide-name">'+esc(c.name)+'</div><div class="lt-slide-title">'+esc((c.title||"")+(c.title&&c.account?" · ":"")+(c.account||""))+'</div></div>'));
+        slide.appendChild(el('<div class="lt-slide-body">'+ltCardBody(item)+'</div>'));
+        var bottom=el('<div class="lt-slide-bottom"></div>');
+        bottom.appendChild(el('<div class="lt-slide-track"><div class="lt-slide-fill'+(isFirst?" accent":"")+'" style="width:'+progress+'%;"></div></div>'));
+        var actions=el('<div class="lt-slide-actions"><button class="lt-slide-open'+(isFirst?" solid":"")+'">OPEN DRAFT</button><button class="lt-slide-later">LATER</button></div>');
+        actions.querySelector(".lt-slide-open").addEventListener("click", function(e){ e.stopPropagation(); ltOpenIdx=waiting.indexOf(item); ltBriefChannel=(i&&i.ch)||(c.t&&c.t.channel)||"em"; ltAiOpen=false; render(); });
+        var laterBtn=actions.querySelector(".lt-slide-later");
+        laterBtn.addEventListener("click", function(e){ e.stopPropagation(); if(ltCarIdx<shown.length-1){ ltCarIdx++; updateCarouselUI(); } });
+        bottom.appendChild(actions);
+        slide.appendChild(bottom);
+        slide.addEventListener("click", function(){ ltOpenIdx=waiting.indexOf(item); ltBriefChannel=(i&&i.ch)||(c.t&&c.t.channel)||"em"; ltAiOpen=false; render(); });
+        track.appendChild(slide);
       });
-      m.appendChild(ws);
+      viewport.appendChild(track);
+      cardsWrap.appendChild(viewport);
+
+      var dotsEl=head.querySelector("#ltDots"), prevBtn=head.querySelector("#ltPrev"), nextBtn=head.querySelector("#ltNext");
+      shown.forEach(function(_,idx){
+        var d=el('<div class="lt-dot'+(idx===ltCarIdx?" on":"")+'"></div>');
+        d.addEventListener("click", function(){ ltCarIdx=idx; updateCarouselUI(); });
+        dotsEl.appendChild(d);
+      });
+      var CARD_W=444; // 424px card + 20px gap
+      function updateCarouselUI(){
+        track.style.transform="translateX("+(-ltCarIdx*CARD_W)+"px)";
+        Array.prototype.forEach.call(dotsEl.children, function(d,idx){ d.classList.toggle("on", idx===ltCarIdx); });
+        prevBtn.disabled = ltCarIdx<=0; nextBtn.disabled = ltCarIdx>=shown.length-1;
+      }
+      prevBtn.addEventListener("click", function(){ if(ltCarIdx>0){ ltCarIdx--; updateCarouselUI(); } });
+      nextBtn.addEventListener("click", function(){ if(ltCarIdx<shown.length-1){ ltCarIdx++; updateCarouselUI(); } });
+      viewport.addEventListener("keydown", function(e){
+        if(e.key==="ArrowLeft"){ if(ltCarIdx>0){ ltCarIdx--; updateCarouselUI(); } }
+        else if(e.key==="ArrowRight"){ if(ltCarIdx<shown.length-1){ ltCarIdx++; updateCarouselUI(); } }
+      });
+      (function(){
+        var dragging=false, startX=0, startTx=0, moved=0, pointerId=null;
+        viewport.addEventListener("pointerdown", function(e){
+          dragging=true; moved=0; startX=e.clientX; startTx=-ltCarIdx*CARD_W; pointerId=e.pointerId;
+        });
+        viewport.addEventListener("pointermove", function(e){
+          if(!dragging) return;
+          var dx=e.clientX-startX; moved=Math.abs(dx);
+          // only claim the pointer (and visually commit to a drag) past a small
+          // threshold — capturing immediately on pointerdown retargets the
+          // click event away from buttons inside the card, breaking taps
+          if(moved>6 && pointerId!==null){
+            viewport.classList.add("grabbing");
+            track.classList.add("dragging");
+            try{ viewport.setPointerCapture(pointerId); }catch(err){}
+            pointerId=null;
+          }
+          track.style.transform="translateX("+(startTx+dx)+"px)";
+        });
+        function endDrag(e){
+          if(!dragging) return; dragging=false;
+          viewport.classList.remove("grabbing");
+          track.classList.remove("dragging");
+          var dx=e.clientX-startX;
+          if(Math.abs(dx)>CARD_W*0.25){ if(dx<0 && ltCarIdx<shown.length-1) ltCarIdx++; else if(dx>0 && ltCarIdx>0) ltCarIdx--; }
+          updateCarouselUI();
+        }
+        viewport.addEventListener("pointerup", endDrag);
+        viewport.addEventListener("pointercancel", endDrag);
+        viewport.addEventListener("click", function(e){ if(moved>6){ e.stopPropagation(); moved=0; } }, true);
+      })();
+      updateCarouselUI();
+    } else {
+      cardsWrap.appendChild(el('<div style="padding:40px 0;color:var(--lt-mute);font-size:15px;">Nothing’s waiting. Add contacts, or take the win.</div>'));
     }
 
-    var empty = contacts.length===0;
-    if(empty){
-      var hero=el('<div class="o2-today" style="grid-template-columns:1fr"><div class="o2-left" style="border-right:none;text-align:center;padding:60px 34px">'+
-        '<h1 class="o2-name" style="font-size:clamp(28px,4vw,44px)">Add your first contacts.</h1>'+
-        '<p style="font-family:\'Archivo\',sans-serif;color:var(--o2-slate);margin:16px auto 22px;max-width:440px;line-height:1.6">Drop in a CSV or Excel list — or add a few by hand — and Ōllin builds your daily queue: who to reach, what to say, when.</p>'+
-        '<button class="o2-btn o2-btn-primary" id="heroAdd" style="flex:none;display:inline-block;padding:15px 28px">ADD CONTACTS</button>'+
-        '</div></div>');
-      hero.querySelector("#heroAdd").addEventListener("click", function(){ contactsMode="add"; setView("contacts"); });
-      m.appendChild(hero);
-    } else {
-      var grid=el('<div class="o2-today"></div>');
-      grid.appendChild(buildOneMove(deckList));
-      grid.appendChild(buildQueueRail(deckList));
-      m.appendChild(grid);
+    if(overflow>0){
+      var ov=el('<div class="lt-overflow"><div>'+overflow+' MORE · NOTHING URGENT</div><button class="lt-overflow-btn" id="ltShowAll">SHOW ALL</button></div>');
+      ov.querySelector("#ltShowAll").addEventListener("click", function(){ contactsMode="list"; setView("contacts"); });
+      cardsWrap.appendChild(ov);
+    }
+    m.appendChild(cardsWrap);
+
+    if(ltOpenIdx!==null && waiting[ltOpenIdx]){
+      m.appendChild(buildLtBrief(waiting, ltOpenIdx));
     }
   }
 
@@ -3190,9 +3406,9 @@
   // Loads a contact into Today if they're actually due; otherwise sends the
   // rep to Pipeline, since Today's queue only ever holds due/overdue people.
   function goToContactFromSearch(c){
-    var dueList=[]; asContacts().forEach(function(cc){ var ii=dueInfo(cc); if(ii && ii.overdueDays>=0) dueList.push({c:cc,i:ii}); });
-    var idx=dueList.findIndex(function(x){ return x.c.a.id===c.a.id && x.c.t.id===c.t.id; });
-    if(idx>=0){ focusIdx=idx; setView("home"); }
+    var waiting=ltWaitingList();
+    var idx=waiting.findIndex(function(x){ return x.c.a.id===c.a.id && x.c.t.id===c.t.id; });
+    if(idx>=0){ ltOpenIdx=idx; ltBriefChannel=(waiting[idx].i&&waiting[idx].i.ch)||(c.t&&c.t.channel)||"em"; ltAiOpen=false; setView("home"); }
     else { toast(c.complete ? (firstName(c.name)+"’s cadence is complete") : "Not due yet — see Pipeline for status"); setView("pipeline"); }
   }
   function renderContactsSearch(m, contacts){
