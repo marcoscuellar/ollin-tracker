@@ -559,6 +559,66 @@
   .lt-ai-row2{display:flex;align-items:center;gap:12px;padding:13px 16px;border-top:1px solid var(--lt-ai-rule2);}
   .lt-ai-send{background:var(--lt-accent);color:#FAF9F6;padding:9px 13px;border-radius:6px;font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;letter-spacing:.12em;cursor:pointer;border:none;}
 
+  /* ---- CONTACTS + PIPELINE: shared hero panel, table, stage columns ---- */
+  .lt-wrap{padding:34px 40px 40px;max-width:1456px;margin:0 auto;}
+  .lt-hero{position:relative;overflow:hidden;background:var(--lt-surface);background-image:radial-gradient(120% 88% at 6% 0%,var(--lt-accent-wash-b),rgba(255,255,255,0) 58%);border:1px solid var(--lt-rule);border-radius:6px;padding:44px 40px 40px;}
+  .lt-hero-title{font-size:clamp(38px,4.2vw,58px);font-weight:800;letter-spacing:-.04em;line-height:1.0;text-transform:uppercase;margin:0;}
+  .lt-hero-sub{margin-top:10px;font-size:18px;line-height:1.5;color:var(--lt-mute);max-width:52ch;}
+  .lt-cmdbar{margin-top:30px;max-width:620px;display:flex;align-items:center;gap:16px;border:1px solid var(--lt-rule2);border-radius:6px;padding:18px 20px;background:var(--lt-surface);}
+  .lt-cmdbar.focused{border-color:var(--lt-accent);}
+  .lt-cmdbar input{flex:1;min-width:0;border:none;outline:none;font-size:17px;color:var(--lt-ink);background:transparent;font-family:'Archivo',sans-serif;}
+  .lt-cmdbar input::placeholder{color:#8E8E96;}
+  .lt-cmdcount{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.12em;color:var(--lt-dim);white-space:nowrap;}
+  .lt-cmdrow{margin-top:20px;display:flex;flex-wrap:wrap;gap:20px;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.12em;color:var(--lt-dim);}
+  .lt-cmdrow button{background:none;border:none;font:inherit;color:inherit;cursor:pointer;padding:0;letter-spacing:inherit;}
+  .lt-cmdrow button:hover{color:var(--lt-accent);}
+  .lt-cmddiv{width:1px;height:11px;background:var(--lt-rule);display:inline-block;}
+  .lt-filters{margin-top:26px;display:flex;flex-wrap:wrap;gap:22px;border-bottom:1px solid var(--lt-rule);}
+  .lt-filter{border:none;background:none;border-bottom:2px solid transparent;padding:10px 2px;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.12em;color:var(--lt-dim);cursor:pointer;}
+  .lt-filter.on{border-bottom-color:var(--lt-accent);color:var(--lt-accent);}
+  .lt-table{margin-top:20px;background:var(--lt-surface);border:1px solid var(--lt-rule);border-radius:6px;overflow:hidden;}
+  .lt-thead,.lt-trow{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr) 108px 130px 96px;gap:20px;align-items:center;}
+  .lt-thead{padding:14px 26px;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.14em;color:var(--lt-dim);}
+  .lt-trow{padding:18px 26px;border-top:1px solid var(--lt-rule);cursor:pointer;transition:background .18s;}
+  .lt-trow:hover{background:var(--lt-row-hover);}
+  .lt-trow-name{font-size:16px;font-weight:600;letter-spacing:-.01em;}
+  .lt-trow-title{margin-top:3px;font-size:13px;color:var(--lt-dim);}
+  .lt-trow-company{font-size:14px;color:var(--lt-ink2);}
+  .lt-trow-last{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;color:var(--lt-dim);}
+  .lt-mom-track{height:4px;border-radius:2px;background:var(--lt-rule);}
+  .lt-mom-fill{height:4px;border-radius:2px;background:var(--lt-mute);}
+  .lt-mom-fill.live{background:var(--lt-accent);}
+  .lt-trow-stage{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.12em;color:var(--lt-dim);}
+  .lt-trow-stage.live{color:var(--lt-accent);}
+  .lt-tfoot{margin-top:22px;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.12em;color:var(--lt-dim);}
+  .lt-noresults{padding:40px 26px;text-align:center;color:var(--lt-mute);font-size:15px;}
+
+  .lt-pstats{margin-top:34px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1px solid var(--lt-rule);border-bottom:1px solid var(--lt-rule);}
+  .lt-pstat{padding:22px 24px;border-right:1px solid var(--lt-rule);}
+  .lt-pstat:last-child{border-right:none;}
+  .lt-pstat-num{font-family:'IBM Plex Mono',monospace;font-size:30px;color:var(--lt-ink);line-height:1;}
+  .lt-pstat-num.accent{color:var(--lt-accent);}
+  .lt-pstat-lbl{margin-top:9px;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.14em;color:var(--lt-dim);}
+  .lt-falloff{margin-top:32px;display:flex;align-items:flex-end;gap:14px;}
+  .lt-fcol{flex:1;min-width:0;display:flex;flex-direction:column;gap:10px;}
+  .lt-fcount{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--lt-ink);}
+  .lt-ftrack{height:150px;display:flex;align-items:flex-end;}
+  .lt-fbar{width:100%;background:var(--lt-ink);border:1px solid var(--lt-ink);transition:height .8s cubic-bezier(.2,.8,.2,1);}
+  .lt-fbar.dim{background:var(--lt-accent-wash-a);border-color:rgba(27,77,255,.22);}
+  .lt-flbl{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.12em;color:var(--lt-dim);border-top:1px solid var(--lt-rule);padding-top:10px;}
+  .lt-ffoot{margin-top:18px;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.12em;color:var(--lt-dim);}
+
+  .lt-stagecols{margin-top:28px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px;align-items:start;}
+  .lt-stagecol{display:flex;flex-direction:column;gap:12px;min-width:0;}
+  .lt-stagecol-head{display:flex;align-items:baseline;justify-content:space-between;padding-bottom:12px;border-bottom:1px solid var(--lt-rule);font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.16em;color:var(--lt-dim);}
+  .lt-stagecol-head.live{border-bottom-color:var(--lt-accent);color:var(--lt-accent);}
+  .lt-stagecard{background:var(--lt-surface);border:1px solid var(--lt-rule);border-radius:6px;padding:18px;cursor:pointer;}
+  .lt-stagecard-name{font-size:16px;font-weight:600;letter-spacing:-.01em;}
+  .lt-stagecard-co{margin-top:3px;font-size:13px;color:var(--lt-dim);}
+  .lt-stagecard-why{margin-top:12px;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.1em;color:var(--lt-dim);}
+  .lt-stagecard-why.live{color:var(--lt-accent);}
+  .lt-pbottom{margin-top:26px;background:var(--lt-surface);border:1px solid var(--lt-rule);border-radius:6px;padding:26px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:26px;}
+
   /* ---- Contacts: command-bar search (phase 2) ---- */
   .o2-view{font-family:'Archivo',sans-serif;display:grid;grid-template-columns:minmax(0,1fr) minmax(300px,400px);min-height:calc(100vh - 158px);}
   .o2-view-left{padding:44px 44px 60px;border-right:1px solid var(--o2-ink);}
@@ -1479,7 +1539,7 @@
   var PERSONA_ENTRY = { "Champion":1, "Technical Evaluator":3, "Economic Buyer":5, "Additional":8, "Blocker":0 };
   var PERSONAS = ["Champion","Technical Evaluator","Economic Buyer","Additional","Blocker"];
 
-  var state = { accounts:[], done:{}, notes:{}, reschedule:{}, todos:[], activeId:null, view:"today", seeded:false, sheetUrl:"", dailyGoal:50, handoffNote:"", extra:{} };
+  var state = { accounts:[], done:{}, notes:{}, reschedule:{}, todos:[], activeId:null, view:"today", seeded:false, sheetUrl:"", dailyGoal:50, handoffNote:"", extra:{}, coldStreakSince:null };
   var MODE = { api:false }; // api=true once the Vercel /api + KV backend is detected
   var DEMO = false; // ?demo=1 — public, unauthenticated walkthrough; nothing persists
   var ALL = "__all__"; // sentinel activeId meaning "show every account combined"
@@ -1537,6 +1597,7 @@
     state.dailyGoal = parseInt(await sGet("tracker:dailyGoal"), 10) || 50;
     state.handoffNote = (await sGet("tracker:handoffNote")) || "";
     try{ state.extra = JSON.parse(await sGet("tracker:extra")) || {}; }catch(e){ state.extra = {}; }
+    state.coldStreakSince = (await sGet("tracker:coldStreakSince")) || null;
     if(a){ try{ state.accounts = JSON.parse(a); }catch(e){} }
     if(d){ try{ state.done = JSON.parse(d); }catch(e){} }
     if(n){ try{ state.notes = JSON.parse(n); }catch(e){} }
@@ -1566,12 +1627,13 @@
     sSet("tracker:dailyGoal", String(state.dailyGoal||50));
     sSet("tracker:handoffNote", state.handoffNote||"");
     sSet("tracker:extra", JSON.stringify(state.extra||{}));
+    sSet("tracker:coldStreakSince", state.coldStreakSince||"");
   }
   function apiSave(){
     if(saveTimer) clearTimeout(saveTimer);
     saveTimer=setTimeout(function(){
       fetch("/api/entries",{method:"POST",headers:{"Content-Type":"application/json"},credentials:"same-origin",
-        body:JSON.stringify({accounts:state.accounts,done:state.done,notes:state.notes,reschedule:state.reschedule||{},todos:state.todos||[],active:state.activeId,seeded:!!state.seeded,sheetUrl:state.sheetUrl||"",dailyGoal:state.dailyGoal||50,handoffNote:state.handoffNote||"",extra:state.extra||{}})})
+        body:JSON.stringify({accounts:state.accounts,done:state.done,notes:state.notes,reschedule:state.reschedule||{},todos:state.todos||[],active:state.activeId,seeded:!!state.seeded,sheetUrl:state.sheetUrl||"",dailyGoal:state.dailyGoal||50,handoffNote:state.handoffNote||"",extra:state.extra||{},coldStreakSince:state.coldStreakSince||null})})
         .then(function(r){ if(!r.ok) throw new Error("save"); })
         .catch(function(){ toast("Save failed — check connection"); });
     },300);
@@ -1696,6 +1758,7 @@
       building:find("building"), buildingsrc:find("building source"),
       stack:find("stack","tech stack"), stacksrc:find("stack source"),
       money:find("money","funding"), moneysrc:find("money source"),
+      contractor:find("contractor","is contractor"),
       t1:pick(find("touch 1 copy","touch 1","touch1 copy","linkedin 1","touch 1 message"), findC("outreach 1"), findC("linkedin","day 1")),
       t2subj:pick(find("touch 2 subject","email 1 subject","touch2 subject"), findC("email","subject")),
       t2:pick(find("touch 2 copy","touch 2","touch2 copy","email 1 body","touch 2 message"), findC("outreach 2","body"), findC("email","body")),
@@ -1774,6 +1837,7 @@
         linkedin:get(cm.li), email:get(cm.email),
         angle:get(cm.angle),
         signal:get(cm.signal), signalSrc:normSignalSource(get(cm.signalsrc)),
+        isContractor: /^(y|yes|true|1)/i.test(get(cm.contractor)),
         pulledAt:Date.now()
       };
       if(!thread.signalSrc) thread.signal=""; // no valid, real source → not tracked, never shown
@@ -1833,6 +1897,7 @@
         entryDay: persona==="Blocker"?0:dayFrom(get(cm.seq), persona),
         channel:channelFrom(get(cm.chan)), linkedin:get(cm.li), email:get(cm.email), angle:get(cm.angle),
         signal: signalSrc?get(cm.signal):"", signalSrc: signalSrc,
+        isContractor: /^(y|yes|true|1)/i.test(get(cm.contractor)),
         pulledAt: Date.now()
       };
       var msgs = { 0:get(cm.t1), 1:withSubjG(get(cm.t2subj),get(cm.t2)), 2:get(cm.t3), 3:withSubjG(get(cm.t4subj),get(cm.t4)), 4:get(cm.t5) };
@@ -1846,6 +1911,7 @@
         thread.name=fields.name; thread.title=fields.title; thread.persona=fields.persona; thread.entryDay=fields.entryDay;
         thread.channel=fields.channel; thread.linkedin=fields.linkedin; thread.email=fields.email; thread.angle=fields.angle;
         thread.signal=fields.signal; thread.signalSrc=fields.signalSrc; thread.pulledAt=fields.pulledAt;
+        thread.isContractor=fields.isContractor;
         updated++;
       } else {
         if(added>=budget){ skipped++; continue; } // over the free cap — hold this one back
@@ -2311,13 +2377,13 @@
       var r=await fetch("/api/entries",{credentials:"same-origin"});
       if(r.ok){
         var d=await r.json();
-        state.accounts=d.accounts||[]; state.done=d.done||{}; state.notes=d.notes||{}; state.reschedule=d.reschedule||{}; state.todos=Array.isArray(d.todos)?d.todos:[]; state.seeded=!!d.seeded; state.sheetUrl=d.sheetUrl||""; state.dailyGoal=parseInt(d.dailyGoal,10)||50; state.handoffNote=d.handoffNote||""; state.extra=d.extra||{};
+        state.accounts=d.accounts||[]; state.done=d.done||{}; state.notes=d.notes||{}; state.reschedule=d.reschedule||{}; state.todos=Array.isArray(d.todos)?d.todos:[]; state.seeded=!!d.seeded; state.sheetUrl=d.sheetUrl||""; state.dailyGoal=parseInt(d.dailyGoal,10)||50; state.handoffNote=d.handoffNote||""; state.extra=d.extra||{}; state.coldStreakSince=d.coldStreakSince||null;
         state.activeId=((d.active===ALL && state.accounts.length) || (d.active && state.accounts.some(function(a){return a.id===d.active;})))?d.active:((state.accounts[0]&&state.accounts[0].id)||null);
         if(!state.seeded){ state.seeded=true; apiSave(); } // new users start empty → guided onboarding
       }
     }catch(e){}
   }
-  function clearState(){ state.accounts=[]; state.done={}; state.notes={}; state.reschedule={}; state.todos=[]; state.extra={}; state.handoffNote=""; state.activeId=null; state.seeded=false; }
+  function clearState(){ state.accounts=[]; state.done={}; state.notes={}; state.reschedule={}; state.todos=[]; state.extra={}; state.handoffNote=""; state.activeId=null; state.seeded=false; state.coldStreakSince=null; }
   async function logout(){
     try{ await fetch("/api/auth?action=logout",{method:"POST",credentials:"same-origin"}); }catch(e){}
     ACCOUNT=null; clearState(); comebackDismissed=false; closeAuth(); showApp(false);
@@ -2565,7 +2631,7 @@
   // ---- backup / restore / cleanup ----
   function doExport(){
     if(!state.accounts.length){ toast("Nothing to back up"); return; }
-    var data={ app:"anyway", version:1, exportedAt:new Date().toISOString(), accounts:state.accounts, done:state.done, notes:state.notes, reschedule:state.reschedule||{}, todos:state.todos||[], extra:state.extra||{} };
+    var data={ app:"anyway", version:1, exportedAt:new Date().toISOString(), accounts:state.accounts, done:state.done, notes:state.notes, reschedule:state.reschedule||{}, todos:state.todos||[], extra:state.extra||{}, coldStreakSince:state.coldStreakSince||null };
     var blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
     var url=URL.createObjectURL(blob); var a=document.createElement("a"); a.href=url; a.download="anyway-backup-"+todayStr()+".json";
     document.body.appendChild(a); a.click(); a.remove(); setTimeout(function(){ URL.revokeObjectURL(url); },1000); toast("Backup downloaded");
@@ -2576,7 +2642,7 @@
       var data; try{ data=JSON.parse(reader.result); }catch(e){ toast("Not a valid backup"); return; }
       if(!data || !Array.isArray(data.accounts)){ toast("Not an VAMOS backup"); return; }
       if(!confirm("Restore this backup? Replaces current accounts, touches and messages.")) return;
-      state.accounts=data.accounts||[]; state.done=data.done||{}; state.notes=data.notes||{}; state.reschedule=data.reschedule||{}; state.todos=Array.isArray(data.todos)?data.todos:(state.todos||[]); state.extra=data.extra||{}; state.seeded=true;
+      state.accounts=data.accounts||[]; state.done=data.done||{}; state.notes=data.notes||{}; state.reschedule=data.reschedule||{}; state.todos=Array.isArray(data.todos)?data.todos:(state.todos||[]); state.extra=data.extra||{}; state.coldStreakSince=data.coldStreakSince||null; state.seeded=true;
       persistAccounts(); render(); toast("Backup restored");
     };
     reader.readAsText(file);
@@ -2632,145 +2698,7 @@
   }
 
   // ---- render ----
-  // ---- momentum gauge: fills up, number hidden until tapped ----
-  // ---- step timeline (5 touches, human names) ----
-  function timelineHTML(c, mini){
-    var html='<div class="timeline"'+(mini?' style="margin:14px 0 0"':'')+'>';
-    for(var s=0;s<5;s++){
-      var cls="tl-step"+(s<c.step?" done":(s===c.step?" active":""));
-      var inner = s+1;
-      var nodeStyle = mini ? ' style="width:22px;height:22px;font-size:10px"' : '';
-      html+='<div class="'+cls+'"><div class="tl-line"></div><div class="tl-node"'+nodeStyle+'>'+inner+'</div>'+(mini?'':'<div class="tl-label">'+STEP_NAMES[s]+'</div>')+'</div>';
-    }
-    return html+'</div>';
-  }
   function duePill(i){ return i.overdueDays>0 ? (i.overdueDays===1?"Due yesterday":i.overdueDays+"d overdue") : "Due today"; }
-  // ---- shared right rail: TODAY'S LIST (Contacts + Pipeline) — a small,
-  // account-agnostic checklist, separate from the contact cadence itself.
-  function buildTodayList(){
-    var wrap=el('<div class="o2-right"></div>');
-    var todos=state.todos||[];
-    var doneN=todos.filter(function(t){ return t.done; }).length;
-    wrap.appendChild(el('<div class="o2-rail-head"><span>TODAY’S LIST</span><span>'+doneN+' / '+todos.length+' DONE</span></div>'));
-    wrap.appendChild(el('<div class="o2-track"><div class="o2-track-fill" style="width:'+(todos.length?(doneN/todos.length*100):0)+'%"></div></div>'));
-    var scroller=el('<div class="o2-rail-scroll"></div>');
-    todos.forEach(function(t){
-      var row=el('<div class="o2-todo-row"><button class="o2-todo-box'+(t.done?" on":"")+'">'+(t.done?"✓":"")+'</button><span class="o2-todo-label'+(t.done?" done":"")+'">'+esc(t.text)+'</span><button class="o2-todo-x">×</button></div>');
-      row.querySelector(".o2-todo-box").addEventListener("click", function(){ t.done=!t.done; scheduleSave(); render(); });
-      row.querySelector(".o2-todo-x").addEventListener("click", function(){ state.todos=(state.todos||[]).filter(function(x){ return x!==t; }); scheduleSave(); render(); });
-      scroller.appendChild(row);
-    });
-    wrap.appendChild(scroller);
-    var addRow=el('<div class="o2-todo-add"><span>+</span><input placeholder="Add a move — Enter to save"></div>');
-    var addInput=addRow.querySelector("input");
-    addInput.addEventListener("keydown", function(e){
-      if(e.key==="Enter"){
-        e.preventDefault();
-        var text=addInput.value.trim(); if(!text) return;
-        state.todos=state.todos||[]; state.todos.push({id:"td"+Date.now()+Math.floor(Math.random()*999), text:text, done:false});
-        scheduleSave(); render();
-      }
-    });
-    wrap.appendChild(addRow);
-    return wrap;
-  }
-  function activeCard(item, host, dueList, warm){
-    var c=item.c, i=item.i;
-    var over = i.overdueDays>0 ? " over" : "";
-    var scriptVal = state.notes[i.touch.id] || fillTemplate(TEMPLATES[i.ch], c);
-    var sub = i.stepNum===1 ? "First outreach due — script, send, done." : "Touch "+i.stepNum+" — script, send, done.";
-    var card=el('<div class="dc deckcard active">'+
-      '<div class="dc-head"><div class="dc-ava">'+esc(initials(c.name))+'</div><div><div class="dc-name">'+esc(c.name)+'</div><div class="dc-meta">'+esc((c.title||"")+(c.title&&c.account?" · ":"")+(c.account||""))+'</div></div><div class="dc-due'+over+'">'+duePill(i)+'</div></div>'+
-      '<div class="dc-navrow"><div class="dc-touch"><b>Touch '+i.stepNum+' of '+c.touches.length+'</b><span>'+sub+'</span></div></div>'+
-      ((c.t&&c.t.angle) ? '<div class="dc-angle"><p class="eyebrow">The angle</p><p>'+esc(c.t.angle)+'</p></div>' : '')+
-      '<div class="tl-row"><button class="tl-arrow" id="dcBack" title="Previous contact">‹</button>'+timelineHTML(c,false)+'<button class="tl-arrow" id="dcNext" title="Next contact">›</button></div>'+
-      '<div class="dc-mid"><button class="mi" id="miReview"><div><div class="mi-t">Review / Verify</div><div class="mi-s">Check the script before you send</div></div></button><button class="mi" id="miSkip"><div><div class="mi-t">Skip for now</div><div class="mi-s">Come back to this one later</div></div></button></div>'+
-      '<div class="dc-actions"><button class="dc-act" id="aChan">'+CH_LABEL[i.ch]+'</button><button class="dc-act" id="aReplied">Replied</button><button class="dc-act" id="aScript">Script</button><button class="dc-act done" id="aDone">✓ Done</button></div>'+
-      '<div class="dc-script" id="dcScript"><p class="eyebrow" style="margin-bottom:8px">'+CH_LABEL[i.ch]+' script — use it, or let VAMOS write it</p><textarea>'+esc(scriptVal)+'</textarea>'+
-        '<div class="script-actions"><button class="ai-btn">✦ Write with AI</button><button class="copy-btn">Copy</button></div>'+
-        '<div class="ai-hint" id="aiHint"></div>'+
-        '<div class="ai-steer" id="aiSteer">'+
-          '<p class="ai-steer-lead">Tell VAMOS how to write it — type a direction, or tap a nudge below.</p>'+
-          '<div class="ai-steer-row"><input id="aiSteerInput" placeholder="e.g. mention their new store openings, keep it under 3 sentences…" maxlength="240"><button class="ai-draft" id="aiDraft">Draft it</button></div>'+
-          '<div class="chips">'+
-            '<button class="ai-chip" data-s="Lean into our nearshore capabilities">Push nearshore</button>'+
-            '<button class="ai-chip" data-s="Make it more conversational and human">More conversational</button>'+
-            '<button class="ai-chip" data-s="Make it shorter and punchier">Shorter</button>'+
-            '<button class="ai-chip" data-s="Make it warmer and more personal">Warmer</button>'+
-            '<button class="ai-chip" data-s="Try a completely different angle">Different angle</button>'+
-          '</div>'+
-        '</div>'+
-      '</div>'+
-    '</div>');
-    var scr=card.querySelector("#dcScript"), ta=card.querySelector("textarea");
-    var back=card.querySelector("#dcBack"), next=card.querySelector("#dcNext");
-    // Local index into THIS dueList — this card is reused standalone for the
-    // Contacts inline-expand, always a single-item list.
-    var localIdx=dueList.indexOf(item); if(localIdx<0) localIdx=0;
-    back.disabled = localIdx<=0; next.disabled = localIdx>=dueList.length-1;
-    back.addEventListener("click", function(){ if(localIdx>0){ host.innerHTML=""; host.appendChild(activeCard(dueList[localIdx-1],host,dueList,warm)); } });
-    next.addEventListener("click", function(){ if(localIdx<dueList.length-1){ host.innerHTML=""; host.appendChild(activeCard(dueList[localIdx+1],host,dueList,warm)); } });
-    card.querySelector("#miSkip").addEventListener("click", function(){ if(localIdx<dueList.length-1){ host.innerHTML=""; host.appendChild(activeCard(dueList[localIdx+1],host,dueList,warm)); } else toast("That’s the last one due."); });
-    card.querySelector("#miReview").addEventListener("click", function(){ scr.classList.toggle("open"); });
-    card.querySelector("#aScript").addEventListener("click", function(){ scr.classList.toggle("open"); });
-    card.querySelector("#aChan").addEventListener("click", function(){
-      scr.classList.add("open");
-      var li=((c.t&&c.t.linkedin)||"").trim(), em=((c.t&&c.t.email)||"").trim();
-      if(i.ch==="li"){ window.open(isLinkedInUrl(li)?normUrl(li):liSearch(c), "_blank", "noopener"); }
-      else if(i.ch==="em"){ if(em) window.open("mailto:"+em, "_blank"); }
-    });
-    ta.addEventListener("change", function(){ state.notes[i.touch.id]=ta.value; persistNotes(); });
-    card.querySelector(".copy-btn").addEventListener("click", function(){ copy(ta.value||""); });
-    card.querySelector("#aDone").addEventListener("click", function(){ completeTouch(c); });
-    card.querySelector("#aReplied").addEventListener("click", function(){ setStatus(c,"warm", firstName(c.name)+" moved to WARM"); });
-    (function(){
-      var aiBtn=card.querySelector(".ai-btn"), steer=card.querySelector("#aiSteer"),
-          steerInput=card.querySelector("#aiSteerInput"), draftBtn=card.querySelector("#aiDraft");
-      aiBtn.addEventListener("click", function(){
-        scr.classList.add("open");
-        steer.classList.toggle("open");
-        if(steer.classList.contains("open")) steerInput.focus();
-      });
-      var hint=card.querySelector("#aiHint");
-      function setHint(msg){ if(msg){ hint.textContent=msg; hint.classList.add("show"); } else { hint.textContent=""; hint.classList.remove("show"); } }
-      function generate(steerText){
-        scr.classList.add("open");
-        setHint(""); // clear any prior signal hint before a fresh draft
-        draftBtn.disabled=true; aiBtn.disabled=true;
-        var dl=draftBtn.textContent; draftBtn.textContent="Writing…";
-        fetch("/api/write",{method:"POST",headers:{"Content-Type":"application/json"},
-          body:JSON.stringify({name:c.name,title:c.title||"",company:c.account||"",angle:(c.t&&c.t.angle)||"",channel:i.ch,step:i.stepNum,steer:steerText||""})})
-          .then(function(r){ return r.json().then(function(d){ return {ok:r.ok,d:d}; }); })
-          .then(function(res){ if(!res.ok||!res.d||!res.d.text){ toast((res.d&&res.d.error)||"AI couldn’t draft that — try again"); return; }
-            ta.value=res.d.text; state.notes[i.touch.id]=res.d.text; persistNotes();
-            setHint(res.d.angleWarning||""); // non-blocking nudge, never inside the draft
-            toast(steerText?"Redrafted with your direction.":"Drafted. Yours to edit."); })
-          .catch(function(){ toast("Network hiccup — try again"); })
-          .then(function(){ draftBtn.disabled=false; aiBtn.disabled=false; draftBtn.textContent=dl; });
-      }
-      draftBtn.addEventListener("click", function(){ generate(steerInput.value.trim()); });
-      steerInput.addEventListener("keydown", function(e){ if(e.key==="Enter"){ e.preventDefault(); generate(steerInput.value.trim()); } });
-      Array.prototype.forEach.call(card.querySelectorAll(".ai-chip"), function(chip){
-        chip.addEventListener("click", function(){ var s=chip.getAttribute("data-s"); steerInput.value=s; generate(s); });
-      });
-    })();
-    return card;
-  }
-  // For pipeline contacts with no live "next touch" (warm/meeting/lost/complete)
-  function pausedPanel(c){
-    var s=statusLabel(c);
-    var p=el('<div class="dc deckcard active" style="padding:24px 28px">'+
-      '<div class="dc-head"><div class="dc-ava">'+esc(initials(c.name))+'</div><div><div class="dc-name">'+esc(c.name)+'</div><div class="dc-meta">'+esc((c.title||"")+(c.title&&c.account?" · ":"")+(c.account||""))+'</div></div><div class="dc-due">'+esc(s.txt)+'</div></div>'+
-      timelineHTML(c,false)+
-      (c.status==="warm" ? '<div class="dc-actions"><button class="dc-act" data-a="meeting">Meeting booked</button><button class="dc-act" data-a="touch">Log a reply</button><button class="dc-act" data-a="lost">Not interested</button></div>' : '')+
-    '</div>');
-    if(c.status==="warm"){
-      p.querySelector('[data-a="meeting"]').addEventListener("click", function(){ setStatus(c,"meeting","Meeting booked. VAMOS."); });
-      p.querySelector('[data-a="touch"]').addEventListener("click", function(){ logWarmTouch(c); });
-      p.querySelector('[data-a="lost"]').addEventListener("click", function(){ setStatus(c,"lost","Marked not interested"); });
-    }
-    return p;
-  }
   // ---------- app navigation: real page router (one view at a time) ----------
   function setView(v){ navView=v; closeNavMenu(); try{ window.scrollTo({top:0,behavior:"smooth"}); }catch(e){ window.scrollTo(0,0); } render(); }
   function closeNavMenu(){ var x=document.getElementById("navMenu"); if(x) x.remove(); document.removeEventListener("click", navMenuOutside, true); }
@@ -3405,148 +3333,209 @@
   }
   // Loads a contact into Today if they're actually due; otherwise sends the
   // rep to Pipeline, since Today's queue only ever holds due/overdue people.
-  function goToContactFromSearch(c){
-    var waiting=ltWaitingList();
-    var idx=waiting.findIndex(function(x){ return x.c.a.id===c.a.id && x.c.t.id===c.t.id; });
-    if(idx>=0){ ltOpenIdx=idx; ltBriefChannel=(waiting[idx].i&&waiting[idx].i.ch)||(c.t&&c.t.channel)||"em"; ltAiOpen=false; setView("home"); }
-    else { toast(c.complete ? (firstName(c.name)+"’s cadence is complete") : "Not due yet — see Pipeline for status"); setView("pipeline"); }
+  var CONTACT_FILTERS=[["all","ALL"],["cadence","IN CADENCE"],["cold","GOING COLD"],["contractors","CONTRACTORS"],["never","NEVER CONTACTED"]];
+  var ltContactFilter="all", ltContactsOpenIdx=null, ltContactsQuery="";
+  function ltIsCold(c){ var lt=lastDoneDate(c); return c.status==="active" && !c.complete && !!lt && daysBetween(lt,todayStr())>=7; }
+  function ltFilterMatch(c, key){
+    if(key==="cadence") return c.status==="active" && !c.complete;
+    if(key==="cold") return ltIsCold(c);
+    if(key==="contractors") return !!(c.t && c.t.isContractor);
+    if(key==="never") return c.step===0;
+    return true;
+  }
+  function ltFilterCount(contacts, key){ return contacts.filter(function(c){ return ltFilterMatch(c,key); }).length; }
+  function ltMomentumPct(c){
+    if(c.status==="meeting") return 100;
+    if(c.status==="warm") return 80;
+    if(c.complete) return 8;
+    var lastTouch=lastDoneDate(c);
+    if(!lastTouch) return Math.max(15, c.step*15);
+    var days=daysBetween(lastTouch, todayStr());
+    return Math.max(6, 100-days*6);
+  }
+  function ltStage(c){
+    if(c.status==="meeting") return "IN CONVO";
+    if(c.status==="warm") return "REPLIED";
+    if(c.step===0) return "NEW";
+    return "OPENED";
+  }
+  function ltLastTouchLabel(c){
+    var lastTouch=lastDoneDate(c);
+    if(!lastTouch) return "—";
+    var days=daysBetween(lastTouch, todayStr());
+    if(days<=0) return "TODAY";
+    if(days===1) return "1 DAY";
+    return days+" DAYS";
+  }
+  function ltPipelineStage(c){
+    if(c.status==="meeting") return "IN CONVO";
+    if(c.status==="warm") return "REPLIED";
+    return "OPENED"; // folds in NEW (step 0) — Pipeline has no separate NEW column
+  }
+  function ltStageReason(c){
+    if(c.status==="meeting") return "MEETING BOOKED";
+    if(c.status==="warm") return "REPLIED — YOUR MOVE";
+    var lastTouch=lastDoneDate(c);
+    if(!lastTouch) return "NEVER CONTACTED";
+    var days=daysBetween(lastTouch, todayStr());
+    return days+" DAY"+(days===1?"":"S")+" QUIET";
+  }
+  function ltTouchesSent30d(){
+    var since=iso(addDays(todayStr(), -30)), n=0;
+    for(var k in state.done){ if(state.done[k]>=since) n++; }
+    return n;
+  }
+  function ltFalloffCounts(contacts){
+    var counts=[0,0,0,0,0];
+    contacts.forEach(function(c){ c.touches.forEach(function(t,idx){ if(idx<5 && state.done[t.id]) counts[idx]++; }); });
+    return counts;
+  }
+  // Real health metric, not a fabricated streak: tracks the actual date the
+  // going-cold count last hit zero, persisted, so "days running" is honest.
+  function ltUpdateColdStreak(contacts){
+    var cold=contacts.filter(ltIsCold).length;
+    if(cold>0){ if(state.coldStreakSince){ state.coldStreakSince=null; scheduleSave(); } }
+    else if(!state.coldStreakSince){ state.coldStreakSince=todayStr(); scheduleSave(); }
+  }
+  function ltColdStreakDays(){
+    if(!state.coldStreakSince) return 0;
+    return daysBetween(state.coldStreakSince, todayStr())+1;
   }
   function renderContactsSearch(m, contacts){
-    var grid=el('<div class="o2-view"></div>');
-    var left=el('<div class="o2-view-left"></div>');
-    left.appendChild(el('<h1 class="o2-view-title">Contacts</h1>'));
-    left.appendChild(el('<p class="o2-view-sub">Everyone Ōllin tracks. Search a name, or run a command.</p>'));
-    var cmdwrap=el('<div class="o2-cmdwrap"></div>');
-    var bar=el('<div class="o2-cmdbar" id="cmdBar"><span class="o2-cmd-caret">&gt;</span><input class="o2-cmd-input" id="cmdInput" placeholder="Search or run a command…" autocomplete="off"><button class="o2-cmd-clear" id="cmdClear" style="display:none">CLEAR ×</button><span class="o2-cmd-count" id="cmdCount"></span></div>');
-    cmdwrap.appendChild(bar);
-    var panelHost=el('<div id="cmdPanelHost"></div>');
-    cmdwrap.appendChild(panelHost);
-    left.appendChild(cmdwrap);
-    grid.appendChild(left);
-    grid.appendChild(buildTodayList());
-    m.appendChild(grid);
+    var wrap=el('<div class="lt-wrap"></div>');
+    var hero=el('<div class="lt-hero"><h1 class="lt-hero-title">Contacts</h1><p class="lt-hero-sub">Everyone Ōllin tracks. Search a name, or run a command.</p></div>');
+    var cmdbar=el('<div class="lt-cmdbar" id="ltCmdBar"><span style="font-family:\'IBM Plex Mono\',monospace;font-size:15px;color:var(--lt-accent);">&gt;</span><input id="ltCmdInput" placeholder="Search or run a command…" autocomplete="off"><span class="lt-cmdcount" id="ltCmdCount"></span></div>');
+    hero.appendChild(cmdbar);
+    var cmdrow=el('<div class="lt-cmdrow"><button id="ltCmdAdd">ADD PERSON</button><span class="lt-cmddiv"></span><button id="ltCmdImport">IMPORT CSV</button><span class="lt-cmddiv"></span><button id="ltCmdCold">SHOW GOING COLD</button><span class="lt-cmddiv"></span><button id="ltCmdToday">WHO NEEDS ME TODAY</button></div>');
+    hero.appendChild(cmdrow);
+    wrap.appendChild(hero);
+    var filtersHost=el('<div class="lt-filters"></div>');
+    wrap.appendChild(filtersHost);
+    var resultsHost=el('<div></div>');
+    wrap.appendChild(resultsHost);
+    m.appendChild(wrap);
 
-    var input=bar.querySelector("#cmdInput"), clearBtn=bar.querySelector("#cmdClear"), countEl=bar.querySelector("#cmdCount");
-    var query="", focused=false;
-    // Updates only the dropdown panel — never calls the app-wide render(),
-    // since that would rebuild the DOM and drop focus out of the input on
-    // every keystroke.
-    function updatePanel(){
-      panelHost.innerHTML="";
-      clearBtn.style.display=query?"inline-flex":"none";
-      var q=query.trim().toLowerCase();
-      var matches=contacts.filter(function(c){ return !q || (c.name+" "+c.account+" "+(c.title||"")).toLowerCase().indexOf(q)>-1; });
-      countEl.textContent=matches.length+" OF "+contacts.length;
-      if(!q){
-        countEl.textContent="";
-        if(!focused) return;
-        var panel=el('<div class="o2-cmd-panel"><div class="o2-cmd-panel-lbl">QUICK ACTIONS</div></div>');
-        [
-          {key:"+", label:"Add contact", hint:"ONE PERSON, STRAIGHT INTO A CADENCE", go:function(){ contactsMode="add"; setView("contacts"); }},
-          {key:"⇪", label:"Add a group of contacts", hint:"IMPORT FROM CSV", go:function(){ contactsMode="add"; setView("contacts"); }},
-          {key:"−", label:"Remove contacts", hint:"PULL PEOPLE OUT OF CADENCE", go:function(){ contactsMode="delete"; pipeSel={}; setView("contacts"); }},
-          {key:"▤", label:"See pipeline", hint:"EVERY DEAL BY STAGE", go:function(){ setView("pipeline"); }}
-        ].forEach(function(a){
-          var row=el('<div class="o2-crow"><div class="o2-crow-l"><span class="o2-crow-key">'+a.key+'</span><span class="o2-crow-label">'+esc(a.label)+'</span><span class="o2-crow-hint">'+a.hint+'</span></div><span class="o2-crow-arrow">→</span></div>');
-          row.addEventListener("mousedown", function(e){ e.preventDefault(); a.go(); });
-          panel.appendChild(row);
-        });
-        panelHost.appendChild(panel);
-        return;
-      }
-      var panel=el('<div class="o2-cmd-panel"></div>');
-      if(!matches.length){
-        panel.appendChild(el('<div class="o2-noresults"><div class="glyph">▚ ▚ ▚</div><div class="msg">Nothing matches.</div></div>'));
-      } else {
-        matches.forEach(function(c){
-          var s=statusLabel(c);
-          var row=el('<div class="o2-crow"><div style="min-width:0"><div class="o2-cresult-name">'+esc(c.name)+'</div><div class="o2-cresult-meta">'+esc((c.account||"").toUpperCase())+' · '+esc((c.title||"").toUpperCase())+'</div></div><span class="o2-cresult-state'+(c.complete?" done":"")+'">'+esc(s.txt.toUpperCase())+'</span></div>');
-          row.addEventListener("mousedown", function(e){ e.preventDefault(); goToContactFromSearch(c); });
-          panel.appendChild(row);
-        });
-      }
-      panelHost.appendChild(panel);
+    var input=cmdbar.querySelector("#ltCmdInput"), countEl=cmdbar.querySelector("#ltCmdCount");
+    input.value=ltContactsQuery;
+
+    function renderFilters(){
+      filtersHost.innerHTML="";
+      CONTACT_FILTERS.forEach(function(f){
+        var btn=el('<button class="lt-filter'+(ltContactFilter===f[0]?" on":"")+'">'+f[1]+' '+ltFilterCount(contacts,f[0])+'</button>');
+        btn.addEventListener("click", function(){ ltContactFilter=f[0]; ltContactsOpenIdx=null; renderFilters(); renderResults(); });
+        filtersHost.appendChild(btn);
+      });
     }
-    input.addEventListener("input", function(){ query=input.value; updatePanel(); });
-    input.addEventListener("focus", function(){ focused=true; bar.classList.add("focused"); updatePanel(); });
-    input.addEventListener("blur", function(){ focused=false; bar.classList.remove("focused"); updatePanel(); });
-    clearBtn.addEventListener("mousedown", function(e){ e.preventDefault(); query=""; input.value=""; input.focus(); updatePanel(); });
-    updatePanel();
+    function currentRows(){
+      var q=ltContactsQuery.trim().toLowerCase();
+      var rows=contacts.filter(function(c){ return ltFilterMatch(c, ltContactFilter) && (!q || (c.name+" "+c.account+" "+(c.title||"")).toLowerCase().indexOf(q)>-1); });
+      rows.sort(function(a,b){ return ltMomentumPct(b)-ltMomentumPct(a); });
+      return rows;
+    }
+    function renderResults(){
+      resultsHost.innerHTML="";
+      var rows=currentRows();
+      countEl.textContent = rows.length+" OF "+contacts.length;
+      var table=el('<div class="lt-table"><div class="lt-thead"><div>PERSON</div><div>COMPANY</div><div>LAST TOUCH</div><div>MOMENTUM</div><div>STAGE</div></div></div>');
+      if(!rows.length){
+        table.appendChild(el('<div class="lt-noresults">Nothing matches.</div>'));
+      } else {
+        rows.slice(0,60).forEach(function(c, idx){
+          var stage=ltStage(c), live=stage==="IN CONVO", mom=ltMomentumPct(c);
+          var row=el('<div class="lt-trow"><div><div class="lt-trow-name">'+esc(c.name)+'</div><div class="lt-trow-title">'+esc(c.title||"")+'</div></div><div class="lt-trow-company">'+esc(c.account||"")+'</div><div class="lt-trow-last">'+ltLastTouchLabel(c)+'</div><div><div class="lt-mom-track"><div class="lt-mom-fill'+(live?" live":"")+'" style="width:'+mom+'%;"></div></div></div><div class="lt-trow-stage'+(live?" live":"")+'">'+stage+'</div></div>');
+          row.addEventListener("click", function(){ ltContactsOpenIdx = ltContactsOpenIdx===idx ? null : idx; renderResults(); });
+          table.appendChild(row);
+        });
+      }
+      resultsHost.appendChild(table);
+      if(rows.length>60) resultsHost.appendChild(el('<div class="lt-tfoot">'+(rows.length-60)+' MORE · SORTED BY WHO NEEDS YOU</div>'));
+      if(ltContactsOpenIdx!==null && rows[ltContactsOpenIdx]){
+        var briefRows=rows.map(function(c){ return {c:c, i:dueInfo(c)}; });
+        resultsHost.appendChild(buildLtBrief(briefRows, ltContactsOpenIdx));
+      }
+    }
+
+    input.addEventListener("input", function(){ ltContactsQuery=input.value; ltContactsOpenIdx=null; renderResults(); });
+    input.addEventListener("focus", function(){ cmdbar.classList.add("focused"); });
+    input.addEventListener("blur", function(){ cmdbar.classList.remove("focused"); });
+    cmdrow.querySelector("#ltCmdAdd").addEventListener("click", function(){ contactsMode="add"; setView("contacts"); });
+    cmdrow.querySelector("#ltCmdImport").addEventListener("click", function(){ contactsMode="add"; setView("contacts"); });
+    cmdrow.querySelector("#ltCmdCold").addEventListener("click", function(){ ltContactFilter="cold"; ltContactsOpenIdx=null; renderFilters(); renderResults(); });
+    cmdrow.querySelector("#ltCmdToday").addEventListener("click", function(){ setView("home"); });
+
+    renderFilters();
+    renderResults();
   }
 
   // ---------- PIPELINE: cadence view grouped by account ----------
+  var ltPipelineOpenIdx=null;
   function renderPipeline(m){
     var contacts=asContacts();
-    m.appendChild(el('<div class="view-head"><h2 class="view-title">Pipeline</h2></div>'));
-    if(!contacts.length){ m.appendChild(el('<p class="hint" style="margin-top:6px">No contacts yet — add some under Contacts to see the cadence here.</p>')); return; }
-    var groups={}; contacts.forEach(function(c){ (groups[c.account]=groups[c.account]||[]).push(c); });
-    var totalC=contacts.length, acctN=Object.keys(groups).length;
-    var pipe=el('<details class="section" id="secPipeline" open><summary><span class="sum-title">Pipeline</span><span class="sum-count">'+(totalC?totalC+" contacts · "+acctN+" accounts":"empty")+'</span></summary><div class="cadence-row" id="cadRow"></div><p class="hint" style="margin-top:0;">The cadence every contact runs. Replies pause it automatically.</p><div id="pipeList"></div></details>');
-    var cr=pipe.querySelector("#cadRow");
-    CADENCE.forEach(function(s,idx){
-      cr.appendChild(el('<span class="cad-step">Day '+(s.off+1)+" "+CH_LABEL[s.ch]+'</span>'));
-      if(idx<CADENCE.length-1) cr.appendChild(el('<span class="cad-arrow">→</span>'));
+    var wrap=el('<div class="lt-wrap"></div>');
+    var hero=el('<div class="lt-hero"><h1 class="lt-hero-title">Pipeline</h1><p class="lt-hero-sub">Measured in reach-outs, not revenue. Where everyone sits in their cadence, and what came back.</p></div>');
+
+    var touches30=ltTouchesSent30d();
+    var repliesBack=contacts.filter(function(c){ return c.status==="warm"||c.status==="meeting"; }).length;
+    var replyRate=touches30 ? Math.round(repliesBack/touches30*100) : 0;
+    hero.appendChild(el('<div class="lt-pstats">'+
+      '<div class="lt-pstat"><div class="lt-pstat-num">'+touches30+'</div><div class="lt-pstat-lbl">TOUCHES SENT · 30D</div></div>'+
+      '<div class="lt-pstat"><div class="lt-pstat-num">'+repliesBack+'</div><div class="lt-pstat-lbl">REPLIES BACK</div></div>'+
+      '<div class="lt-pstat"><div class="lt-pstat-num accent">'+replyRate+'%</div><div class="lt-pstat-lbl">REPLY RATE</div></div>'+
+      '<div class="lt-pstat"><div class="lt-pstat-num">—</div><div class="lt-pstat-lbl">AVG TIME TO REPLY</div></div>'+
+    '</div>'));
+
+    var counts=ltFalloffCounts(contacts), maxCount=Math.max(1, counts[0]);
+    var falloff=el('<div class="lt-falloff"></div>');
+    counts.forEach(function(n, idx){
+      var pct=Math.round(n/maxCount*100);
+      falloff.appendChild(el('<div class="lt-fcol"><div class="lt-fcount">'+n+'</div><div class="lt-ftrack"><div class="lt-fbar'+(idx>0?" dim":"")+'" style="height:'+pct+'%;"></div></div><div class="lt-flbl">TOUCH '+(idx+1)+'</div></div>'));
     });
-    var pl=pipe.querySelector("#pipeList");
-    var tools=el('<div class="pipe-tools"></div>');
-    if(!pipeSelect){
-      var selBtn=el('<button class="btn-mini" id="pipeSelBtn">Select to delete</button>');
-      selBtn.addEventListener("click", function(){ pipeSelect=true; render(); });
-      tools.appendChild(selBtn);
-    } else {
-      var delBtn=el('<button class="btn-mini danger">Delete selected (<span id="pipeCount">'+selCount()+'</span>)</button>');
-      var cancelBtn=el('<button class="btn-mini">Cancel</button>');
-      delBtn.addEventListener("click", deleteSelected);
-      cancelBtn.addEventListener("click", function(){ pipeSelect=false; pipeSel={}; render(); });
-      tools.appendChild(delBtn); tools.appendChild(cancelBtn);
+    hero.appendChild(falloff);
+    hero.appendChild(el('<div class="lt-ffoot">MOST PEOPLE ANSWER BY TOUCH 3 — THE ONES WHO DON’T USUALLY NEVER WILL</div>'));
+    wrap.appendChild(hero);
+
+    if(!contacts.length){
+      wrap.appendChild(el('<p style="margin-top:24px;color:var(--lt-mute);font-size:15px;">No contacts yet — add some under Contacts to see the pipeline here.</p>'));
+      m.appendChild(wrap);
+      return;
     }
-    pl.appendChild(tools);
-    Object.keys(groups).sort().forEach(function(acct){
-      var list=groups[acct], warmN=0,meetN=0,lostN=0,activeN=0,compN=0;
-      list.forEach(function(c){ if(c.status==="warm")warmN++; else if(c.status==="meeting")meetN++; else if(c.status==="lost")lostN++; else if(c.complete)compN++; else activeN++; });
-      var parts=[];
-      if(meetN) parts.push("<b>"+meetN+" meeting"+(meetN>1?"s":"")+"</b>");
-      if(warmN) parts.push("<b>"+warmN+" warm</b>");
-      if(activeN) parts.push(activeN+" in cadence");
-      if(compN) parts.push(compN+" complete");
-      if(lostN) parts.push(lostN+" out");
-      var det=el('<details class="acct-det"'+(pipeSelect?' open':'')+'><summary><span class="acct-nm">'+esc(acct)+'</span><span class="acct-sub">'+(parts.join(" · ")||list.length+" people")+'</span></summary><div class="acct-body"></div></details>');
-      var body=det.querySelector(".acct-body");
-      list.forEach(function(c){
-        var s=statusLabel(c);
-        var key=c.a.id+"|"+c.t.id;
-        var nextTxt = c.complete ? "cadence complete" : (c.status==="active" ? (function(){ var di=dueInfo(c); return di ? ("Touch "+di.stepNum+" of "+c.touches.length) : ""; })() : "");
-        var wrap2=el('<div class="pc-wrap">'+
-          '<div class="pcard'+(pipeSelect?" selectable":"")+(pipeSelect&&pipeSel[key]?" selected":"")+'">'+
-            (pipeSelect?'<div class="pc-check'+(pipeSel[key]?" on":"")+'"></div>':'')+
-            '<div class="pc-ava">'+esc(initials(c.name))+'</div>'+
-            '<div class="pc-main"><div class="pc-name">'+esc(c.name)+'</div><div class="pc-meta">'+esc((c.title||"")+(c.title&&c.account?" · ":"")+(c.account||""))+(nextTxt?' · '+nextTxt:"")+'</div></div>'+
-            '<div class="pc-status'+(s.gold?" gold":"")+'">'+s.txt+'</div>'+
-            (pipeSelect?'':'<button class="pc-x" title="Remove">×</button>')+
-          '</div>'+
-          '<div class="pc-exec"></div></div>');
-        var pcard=wrap2.querySelector(".pcard"), exec=wrap2.querySelector(".pc-exec");
-        if(pipeSelect){
-          pcard.addEventListener("click", function(){
-            pipeSel[key]=!pipeSel[key];
-            pcard.classList.toggle("selected");
-            pcard.querySelector(".pc-check").classList.toggle("on");
-            var cnt=document.getElementById("pipeCount"); if(cnt) cnt.textContent=selCount();
-          });
-        } else {
-          wrap2.querySelector(".pc-x").addEventListener("click", function(e){ e.stopPropagation(); removeContact(c); });
-          pcard.addEventListener("click", function(){
-            if(exec.classList.contains("open")){ exec.classList.remove("open"); exec.innerHTML=""; pcard.classList.remove("expanded"); return; }
-            exec.innerHTML=""; exec.classList.add("open"); pcard.classList.add("expanded");
-            var di=dueInfo(c);
-            exec.appendChild(di ? activeCard({c:c,i:di}, exec, [{c:c,i:di}], contacts.filter(function(x){ return x.status==="warm"; })) : pausedPanel(c));
-          });
-        }
-        body.appendChild(wrap2);
+
+    var byStage={OPENED:[],REPLIED:[],"IN CONVO":[],MET:[]};
+    contacts.forEach(function(c){ byStage[ltPipelineStage(c)].push(c); });
+    Object.keys(byStage).forEach(function(k){ byStage[k].sort(function(a,b){ return ltMomentumPct(a)-ltMomentumPct(b); }); });
+
+    var stagecols=el('<div class="lt-stagecols"></div>');
+    var flatRows=[];
+    ["OPENED","REPLIED","IN CONVO","MET"].forEach(function(key){
+      var list=byStage[key], live=key==="IN CONVO";
+      var col=el('<div class="lt-stagecol"><div class="lt-stagecol-head'+(live?" live":"")+'"><div>'+key+'</div><div>'+list.length+'</div></div></div>');
+      list.slice(0,4).forEach(function(c){
+        var idx=flatRows.length; flatRows.push(c);
+        var card=el('<div class="lt-stagecard"><div class="lt-stagecard-name">'+esc(c.name)+'</div><div class="lt-stagecard-co">'+esc(c.account||"")+'</div><div class="lt-stagecard-why'+(live?" live":"")+'">'+ltStageReason(c)+'</div></div>');
+        card.addEventListener("click", function(){ ltPipelineOpenIdx = ltPipelineOpenIdx===idx ? null : idx; render(); });
+        col.appendChild(card);
       });
-      pl.appendChild(det);
+      stagecols.appendChild(col);
     });
-    m.appendChild(pipe);
+    wrap.appendChild(stagecols);
+
+    if(ltPipelineOpenIdx!==null && flatRows[ltPipelineOpenIdx]){
+      var briefRows=flatRows.map(function(c){ return {c:c, i:dueInfo(c)}; });
+      wrap.appendChild(buildLtBrief(briefRows, ltPipelineOpenIdx));
+    }
+
+    var thisMonday=ltMonday(new Date()), reachThisWeek=0;
+    for(var d=0; d<7; d++){ reachThisWeek+=dayTotal(iso(addDays(iso(thisMonday), d))); }
+    ltUpdateColdStreak(contacts);
+    var coldDays=ltColdStreakDays();
+    wrap.appendChild(el('<div class="lt-pbottom">'+
+      '<div><div class="lt-pstat-lbl">REACH-OUTS THIS WEEK</div><div class="lt-pstat-num accent" style="margin-top:10px;">'+reachThisWeek+'</div></div>'+
+      '<div><div class="lt-pstat-lbl">REPLY RATE</div><div class="lt-pstat-num" style="margin-top:10px;">'+replyRate+'%</div></div>'+
+      '<div><div class="lt-pstat-lbl">AVG DAYS TO REPLY</div><div class="lt-pstat-num" style="margin-top:10px;">—</div></div>'+
+      '<div><div class="lt-pstat-lbl">NOTHING FELL THROUGH</div><div class="lt-pstat-num" style="margin-top:10px;">'+coldDays+'</div><div style="margin-top:6px;font-family:\'IBM Plex Mono\',monospace;font-size:10px;color:var(--lt-dim);">DAY'+(coldDays===1?"":"S")+' RUNNING</div></div>'+
+    '</div>'));
+
+    m.appendChild(wrap);
   }
 
   // ---------- DASHBOARD: activity heatmap + history (reworked in a later phase) ----------
