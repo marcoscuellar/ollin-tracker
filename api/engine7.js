@@ -82,6 +82,16 @@ export const SYSTEM = [
   'QUALITY CHECK before returning: opens about them · sender line is brief and uses the provided identity · curiosity present · CTA is asset-based · CTA is the final line · no banned words or phrases · channel length respected · no meeting ask · no invented sender name and no fabricated signal.',
 ].join('\n');
 
+// Draft angle frame — the three tabs in the brief UI (THE GAP / COST OF
+// WAITING / THE PERSON). Each steers the same Engine 7 structure toward a
+// different argument without changing the rules (banned words, CTA, length).
+export const ANGLE_FRAMES = {
+  gap: 'ANGLE FRAME: THE GAP. Center the opening observation on the specific capability or role gap at their company right now.',
+  cow: 'ANGLE FRAME: COST OF WAITING. Center the opening observation on what leaving that gap open is costing them — time, risk, or a missed window — not just that the gap exists.',
+  person: 'ANGLE FRAME: THE PERSON. Center the opening observation on the prospect specifically — their move, their team, their own stake in this — rather than the company in the abstract.',
+};
+export function normAngleFrame(f) { return ANGLE_FRAMES[f] ? f : 'gap'; }
+
 // SIGNAL STRENGTH mode instructions, keyed by classified angle strength.
 export const SIGNAL_MODE = {
   strong: 'SIGNAL STRENGTH: STRONG. Open confidently and specifically on the signal/notes below.',
@@ -139,6 +149,7 @@ export function buildDraftPrompt(user, body) {
 
   const strength = classifyAngle(angle, body.angleStrength);
   const angleWarning = angleWarningFor(strength);
+  const angleFrame = normAngleFrame(body.angleFrame);
 
   const prompt =
     CHANNELS[channel] + '\n\n' +
@@ -149,6 +160,7 @@ export function buildDraftPrompt(user, body) {
     (senderCred ? '  Credibility (supporting proof only — never the opener): ' + senderCred + '\n' : '') +
     '\n' +
     SIGNAL_MODE[strength] + '\n' +
+    (angleFrame !== 'gap' ? ANGLE_FRAMES[angleFrame] + '\n' : '') +
     (angle ? 'SIGNAL / NOTES (user-provided, unverified — weave in naturally, do not quote): ' + angle + '\n' : '') +
     (priorRel ? 'PRIOR RELATIONSHIP (use as credibility AFTER the prospect-first opener — never lead with it): ' + priorRel + '\n' : '') +
     'PREFERRED ASSET for the CTA: ' + sender.defaultAsset + '. Build the final asset-based CTA around it (e.g. "I built a quick ' + sender.defaultAsset + ' around this — should I send it over?"). Never make the CTA a meeting or call request.\n' +
