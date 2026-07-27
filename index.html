@@ -4,7 +4,7 @@
 <link rel="icon" type="image/svg+xml" href="assets/ollin-mark.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800;900&family=Geist+Mono:wght@400;500;600&family=Sora:wght@500;700;800&family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800;900&family=Geist+Mono:wght@400;500;600&family=Sora:wght@500;700;800&family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500;600&family=Playfair+Display:ital,wght@1,500;1,600&display=swap" rel="stylesheet">
 <style>
   :root{
     --ink:#0a0a0a; --cream:#FFFFFF; --card:#FFFFFF; --gold:#0a0a0a; --blue:#1B2E52; --blue900:#1B2E52; --honey:#A83246; --honey-d:#7A2536; --grey:#6B6B6B; --tint:#E9EBF1;
@@ -421,7 +421,7 @@
   .lt-intro-h1{position:relative;margin-top:34px;font-size:clamp(40px,6vw,72px);font-weight:800;letter-spacing:-.046em;line-height:.98;}
   .lt-intro-line{overflow:hidden;padding-bottom:4px;}
   .lt-intro-line2{display:flex;align-items:baseline;gap:.22em;}
-  .lt-intro-accent{font-family:'IBM Plex Mono',monospace;font-style:italic;font-weight:500;letter-spacing:-.02em;color:var(--lt-accent-deep);}
+  .lt-intro-accent{font-family:'Playfair Display',serif;font-style:italic;font-weight:500;letter-spacing:-.01em;color:var(--lt-accent-deep);}
   .lt-intro-sub{position:relative;margin-top:26px;font-size:19px;line-height:1.55;color:var(--lt-mute);max-width:38ch;}
   .lt-intro-ctas{position:relative;margin-top:30px;display:flex;align-items:center;gap:22px;}
   .lt-intro-cta-solid{background:var(--lt-ink);color:var(--lt-paper);border-radius:6px;padding:20px 34px;font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;letter-spacing:.16em;cursor:pointer;transition:opacity .18s ease;}
@@ -429,13 +429,14 @@
   .lt-intro-cta-link{border-bottom:1px solid var(--lt-ink);padding:11px 2px;font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;letter-spacing:.16em;color:var(--lt-ink);cursor:pointer;}
   .lt-intro-bar{position:absolute;left:0;right:0;bottom:0;height:10px;background:var(--lt-ink);}
 
-  .lt-poster{color:var(--lt-poster-fg);border-radius:6px;background:var(--lt-poster-bg);border:1px solid var(--lt-poster-bg);padding:34px 40px 30px;display:flex;flex-direction:column;min-height:470px;cursor:pointer;}
-  .lt-poster-top{display:flex;align-items:baseline;justify-content:space-between;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.16em;color:#7A7A74;}
-  .lt-poster-mid{margin-top:auto;margin-bottom:auto;padding:34px 0;font-size:clamp(34px,4.4vw,92px);font-weight:800;letter-spacing:-.05em;line-height:1.0;text-transform:uppercase;}
+  .lt-poster{position:relative;overflow:hidden;color:var(--lt-poster-fg);border-radius:6px;background:var(--lt-poster-bg);border:1px solid var(--lt-poster-bg);padding:34px 40px 30px;display:flex;flex-direction:column;min-height:470px;cursor:pointer;}
+  .lt-poster-canvas{position:absolute;inset:0;width:100%;height:100%;display:block;}
+  .lt-poster-top{position:relative;display:flex;align-items:baseline;justify-content:space-between;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.16em;color:#7A7A74;}
+  .lt-poster-mid{position:relative;margin-top:auto;margin-bottom:auto;padding:34px 0;font-size:clamp(34px,4.4vw,92px);font-weight:800;letter-spacing:-.05em;line-height:1.0;text-transform:uppercase;}
   .lt-poster-lwrap{overflow:hidden;padding-bottom:8px;}
   .lt-poster-l3{overflow:hidden;padding-bottom:8px;display:flex;align-items:baseline;gap:.24em;}
   .lt-poster-knock{background:var(--lt-poster-fg);color:var(--lt-poster-bg);padding:.04em .12em .1em;}
-  .lt-poster-bottom{display:flex;align-items:flex-end;justify-content:space-between;}
+  .lt-poster-bottom{position:relative;display:flex;align-items:flex-end;justify-content:space-between;}
   .lt-poster-word{font-size:19px;font-weight:800;letter-spacing:-.04em;line-height:1;}
   .lt-poster-sub{margin-top:5px;font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.34em;color:#7A7A74;}
   .lt-poster-tag{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.16em;color:#7A7A74;}
@@ -2933,7 +2934,8 @@
   function render(){
     var m=document.getElementById("appMain"); if(!m) return;
     state.extra=state.extra||{};
-    if(navView!=="landing") ltStopIntroField();
+    ltStopIntroField();
+    ltStopPosterField();
     m.innerHTML="";
     buildNav(m);
     if(DEMO){
@@ -2996,9 +2998,12 @@
     return day+(day===1?" DAY AGO":" DAYS AGO");
   }
   // ---- HOME: animated intro splash (glyph field + entry card) ----
-  var ltIntroStop=null;
+  var ltIntroStop=null, ltPosterFieldStop=null;
   function ltStopIntroField(){ if(ltIntroStop){ ltIntroStop(); ltIntroStop=null; } }
-  function ltStartIntroField(canvas){
+  function ltStopPosterField(){ if(ltPosterFieldStop){ ltPosterFieldStop(); ltPosterFieldStop=null; } }
+  // shared animated glyph-field canvas — used behind the Home intro card and
+  // the Today poster, which shows the same "next move" headline
+  function ltStartGlyphField(canvas, colorVar){
     var ctx=canvas.getContext("2d");
     var dpr=window.devicePixelRatio||1;
     var w=0, h=0, particles=[];
@@ -3009,7 +3014,7 @@
       if(isNaN(r)||isNaN(g)||isNaN(b)){ r=10; g=10; b=10; }
       return "rgba("+r+","+g+","+b+","+a+")";
     }
-    var inkHex=getComputedStyle(document.documentElement).getPropertyValue("--lt-ink").trim();
+    var dotHex=getComputedStyle(document.documentElement).getPropertyValue(colorVar||"--lt-ink").trim();
     function resize(){
       w=canvas.clientWidth; h=canvas.clientHeight;
       canvas.width=Math.max(1,Math.round(w*dpr)); canvas.height=Math.max(1,Math.round(h*dpr));
@@ -3029,7 +3034,7 @@
         if(p.x<-4) p.x=w+4; if(p.x>w+4) p.x=-4;
         if(p.y<-4) p.y=h+4; if(p.y>h+4) p.y=-4;
         ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-        ctx.fillStyle=hexToRgba(inkHex,p.a); ctx.fill();
+        ctx.fillStyle=hexToRgba(dotHex,p.a); ctx.fill();
       });
       raf=requestAnimationFrame(tick);
     }
@@ -3053,7 +3058,7 @@
     m.appendChild(intro);
     intro.querySelector("#ltEnterTracker").addEventListener("click", function(){ setView("home"); });
     intro.querySelector("#ltSeePipeline").addEventListener("click", function(){ setView("pipeline"); });
-    ltIntroStop=ltStartIntroField(intro.querySelector(".lt-intro-canvas"));
+    ltIntroStop=ltStartGlyphField(intro.querySelector(".lt-intro-canvas"), "--lt-ink");
   }
 
   // ---------- TODAY — six-card carousel + expandable brief ----------
@@ -3350,7 +3355,7 @@
     var pGoingCold=pdue.filter(function(x){ return x.i.overdueDays>=7; }).length;
     var poster = (ltPosterIndex===null) ? ltPickPoster(pdue.length, pGoingCold) : LT_DAILY_POSTERS[ltPosterIndex % LT_DAILY_POSTERS.length];
     var posterRow=el('<div class="lt-poster-row"></div>');
-    var posterEl=el('<div class="lt-poster">'+
+    var posterEl=el('<div class="lt-poster"><canvas class="lt-poster-canvas"></canvas>'+
       '<div class="lt-poster-top"><div>'+DOW_FULL[now.getDay()]+" · "+now.getDate()+" "+MON_FULL[now.getMonth()]+" · "+hh+":"+mm+'</div><div>C:\\ŌLLIN&gt;</div></div>'+
       '<div class="lt-poster-mid">'+
         '<div class="lt-poster-lwrap"><div>'+esc(poster.l1)+'</div></div>'+
@@ -3362,6 +3367,7 @@
     posterEl.addEventListener("click", function(){ ltPosterIndex = (ltPosterIndex===null) ? 0 : ltPosterIndex+1; render(); });
     posterRow.appendChild(posterEl);
     m.appendChild(posterRow);
+    ltPosterFieldStop=ltStartGlyphField(posterEl.querySelector(".lt-poster-canvas"), "--lt-poster-fg");
 
     var numGrid=el('<div class="lt-num-grid"></div>');
     var reach=el('<div class="lt-card"><div class="lt-card-lbl">REACH-OUTS · MON–FRI</div><div class="lt-vbars"></div></div>');
