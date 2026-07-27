@@ -420,7 +420,12 @@
   .lt-intro-eyebrow-row{position:relative;display:flex;align-items:baseline;justify-content:space-between;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;color:var(--lt-mute);}
   .lt-intro-h1{position:relative;margin-top:34px;font-size:clamp(40px,6vw,72px);font-weight:800;letter-spacing:-.046em;line-height:.98;}
   .lt-intro-line{overflow:hidden;padding-bottom:4px;}
-  .lt-intro-line2{display:flex;align-items:baseline;gap:.22em;}
+  .lt-intro-line2 .lt-reveal-in{display:flex;align-items:baseline;gap:.22em;}
+  /* generic entrance motion — masked line reveal + staggered fade/rise */
+  .lt-reveal-in{display:block;transform:translateY(112%);transition:transform .62s cubic-bezier(.16,1,.3,1);}
+  .lt-reveal-in.in{transform:translateY(0);}
+  .lt-enter{opacity:0;transform:translateY(10px);transition:opacity .5s ease,transform .5s cubic-bezier(.16,1,.3,1);}
+  .lt-enter.in{opacity:1;transform:translateY(0);}
   .lt-intro-accent{font-family:'Playfair Display',serif;font-style:italic;font-weight:500;letter-spacing:-.01em;color:var(--lt-accent-deep);}
   .lt-intro-sub{position:relative;margin-top:26px;font-size:19px;line-height:1.55;color:var(--lt-mute);max-width:38ch;}
   .lt-intro-ctas{position:relative;margin-top:30px;display:flex;align-items:center;gap:22px;}
@@ -434,7 +439,8 @@
   .lt-poster-top{position:relative;display:flex;align-items:baseline;justify-content:space-between;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.16em;color:#7A7A74;}
   .lt-poster-mid{position:relative;margin-top:auto;margin-bottom:auto;padding:34px 0;font-size:clamp(34px,4.4vw,92px);font-weight:800;letter-spacing:-.05em;line-height:1.0;text-transform:uppercase;}
   .lt-poster-lwrap{overflow:hidden;padding-bottom:8px;}
-  .lt-poster-l3{overflow:hidden;padding-bottom:8px;display:flex;align-items:baseline;gap:.24em;}
+  .lt-poster-l3{overflow:hidden;padding-bottom:8px;}
+  .lt-poster-l3 .lt-reveal-in{display:flex;align-items:baseline;gap:.24em;}
   .lt-poster-knock{background:var(--lt-poster-fg);color:var(--lt-poster-bg);padding:.04em .12em .1em;}
   .lt-poster-bottom{position:relative;display:flex;align-items:flex-end;justify-content:space-between;}
   .lt-poster-word{font-size:19px;font-weight:800;letter-spacing:-.04em;line-height:1;}
@@ -471,7 +477,7 @@
   /* ---- TODAY: greeting + carousel + brief ---- */
   .lt-greet{padding:40px 40px 30px;display:grid;grid-template-columns:minmax(560px,1fr) minmax(300px,460px);gap:44px;align-items:end;max-width:1456px;margin:0 auto;}
   .lt-greet-date{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.18em;color:var(--lt-dim);}
-  .lt-greet-title{margin-top:16px;font-size:clamp(38px,4.2vw,56px);font-weight:800;letter-spacing:-.04em;line-height:1.06;}
+  .lt-greet-title{overflow:hidden;margin-top:16px;font-size:clamp(38px,4.2vw,56px);font-weight:800;letter-spacing:-.04em;line-height:1.06;padding-bottom:4px;}
   .lt-greet-body{margin-top:16px;font-size:17px;line-height:1.55;color:var(--lt-mute);max-width:46ch;}
   .lt-counters{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
   .lt-counter-num{margin-top:12px;font-family:'IBM Plex Mono',monospace;font-size:34px;color:var(--lt-ink);line-height:1;}
@@ -3043,19 +3049,40 @@
     window.addEventListener("resize", onResize);
     return function stop(){ running=false; if(raf) cancelAnimationFrame(raf); window.removeEventListener("resize", onResize); };
   }
+  // masked-line + staggered-fade entrance, used on Home's intro, the poster
+  // headline, and Today's greeting — lines reveal first, then supporting
+  // content fades/rises in.
+  function ltRevealIn(root, opts){
+    opts=opts||{};
+    var lineDelay=opts.lineDelay!=null?opts.lineDelay:90;
+    var enterDelay=opts.enterDelay!=null?opts.enterDelay:70;
+    var enterStart=opts.enterStart!=null?opts.enterStart:240;
+    var lines=root.querySelectorAll(".lt-reveal-in");
+    var enters=root.querySelectorAll(".lt-enter");
+    requestAnimationFrame(function(){
+      requestAnimationFrame(function(){
+        lines.forEach(function(el,i){ setTimeout(function(){ el.classList.add("in"); }, i*lineDelay); });
+        enters.forEach(function(el,i){ setTimeout(function(){ el.classList.add("in"); }, enterStart+i*enterDelay); });
+      });
+    });
+  }
   function renderLanding(m){
     ltStopIntroField();
     var intro=el('<div class="lt-intro"><canvas class="lt-intro-canvas"></canvas><div class="lt-intro-fade"></div>'+
       '<div class="lt-intro-inner"><div class="lt-intro-framewrap"><div class="lt-intro-frame"></div>'+
         '<div class="lt-intro-card"><div class="lt-intro-wash"></div>'+
-          '<div class="lt-intro-eyebrow-row"><div>ŌLLIN SYSTEMS</div><div>TRACKER</div></div>'+
-          '<div class="lt-intro-h1"><div class="lt-intro-line">The next move,</div><div class="lt-intro-line lt-intro-line2">made <span class="lt-intro-accent">clear.</span></div></div>'+
-          '<div class="lt-intro-sub">Ōllin watches every account, every thread, and every silence — then hands you the one thing worth doing next.</div>'+
-          '<div class="lt-intro-ctas"><div class="lt-intro-cta-solid" id="ltEnterTracker">ENTER TRACKER →</div><div class="lt-intro-cta-link" id="ltSeePipeline">SEE PIPELINE ↓</div></div>'+
+          '<div class="lt-intro-eyebrow-row lt-enter"><div>ŌLLIN SYSTEMS</div><div>TRACKER</div></div>'+
+          '<div class="lt-intro-h1">'+
+            '<div class="lt-intro-line"><span class="lt-reveal-in">The next move,</span></div>'+
+            '<div class="lt-intro-line lt-intro-line2"><span class="lt-reveal-in">made <span class="lt-intro-accent">clear.</span></span></div>'+
+          '</div>'+
+          '<div class="lt-intro-sub lt-enter">Ōllin watches every account, every thread, and every silence — then hands you the one thing worth doing next.</div>'+
+          '<div class="lt-intro-ctas lt-enter"><div class="lt-intro-cta-solid" id="ltEnterTracker">ENTER TRACKER →</div><div class="lt-intro-cta-link" id="ltSeePipeline">SEE PIPELINE ↓</div></div>'+
         '</div></div></div>'+
       '<div class="lt-intro-bar"></div>'+
     '</div>');
     m.appendChild(intro);
+    ltRevealIn(intro);
     intro.querySelector("#ltEnterTracker").addEventListener("click", function(){ setView("home"); });
     intro.querySelector("#ltSeePipeline").addEventListener("click", function(){ setView("pipeline"); });
     ltIntroStop=ltStartGlyphField(intro.querySelector(".lt-intro-canvas"), "--lt-ink");
@@ -3248,15 +3275,16 @@
     var greet=el('<div class="lt-greet"></div>');
     var titleText = waiting.length===0 ? "Nothing’s waiting." : (waiting.length===1 ? "One person is waiting on you." : waiting.length+" people are waiting on you.");
     var bodyText = thisWeekDone>0 ? ("Start with one. "+thisWeekDone+" already went out this week.") : "Start with one.";
-    var greetLeft=el('<div><div class="lt-greet-date">'+DOW_FULL[now.getDay()]+" · "+now.getDate()+" "+MON_FULL[now.getMonth()]+'</div><div class="lt-greet-title">'+esc(titleText)+'</div><div class="lt-greet-body">'+esc(bodyText)+'</div></div>');
+    var greetLeft=el('<div><div class="lt-greet-date lt-enter">'+DOW_FULL[now.getDay()]+" · "+now.getDate()+" "+MON_FULL[now.getMonth()]+'</div><div class="lt-greet-title"><span class="lt-reveal-in">'+esc(titleText)+'</span></div><div class="lt-greet-body lt-enter">'+esc(bodyText)+'</div></div>');
     greet.appendChild(greetLeft);
-    var counters=el('<div class="lt-counters">'+
+    var counters=el('<div class="lt-counters lt-enter">'+
       '<div class="lt-card"><div class="lt-card-lbl">DONE TODAY</div><div class="lt-counter-num accent">'+doneToday+'</div><div class="lt-counter-sub">/ '+shown.length+' QUEUED</div></div>'+
       '<div class="lt-card"><div class="lt-card-lbl">THIS WEEK</div><div class="lt-counter-num">'+thisWeekDone+'</div><div class="lt-counter-sub">LAST WEEK '+lastWeekDone+'</div></div>'+
       '<div class="lt-card"><div class="lt-card-lbl">IN CADENCE</div><div class="lt-counter-num">'+inCadence+'</div><div class="lt-counter-sub">'+contactCount()+' CONTACTS</div></div>'+
     '</div>');
     greet.appendChild(counters);
     m.appendChild(greet);
+    ltRevealIn(greet);
 
     var cardsWrap=el('<div class="lt-cards-wrap"></div>');
     var head=el('<div class="lt-cards-head"><div class="lt-cards-title">&gt; TODAY’S LIST · '+shown.length+'</div><div class="lt-cards-ctrl"><div class="lt-dots" id="ltDots"></div><div class="lt-arrows"><button class="lt-arrow" id="ltPrev">←</button><button class="lt-arrow" id="ltNext">→</button></div><div class="lt-drag-lbl">DRAG</div></div></div>');
@@ -3356,18 +3384,19 @@
     var poster = (ltPosterIndex===null) ? ltPickPoster(pdue.length, pGoingCold) : LT_DAILY_POSTERS[ltPosterIndex % LT_DAILY_POSTERS.length];
     var posterRow=el('<div class="lt-poster-row"></div>');
     var posterEl=el('<div class="lt-poster"><canvas class="lt-poster-canvas"></canvas>'+
-      '<div class="lt-poster-top"><div>'+DOW_FULL[now.getDay()]+" · "+now.getDate()+" "+MON_FULL[now.getMonth()]+" · "+hh+":"+mm+'</div><div>C:\\ŌLLIN&gt;</div></div>'+
+      '<div class="lt-poster-top lt-enter"><div>'+DOW_FULL[now.getDay()]+" · "+now.getDate()+" "+MON_FULL[now.getMonth()]+" · "+hh+":"+mm+'</div><div>C:\\ŌLLIN&gt;</div></div>'+
       '<div class="lt-poster-mid">'+
-        '<div class="lt-poster-lwrap"><div>'+esc(poster.l1)+'</div></div>'+
-        '<div class="lt-poster-lwrap"><div>'+esc(poster.l2)+'</div></div>'+
-        '<div class="lt-poster-l3"><div>'+esc(poster.l3)+'</div><div class="lt-poster-knock">'+esc(poster.knock)+'</div></div>'+
+        '<div class="lt-poster-lwrap"><span class="lt-reveal-in">'+esc(poster.l1)+'</span></div>'+
+        '<div class="lt-poster-lwrap"><span class="lt-reveal-in">'+esc(poster.l2)+'</span></div>'+
+        '<div class="lt-poster-l3"><div class="lt-reveal-in">'+esc(poster.l3)+'<div class="lt-poster-knock">'+esc(poster.knock)+'</div></div></div>'+
       '</div>'+
-      '<div class="lt-poster-bottom"><div><div class="lt-poster-word">ŌLLIN</div><div class="lt-poster-sub">TRACKER</div></div><div class="lt-poster-tag">'+esc(poster.tag)+'</div></div>'+
+      '<div class="lt-poster-bottom lt-enter"><div><div class="lt-poster-word">ŌLLIN</div><div class="lt-poster-sub">TRACKER</div></div><div class="lt-poster-tag">'+esc(poster.tag)+'</div></div>'+
     '</div>');
     posterEl.addEventListener("click", function(){ ltPosterIndex = (ltPosterIndex===null) ? 0 : ltPosterIndex+1; render(); });
     posterRow.appendChild(posterEl);
     m.appendChild(posterRow);
     ltPosterFieldStop=ltStartGlyphField(posterEl.querySelector(".lt-poster-canvas"), "--lt-poster-fg");
+    ltRevealIn(posterEl);
 
     var numGrid=el('<div class="lt-num-grid"></div>');
     var reach=el('<div class="lt-card"><div class="lt-card-lbl">REACH-OUTS · MON–FRI</div><div class="lt-vbars"></div></div>');
