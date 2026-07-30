@@ -564,6 +564,46 @@
   .ot-quote-text{margin-top:16px;font-size:clamp(28px,3.6vw,42px);font-weight:800;letter-spacing:-.03em;line-height:1.15;color:#F8F7F4;}
   .ot-quote-line{padding-bottom:6px;}
 
+  /* ---------- CONTACTS ---------- */
+  .oc-wrap{padding:34px 40px 0;max-width:1456px;margin:0 auto;}
+  .oc-head{position:relative;overflow:hidden;background:#141412;border:1px solid #26262B;border-radius:6px;padding:36px 40px 32px;display:flex;align-items:flex-end;justify-content:space-between;gap:32px;flex-wrap:wrap;}
+  .oc-head-l{min-width:280px;}
+  .oc-eyebrow{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.16em;color:#7A93A8;text-transform:uppercase;}
+  .oc-sub{margin-top:10px;font-size:18px;line-height:1.5;color:#9A968B;}
+  .oc-stats{display:flex;gap:28px;}
+  .oc-stat{text-align:right;}
+  .oc-stat-n{font-family:'IBM Plex Mono',monospace;font-size:28px;font-weight:700;color:#F8F7F4;line-height:1;}
+  .oc-stat-n.blue{color:#7A93A8;}
+  .oc-stat-n.gold{color:#C9A84C;}
+  .oc-stat-l{margin-top:6px;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.12em;color:#9A968B;}
+
+  .oc-search{margin-top:16px;display:flex;align-items:center;gap:16px;background:#141412;border:1px solid #26262B;border-radius:6px;padding:16px 20px;}
+  .oc-search .p{font-family:'IBM Plex Mono',monospace;font-size:15px;color:#7A93A8;}
+  .oc-search input{flex:1;background:none;border:none;outline:none;font-family:'Archivo',sans-serif;font-size:16px;color:#F8F7F4;}
+  .oc-search input::placeholder{color:#9A968B;}
+  .oc-search .n{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.12em;color:#9A968B;white-space:nowrap;}
+
+  .oc-acts{margin-top:14px;display:flex;flex-wrap:wrap;gap:8px;}
+  .oc-act{border-radius:20px;padding:7px 14px;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.1em;border:1px solid #26262B;color:#9A968B;background:none;cursor:pointer;transition:color .18s ease,border-color .18s ease;}
+  .oc-act:hover{color:#F8F7F4;border-color:#3A3A34;}
+  .oc-act.blue{border-color:rgba(122,147,168,.4);color:#7A93A8;}
+  .oc-act.blue:hover{border-color:#7A93A8;color:#F8F7F4;}
+  .oc-act.gold{background:#C9A84C;border-color:#C9A84C;color:#0A0A0A;font-weight:700;}
+  .oc-act.gold:hover{background:#D8BA66;border-color:#D8BA66;color:#0A0A0A;}
+
+  .oc-filters{margin-top:26px;display:flex;flex-wrap:wrap;gap:10px;}
+  .oc-filter{border-radius:20px;padding:8px 16px;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;background:transparent;border:1px solid #26262B;color:#9A968B;cursor:pointer;transition:color .18s ease,border-color .18s ease;}
+  .oc-filter:hover{color:#F8F7F4;border-color:#3A3A34;}
+  .oc-filter.on{background:#7A93A8;border-color:#7A93A8;color:#0A0A0A;font-weight:700;}
+
+  /* Table: the design's five columns, plus the selection column the bulk
+     actions need. The checkbox sits outside the spec's grid on purpose. */
+  .oc-ava{width:34px;height:34px;border-radius:50%;background:rgba(154,150,139,.14);color:#9A968B;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:700;flex-shrink:0;}
+  .oc-ava.live{background:rgba(122,147,168,.18);color:#7A93A8;}
+  .oc-person{display:flex;align-items:center;gap:14px;min-width:0;}
+  .oc-badge{display:inline-flex;padding:4px 10px;border-radius:20px;background:rgba(122,147,168,.10);font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.1em;color:#9A968B;width:fit-content;}
+  .oc-badge.live{background:rgba(122,147,168,.14);color:#7A93A8;}
+
   .ot-statwrap{padding:26px 40px 0;max-width:1456px;margin:0 auto;}
   .ot-stat{position:relative;background:#141412;border:1px solid #26262B;border-radius:6px;padding:28px 32px;display:flex;align-items:center;justify-content:space-between;gap:32px;flex-wrap:wrap;}
   .ot-stat-l{min-width:280px;}
@@ -770,7 +810,10 @@
   .lt-bulkbar button:hover{color:var(--lt-accent);}
   .lt-bulkbar button.danger:hover{color:#A5341F;}
   .lt-thead{padding:14px 26px;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.14em;color:var(--lt-dim);}
+  :root[data-lt-theme="dark"] .lt-thead{background:#0A0A0A;color:#FFFFFF;}
   .lt-trow{padding:18px 26px;border-top:1px solid var(--lt-rule);cursor:pointer;transition:background .18s;}
+  /* The row that needs you most is the one the eye should land on first. */
+  .lt-trow.lead{border-left:2px solid var(--lt-accent);}
   .lt-trow:hover{background:var(--lt-row-hover);}
   .lt-trow-name{font-size:16px;font-weight:600;letter-spacing:-.01em;}
   .lt-trow-title{margin-top:3px;font-size:13px;color:var(--lt-dim);}
@@ -3705,6 +3748,10 @@
   var ltSel={};
   function ltKey(c){ return c.a.id+"|"+c.t.id; }
   function ltSelected(contacts){ return contacts.filter(function(c){ return ltSel[ltKey(c)]; }); }
+  // Overdue means the touch date has already passed — due-today is not late.
+  function ltOverdueList(contacts){
+    return contacts.filter(function(c){ var i=dueInfo(c); return i && i.overdueDays>0; });
+  }
 
   // Today's queue is whoever is due today, so "move to today" is a due-date
   // override rather than a separate list. Someone already due is left alone.
@@ -3767,14 +3814,44 @@
   }
 
   function renderContactsSearch(m, contacts){
-    var wrap=el('<div class="lt-wrap"></div>');
-    var hero=el('<div class="lt-hero"><h1 class="lt-hero-title">Contacts</h1><p class="lt-hero-sub">Everyone Ōllin tracks. Search a name, or run a command.</p></div>');
-    var cmdbar=el('<div class="lt-cmdbar" id="ltCmdBar"><span style="font-family:\'IBM Plex Mono\',monospace;font-size:15px;color:var(--lt-accent);">&gt;</span><input id="ltCmdInput" placeholder="Search or run a command…" autocomplete="off"><span class="lt-cmdcount" id="ltCmdCount"></span></div>');
-    hero.appendChild(cmdbar);
-    var cmdrow=el('<div class="lt-cmdrow"><button id="ltCmdAdd">ADD PERSON</button><span class="lt-cmddiv"></span><button id="ltCmdImport">IMPORT CSV</button><span class="lt-cmddiv"></span><button id="ltCmdCold">SHOW GOING COLD</button><span class="lt-cmddiv"></span><button id="ltCmdToday">WHO NEEDS ME TODAY</button><span class="lt-cmddiv"></span><button id="ltCmdCsv">EXPORT CSV ↓</button></div>');
-    hero.appendChild(cmdrow);
+    // Same quote component as Today — one morning line across the whole app.
+    var q=ltQuote().split("|");
+    var qWrap=el('<div class="ot-quotewrap"><div class="ot-quote"><div class="ot-quote-glow"></div><div class="ot-quote-vig"></div>'+
+      '<div class="ot-quote-in"><div class="ot-quote-body">'+
+        '<div class="ot-quote-eyebrow">RIGHT WHERE YOU LEFT OFF · SO YOU WON’T MISS A BEAT</div>'+
+        '<div class="ot-quote-text">'+q.map(function(line){ return '<div class="ot-quote-line">'+esc(line)+'</div>'; }).join("")+'</div>'+
+      '</div></div></div></div>');
+    qWrap.querySelector(".ot-quote").addEventListener("click", function(){
+      ltQuoteIdx = (ltQuoteIdx===null ? ltQuoteDayIdx() : ltQuoteIdx) + 1; render();
+    });
+    m.appendChild(qWrap);
+
+    var wrap=el('<div class="oc-wrap"></div>');
+    var overdue=ltOverdueList(contacts);
+    var hero=el('<div class="oc-head">'+
+      '<div class="oc-head-l"><div class="oc-eyebrow">Contacts</div>'+
+        '<div class="oc-sub">Everyone Ōllin tracks. Search a name, or run a command.</div></div>'+
+      '<div class="oc-stats">'+
+        '<div class="oc-stat"><div class="oc-stat-n">'+contacts.length+'</div><div class="oc-stat-l">TRACKED</div></div>'+
+        '<div class="oc-stat"><div class="oc-stat-n blue">'+ltFilterCount(contacts,"cadence")+'</div><div class="oc-stat-l">IN CADENCE</div></div>'+
+        '<div class="oc-stat"><div class="oc-stat-n gold">'+ltFilterCount(contacts,"cold")+'</div><div class="oc-stat-l">GOING COLD</div></div>'+
+      '</div></div>');
     wrap.appendChild(hero);
-    var filtersHost=el('<div class="lt-filters"></div>');
+
+    var cmdbar=el('<div class="oc-search" id="ltCmdBar"><span class="p">&gt;</span><input id="ltCmdInput" placeholder="Search or run a command…" autocomplete="off"><span class="n" id="ltCmdCount"></span></div>');
+    wrap.appendChild(cmdbar);
+
+    // Gold is the one filled action, and it only earns that when it has work
+    // to do — with nothing overdue the button says so instead of lying.
+    var cmdrow=el('<div class="oc-acts">'+
+      '<button class="oc-act" id="ltCmdAdd">+ ADD PERSON</button>'+
+      '<button class="oc-act" id="ltCmdImport">IMPORT CSV</button>'+
+      '<button class="oc-act" id="ltCmdCsv">EXPORT CSV ↓</button>'+
+      '<button class="oc-act blue" id="ltCmdToday">WHO NEEDS ME TODAY</button>'+
+      '<button class="oc-act'+(overdue.length?" gold":"")+'" id="ltCmdOverdue">MOVE OVERDUE → TODAY'+(overdue.length?" · "+overdue.length:"")+'</button>'+
+    '</div>');
+    wrap.appendChild(cmdrow);
+    var filtersHost=el('<div class="oc-filters"></div>');
     wrap.appendChild(filtersHost);
     var resultsHost=el('<div></div>');
     wrap.appendChild(resultsHost);
@@ -3783,10 +3860,15 @@
     var input=cmdbar.querySelector("#ltCmdInput"), countEl=cmdbar.querySelector("#ltCmdCount");
     input.value=ltContactsQuery;
 
+    cmdrow.querySelector("#ltCmdOverdue").addEventListener("click", function(){
+      if(!overdue.length){ toast("Nothing overdue"); return; }
+      ltMoveToToday(overdue); setView("home");
+    });
+
     function renderFilters(){
       filtersHost.innerHTML="";
       CONTACT_FILTERS.forEach(function(f){
-        var btn=el('<button class="lt-filter'+(ltContactFilter===f[0]?" on":"")+'">'+f[1]+' '+ltFilterCount(contacts,f[0])+'</button>');
+        var btn=el('<button class="oc-filter'+(ltContactFilter===f[0]?" on":"")+'">'+f[1]+' '+ltFilterCount(contacts,f[0])+'</button>');
         btn.addEventListener("click", function(){ ltContactFilter=f[0]; ltContactsOpenIdx=null; renderFilters(); renderResults(); });
         filtersHost.appendChild(btn);
       });
@@ -3814,7 +3896,16 @@
       } else {
         rows.slice(0,60).forEach(function(c, idx){
           var stage=ltStage(c), live=stage==="IN CONVO", mom=ltMomentumPct(c);
-          var row=el('<div class="lt-trow"><div class="lt-check'+(ltSel[ltKey(c)]?" on":"")+'"></div><div><div class="lt-trow-name">'+esc(c.name)+'</div><div class="lt-trow-title">'+esc(c.title||"")+'</div></div><div class="lt-trow-company">'+esc(c.account||"")+'</div><div class="lt-trow-last">'+ltLastTouchLabel(c)+'</div><div><div class="lt-mom-track"><div class="lt-mom-fill'+(live?" live":"")+'" style="width:'+mom+'%;"></div></div></div><div class="lt-trow-stage'+(live?" live":"")+'">'+stage+'</div></div>');
+          var row=el('<div class="lt-trow'+(idx===0?" lead":"")+'">'+
+            '<div class="lt-check'+(ltSel[ltKey(c)]?" on":"")+'"></div>'+
+            '<div class="oc-person"><div class="oc-ava'+(live?" live":"")+'">'+esc(initials(c.name))+'</div>'+
+              '<div><div class="lt-trow-name">'+esc(c.name)+'</div>'+
+              '<div class="lt-trow-title"'+(live?' style="color:var(--lt-accent);"':'')+'>'+esc(c.title||"")+'</div></div></div>'+
+            '<div class="lt-trow-company">'+esc(c.account||"")+'</div>'+
+            '<div class="lt-trow-last">'+ltLastTouchLabel(c)+'</div>'+
+            '<div><div class="lt-mom-track"><div class="lt-mom-fill'+(live?" live":"")+'" style="width:'+mom+'%;"></div></div></div>'+
+            '<div><span class="oc-badge'+(live?" live":"")+'">'+stage+'</span></div>'+
+          '</div>');
           // The checkbox selects; anywhere else on the row still opens the brief.
           row.querySelector(".lt-check").addEventListener("click", function(e){
             e.stopPropagation();
@@ -3853,7 +3944,6 @@
     input.addEventListener("blur", function(){ cmdbar.classList.remove("focused"); });
     cmdrow.querySelector("#ltCmdAdd").addEventListener("click", function(){ contactsMode="add"; setView("contacts"); });
     cmdrow.querySelector("#ltCmdImport").addEventListener("click", function(){ contactsMode="add"; setView("contacts"); });
-    cmdrow.querySelector("#ltCmdCold").addEventListener("click", function(){ ltContactFilter="cold"; ltContactsOpenIdx=null; renderFilters(); renderResults(); });
     cmdrow.querySelector("#ltCmdToday").addEventListener("click", function(){ setView("home"); });
     // With nothing ticked, export means "what I'm looking at" rather than nothing.
     cmdrow.querySelector("#ltCmdCsv").addEventListener("click", function(){ ltExportCsv(ltSelected(contacts).length ? ltSelected(contacts) : currentRows()); });
