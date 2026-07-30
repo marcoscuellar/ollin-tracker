@@ -149,11 +149,10 @@ test('auditDraft passes a clean LinkedIn draft', () => {
   assert.deepEqual(auditDraft(clean, 'li'), []);
 });
 
-test('auditDraft catches a LinkedIn draft over 300 characters', () => {
-  const long = 'x'.repeat(301);
-  const failures = auditDraft(long, 'li');
-  assert.equal(failures.length, 1);
-  assert.match(failures[0], /300 characters/);
+test('auditDraft does not cap length on either channel', () => {
+  const long = 'Nine of your fourteen open roles are data and ML. ' + 'The Databricks cutover lands the same quarter. '.repeat(20) + 'Want the map?';
+  assert.deepEqual(auditDraft(long, 'li'), []);
+  assert.deepEqual(auditDraft('Subject: austin data build\n' + long, 'em'), []);
 });
 
 test('auditDraft catches banned wording from both lists', () => {
@@ -179,12 +178,6 @@ test('auditDraft allows one em dash but not two', () => {
   assert.deepEqual(auditDraft('One — dash only. Want the map?', 'li'), []);
   const failures = auditDraft('One — dash — two. Want the map?', 'li');
   assert.ok(failures.some((f) => /em dashes/.test(f)));
-});
-
-test('auditDraft measures the email body, not the subject line', () => {
-  const body = Array.from({ length: 121 }, () => 'word').join(' ');
-  const failures = auditDraft('Subject: austin data build\n' + body, 'em');
-  assert.ok(failures.some((f) => /121 words/.test(f)));
 });
 
 test('auditDraft wants a subject line on email', () => {

@@ -40,8 +40,8 @@ export function quotaExceededMessage() {
 
 // ---------- channel spec + hard length limits (Engine 7 Lite LENGTH RULES) ----------
 export const CHANNELS = {
-  li:   'CHANNEL = LinkedIn. HARD LIMIT: 300 characters total. No subject line.',
-  em:   'CHANNEL = Email. Start with one short "Subject:" line — specific and pattern-interrupt, no hype, lowercase-leaning. Then the body. HARD LIMIT: body ≤ 120 words. Sign off with the sender\'s name.',
+  li:   'CHANNEL = LinkedIn. No subject line. Say what the message needs and stop; there is no character cap.',
+  em:   'CHANNEL = Email. Start with one short "Subject:" line — specific and pattern-interrupt, no hype, lowercase-leaning. Then the body. Say what the message needs and stop; there is no word cap. Sign off with the sender\'s name.',
   call: 'CHANNEL = a spoken call opener + a short voicemail (≤ ~30 seconds each). Same 4-part structure, written the way the sender would actually say it out loud, each ending on the asset-based CTA.',
 };
 
@@ -112,10 +112,6 @@ const MEETING_ASKS = [
   '15 min', '15-min', '30 minutes',
 ];
 
-function words(text) {
-  return String(text || '').trim().split(/\s+/).filter(Boolean).length;
-}
-
 // Email drafts open with a "Subject:" line; the body is what has the limit.
 export function splitSubject(text) {
   const match = String(text || '').match(/^\s*Subject:\s*(.+?)\s*\n([\s\S]*)$/i);
@@ -130,16 +126,11 @@ export function auditDraft(text, channel) {
   if (!draft) return ['The draft is empty.'];
 
   const failures = [];
-  const { subject, body } = channel === 'em' ? splitSubject(draft) : { subject: '', body: draft };
+  const { subject } = channel === 'em' ? splitSubject(draft) : { subject: '' };
   const haystack = draft.toLowerCase();
 
-  if (channel === 'li' && draft.length > 300) {
-    failures.push('LinkedIn is capped at 300 characters and this is ' + draft.length + '.');
-  }
-  if (channel === 'em') {
-    const count = words(body);
-    if (count > 120) failures.push('The email body is ' + count + ' words; the cap is 120.');
-    if (!subject) failures.push('The email is missing its "Subject:" first line.');
+  if (channel === 'em' && !subject) {
+    failures.push('The email is missing its "Subject:" first line.');
   }
 
   const hits = BANNED_STRINGS.filter((phrase) => haystack.includes(phrase));
