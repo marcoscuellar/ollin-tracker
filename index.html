@@ -564,6 +564,34 @@
   .ot-quote-text{margin-top:16px;font-size:clamp(28px,3.6vw,42px);font-weight:800;letter-spacing:-.03em;line-height:1.15;color:#F8F7F4;}
   .ot-quote-line{padding-bottom:6px;}
 
+  /* ---------- LOGIN ----------
+     Its own dark world regardless of the stored theme — you have not chosen
+     one yet at this point, and the design is dark. */
+  .ol-page{position:relative;overflow:hidden;min-height:100vh;background:#0A0A0A;display:flex;align-items:center;justify-content:center;padding:20px;font-family:'Archivo',Helvetica,Arial,sans-serif;}
+  .ol-hatch{position:absolute;inset:0;pointer-events:none;
+    background-image:repeating-linear-gradient(45deg,rgba(255,255,255,.05) 0,rgba(255,255,255,.05) 1px,transparent 1px,transparent 13px),
+                     repeating-linear-gradient(-45deg,rgba(255,255,255,.035) 0,rgba(255,255,255,.035) 1px,transparent 1px,transparent 19px);
+    animation:oh-drift 16s linear infinite;}
+  .ol-vig{position:absolute;inset:0;pointer-events:none;background:radial-gradient(60% 55% at 50% 30%,rgba(10,10,10,.85),rgba(10,10,10,0) 70%);}
+  .ol-card{position:relative;width:420px;max-width:calc(100vw - 40px);padding:44px 40px 40px;background:#141412;border:1px solid #26262B;border-radius:10px;}
+  .ol-brand{text-align:center;margin-bottom:36px;}
+  .ol-mark{font-size:30px;font-weight:800;letter-spacing:-.05em;line-height:1;color:#F8F7F4;}
+  .ol-lbl{margin-top:8px;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;letter-spacing:.16em;color:#9A968B;text-transform:uppercase;}
+  .ol-h{font-size:22px;font-weight:700;letter-spacing:-.02em;text-align:center;margin-bottom:28px;color:#F8F7F4;}
+  .ol-form{display:flex;flex-direction:column;gap:18px;}
+  .ol-field label{display:block;margin-bottom:8px;font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;letter-spacing:.14em;color:#9A968B;text-transform:uppercase;}
+  .ol-field input{width:100%;background:#0A0A0A;border:1px solid #26262B;border-radius:6px;padding:13px 14px;font-family:'Archivo',sans-serif;font-size:15px;color:#F8F7F4;outline:none;transition:border-color .18s ease;}
+  .ol-field input::placeholder{color:#5A564C;}
+  .ol-field input:focus{border-color:#5A564C;}
+  .ol-go{width:100%;background:#F8F7F4;color:#0A0A0A;border:none;border-radius:6px;padding:14px 22px;font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;letter-spacing:.14em;cursor:pointer;transition:background .18s ease;}
+  .ol-go:hover{background:#E7E5E0;}
+  .ol-go:disabled{opacity:.6;cursor:default;}
+  .ol-err{min-height:16px;margin-top:14px;text-align:center;font-size:13px;font-weight:500;color:#C97A6A;}
+  .ol-alt{margin-top:10px;text-align:center;font-size:12.5px;color:#9A968B;}
+  .ol-alt a{color:#9A968B;text-decoration:underline;cursor:pointer;}
+  .ol-alt a:hover{color:#C9A84C;}
+  @media (prefers-reduced-motion:reduce){ .ol-hatch{animation:none;} }
+
   /* ---------- CONTACTS ---------- */
   .oc-wrap{padding:34px 40px 0;max-width:1456px;margin:0 auto;}
   .oc-head{position:relative;overflow:hidden;background:#141412;border:1px solid #26262B;border-radius:6px;padding:36px 40px 32px;display:flex;align-items:flex-end;justify-content:space-between;gap:32px;flex-wrap:wrap;}
@@ -1723,21 +1751,26 @@
 <div class="app hide" id="appMain"></div>
 
 <div class="lock hide" id="lockScreen">
-  <div class="site">
-    <div class="lp-splash">
-      <div class="gl-mark brandmark"><svg viewBox="0 0 72 62" width="52" height="45"><circle cx="36" cy="36" r="21" stroke="#16130F" stroke-width="2.5" fill="none"/><circle cx="36" cy="6" r="5" fill="#1E9DA8"/><circle class="mv-dot" cx="61.98" cy="51" r="9" fill="#A83246"/><circle cx="10.02" cy="51" r="5" fill="#F5B700"/></svg><span class="bm-word">ōllin</span><span class="bm-tag">Movement</span></div>
-      <div class="lp-login-group">
-        <form id="lpLoginForm" class="lp-login-row" autocomplete="on">
-          <label for="lpEmailInput">Login:</label>
-          <input type="email" id="lpEmailInput" name="email" autocomplete="username" placeholder="you@work.com" aria-label="Email address">
-          <input type="password" id="lpPassInput" name="password" autocomplete="current-password" placeholder="Password" aria-label="Password" class="hide">
-          <button type="submit" id="lpLoginGo" aria-label="Log in"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
-        </form>
-        <p class="lp-err" id="lpErr"></p>
-        <p class="lp-signup">New to <span class="bm-word" style="font-size:15px">öllin</span>? <a id="lpSignupLink">Create an account</a></p>
-        <p class="lp-signup"><a href="?demo=1">Watch demo — upload a list &amp; make a reach out</a></p>
-      </div>
-      <p class="lp-contact">For more info email <a href="mailto:marcosmcuellar@gmail.com">Marcos Cuellar</a></p>
+  <div class="ol-page">
+    <div class="ol-hatch"></div><div class="ol-vig"></div>
+    <div class="ol-card">
+      <div class="ol-brand"><div class="ol-mark">ŌLLIN</div><div class="ol-lbl">Tracker</div></div>
+      <div class="ol-h">Log in here</div>
+      <form id="lpLoginForm" class="ol-form" autocomplete="on">
+        <div class="ol-field">
+          <label for="lpEmailInput">Email</label>
+          <input type="email" id="lpEmailInput" name="email" autocomplete="username" placeholder="you@work.com" autocapitalize="off" autocorrect="off">
+        </div>
+        <div class="ol-field">
+          <label for="lpPassInput">Password</label>
+          <input type="password" id="lpPassInput" name="password" autocomplete="current-password" placeholder="••••••••">
+        </div>
+        <button type="submit" id="lpLoginGo" class="ol-go">LOG IN →</button>
+      </form>
+      <p class="ol-err" id="lpErr"></p>
+      <div class="ol-alt">New here? <a id="lpSignupLink">Create an account</a></div>
+      <div class="ol-alt"><a id="lpForgotLink">Forgot password?</a></div>
+      <div class="ol-alt"><a href="?demo=1">Watch the demo — no account needed</a></div>
     </div>
   </div>
 
@@ -2503,19 +2536,13 @@
   function closeAuth(){ document.getElementById("authOverlay").classList.add("hide"); }
   function wireLanding(){
     var by=function(x){ return document.getElementById(x); };
-    // Splash IS the login form — no popup. Step 1: email → reveal password. Step 2: submit logs in directly.
+    // Both fields are on screen from the start, so this is one step now.
     var form=by("lpLoginForm"), ei=by("lpEmailInput"), pi=by("lpPassInput"), go=by("lpLoginGo"), errEl=by("lpErr");
     function showLpErr(m){ if(errEl) errEl.textContent=m||""; }
     if(form) form.addEventListener("submit", async function(e){
       e.preventDefault();
       var email=(ei.value||"").trim();
       if(!email){ showLpErr("Enter your email."); ei.focus(); return; }
-      if(pi.classList.contains("hide")){
-        showLpErr("");
-        pi.classList.remove("hide");
-        pi.focus();
-        return;
-      }
       var password=pi.value||"";
       if(!password){ showLpErr("Enter your password."); return; }
       showLpErr("");
@@ -2534,6 +2561,7 @@
       go.disabled=false;
     });
     var su=by("lpSignupLink"); if(su) su.addEventListener("click", function(){ openAuth("signup"); });
+    var fg=by("lpForgotLink"); if(fg) fg.addEventListener("click", function(){ doForgot((ei&&ei.value)||""); });
     if(by("authClose")) by("authClose").addEventListener("click", closeAuth);
     var ov=by("authOverlay"); if(ov) ov.addEventListener("click", function(e){ if(e.target===ov) closeAuth(); });
   }
