@@ -43,6 +43,31 @@
   :root[data-lt-theme="dark"],
   :root[data-lt-theme="dark"] body,
   :root[data-lt-theme="dark"] .app{background:#0A0A0A;}
+
+  /* Screens the redesign has not reached yet — add a contact, import a list,
+     manage account — are still built on the original light palette. Rather
+     than restyle each of them, remap the palette itself for dark, so a white
+     card with near-white text becomes a dark card with readable text
+     everywhere at once. The o2-* set is the same story, one system older. */
+  :root[data-lt-theme="dark"]{
+    --ink:#F8F7F4; --cream:#0A0A0A; --card:#141412; --bg:#0A0A0A; --panel:#141412;
+    --grey:#9A968B; --grey2:#7A7A74; --tint:#1B242B; --hover:#26262B;
+    --hairline:#26262B; --gold:#C9A84C; --honey:#7A93A8; --honey-d:#5C7A91;
+    --blue:#7A93A8; --blue900:#0B1C2C; --navy:#0B1C2C;
+    --o2-ink:#F8F7F4; --o2-slate:#9A968B; --o2-mute:#7A7A74;
+    --o2-hairline:#26262B; --o2-paper:#141412; --o2-hoverbg:#1A1A17;
+    --o2-accent:#C9A84C; --ollin-ink:#F8F7F4;
+  }
+  /* A few places hard-code white rather than reading --card. */
+  :root[data-lt-theme="dark"] .enginecard,
+  :root[data-lt-theme="dark"] .o2-bfyg textarea,
+  :root[data-lt-theme="dark"] .dc-script textarea{background:#141412;color:#F8F7F4;}
+  :root[data-lt-theme="dark"] .uploadzone{background:#0A0A0A;border-color:#3A3A34;}
+  :root[data-lt-theme="dark"] .uploadzone.drag{border-color:#7A93A8;background:#12181C;}
+  :root[data-lt-theme="dark"] .btn-primary{background:#F8F7F4;color:#0A0A0A;}
+  :root[data-lt-theme="dark"] select option{background:#141412;color:#F8F7F4;}
+  /* --navy is the dark card colour now, so anything drawn in it vanishes. */
+  :root[data-lt-theme="dark"] .uz-plus{color:#7A93A8;}
   *{margin:0;padding:0;box-sizing:border-box;}
   html,body{background:var(--bg);color:var(--ink);}
   body{font-family:'Geist',system-ui,sans-serif;-webkit-font-smoothing:antialiased;min-height:100vh;font-size:16px;}
