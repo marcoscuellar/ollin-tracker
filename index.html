@@ -830,15 +830,22 @@
   .lt-pstats{margin-top:34px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1px solid var(--lt-rule);border-bottom:1px solid var(--lt-rule);}
   .lt-pstat{padding:22px 24px;border-right:1px solid var(--lt-rule);}
   .lt-pstat:last-child{border-right:none;}
-  .lt-pstat-num{font-family:'IBM Plex Mono',monospace;font-size:30px;color:var(--lt-ink);line-height:1;}
+  .lt-pstat-num{font-family:'IBM Plex Mono',monospace;font-size:34px;font-weight:700;color:var(--lt-ink);line-height:1;}
   .lt-pstat-num.accent{color:var(--lt-accent);}
+  .lt-pstat-num.gold{color:#C9A84C;}
   .lt-pstat-lbl{margin-top:9px;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.14em;color:var(--lt-dim);}
   .lt-falloff{margin-top:32px;display:flex;align-items:flex-end;gap:14px;}
   .lt-fcol{flex:1;min-width:0;display:flex;flex-direction:column;gap:10px;}
   .lt-fcount{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--lt-ink);}
   .lt-ftrack{height:150px;display:flex;align-items:flex-end;}
-  .lt-fbar{width:100%;background:var(--lt-ink);border:1px solid var(--lt-ink);transition:height .8s cubic-bezier(.2,.8,.2,1);}
-  .lt-fbar.dim{background:var(--lt-accent-wash-a);border-color:rgba(27,77,255,.22);}
+  /* The bars step lighter as the funnel narrows, so the drop-off reads as a
+     fade rather than five identical blocks of different heights. */
+  .lt-fbar{width:100%;background:#5C7A91;transition:height .8s cubic-bezier(.2,.8,.2,1);}
+  .lt-fbar.s1{background:#6F8CA3;}
+  .lt-fbar.s2{background:#86A3B7;}
+  .lt-fbar.s3{background:#A0B7C7;}
+  .lt-fbar.s4{background:#C7D6E0;}
+  @media (prefers-reduced-motion:reduce){ .lt-fbar{transition:none;} }
   .lt-flbl{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.12em;color:var(--lt-dim);border-top:1px solid var(--lt-rule);padding-top:10px;}
   .lt-ffoot{margin-top:18px;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.12em;color:var(--lt-dim);}
 
@@ -846,12 +853,20 @@
   .lt-stagecol{display:flex;flex-direction:column;gap:12px;min-width:0;}
   .lt-stagecol-head{display:flex;align-items:baseline;justify-content:space-between;padding-bottom:12px;border-bottom:1px solid var(--lt-rule);font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.16em;color:var(--lt-dim);}
   .lt-stagecol-head.live{border-bottom-color:var(--lt-accent);color:var(--lt-accent);}
-  .lt-stagecard{background:var(--lt-surface);border:1px solid var(--lt-rule);border-radius:6px;padding:18px;cursor:pointer;}
-  .lt-stagecard-name{font-size:16px;font-weight:600;letter-spacing:-.01em;}
-  .lt-stagecard-co{margin-top:3px;font-size:13px;color:var(--lt-dim);}
-  .lt-stagecard-why{margin-top:12px;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.1em;color:var(--lt-dim);}
-  .lt-stagecard-why.live{color:var(--lt-accent);}
-  .lt-pbottom{margin-top:26px;background:var(--lt-surface);border:1px solid var(--lt-rule);border-radius:6px;padding:26px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:26px;}
+  .lt-stagecard{background:var(--lt-surface);border:1px solid var(--lt-rule);border-radius:6px;padding:16px;cursor:pointer;display:flex;gap:12px;align-items:flex-start;transition:transform .18s ease,border-color .18s ease;}
+  .lt-stagecard:hover{transform:translateY(-3px);border-color:var(--lt-rule2);}
+  @media (prefers-reduced-motion:reduce){ .lt-stagecard{transition:none;} .lt-stagecard:hover{transform:none;} }
+  .lt-stagecard-ava{width:30px;height:30px;border-radius:50%;background:rgba(122,147,168,.14);color:#7A93A8;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:700;flex-shrink:0;}
+  .lt-stagecard-name{font-size:15px;font-weight:600;letter-spacing:-.01em;}
+  .lt-stagecard-co{margin-top:2px;font-size:12px;color:var(--lt-mute);}
+  .lt-stagecard-why{margin-top:10px;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.1em;color:var(--lt-mute);}
+  .lt-stagecard-why.live{color:var(--lt-dim);}
+  .lt-pbottom{margin-top:28px;background:var(--lt-surface);border:1px solid var(--lt-rule);border-radius:6px;padding:30px 32px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));}
+  .lt-pbottom>div{padding:0 26px;border-right:1px solid var(--lt-rule);}
+  .lt-pbottom>div:first-child{padding-left:0;}
+  .lt-pbottom>div:last-child{border-right:none;padding-right:0;}
+  .lt-pfoot{margin-top:8px;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.1em;color:var(--lt-mute);}
+  .lt-pfoot.blue{color:var(--lt-accent);}
 
   /* ---- Contacts: command-bar search (phase 2) ---- */
   .o2-view{font-family:'Archivo',sans-serif;display:grid;grid-template-columns:minmax(0,1fr) minmax(300px,400px);min-height:calc(100vh - 158px);}
@@ -3956,8 +3971,21 @@
   var ltPipelineOpenIdx=null;
   function renderPipeline(m){
     var contacts=asContacts();
-    var wrap=el('<div class="lt-wrap"></div>');
-    var hero=el('<div class="lt-hero"><h1 class="lt-hero-title">Pipeline</h1><p class="lt-hero-sub">Measured in reach-outs, not revenue. Where everyone sits in their cadence, and what came back.</p></div>');
+
+    var q=ltQuote().split("|");
+    var qWrap=el('<div class="ot-quotewrap"><div class="ot-quote"><div class="ot-quote-glow"></div><div class="ot-quote-vig"></div>'+
+      '<div class="ot-quote-in"><div class="ot-quote-body">'+
+        '<div class="ot-quote-eyebrow">RIGHT WHERE YOU LEFT OFF · SO YOU WON’T MISS A BEAT</div>'+
+        '<div class="ot-quote-text">'+q.map(function(line){ return '<div class="ot-quote-line">'+esc(line)+'</div>'; }).join("")+'</div>'+
+      '</div></div></div></div>');
+    qWrap.querySelector(".ot-quote").addEventListener("click", function(){
+      ltQuoteIdx = (ltQuoteIdx===null ? ltQuoteDayIdx() : ltQuoteIdx) + 1; render();
+    });
+    m.appendChild(qWrap);
+
+    var wrap=el('<div class="oc-wrap"></div>');
+    var hero=el('<div class="oc-head" style="display:block;"><div class="oc-eyebrow">Pipeline</div>'+
+      '<div class="oc-sub" style="max-width:52ch;">Measured in reach-outs, not revenue. Where everyone sits in their cadence, and what came back.</div></div>');
 
     var touches30=ltTouchesSent30d();
     var repliesBack=contacts.filter(function(c){ return c.status==="warm"||c.status==="meeting"; }).length;
@@ -3966,14 +3994,14 @@
       '<div class="lt-pstat"><div class="lt-pstat-num">'+touches30+'</div><div class="lt-pstat-lbl">TOUCHES SENT · 30D</div></div>'+
       '<div class="lt-pstat"><div class="lt-pstat-num">'+repliesBack+'</div><div class="lt-pstat-lbl">REPLIES BACK</div></div>'+
       '<div class="lt-pstat"><div class="lt-pstat-num accent">'+replyRate+'%</div><div class="lt-pstat-lbl">REPLY RATE</div></div>'+
-      '<div class="lt-pstat"><div class="lt-pstat-num">—</div><div class="lt-pstat-lbl">AVG TIME TO REPLY</div></div>'+
+      '<div class="lt-pstat"><div class="lt-pstat-num gold">—</div><div class="lt-pstat-lbl">AVG TIME TO REPLY</div></div>'+
     '</div>'));
 
     var counts=ltFalloffCounts(contacts), maxCount=Math.max(1, counts[0]);
     var falloff=el('<div class="lt-falloff"></div>');
     counts.forEach(function(n, idx){
       var pct=Math.round(n/maxCount*100);
-      falloff.appendChild(el('<div class="lt-fcol"><div class="lt-fcount">'+n+'</div><div class="lt-ftrack"><div class="lt-fbar'+(idx>0?" dim":"")+'" style="height:'+pct+'%;"></div></div><div class="lt-flbl">TOUCH '+(idx+1)+'</div></div>'));
+      falloff.appendChild(el('<div class="lt-fcol"><div class="lt-fcount">'+n+'</div><div class="lt-ftrack"><div class="lt-fbar'+(idx?" s"+idx:"")+'" style="height:'+pct+'%;"></div></div><div class="lt-flbl">TOUCH '+(idx+1)+'</div></div>'));
     });
     hero.appendChild(falloff);
     hero.appendChild(el('<div class="lt-ffoot">MOST PEOPLE ANSWER BY TOUCH 3 — THE ONES WHO DON’T USUALLY NEVER WILL</div>'));
@@ -3996,7 +4024,10 @@
       var col=el('<div class="lt-stagecol"><div class="lt-stagecol-head'+(live?" live":"")+'"><div>'+key+'</div><div>'+list.length+'</div></div></div>');
       list.slice(0,4).forEach(function(c){
         var idx=flatRows.length; flatRows.push(c);
-        var card=el('<div class="lt-stagecard"><div class="lt-stagecard-name">'+esc(c.name)+'</div><div class="lt-stagecard-co">'+esc(c.account||"")+'</div><div class="lt-stagecard-why'+(live?" live":"")+'">'+ltStageReason(c)+'</div></div>');
+        var card=el('<div class="lt-stagecard"><div class="lt-stagecard-ava">'+esc(initials(c.name))+'</div>'+
+          '<div style="min-width:0;"><div class="lt-stagecard-name">'+esc(c.name)+'</div>'+
+          '<div class="lt-stagecard-co">'+esc(c.account||"")+'</div>'+
+          '<div class="lt-stagecard-why'+(live?" live":"")+'">'+ltStageReason(c)+'</div></div></div>');
         card.addEventListener("click", function(){ ltPipelineOpenIdx = ltPipelineOpenIdx===idx ? null : idx; render(); });
         col.appendChild(card);
       });
@@ -4009,15 +4040,21 @@
       wrap.appendChild(buildLtBrief(briefRows, ltPipelineOpenIdx));
     }
 
-    var thisMonday=ltMonday(new Date()), reachThisWeek=0;
-    for(var d=0; d<7; d++){ reachThisWeek+=dayTotal(iso(addDays(iso(thisMonday), d))); }
+    var thisMonday=ltMonday(new Date()), reachThisWeek=0, reachLastWeek=0;
+    for(var d=0; d<7; d++){
+      reachThisWeek+=dayTotal(iso(addDays(iso(thisMonday), d)));
+      reachLastWeek+=dayTotal(iso(addDays(iso(thisMonday), d-7)));
+    }
     ltUpdateColdStreak(contacts);
     var coldDays=ltColdStreakDays();
+    // Each number gets a line of context underneath. Where there is nothing
+    // honest to compare against yet, it says so rather than inventing a trend.
+    function pfoot(text, blue){ return '<div class="lt-pfoot'+(blue?" blue":"")+'">'+text+'</div>'; }
     wrap.appendChild(el('<div class="lt-pbottom">'+
-      '<div><div class="lt-pstat-lbl">REACH-OUTS THIS WEEK</div><div class="lt-pstat-num accent" style="margin-top:10px;">'+reachThisWeek+'</div></div>'+
-      '<div><div class="lt-pstat-lbl">REPLY RATE</div><div class="lt-pstat-num" style="margin-top:10px;">'+replyRate+'%</div></div>'+
-      '<div><div class="lt-pstat-lbl">AVG DAYS TO REPLY</div><div class="lt-pstat-num" style="margin-top:10px;">—</div></div>'+
-      '<div><div class="lt-pstat-lbl">NOTHING FELL THROUGH</div><div class="lt-pstat-num" style="margin-top:10px;">'+coldDays+'</div><div style="margin-top:6px;font-family:\'IBM Plex Mono\',monospace;font-size:10px;color:var(--lt-dim);">DAY'+(coldDays===1?"":"S")+' RUNNING</div></div>'+
+      '<div><div class="lt-pstat-lbl">REACH-OUTS THIS WEEK</div><div class="lt-pstat-num accent" style="margin-top:10px;">'+reachThisWeek+'</div>'+pfoot("LAST WEEK "+reachLastWeek)+'</div>'+
+      '<div><div class="lt-pstat-lbl">REPLY RATE</div><div class="lt-pstat-num" style="margin-top:10px;">'+replyRate+'%</div>'+pfoot(repliesBack+" OF "+touches30+" · 30D")+'</div>'+
+      '<div><div class="lt-pstat-lbl">AVG DAYS TO REPLY</div><div class="lt-pstat-num" style="margin-top:10px;">—</div>'+pfoot("NOT TRACKED YET")+'</div>'+
+      '<div><div class="lt-pstat-lbl">NOTHING FELL THROUGH</div><div class="lt-pstat-num gold" style="margin-top:10px;">'+coldDays+'</div>'+pfoot("DAY"+(coldDays===1?"":"S")+" RUNNING")+'</div>'+
     '</div>'));
 
     m.appendChild(wrap);
