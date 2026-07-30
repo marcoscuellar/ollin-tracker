@@ -27,17 +27,19 @@
     --lt-ai-surface:#F1F4FF; --lt-ai-rule:#BCCBFF; --lt-ai-rule2:#D8E0FF;
     --lt-poster-bg:#0B0B09; --lt-poster-fg:#F4F2ED; --lt-row-hover:#F7F7FA;
   }
-  /* Dark theme — pink accent. A token swap on the same components per the
-     handoff ("same system, Home + Today only" was just what got mocked up;
-     Contacts/Pipeline inherit the same tokens automatically). */
+  /* Dark theme — the locked ŌLLIN palette. Blue #7A93A8 carries state and
+     emphasis, gold #C9A84C is the rare accent. Every screen reads these, so
+     Contacts and Pipeline pick up the design system without their own rules. */
   :root[data-lt-theme="dark"]{
-    --lt-paper:#0A0A0A; --lt-surface:#0C0C0B; --lt-ink:#EDEDEA; --lt-ink2:#C9C9C2;
-    --lt-mute:#9A9A94; --lt-dim:#7A7A74; --lt-rule:#1E1E1C; --lt-rule2:#2A2A26;
-    --lt-accent:#FF4D91; --lt-accent-deep:#FF4D91; --lt-accent-alt:#C9A7B6;
-    --lt-accent-wash-a:rgba(255,77,145,.14); --lt-accent-wash-b:rgba(255,77,145,.10);
-    --lt-ai-surface:#140C11; --lt-ai-rule:#3A2630; --lt-ai-rule2:#2A1A22;
-    --lt-poster-bg:#050505; --lt-poster-fg:#EDEDEA; --lt-row-hover:#141412;
+    --lt-paper:#0A0A0A; --lt-surface:#141412; --lt-ink:#F8F7F4; --lt-ink2:#C9C9C2;
+    --lt-mute:#9A968B; --lt-dim:#7A7A74; --lt-rule:#26262B; --lt-rule2:#3A3A34;
+    --lt-accent:#7A93A8; --lt-accent-deep:#7A93A8; --lt-accent-alt:#C9A84C;
+    --lt-accent-wash-a:rgba(122,147,168,.22); --lt-accent-wash-b:rgba(122,147,168,.12);
+    --lt-ai-surface:#0F1418; --lt-ai-rule:#26343F; --lt-ai-rule2:#1B242B;
+    --lt-poster-bg:#050505; --lt-poster-fg:#F8F7F4; --lt-row-hover:#141412;
   }
+  /* The app card stops at 1456px; the page behind it has to match. */
+  :root[data-lt-theme="dark"] body{background:#0A0A0A;}
   *{margin:0;padding:0;box-sizing:border-box;}
   html,body{background:var(--bg);color:var(--ink);}
   body{font-family:'Geist',system-ui,sans-serif;-webkit-font-smoothing:antialiased;min-height:100vh;font-size:16px;}
@@ -230,6 +232,11 @@
   .verifybar{border:.5px solid var(--hairline);border-left:3px solid var(--gold);background:var(--cream);padding:10px 14px;margin-bottom:14px;font-size:12.5px;line-height:1.5;color:var(--grey);}
   .demobar{border:.5px solid var(--ollin-maroon);border-left:3px solid var(--ollin-maroon);background:rgba(168,50,70,.06);padding:10px 14px;margin-bottom:14px;font-size:12.5px;line-height:1.5;color:var(--ink);max-width:840px;margin-left:auto;margin-right:auto;border-radius:var(--radius);}
   .demobar a{color:var(--ollin-maroon);font-weight:600;text-decoration:underline;cursor:pointer;margin-left:6px;}
+  /* Both bars sit on the dark page, so they cannot keep the paper palette. */
+  :root[data-lt-theme="dark"] .demobar{background:rgba(122,147,168,.10);border-color:#7A93A8;color:#C9C9C2;}
+  :root[data-lt-theme="dark"] .demobar a{color:#7A93A8;}
+  :root[data-lt-theme="dark"] .verifybar{background:rgba(201,168,76,.10);border-color:#26262B;border-left-color:#C9A84C;color:#C9C9C2;}
+  :root[data-lt-theme="dark"] .verifybar a{color:#C9A84C;}
   .verifybar a{color:var(--gold);font-weight:600;cursor:pointer;text-decoration:underline;}
   /* plan / founding-member gating */
   .planbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;border:.5px solid var(--hairline);border-left:3px solid var(--blue);background:var(--cream);padding:10px 14px;margin-bottom:14px;font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:.06em;color:var(--grey);}
@@ -393,7 +400,9 @@
   .lt-app{font-family:'Archivo',Helvetica,Arial,sans-serif;background:var(--lt-paper);color:var(--lt-ink);padding-bottom:48px;}
   .lt-head{background:var(--lt-surface);display:flex;align-items:center;justify-content:space-between;padding:20px 40px;border-bottom:1px solid var(--lt-rule);font-family:'Archivo',sans-serif;}
   .lt-head-l{display:flex;align-items:center;gap:36px;}
-  .lt-logo{cursor:pointer;}
+  .lt-logo{cursor:pointer;display:flex;align-items:center;gap:10px;}
+  .lt-mark{font-size:20px;font-weight:800;letter-spacing:-.05em;line-height:1;color:var(--lt-ink);}
+  .lt-marklbl{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;letter-spacing:.1em;color:var(--lt-mute);text-transform:uppercase;}
   .lt-word-wrap{height:11px;overflow:hidden;}
   .lt-word-top{font-size:23px;font-weight:800;letter-spacing:-.04em;line-height:1;color:var(--lt-ink);}
   .lt-word-cut{transform:translateX(4px);height:11px;overflow:hidden;transition:transform .3s var(--lt-ease,cubic-bezier(.2,.8,.2,1));}
@@ -542,6 +551,26 @@
   .lt-counter-num.accent{color:var(--lt-accent);}
   .lt-counter-sub{margin-top:8px;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--lt-dim);}
 
+  /* ---------- TODAY header: quote card + list/goal card ----------
+     Dark-locked like Home. The quote is the first thing you read in the
+     morning, so it gets the full-width card and the corner glow. */
+  .ot-quotewrap{padding:34px 40px 0;max-width:1456px;margin:0 auto;}
+  .ot-quote{position:relative;overflow:hidden;border-radius:12px;background:#0A0A0A;cursor:pointer;}
+  .ot-quote-glow{position:absolute;top:0;left:0;width:280px;height:280px;z-index:0;pointer-events:none;background:radial-gradient(circle at 0% 0%,rgba(122,147,168,.45),rgba(122,147,168,0) 70%);}
+  .ot-quote-vig{position:absolute;inset:0;pointer-events:none;background:radial-gradient(120% 100% at 12% 15%,#0A0A0A 32%,rgba(10,10,10,.55) 62%,rgba(10,10,10,.15) 100%);}
+  .ot-quote-in{position:relative;padding:36px 0;}
+  .ot-quote-body{max-width:900px;padding:34px 0 38px;display:grid;}
+  .ot-quote-eyebrow{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.18em;color:#9A968B;text-transform:uppercase;}
+  .ot-quote-text{margin-top:16px;font-size:clamp(28px,3.6vw,42px);font-weight:800;letter-spacing:-.03em;line-height:1.15;color:#F8F7F4;}
+  .ot-quote-line{padding-bottom:6px;}
+
+  .ot-statwrap{padding:26px 40px 0;max-width:1456px;margin:0 auto;}
+  .ot-stat{position:relative;background:#141412;border:1px solid #26262B;border-radius:6px;padding:28px 32px;display:flex;align-items:center;justify-content:space-between;gap:32px;flex-wrap:wrap;}
+  .ot-stat-l{min-width:280px;}
+  .ot-stat-lbl{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.16em;color:#7A93A8;text-transform:uppercase;}
+  .ot-stat-sub{margin-top:8px;font-size:16px;line-height:1.5;color:#9A968B;}
+  .ot-stat-r{display:flex;align-items:center;gap:14px;}
+
   .lt-cards-wrap{padding:0 40px;max-width:1456px;margin:0 auto;}
   .lt-cards-head{display:flex;align-items:baseline;justify-content:space-between;padding-bottom:18px;}
   .lt-cards-title{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.18em;color:var(--lt-dim);}
@@ -571,7 +600,13 @@
   .lt-slide-fill{height:5px;border-radius:3px;background:var(--lt-mute);}
   .lt-slide-fill.accent{background:var(--lt-accent);}
   .lt-slide-actions{display:flex;gap:9px;}
-  .lt-slide-open{flex:1;text-align:center;padding:12px;border-radius:6px;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;letter-spacing:.12em;border:1px solid var(--lt-ink);color:var(--lt-ink);background:none;}
+  /* Corner glow, matching the quote card above it — same light source. */
+  .lt-slide-glow{position:absolute;top:0;left:0;width:180px;height:180px;z-index:0;pointer-events:none;background:radial-gradient(circle at 0% 0%,rgba(122,147,168,.45),rgba(122,147,168,0) 70%);}
+  .lt-slide{transition:transform .2s ease,border-color .2s ease;}
+  .lt-slide:hover{transform:translateY(-5px);}
+  @media (prefers-reduced-motion:reduce){ .lt-slide{transition:none;} .lt-slide:hover{transform:none;} }
+  .lt-slide-open{flex:1;text-align:center;padding:12px;border-radius:6px;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;letter-spacing:.12em;border:1px solid #F8F7F4;color:#0A0A0A;background:#F8F7F4;cursor:pointer;transition:background .18s ease,border-color .18s ease;}
+  .lt-slide-open:hover{background:#C9A84C;border-color:#C9A84C;}
   .lt-slide-open.solid{background:var(--lt-accent);border-color:var(--lt-accent);color:#FAF9F6;}
   .lt-slide-later{border-radius:6px;padding:12px 14px;border:1px solid var(--lt-rule2);color:var(--lt-mute);font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.12em;background:none;}
   /* per-card themes — a fixed palette cycled by index, not app light/dark mode */
@@ -2583,8 +2618,10 @@
   var CH_LABEL = { li:"LinkedIn", em:"Email", call:"Call" };
   var STEP_NAMES = ["Outreach","Follow up","Nudge","Break up","Final attempt"];
   var navView="landing", contactsMode="list", ltPosterIndex=null;
-  var ltTheme="light";
-  try{ ltTheme = localStorage.getItem("tracker:ltTheme")||"light"; }catch(e){}
+  // Dark is the design's default — every screen is drawn on #0A0A0A. The
+  // toggle stays for anyone who wants light; only the starting point moved.
+  var ltTheme="dark";
+  try{ ltTheme = localStorage.getItem("tracker:ltTheme")||"dark"; }catch(e){}
   function ltSetTheme(t){
     ltTheme=t;
     try{ localStorage.setItem("tracker:ltTheme", t); }catch(e){}
@@ -2885,10 +2922,12 @@
   }
   function buildNav(m){
     var now=new Date();
-    var TABS=[["landing","HOME"],["home","TODAY"],["contacts","CONTACTS"],["pipeline","PIPELINE"]];
+    // Three tabs, per the design. Home is the wordmark — clicking it goes back
+    // to the greeting screen, which is the only way back now that HOME is gone.
+    var TABS=[["home","TODAY"],["contacts","CONTACTS"],["pipeline","PIPELINE"]];
     var hh=String(now.getHours()).padStart(2,"0"), mm=String(now.getMinutes()).padStart(2,"0");
     var nowStr=DOW[now.getDay()]+" · "+now.getDate()+" "+MON[now.getMonth()]+" · "+hh+":"+mm;
-    var nav=el('<div class="lt-head"><div class="lt-head-l"><div class="lt-logo"><div class="lt-word-wrap"><div class="lt-word-top">ŌLLIN</div></div><div class="lt-word-cut"><div class="lt-word-bottom">ŌLLIN</div></div></div><div class="lt-navlinks" id="navTabs"></div></div><div class="lt-head-r"><span class="lt-headtime">'+nowStr+'</span><button class="lt-theme-toggle" id="navThemeToggle" title="Switch theme">'+(ltTheme==="dark"?"LIGHT":"DARK")+'</button><div class="lt-ava" id="navAva" title="Account">'+esc(avaInitial())+'</div></div></div>');
+    var nav=el('<div class="lt-head"><div class="lt-head-l"><div class="lt-logo"><div class="lt-mark">ŌLLIN</div><span class="lt-marklbl">Tracker</span></div><div class="lt-navlinks" id="navTabs"></div></div><div class="lt-head-r"><span class="lt-headtime">'+nowStr+'</span><button class="lt-theme-toggle" id="navThemeToggle" title="Switch theme">'+(ltTheme==="dark"?"LIGHT":"DARK")+'</button><div class="lt-ava" id="navAva" title="Account">'+esc(avaInitial())+'</div></div></div>');
     nav.querySelector(".lt-logo").addEventListener("click", function(){ setView("landing"); });
     nav.querySelector("#navThemeToggle").addEventListener("click", function(e){ e.stopPropagation(); ltSetTheme(ltTheme==="dark"?"light":"dark"); render(); });
     var ntabs=nav.querySelector("#navTabs");
@@ -3331,6 +3370,22 @@
     });
     return wrap;
   }
+  /* The morning quote. Two lines each, split on "|" so the break is chosen
+     rather than left to the browser. Rotates daily; clicking steps through. */
+  var LT_QUOTES=[
+    "“The most certain way to succeed is|always to try just one more time.” – Edison",
+    "“Care enough to create value for customers.|If you get that part right, selling is easy.” – Iannarino",
+    "“Nobody counts the number of ads you run;|they just remember the impression you make.” – Ogilvy",
+    "“Approach each customer with the idea of helping|solve a problem.” – Brian Tracy",
+    "“The best time to plant a tree was twenty years ago.|The second best time is now.” – Proverb",
+    "“Amateurs sit and wait for inspiration.|The rest of us just get up and go to work.” – Chuck Close",
+    "“You miss 100% of the shots|you don’t take.” – Wayne Gretzky",
+    "“Success is the sum of small efforts|repeated day in and day out.” – Robert Collier"
+  ];
+  var ltQuoteIdx=null; // null = today's, a number = the user clicked through
+  function ltQuoteDayIdx(){ return new Date().getDate() % LT_QUOTES.length; }
+  function ltQuote(){ return LT_QUOTES[(ltQuoteIdx===null ? ltQuoteDayIdx() : ltQuoteIdx) % LT_QUOTES.length]; }
+
   function renderToday(m){
     var waiting=ltWaitingList();
     var shown=waiting.slice(0,6);
@@ -3346,38 +3401,45 @@
     }
 
     var now=new Date();
-    function ltWeekTotal(mondayDate){ var sum=0, mIso=iso(mondayDate); for(var d=0; d<7; d++){ sum+=dayTotal(iso(addDays(mIso,d))); } return sum; }
     var thisMonday=ltMonday(now);
-    var thisWeekDone=ltWeekTotal(thisMonday);
-    var lastWeekDone=ltWeekTotal(addDays(iso(thisMonday), -7));
-    var doneToday=dayTotal(todayStr());
-    var inCadence=asContacts().filter(function(c){ return c.status==="active" && !c.complete; }).length;
 
-    var greet=el('<div class="lt-greet"></div>');
-    var titleText = waiting.length===0 ? "Nothing’s waiting." : (waiting.length===1 ? "One person is waiting on you." : waiting.length+" people are waiting on you.");
-    var bodyText = thisWeekDone>0 ? ("Start with one. "+thisWeekDone+" already went out this week.") : "Start with one.";
-    var greetLeft=el('<div><div class="lt-greet-date">'+DOW_FULL[now.getDay()]+" · "+now.getDate()+" "+MON_FULL[now.getMonth()]+'</div><div class="lt-greet-title">'+esc(titleText)+'</div><div class="lt-greet-body">'+esc(bodyText)+'</div></div>');
-    greet.appendChild(greetLeft);
-    var counters=el('<div class="lt-counters">'+
-      '<div class="lt-card"><div class="lt-card-lbl">DONE TODAY</div><div class="lt-counter-num accent">'+doneToday+'</div><div class="lt-counter-sub">/ '+shown.length+' QUEUED</div></div>'+
-      '<div class="lt-card"><div class="lt-card-lbl">THIS WEEK</div><div class="lt-counter-num">'+thisWeekDone+'</div><div class="lt-counter-sub">LAST WEEK '+lastWeekDone+'</div></div>'+
-      '<div class="lt-card"><div class="lt-card-lbl">IN CADENCE</div><div class="lt-counter-num">'+inCadence+'</div><div class="lt-counter-sub">'+contactCount()+' CONTACTS</div></div>'+
-    '</div>');
-    greet.appendChild(counters);
-    m.appendChild(greet);
+    // Click cycles to the next quote — same gesture the poster strip uses.
+    var q=ltQuote().split("|");
+    var qWrap=el('<div class="ot-quotewrap"><div class="ot-quote"><div class="ot-quote-glow"></div><div class="ot-quote-vig"></div>'+
+      '<div class="ot-quote-in"><div class="ot-quote-body">'+
+        '<div class="ot-quote-eyebrow">RIGHT WHERE YOU LEFT OFF · SO YOU WON’T MISS A BEAT</div>'+
+        '<div class="ot-quote-text">'+q.map(function(line){ return '<div class="ot-quote-line">'+esc(line)+'</div>'; }).join("")+'</div>'+
+      '</div></div></div></div>');
+    qWrap.querySelector(".ot-quote").addEventListener("click", function(){
+      ltQuoteIdx = (ltQuoteIdx===null ? ltQuoteDayIdx() : ltQuoteIdx) + 1; render();
+    });
+    m.appendChild(qWrap);
 
-    var cardsWrap=el('<div class="lt-cards-wrap"></div>');
-    var head=el('<div class="lt-cards-head"><div class="lt-cards-title">&gt; TODAY’S LIST · '+shown.length+'</div><div class="lt-cards-ctrl"><div class="lt-dots" id="ltDots"></div><div class="lt-arrows"><button class="lt-arrow" id="ltPrev">←</button><button class="lt-arrow" id="ltNext">→</button></div><div class="lt-drag-lbl">DRAG</div></div></div>');
-    cardsWrap.appendChild(head);
+    // The list header doubles as the carousel's control panel, so the count and
+    // the thing that moves through it never drift apart.
+    var statWrap=el('<div class="ot-statwrap"><div class="ot-stat">'+
+      '<div class="ot-stat-l"><div class="ot-stat-lbl">TODAY’S LIST · '+shown.length+'</div>'+
+        '<div class="ot-stat-sub">'+(shown.length ? "Ōllin will get you to your goal, one contact at a time." : "Nothing’s waiting. Go outside.")+'</div></div>'+
+      '<div class="ot-stat-r"><div class="lt-dots" id="ltDots"></div>'+
+        '<div class="lt-arrows"><button class="lt-arrow" id="ltPrev">←</button><button class="lt-arrow" id="ltNext">→</button></div>'+
+        '<div class="lt-drag-lbl">DRAG</div></div>'+
+    '</div></div>');
+    m.appendChild(statWrap);
+
+    var cardsWrap=el('<div class="lt-cards-wrap" style="margin-top:26px;"></div>');
+    var head=statWrap;
 
     if(shown.length){
       var viewport=el('<div class="lt-viewport" tabindex="0"></div>');
       var track=el('<div class="lt-track"></div>');
       shown.forEach(function(item,idx){
-        var c=item.c, i=item.i, isFirst=idx===0, theme=ltCardTheme(idx);
+        // Uniform in the deck — the design varies the detail header per contact,
+        // not the queue. Six different card colours read as six categories.
+        var c=item.c, i=item.i, isFirst=idx===0, theme="black";
         var progress=Math.max(4, Math.round((c.step/5)*100));
         var slide=el('<div class="lt-slide theme-'+theme+'"></div>');
         slide.appendChild(el('<div class="lt-slide-wash"></div>'));
+        slide.appendChild(el('<div class="lt-slide-glow"></div>'));
         slide.appendChild(el('<div class="lt-slide-top"><div class="lt-slide-eyebrow'+(isFirst?" accent":"")+'">'+ltCardEyebrow(item)+'</div><div class="lt-slide-touch">TOUCH '+(c.step+1)+'/5</div></div>'));
         slide.appendChild(el('<div><div class="lt-slide-name">'+esc(c.name)+'</div><div class="lt-slide-title">'+esc((c.title||"")+(c.title&&c.account?" · ":"")+(c.account||""))+'</div></div>'));
         slide.appendChild(el('<div class="lt-slide-body">'+ltCardBody(item)+'</div>'));
