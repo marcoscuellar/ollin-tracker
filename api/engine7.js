@@ -82,6 +82,95 @@ export const SYSTEM = [
   'QUALITY CHECK before returning: opens about them · sender line is brief and uses the provided identity · curiosity present · CTA is asset-based · CTA is the final line · no banned words or phrases · channel length respected · no meeting ask · no invented sender name and no fabricated signal.',
 ].join('\n');
 
+// ---------- audit (Engine 8 § 6, the decidable half) ----------
+// The QUALITY CHECK above is an instruction, and a model marking its own
+// homework passes itself on length and banned words more often than it should.
+// These are the checks that need no judgement, so they are made here instead of
+// asked for. A failure is fed back verbatim for one rewrite — per the ŌLLIN
+// Systems Engine 8 rule that any NO is a rewrite, not a ship.
+
+// Everything SYSTEM already bans, plus the Engine 8 list. Lower-case; matched
+// as substrings against the lower-cased draft.
+export const BANNED_STRINGS = [
+  // Engine 7 Lite's own list
+  'check-in', 'synergy', 'just reaching out', 'might be worth', 'no pressure',
+  'wanted to reach out', 'pick your brain', 'circle back', 'let me know',
+  'would love to connect', 'are you open to a call', 'can we meet',
+  'i hope this finds you well',
+  // Engine 8 § 4
+  'leverage', 'robust', 'seamless', 'landscape', 'circling back',
+  'reaching out', 'at the end of the day', "in today's", 'game-changer',
+  'deep dive', 'unlock', 'empower', 'journey', 'excited to',
+  'talent solutions', 'talent needs', 'best-in-class', 'world-class',
+  'top-tier talent', 'quick question', 'following up', 'touching base',
+];
+
+// A meeting ask is never the primary CTA — SYSTEM says so, this proves it.
+const MEETING_ASKS = [
+  'do you have 15 minutes', 'hop on a call', 'book a time', 'grab time',
+  'find a time', 'schedule a call', 'on my calendar', 'your calendar',
+  '15 min', '15-min', '30 minutes',
+];
+
+function words(text) {
+  return String(text || '').trim().split(/\s+/).filter(Boolean).length;
+}
+
+// Email drafts open with a "Subject:" line; the body is what has the limit.
+export function splitSubject(text) {
+  const match = String(text || '').match(/^\s*Subject:\s*(.+?)\s*\n([\s\S]*)$/i);
+  if (!match) return { subject: '', body: String(text || '').trim() };
+  return { subject: match[1].trim(), body: match[2].trim() };
+}
+
+// Returns [] when the draft is shippable, otherwise one plain sentence per
+// failure — written to be handed straight back to the model.
+export function auditDraft(text, channel) {
+  const draft = String(text || '').trim();
+  if (!draft) return ['The draft is empty.'];
+
+  const failures = [];
+  const { subject, body } = channel === 'em' ? splitSubject(draft) : { subject: '', body: draft };
+  const haystack = draft.toLowerCase();
+
+  if (channel === 'li' && draft.length > 300) {
+    failures.push('LinkedIn is capped at 300 characters and this is ' + draft.length + '.');
+  }
+  if (channel === 'em') {
+    const count = words(body);
+    if (count > 120) failures.push('The email body is ' + count + ' words; the cap is 120.');
+    if (!subject) failures.push('The email is missing its "Subject:" first line.');
+  }
+
+  const hits = BANNED_STRINGS.filter((phrase) => haystack.includes(phrase));
+  if (hits.length) failures.push('Banned wording used: ' + hits.join(', ') + '.');
+
+  // "help" family is scrubbed from sender copy; it must not come back in the draft.
+  if (/\bhelp(s|ing|ed)?\b/i.test(draft)) {
+    failures.push('Uses the banned word "help".');
+  }
+
+  const meeting = MEETING_ASKS.filter((phrase) => haystack.includes(phrase));
+  if (meeting.length) {
+    failures.push('Asks for a meeting (' + meeting.join(', ') + '); the CTA must be asset-based.');
+  }
+
+  const emDashes = (draft.match(/—/g) || []).length;
+  if (emDashes > 1) failures.push(emDashes + ' em dashes; the maximum is one.');
+
+  return failures;
+}
+
+// The rewrite instruction, given what failed.
+export function rewritePrompt(failures) {
+  return (
+    'That draft failed its own quality check:\n' +
+    failures.map((f) => '- ' + f).join('\n') +
+    '\n\nRewrite it. Same sender, same prospect, same angle, same structure. ' +
+    'Fix every line above and change nothing else that was working. Return only the message.'
+  );
+}
+
 // Draft angle frame — the three tabs in the brief UI (THE GAP / COST OF
 // WAITING / THE PERSON). Each steers the same Engine 7 structure toward a
 // different argument without changing the rules (banned words, CTA, length).

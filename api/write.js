@@ -4,7 +4,7 @@
 // The pure prompt/sender/angle logic lives in ./engine7.js (I/O-free, tested);
 // this file only wires it to auth, the monthly quota, and the Anthropic call.
 import { kv, send, readJson, requireSession, userKey } from './_lib.js';
-import { FREE_AI_PER_MONTH, quotaExceededMessage, buildDraftPrompt } from './engine7.js';
+import { FREE_AI_PER_MONTH, quotaExceededMessage, buildDraftPrompt, auditDraft, rewritePrompt } from './engine7.js';
 
 const MODEL = 'claude-sonnet-5';
 function monthKey() { return new Date().toISOString().slice(0, 7); } // 'YYYY-MM'
@@ -32,9 +32,11 @@ export default async function handler(req, res) {
   const body = await readJson(req);
   // All Engine 7 Lite logic — sender resolution, soft angle handling, prompt
   // assembly — is pure and lives in engine7.js.
-  const { system, prompt, angleWarning } = buildDraftPrompt(user, body);
+  const { system, prompt, angleWarning, channel } = buildDraftPrompt(user, body);
 
-  try {
+  // One turn of the conversation. Returns the draft text, or throws the
+  // upstream failure for the caller to translate.
+  async function ask(messages) {
     const r = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
@@ -46,21 +48,47 @@ export default async function handler(req, res) {
         model: MODEL,
         max_tokens: 500,
         system: system,
-        messages: [{ role: 'user', content: prompt }],
+        messages: messages,
       }),
     });
 
     if (!r.ok) {
       const detail = await r.text().catch(() => '');
-      return send(res, 502, { error: 'AI service error (' + r.status + ').', detail: detail.slice(0, 300) });
+      const err = new Error('AI service error (' + r.status + ').');
+      err.upstream = { status: r.status, detail: detail.slice(0, 300) };
+      throw err;
     }
 
     const data = await r.json();
-    const text = (data && Array.isArray(data.content) ? data.content : [])
+    return (data && Array.isArray(data.content) ? data.content : [])
       .filter(function (b) { return b && b.type === 'text'; })
       .map(function (b) { return b.text; })
       .join('')
       .trim();
+  }
+
+  try {
+    const messages = [{ role: 'user', content: prompt }];
+    let text = await ask(messages);
+
+    /*
+      Any NO is a rewrite, not a ship — ŌLLIN Systems, Engine 8 § 6.
+
+      The quality check in SYSTEM is an instruction; auditDraft is the half of
+      it that can be decided without judgement, so a length or banned-word miss
+      is caught here rather than reaching the sender. The failures go back
+      verbatim, which is a far better instruction than "try again".
+
+      Once. Past that the inputs are the problem, not the wording, and a second
+      round burns the sender's quota to say so.
+    */
+    const failures = auditDraft(text, channel);
+    if (text && failures.length) {
+      messages.push({ role: 'assistant', content: text });
+      messages.push({ role: 'user', content: rewritePrompt(failures) });
+      const second = await ask(messages);
+      if (second) text = second;
+    }
 
     if (!text) return send(res, 502, { error: 'AI returned an empty draft. Try again.' });
 
@@ -71,6 +99,9 @@ export default async function handler(req, res) {
     const remaining = unlimited ? null : Math.max(0, FREE_AI_PER_MONTH - user.ai[mk]);
     return send(res, 200, { text: text, remaining: remaining, angleWarning: angleWarning });
   } catch (e) {
+    if (e && e.upstream) {
+      return send(res, 502, { error: e.message, detail: e.upstream.detail });
+    }
     return send(res, 500, { error: String((e && e.message) || e) });
   }
 }

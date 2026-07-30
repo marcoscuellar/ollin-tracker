@@ -6,6 +6,7 @@ import assert from 'node:assert/strict';
 import {
   buildDraftPrompt, resolveSender, quotaExceededMessage,
   SYSTEM, DEFAULT_SENDER_INTRO, DEFAULT_ASSET,
+  auditDraft, splitSubject, rewritePrompt,
 } from '../api/engine7.js';
 
 const PROFILE = {
@@ -139,4 +140,71 @@ test('CTA is asset-based, never a meeting/call request', () => {
   assert.ok(SYSTEM.includes('The primary CTA is NEVER a meeting or call request.'));
   const { prompt } = buildDraftPrompt(PROFILE, { angle: 'x' });
   assert.ok(prompt.includes('Never make the CTA a meeting or call request.'));
+});
+
+// ---------- audit ----------
+
+test('auditDraft passes a clean LinkedIn draft', () => {
+  const clean = 'Nine of your fourteen open roles are data and ML. The Databricks cutover lands the same quarter. I built a quick Capacity Map around that — want me to send it over?';
+  assert.deepEqual(auditDraft(clean, 'li'), []);
+});
+
+test('auditDraft catches a LinkedIn draft over 300 characters', () => {
+  const long = 'x'.repeat(301);
+  const failures = auditDraft(long, 'li');
+  assert.equal(failures.length, 1);
+  assert.match(failures[0], /300 characters/);
+});
+
+test('auditDraft catches banned wording from both lists', () => {
+  const bad = 'Just reaching out to leverage our world-class network. Want the map?';
+  const failures = auditDraft(bad, 'li');
+  assert.equal(failures.length, 1);
+  assert.match(failures[0], /just reaching out/);
+  assert.match(failures[0], /leverage/);
+  assert.match(failures[0], /world-class/);
+});
+
+test('auditDraft catches the banned word "help" in any form', () => {
+  const failures = auditDraft('We can help your team ship faster. Want the map?', 'li');
+  assert.ok(failures.some((f) => /"help"/.test(f)));
+});
+
+test('auditDraft catches a meeting ask', () => {
+  const failures = auditDraft('Worth a look? Do you have 15 minutes this week?', 'li');
+  assert.ok(failures.some((f) => /meeting/.test(f)));
+});
+
+test('auditDraft allows one em dash but not two', () => {
+  assert.deepEqual(auditDraft('One — dash only. Want the map?', 'li'), []);
+  const failures = auditDraft('One — dash — two. Want the map?', 'li');
+  assert.ok(failures.some((f) => /em dashes/.test(f)));
+});
+
+test('auditDraft measures the email body, not the subject line', () => {
+  const body = Array.from({ length: 121 }, () => 'word').join(' ');
+  const failures = auditDraft('Subject: austin data build\n' + body, 'em');
+  assert.ok(failures.some((f) => /121 words/.test(f)));
+});
+
+test('auditDraft wants a subject line on email', () => {
+  const failures = auditDraft('No subject here. Want the map?', 'em');
+  assert.ok(failures.some((f) => /Subject:/.test(f)));
+});
+
+test('auditDraft reports an empty draft', () => {
+  assert.deepEqual(auditDraft('  ', 'li'), ['The draft is empty.']);
+});
+
+test('splitSubject separates the subject from the body', () => {
+  const { subject, body } = splitSubject('Subject: austin data build\n\nNine roles open.');
+  assert.equal(subject, 'austin data build');
+  assert.equal(body, 'Nine roles open.');
+});
+
+test('rewritePrompt feeds every failure back verbatim', () => {
+  const prompt = rewritePrompt(['Too long.', 'Banned wording used: leverage.']);
+  assert.match(prompt, /- Too long\./);
+  assert.match(prompt, /- Banned wording used: leverage\./);
+  assert.match(prompt, /Return only the message\./);
 });
