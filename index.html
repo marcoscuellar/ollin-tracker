@@ -671,8 +671,8 @@
   .lt-cards-head{display:flex;align-items:baseline;justify-content:space-between;padding-bottom:18px;}
   .lt-cards-title{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.18em;color:var(--lt-dim);}
   .lt-cards-ctrl{display:flex;align-items:center;gap:14px;}
-  /* Wraps rather than truncates — however many are due, they all get a dot. */
-  .lt-dots{display:flex;gap:6px;flex-wrap:wrap;max-width:320px;}
+  .lt-dots{display:flex;gap:6px;}
+  .lt-dots.counter{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.12em;color:var(--lt-mute);white-space:nowrap;}
   .lt-dot{width:22px;height:3px;background:var(--lt-rule2);cursor:pointer;transition:background .2s;}
   .lt-dot.on{background:var(--lt-accent);}
   .lt-arrows{display:flex;gap:8px;}
@@ -3587,15 +3587,23 @@
       cardsWrap.appendChild(viewport);
 
       var dotsEl=head.querySelector("#ltDots"), prevBtn=head.querySelector("#ltPrev"), nextBtn=head.querySelector("#ltNext");
-      shown.forEach(function(_,idx){
-        var d=el('<div class="lt-dot'+(idx===ltCarIdx?" on":"")+'"></div>');
-        d.addEventListener("click", function(){ ltCarIdx=idx; updateCarouselUI(); });
-        dotsEl.appendChild(d);
-      });
+      // Dots are a position indicator, and they stop indicating position long
+      // before twenty of them. Past eight, one counter says the same thing.
+      var useDots = shown.length<=8;
+      if(useDots){
+        shown.forEach(function(_,idx){
+          var d=el('<div class="lt-dot'+(idx===ltCarIdx?" on":"")+'"></div>');
+          d.addEventListener("click", function(){ ltCarIdx=idx; updateCarouselUI(); });
+          dotsEl.appendChild(d);
+        });
+      } else {
+        dotsEl.classList.add("counter");
+      }
       var CARD_W=444; // 424px card + 20px gap
       function updateCarouselUI(){
         track.style.transform="translateX("+(-ltCarIdx*CARD_W)+"px)";
-        Array.prototype.forEach.call(dotsEl.children, function(d,idx){ d.classList.toggle("on", idx===ltCarIdx); });
+        if(useDots) Array.prototype.forEach.call(dotsEl.children, function(d,idx){ d.classList.toggle("on", idx===ltCarIdx); });
+        else dotsEl.textContent=(ltCarIdx+1)+" / "+shown.length;
         prevBtn.disabled = ltCarIdx<=0; nextBtn.disabled = ltCarIdx>=shown.length-1;
       }
       prevBtn.addEventListener("click", function(){ if(ltCarIdx>0){ ltCarIdx--; updateCarouselUI(); } });
