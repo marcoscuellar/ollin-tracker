@@ -38,8 +38,11 @@
     --lt-ai-surface:#0F1418; --lt-ai-rule:#26343F; --lt-ai-rule2:#1B242B;
     --lt-poster-bg:#050505; --lt-poster-fg:#F8F7F4; --lt-row-hover:#141412;
   }
-  /* The app card stops at 1456px; the page behind it has to match. */
-  :root[data-lt-theme="dark"] body{background:#0A0A0A;}
+  /* The app card stops at 1456px; the page behind it has to match, or a wide
+     window shows pale gutters around a screen that is black by construction. */
+  :root[data-lt-theme="dark"],
+  :root[data-lt-theme="dark"] body,
+  :root[data-lt-theme="dark"] .app{background:#0A0A0A;}
   *{margin:0;padding:0;box-sizing:border-box;}
   html,body{background:var(--bg);color:var(--ink);}
   body{font-family:'Geist',system-ui,sans-serif;-webkit-font-smoothing:antialiased;min-height:100vh;font-size:16px;}
@@ -2706,8 +2709,19 @@
   var navView="landing", contactsMode="list", ltPosterIndex=null;
   // Dark is the design's default — every screen is drawn on #0A0A0A. The
   // toggle stays for anyone who wants light; only the starting point moved.
+  //
+  // Anyone using the app before the redesign has "light" saved from a system
+  // that no longer exists, which left the page chrome white around screens
+  // that are dark by construction. Retire that preference once, then respect
+  // whatever they choose from here.
   var ltTheme="dark";
-  try{ ltTheme = localStorage.getItem("tracker:ltTheme")||"dark"; }catch(e){}
+  try{
+    if(!localStorage.getItem("tracker:ltThemeV2")){
+      localStorage.setItem("tracker:ltTheme","dark");
+      localStorage.setItem("tracker:ltThemeV2","1");
+    }
+    ltTheme = localStorage.getItem("tracker:ltTheme")||"dark";
+  }catch(e){}
   function ltSetTheme(t){
     ltTheme=t;
     try{ localStorage.setItem("tracker:ltTheme", t); }catch(e){}
