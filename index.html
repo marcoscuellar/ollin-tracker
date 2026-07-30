@@ -671,7 +671,8 @@
   .lt-cards-head{display:flex;align-items:baseline;justify-content:space-between;padding-bottom:18px;}
   .lt-cards-title{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.18em;color:var(--lt-dim);}
   .lt-cards-ctrl{display:flex;align-items:center;gap:14px;}
-  .lt-dots{display:flex;gap:6px;}
+  /* Wraps rather than truncates — however many are due, they all get a dot. */
+  .lt-dots{display:flex;gap:6px;flex-wrap:wrap;max-width:320px;}
   .lt-dot{width:22px;height:3px;background:var(--lt-rule2);cursor:pointer;transition:background .2s;}
   .lt-dot.on{background:var(--lt-accent);}
   .lt-arrows{display:flex;gap:8px;}
@@ -3329,6 +3330,9 @@
 
   // ---------- TODAY — six-card carousel + expandable brief ----------
   var ltCarIdx=0, ltOpenIdx=null, ltBriefChannel="em", ltAiOpen=false, ltBriefAngle="gap";
+  // Set only by the gesture that opens a card, so re-renders while you type in
+  // the draft do not yank the page back to the top of the brief.
+  var ltBriefJustOpened=false;
   var LT_ANGLE_TABS=[["gap","THE GAP"],["cow","COST OF WAITING"],["person","THE PERSON"]];
   var LT_ANGLE_LABELS={gap:"The Gap", cow:"Cost of Waiting", person:"The Person"};
   function ltAngleNoteKey(touchId, angle){ return touchId + (angle && angle!=="gap" ? ("|"+angle) : ""); }
@@ -3513,8 +3517,10 @@
 
   function renderToday(m){
     var waiting=ltWaitingList();
-    var shown=waiting.slice(0,6);
-    var overflow=Math.max(0, waiting.length-6);
+    // Everyone who is due goes in the deck. It used to stop at six and park the
+    // rest behind a "SHOW ALL" link, which made "start everyone today" look
+    // like it had silently dropped people.
+    var shown=waiting;
     if(ltCarIdx>=shown.length) ltCarIdx=Math.max(0, shown.length-1);
     if(ltOpenIdx!==null && !waiting[ltOpenIdx]) ltOpenIdx=null;
 
@@ -3525,8 +3531,6 @@
       m.appendChild(pb);
     }
 
-    var now=new Date();
-    var thisMonday=ltMonday(now);
 
     // Click cycles to the next quote — same gesture the poster strip uses.
     var q=ltQuote().split("|");
@@ -3571,12 +3575,12 @@
         var bottom=el('<div class="lt-slide-bottom"></div>');
         bottom.appendChild(el('<div class="lt-slide-track"><div class="lt-slide-fill'+(isFirst?" accent":"")+'" style="width:'+progress+'%;"></div></div>'));
         var actions=el('<div class="lt-slide-actions"><button class="lt-slide-open">OPEN DRAFT</button><button class="lt-slide-later">LATER</button></div>');
-        actions.querySelector(".lt-slide-open").addEventListener("click", function(e){ e.stopPropagation(); ltOpenIdx=waiting.indexOf(item); ltBriefChannel=(i&&i.ch)||(c.t&&c.t.channel)||"em"; ltAiOpen=false; ltBriefAngle="gap"; render(); });
+        actions.querySelector(".lt-slide-open").addEventListener("click", function(e){ e.stopPropagation(); ltOpenIdx=waiting.indexOf(item); ltBriefChannel=(i&&i.ch)||(c.t&&c.t.channel)||"em"; ltAiOpen=false; ltBriefAngle="gap"; ltBriefJustOpened=true; render(); });
         var laterBtn=actions.querySelector(".lt-slide-later");
         laterBtn.addEventListener("click", function(e){ e.stopPropagation(); if(ltCarIdx<shown.length-1){ ltCarIdx++; updateCarouselUI(); } });
         bottom.appendChild(actions);
         slide.appendChild(bottom);
-        slide.addEventListener("click", function(){ ltOpenIdx=waiting.indexOf(item); ltBriefChannel=(i&&i.ch)||(c.t&&c.t.channel)||"em"; ltAiOpen=false; ltBriefAngle="gap"; render(); });
+        slide.addEventListener("click", function(){ ltOpenIdx=waiting.indexOf(item); ltBriefChannel=(i&&i.ch)||(c.t&&c.t.channel)||"em"; ltAiOpen=false; ltBriefAngle="gap"; ltBriefJustOpened=true; render(); });
         track.appendChild(slide);
       });
       viewport.appendChild(track);
@@ -3636,73 +3640,25 @@
       cardsWrap.appendChild(el('<div style="padding:40px 0;color:var(--lt-mute);font-size:15px;">Nothing’s waiting. Add contacts, or take the win.</div>'));
     }
 
-    if(overflow>0){
-      var ov=el('<div class="lt-overflow"><div>'+overflow+' MORE · NOTHING URGENT</div><button class="lt-overflow-btn" id="ltShowAll">SHOW ALL</button></div>');
-      ov.querySelector("#ltShowAll").addEventListener("click", function(){ contactsMode="list"; setView("contacts"); });
-      cardsWrap.appendChild(ov);
-    }
     m.appendChild(cardsWrap);
 
-    // ---- POSTER + NUMBERS STRIP ----
-    var hh=String(now.getHours()).padStart(2,"0"), mm=String(now.getMinutes()).padStart(2,"0");
-    var pcontacts=asContacts();
-    var pdue=[]; pcontacts.forEach(function(c){ var i=dueInfo(c); if(i && i.overdueDays>=0) pdue.push({c:c,i:i}); });
-    var pGoingCold=pdue.filter(function(x){ return x.i.overdueDays>=7; }).length;
-    var poster = (ltPosterIndex===null) ? ltPickPoster(pdue.length, pGoingCold) : LT_DAILY_POSTERS[ltPosterIndex % LT_DAILY_POSTERS.length];
-    var posterRow=el('<div class="lt-poster-row"></div>');
-    var posterEl=el('<div class="lt-poster">'+
-      '<div class="lt-poster-top"><div>'+DOW_FULL[now.getDay()]+" · "+now.getDate()+" "+MON_FULL[now.getMonth()]+" · "+hh+":"+mm+'</div><div>C:\\ŌLLIN&gt;</div></div>'+
-      '<div class="lt-poster-mid">'+
-        '<div class="lt-poster-lwrap"><div>'+esc(poster.l1)+'</div></div>'+
-        '<div class="lt-poster-lwrap"><div>'+esc(poster.l2)+'</div></div>'+
-        '<div class="lt-poster-l3"><div>'+esc(poster.l3)+'</div><div class="lt-poster-knock">'+esc(poster.knock)+'</div></div>'+
-      '</div>'+
-      '<div class="lt-poster-bottom"><div><div class="lt-poster-word">ŌLLIN</div><div class="lt-poster-sub">TRACKER</div></div><div class="lt-poster-tag">'+esc(poster.tag)+'</div></div>'+
-    '</div>');
-    posterEl.addEventListener("click", function(){ ltPosterIndex = (ltPosterIndex===null) ? 0 : ltPosterIndex+1; render(); });
-    posterRow.appendChild(posterEl);
-    m.appendChild(posterRow);
-
-    var numGrid=el('<div class="lt-num-grid"></div>');
-    var reach=el('<div class="lt-card"><div class="lt-card-lbl">REACH-OUTS · MON–FRI</div><div class="lt-vbars"></div></div>');
-    var vbars=reach.querySelector(".lt-vbars");
-    var weekVals=[], weekIsToday=[];
-    for(var d=0; d<5; d++){ var ds=iso(addDays(iso(thisMonday), d)); var v=dayTotal(ds); weekVals.push(v); weekIsToday.push(ds===todayStr()); }
-    var maxV=Math.max(1, Math.max.apply(null, weekVals));
-    ["MON","TUE","WED","THU","FRI"].forEach(function(lbl,idx){
-      var v=weekVals[idx], isToday=weekIsToday[idx];
-      var h=Math.max(4, Math.round(v/maxV*96));
-      var col=el('<div class="lt-vbar-col"><div class="lt-vbar'+(isToday?" today":"")+'" style="height:'+h+'px;"></div><div class="lt-vbar-lbl'+(isToday?" today":"")+'">'+lbl+" "+v+'</div></div>');
-      vbars.appendChild(col);
-    });
-    numGrid.appendChild(reach);
-
-    var opened=pcontacts.filter(function(c){ return c.status==="active" && c.step>=1 && !c.complete; }).length;
-    var replied=pcontacts.filter(function(c){ return c.status==="warm"; }).length;
-    var inConvo=pcontacts.filter(function(c){ return c.status==="meeting"; }).length;
-    var met=0; // not tracked separately from "meeting" yet — honest zero, not fabricated
-    var stageMax=Math.max(1, opened, replied, inConvo, met);
-    function stageRow(label, count, live){
-      var pct=Math.round(count/stageMax*100);
-      return '<div class="lt-stage-row"><div class="lt-stage-lbl'+(live?" live":"")+'">'+label+'</div><div class="lt-stage-track"><div class="lt-stage-fill'+(live?" live":"")+'" style="width:'+pct+'%;"></div></div><div class="lt-stage-count'+(live?" live":"")+'">'+count+'</div></div>';
-    }
-    var stageCard=el('<div class="lt-card"><div class="lt-card-lbl">PIPELINE BY STAGE</div><div class="lt-stage-rows">'+
-      stageRow("OPENED",opened,false)+stageRow("REPLIED",replied,false)+stageRow("IN CONVO",inConvo,true)+stageRow("MET",met,false)+
-      '</div></div>');
-    numGrid.appendChild(stageCard);
-
-    var minCard=el('<div class="lt-card lt-min-card"><div class="lt-card-lbl">NEED A MINUTE?</div><div class="lt-min-body">Pick one. No streak, no scolding.</div>'+
-      '<div class="lt-min-btns"><button class="lt-min-btn" id="ltFocus25">FOCUS 25 →</button><button class="lt-min-btn" id="ltJustOne">JUST DO ONE →</button><button class="lt-min-btn" id="ltBreathe">BREATHE →</button></div>'+
-      '<div class="lt-min-foot">WE GOT YOU.</div></div>');
-    numGrid.appendChild(minCard);
-    m.appendChild(numGrid);
-    m.querySelector("#ltFocus25").addEventListener("click", openPomodoro);
-    m.querySelector("#ltJustOne").addEventListener("click", openJustOne);
-    m.querySelector("#ltBreathe").addEventListener("click", openBreathe);
-
+    // The opened card belongs directly under the deck you clicked, not below
+    // the poster and the stats where you would never see it appear.
     if(ltOpenIdx!==null && waiting[ltOpenIdx]){
-      m.appendChild(buildLtBrief(waiting, ltOpenIdx, ltCardTheme(ltOpenIdx)));
+      var brief=buildLtBrief(waiting, ltOpenIdx, ltCardTheme(ltOpenIdx));
+      m.appendChild(brief);
+      if(ltBriefJustOpened){
+        ltBriefJustOpened=false;
+        requestAnimationFrame(function(){
+          try{ brief.scrollIntoView({behavior:"smooth", block:"start"}); }catch(e){ brief.scrollIntoView(); }
+        });
+      }
     }
+
+    /* The poster, the week bars, the stage bars and the minute prompts used to
+       sit under the deck. The Today design ends at the opened card, and all of
+       that duplicates Pipeline, so it is gone. */
+
   }
 
   // ---------- CONTACTS: command-bar search (list) / add / delete ----------
