@@ -2054,7 +2054,17 @@
       last:find("last name","lastname","last"),
       name:find("name","full name","contact"),
       email:find("email","email address"),
-      company:find("company","company name","account"),
+      // Exact names first, then anything whose header merely contains the word.
+      // Sales Navigator, ZoomInfo and HubSpot exports all label this column
+      // differently, and an exact-match miss silently named every row
+      // "Imported account". "account" stays exact — "Account Owner" and
+      // "Account ID" are common columns and neither one is the company.
+      company:pick(
+        find("company","company name","account","account name","organization",
+             "organisation","employer","current company","company / account",
+             "company/account","primary company","account / company"),
+        findC("company"), findC("organization"), findC("organisation"), findC("employer")
+      ),
       title:find("job title","title"),
       li:find("linkedin url","linkedin","linkedin profile"),
       thread:find("outreach thread","thread","persona"),
@@ -2197,6 +2207,9 @@
     var cm=colMap(rows[0]);
     if(cm.name<0 && cm.first<0) return {ok:false,msg:"No Name column found — check the header row"};
     var added=0, updated=0, skipped=0, lastAcctId=null;
+    // Worth saying out loud rather than filing everyone under one placeholder
+    // and letting the rep discover it in the table.
+    var noCompanyCol = cm.company<0;
     var budget=freeLeft(); // new contacts allowed under the free cap (Infinity if unlimited)
     for(var i=1;i<rows.length;i++){
       var r=rows[i];
@@ -2239,7 +2252,7 @@
     // drop any account left empty because all its rows hit the cap
     state.accounts=state.accounts.filter(function(a){ return (a.threads||[]).length>0; });
     if(lastAcctId && state.accounts.some(function(a){return a.id===lastAcctId;})) state.activeId=lastAcctId;
-    return {ok:true, added:added, updated:updated, skipped:skipped};
+    return {ok:true, added:added, updated:updated, skipped:skipped, noCompanyCol:noCompanyCol};
   }
 
   // turn any Google Sheets link into an anonymously-fetchable CSV URL.
@@ -2282,6 +2295,7 @@
           state.sheetUrl=raw; state.seeded=true;
           persistAccounts(); render();
           toast("Synced: "+res.added+" added, "+res.updated+" updated");
+          if(res.noCompanyCol) toast("No Company column found — everyone landed under “Imported account”.");
           if(res.skipped) openUpgrade(res.skipped+" contact"+(res.skipped>1?"s":"")+" didn’t fit your "+FREE_CONTACT_CAP+" free slots.");
         })
         .catch(function(e){ toast(e.message||"Import failed"); btn.disabled=false; btn.textContent="Import / Sync"; });
@@ -2309,6 +2323,7 @@
     if(!res.ok){ toast(res.msg); return; }
     state.seeded=true; persistAccounts(); render();
     toast("Imported: "+res.added+" added, "+res.updated+" updated");
+    if(res.noCompanyCol) toast("No Company column found — everyone landed under “Imported account”.");
     if(res.skipped) openUpgrade(res.skipped+" contact"+(res.skipped>1?"s":"")+" didn’t fit your "+FREE_CONTACT_CAP+" free slots.");
   }
   function handleImportFile(file){
