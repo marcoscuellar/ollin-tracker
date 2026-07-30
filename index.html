@@ -671,18 +671,20 @@
   .lt-cards-head{display:flex;align-items:baseline;justify-content:space-between;padding-bottom:18px;}
   .lt-cards-title{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.18em;color:var(--lt-dim);}
   .lt-cards-ctrl{display:flex;align-items:center;gap:14px;}
-  .lt-dots{display:flex;gap:6px;}
-  .lt-dots.counter{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.12em;color:var(--lt-mute);white-space:nowrap;}
-  .lt-dot{width:22px;height:3px;background:var(--lt-rule2);cursor:pointer;transition:background .2s;}
-  .lt-dot.on{background:var(--lt-accent);}
   .lt-arrows{display:flex;gap:8px;}
   .lt-arrow{box-sizing:border-box;border-radius:6px;width:34px;height:34px;border:1px solid var(--lt-rule2);display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--lt-ink);cursor:pointer;background:var(--lt-surface);user-select:none;}
   .lt-arrow:disabled{opacity:.35;cursor:default;}
   .lt-drag-lbl{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.12em;color:var(--lt-dim);}
-  .lt-viewport{overflow:hidden;cursor:grab;touch-action:pan-y;outline:none;}
-  .lt-viewport.grabbing{cursor:grabbing;}
-  .lt-track{display:flex;gap:20px;will-change:transform;transition:transform .38s cubic-bezier(.2,.8,.2,1);}
-  .lt-track.dragging{transition:none;}
+  /* Free horizontal scroll. The browser keeps momentum, trackpad gestures,
+     shift-wheel and keyboard for free; padding-bottom leaves room for the bar
+     so it never sits on top of a card. */
+  .lt-viewport{overflow-x:auto;overflow-y:hidden;outline:none;scroll-behavior:smooth;padding-bottom:10px;overscroll-behavior-x:contain;}
+  .lt-viewport::-webkit-scrollbar{height:8px;}
+  .lt-viewport::-webkit-scrollbar-track{background:var(--lt-rule);border-radius:4px;}
+  .lt-viewport::-webkit-scrollbar-thumb{background:var(--lt-rule2);border-radius:4px;}
+  .lt-viewport::-webkit-scrollbar-thumb:hover{background:var(--lt-mute);}
+  .lt-viewport{scrollbar-width:thin;scrollbar-color:var(--lt-rule2) var(--lt-rule);}
+  .lt-track{display:flex;gap:20px;}
   .lt-slide{background:var(--lt-surface);box-sizing:border-box;width:424px;flex:none;position:relative;overflow:hidden;border-radius:6px;border:1px solid var(--lt-rule);padding:26px;display:flex;flex-direction:column;gap:18px;min-height:320px;cursor:pointer;}
   .lt-slide-wash{opacity:.7;position:absolute;inset:0;background:radial-gradient(120% 90% at 15% 0%,var(--lt-accent-wash-a),transparent 62%);pointer-events:none;}
   .lt-slide-top{position:relative;display:flex;align-items:flex-start;justify-content:space-between;}
@@ -3329,7 +3331,7 @@
   }
 
   // ---------- TODAY — six-card carousel + expandable brief ----------
-  var ltCarIdx=0, ltOpenIdx=null, ltBriefChannel="em", ltAiOpen=false, ltBriefAngle="gap";
+  var ltOpenIdx=null, ltBriefChannel="em", ltAiOpen=false, ltBriefAngle="gap";
   // Set only by the gesture that opens a card, so re-renders while you type in
   // the draft do not yank the page back to the top of the brief.
   var ltBriefJustOpened=false;
@@ -3521,7 +3523,6 @@
     // rest behind a "SHOW ALL" link, which made "start everyone today" look
     // like it had silently dropped people.
     var shown=waiting;
-    if(ltCarIdx>=shown.length) ltCarIdx=Math.max(0, shown.length-1);
     if(ltOpenIdx!==null && !waiting[ltOpenIdx]) ltOpenIdx=null;
 
     if(ACCOUNT && !isUnlimited()){
@@ -3549,9 +3550,7 @@
     var statWrap=el('<div class="ot-statwrap"><div class="ot-stat">'+
       '<div class="ot-stat-l"><div class="ot-stat-lbl">TODAY’S LIST · '+shown.length+'</div>'+
         '<div class="ot-stat-sub">'+(shown.length ? "Ōllin will get you to your goal, one contact at a time." : "Nothing’s waiting. Go outside.")+'</div></div>'+
-      '<div class="ot-stat-r"><div class="lt-dots" id="ltDots"></div>'+
-        '<div class="lt-arrows"><button class="lt-arrow" id="ltPrev">←</button><button class="lt-arrow" id="ltNext">→</button></div>'+
-        '<div class="lt-drag-lbl">DRAG</div></div>'+
+      '<div class="ot-stat-r"><div class="lt-drag-lbl">'+(shown.length>1?"SCROLL →":"")+'</div></div>'+
     '</div></div>');
     m.appendChild(statWrap);
 
@@ -3577,7 +3576,11 @@
         var actions=el('<div class="lt-slide-actions"><button class="lt-slide-open">OPEN DRAFT</button><button class="lt-slide-later">LATER</button></div>');
         actions.querySelector(".lt-slide-open").addEventListener("click", function(e){ e.stopPropagation(); ltOpenIdx=waiting.indexOf(item); ltBriefChannel=(i&&i.ch)||(c.t&&c.t.channel)||"em"; ltAiOpen=false; ltBriefAngle="gap"; ltBriefJustOpened=true; render(); });
         var laterBtn=actions.querySelector(".lt-slide-later");
-        laterBtn.addEventListener("click", function(e){ e.stopPropagation(); if(ltCarIdx<shown.length-1){ ltCarIdx++; updateCarouselUI(); } });
+        // LATER just moves past them — scroll this card off to the left.
+        laterBtn.addEventListener("click", function(e){
+          e.stopPropagation();
+          viewport.scrollTo({ left: slide.offsetLeft + slide.offsetWidth - viewport.offsetLeft, behavior: "smooth" });
+        });
         bottom.appendChild(actions);
         slide.appendChild(bottom);
         slide.addEventListener("click", function(){ ltOpenIdx=waiting.indexOf(item); ltBriefChannel=(i&&i.ch)||(c.t&&c.t.channel)||"em"; ltAiOpen=false; ltBriefAngle="gap"; ltBriefJustOpened=true; render(); });
@@ -3586,64 +3589,8 @@
       viewport.appendChild(track);
       cardsWrap.appendChild(viewport);
 
-      var dotsEl=head.querySelector("#ltDots"), prevBtn=head.querySelector("#ltPrev"), nextBtn=head.querySelector("#ltNext");
-      // Dots are a position indicator, and they stop indicating position long
-      // before twenty of them. Past eight, one counter says the same thing.
-      var useDots = shown.length<=8;
-      if(useDots){
-        shown.forEach(function(_,idx){
-          var d=el('<div class="lt-dot'+(idx===ltCarIdx?" on":"")+'"></div>');
-          d.addEventListener("click", function(){ ltCarIdx=idx; updateCarouselUI(); });
-          dotsEl.appendChild(d);
-        });
-      } else {
-        dotsEl.classList.add("counter");
-      }
-      var CARD_W=444; // 424px card + 20px gap
-      function updateCarouselUI(){
-        track.style.transform="translateX("+(-ltCarIdx*CARD_W)+"px)";
-        if(useDots) Array.prototype.forEach.call(dotsEl.children, function(d,idx){ d.classList.toggle("on", idx===ltCarIdx); });
-        else dotsEl.textContent=(ltCarIdx+1)+" / "+shown.length;
-        prevBtn.disabled = ltCarIdx<=0; nextBtn.disabled = ltCarIdx>=shown.length-1;
-      }
-      prevBtn.addEventListener("click", function(){ if(ltCarIdx>0){ ltCarIdx--; updateCarouselUI(); } });
-      nextBtn.addEventListener("click", function(){ if(ltCarIdx<shown.length-1){ ltCarIdx++; updateCarouselUI(); } });
-      viewport.addEventListener("keydown", function(e){
-        if(e.key==="ArrowLeft"){ if(ltCarIdx>0){ ltCarIdx--; updateCarouselUI(); } }
-        else if(e.key==="ArrowRight"){ if(ltCarIdx<shown.length-1){ ltCarIdx++; updateCarouselUI(); } }
-      });
-      (function(){
-        var dragging=false, startX=0, startTx=0, moved=0, pointerId=null;
-        viewport.addEventListener("pointerdown", function(e){
-          dragging=true; moved=0; startX=e.clientX; startTx=-ltCarIdx*CARD_W; pointerId=e.pointerId;
-        });
-        viewport.addEventListener("pointermove", function(e){
-          if(!dragging) return;
-          var dx=e.clientX-startX; moved=Math.abs(dx);
-          // only claim the pointer (and visually commit to a drag) past a small
-          // threshold — capturing immediately on pointerdown retargets the
-          // click event away from buttons inside the card, breaking taps
-          if(moved>6 && pointerId!==null){
-            viewport.classList.add("grabbing");
-            track.classList.add("dragging");
-            try{ viewport.setPointerCapture(pointerId); }catch(err){}
-            pointerId=null;
-          }
-          track.style.transform="translateX("+(startTx+dx)+"px)";
-        });
-        function endDrag(e){
-          if(!dragging) return; dragging=false;
-          viewport.classList.remove("grabbing");
-          track.classList.remove("dragging");
-          var dx=e.clientX-startX;
-          if(Math.abs(dx)>CARD_W*0.25){ if(dx<0 && ltCarIdx<shown.length-1) ltCarIdx++; else if(dx>0 && ltCarIdx>0) ltCarIdx--; }
-          updateCarouselUI();
-        }
-        viewport.addEventListener("pointerup", endDrag);
-        viewport.addEventListener("pointercancel", endDrag);
-        viewport.addEventListener("click", function(e){ if(moved>6){ e.stopPropagation(); moved=0; } }, true);
-      })();
-      updateCarouselUI();
+      // Free scroll: the browser does it, so it keeps momentum, trackpad
+      // gestures, shift-wheel and keyboard scrolling for nothing.
     } else {
       cardsWrap.appendChild(el('<div style="padding:40px 0;color:var(--lt-mute);font-size:15px;">Nothing’s waiting. Add contacts, or take the win.</div>'));
     }
