@@ -211,6 +211,12 @@ async function founding(req, res) {
   const user = await kv.get(userKey(s.sub));
   if (!user) return send(res, 401, { error: 'unauthorized' });
 
+  // Founding is unlimited drafting on the operator's key. A throwaway address
+  // must not be able to grant itself that.
+  if (!user.verified) {
+    return send(res, 403, { error: 'Confirm your email first — the link is in your inbox.' });
+  }
+
   // Only promote a free account; never downgrade a paid Pro.
   if ((user.plan || 'free') === 'free') {
     user.plan = 'founding';

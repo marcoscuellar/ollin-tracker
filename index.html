@@ -660,7 +660,15 @@
   .lt-filter{border:none;background:none;border-bottom:2px solid transparent;padding:10px 2px;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.12em;color:var(--lt-dim);cursor:pointer;}
   .lt-filter.on{border-bottom-color:var(--lt-accent);color:var(--lt-accent);}
   .lt-table{margin-top:20px;background:var(--lt-surface);border:1px solid var(--lt-rule);border-radius:6px;overflow:hidden;}
-  .lt-thead,.lt-trow{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr) 108px 130px 96px;gap:20px;align-items:center;}
+  .lt-thead,.lt-trow{display:grid;grid-template-columns:22px minmax(0,1.5fr) minmax(0,1fr) 108px 130px 96px;gap:20px;align-items:center;}
+  .lt-check{width:15px;height:15px;border:1px solid var(--lt-rule);border-radius:3px;cursor:pointer;flex-shrink:0;position:relative;}
+  .lt-check.on{background:var(--lt-accent);border-color:var(--lt-accent);}
+  .lt-check.on::after{content:"";position:absolute;left:4px;top:1px;width:4px;height:8px;border:solid var(--lt-surface);border-width:0 2px 2px 0;transform:rotate(42deg);}
+  .lt-bulkbar{margin-top:18px;display:flex;flex-wrap:wrap;align-items:center;gap:18px;padding:12px 16px;border:1px solid var(--lt-accent);border-radius:6px;background:var(--lt-surface);font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.12em;color:var(--lt-dim);}
+  .lt-bulkbar .n{color:var(--lt-accent);}
+  .lt-bulkbar button{background:none;border:none;font:inherit;color:var(--lt-ink);cursor:pointer;padding:0;letter-spacing:inherit;}
+  .lt-bulkbar button:hover{color:var(--lt-accent);}
+  .lt-bulkbar button.danger:hover{color:#A5341F;}
   .lt-thead{padding:14px 26px;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.14em;color:var(--lt-dim);}
   .lt-trow{padding:18px 26px;border-top:1px solid var(--lt-rule);cursor:pointer;transition:background .18s;}
   .lt-trow:hover{background:var(--lt-row-hover);}
@@ -1750,7 +1758,8 @@
       ]},
       { id:"demoB", company:"Aster Health (sample)", start:t, threads:[
         {id:"ab1", name:"Priya Shah", title:"CTO", persona:"Economic Buyer", entryDay:1, channel:"em", linkedin:"", email:"priya@example.com", angle:"Compliance deadline in Q3 is forcing a hiring decision now.", pulledAt:Date.now()-2*3600*1000},
-        {id:"ab2", name:"Marcus Webb", title:"Eng Manager", persona:"Champion", entryDay:1, channel:"li", linkedin:"", email:"", angle:"Team has been re-posting the same senior role for 90+ days.", pulledAt:Date.now()-26*3600*1000}
+        {id:"ab2", name:"Marcus Webb", title:"Eng Manager", persona:"Champion", entryDay:1, channel:"li", linkedin:"", email:"", angle:"Team has been re-posting the same senior role for 90+ days.", pulledAt:Date.now()-26*3600*1000},
+        {id:"ab3", name:"Dana Okafor", title:"Head of Talent", persona:"Gatekeeper", entryDay:1, channel:"em", linkedin:"", email:"dana@example.com", angle:"Runs the req intake — every outside vendor goes through her first.", pulledAt:Date.now()-5*3600*1000}
       ]}
     ];
     state.activeId="demoA";
@@ -3529,12 +3538,80 @@
     if(!state.coldStreakSince) return 0;
     return daysBetween(state.coldStreakSince, todayStr())+1;
   }
+  /* ---------- bulk selection on Contacts ----------
+     Keyed by account+thread so a selection survives a re-render and a filter
+     change: tick four people, narrow the search, the four are still ticked.
+     Selection is cleared on delete, and by CLEAR — never silently. */
+  var ltSel={};
+  function ltKey(c){ return c.a.id+"|"+c.t.id; }
+  function ltSelected(contacts){ return contacts.filter(function(c){ return ltSel[ltKey(c)]; }); }
+
+  // Today's queue is whoever is due today, so "move to today" is a due-date
+  // override rather than a separate list. Someone already due is left alone.
+  function ltMoveToToday(picked){
+    state.reschedule=state.reschedule||{};
+    var today=todayStr(), n=0, skipped=0;
+    picked.forEach(function(c){
+      var i=dueInfo(c);
+      if(!i){ skipped++; return; }          // complete, replied, or paused
+      if(i.overdueDays>=0) return;          // already on today
+      state.reschedule[i.touch.id]=today; n++;
+    });
+    persistDone();
+    toast(n ? n+" moved to today"+(skipped?" · "+skipped+" not in cadence":"") : "Nobody to move");
+  }
+
+  // The mirror: push the next touch out a week. Not a delete — they come back.
+  function ltTakeOffToday(picked){
+    state.reschedule=state.reschedule||{};
+    var next=iso(addDays(todayStr(), 7)), n=0;
+    picked.forEach(function(c){
+      var i=dueInfo(c);
+      if(!i || i.overdueDays<0) return;     // not on today in the first place
+      state.reschedule[i.touch.id]=next; n++;
+    });
+    persistDone();
+    toast(n ? n+" pushed to next week" : "Nobody was on today");
+  }
+
+  function ltDeleteContacts(picked){
+    if(!picked.length) return false;
+    if(!confirm("Delete "+picked.length+" contact"+(picked.length>1?"s":"")+"? This can’t be undone.")) return false;
+    picked.forEach(function(c){ c.a.threads=(c.a.threads||[]).filter(function(t){ return t.id!==c.t.id; }); });
+    state.accounts=state.accounts.filter(function(a){ return (a.threads||[]).length>0; });
+    ltSel={};
+    persistAccounts();
+    toast(picked.length+" removed");
+    return true;
+  }
+
+  // The first-touch export: what someone hands to a CRM, not an internal dump.
+  function ltExportCsv(picked){
+    if(!picked.length){ toast("Nothing to export"); return; }
+    var rows=[["Name","Title","Company","Persona","LinkedIn","Email","Stage","Next touch","Channel","Due","Last touch","Status"]];
+    picked.forEach(function(c){
+      var i=dueInfo(c);
+      rows.push([
+        c.name||"", c.title||"", c.account||"", c.t.persona||"",
+        c.t.linkedin||"", c.t.email||"", ltStage(c),
+        i ? "TOUCH "+i.stepNum : "", i ? CH_LABEL[i.ch] : "", i ? i.dueKey : "",
+        lastDoneDate(c)||"", c.status||"active"
+      ]);
+    });
+    var csv=rows.map(function(r){ return r.map(csvCell).join(","); }).join("\n");
+    var url=URL.createObjectURL(new Blob([csv],{type:"text/csv;charset=utf-8"}));
+    var a=document.createElement("a"); a.href=url; a.download="ollin-contacts-"+todayStr()+".csv";
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
+    toast(picked.length+" exported");
+  }
+
   function renderContactsSearch(m, contacts){
     var wrap=el('<div class="lt-wrap"></div>');
     var hero=el('<div class="lt-hero"><h1 class="lt-hero-title">Contacts</h1><p class="lt-hero-sub">Everyone Ōllin tracks. Search a name, or run a command.</p></div>');
     var cmdbar=el('<div class="lt-cmdbar" id="ltCmdBar"><span style="font-family:\'IBM Plex Mono\',monospace;font-size:15px;color:var(--lt-accent);">&gt;</span><input id="ltCmdInput" placeholder="Search or run a command…" autocomplete="off"><span class="lt-cmdcount" id="ltCmdCount"></span></div>');
     hero.appendChild(cmdbar);
-    var cmdrow=el('<div class="lt-cmdrow"><button id="ltCmdAdd">ADD PERSON</button><span class="lt-cmddiv"></span><button id="ltCmdImport">IMPORT CSV</button><span class="lt-cmddiv"></span><button id="ltCmdCold">SHOW GOING COLD</button><span class="lt-cmddiv"></span><button id="ltCmdToday">WHO NEEDS ME TODAY</button></div>');
+    var cmdrow=el('<div class="lt-cmdrow"><button id="ltCmdAdd">ADD PERSON</button><span class="lt-cmddiv"></span><button id="ltCmdImport">IMPORT CSV</button><span class="lt-cmddiv"></span><button id="ltCmdCold">SHOW GOING COLD</button><span class="lt-cmddiv"></span><button id="ltCmdToday">WHO NEEDS ME TODAY</button><span class="lt-cmddiv"></span><button id="ltCmdCsv">EXPORT CSV ↓</button></div>');
     hero.appendChild(cmdrow);
     wrap.appendChild(hero);
     var filtersHost=el('<div class="lt-filters"></div>');
@@ -3564,16 +3641,44 @@
       resultsHost.innerHTML="";
       var rows=currentRows();
       countEl.textContent = rows.length+" OF "+contacts.length;
-      var table=el('<div class="lt-table"><div class="lt-thead"><div>PERSON</div><div>COMPANY</div><div>LAST TOUCH</div><div>MOMENTUM</div><div>STAGE</div></div></div>');
+      var allOn = rows.length>0 && rows.every(function(c){ return ltSel[ltKey(c)]; });
+      var table=el('<div class="lt-table"><div class="lt-thead"><div class="lt-check'+(allOn?" on":"")+'" id="ltCheckAll" title="Select all matching"></div><div>PERSON</div><div>COMPANY</div><div>LAST TOUCH</div><div>MOMENTUM</div><div>STAGE</div></div></div>');
+      // Select-all covers every row the filter matched, not just the 60 drawn.
+      table.querySelector("#ltCheckAll").addEventListener("click", function(e){
+        e.stopPropagation();
+        rows.forEach(function(c){ if(allOn) delete ltSel[ltKey(c)]; else ltSel[ltKey(c)]=true; });
+        renderResults();
+      });
       if(!rows.length){
         table.appendChild(el('<div class="lt-noresults">Nothing matches.</div>'));
       } else {
         rows.slice(0,60).forEach(function(c, idx){
           var stage=ltStage(c), live=stage==="IN CONVO", mom=ltMomentumPct(c);
-          var row=el('<div class="lt-trow"><div><div class="lt-trow-name">'+esc(c.name)+'</div><div class="lt-trow-title">'+esc(c.title||"")+'</div></div><div class="lt-trow-company">'+esc(c.account||"")+'</div><div class="lt-trow-last">'+ltLastTouchLabel(c)+'</div><div><div class="lt-mom-track"><div class="lt-mom-fill'+(live?" live":"")+'" style="width:'+mom+'%;"></div></div></div><div class="lt-trow-stage'+(live?" live":"")+'">'+stage+'</div></div>');
+          var row=el('<div class="lt-trow"><div class="lt-check'+(ltSel[ltKey(c)]?" on":"")+'"></div><div><div class="lt-trow-name">'+esc(c.name)+'</div><div class="lt-trow-title">'+esc(c.title||"")+'</div></div><div class="lt-trow-company">'+esc(c.account||"")+'</div><div class="lt-trow-last">'+ltLastTouchLabel(c)+'</div><div><div class="lt-mom-track"><div class="lt-mom-fill'+(live?" live":"")+'" style="width:'+mom+'%;"></div></div></div><div class="lt-trow-stage'+(live?" live":"")+'">'+stage+'</div></div>');
+          // The checkbox selects; anywhere else on the row still opens the brief.
+          row.querySelector(".lt-check").addEventListener("click", function(e){
+            e.stopPropagation();
+            var k=ltKey(c); if(ltSel[k]) delete ltSel[k]; else ltSel[k]=true;
+            renderResults();
+          });
           row.addEventListener("click", function(){ ltContactsOpenIdx = ltContactsOpenIdx===idx ? null : idx; renderResults(); });
           table.appendChild(row);
         });
+      }
+      var picked=ltSelected(contacts);
+      if(picked.length){
+        var bar=el('<div class="lt-bulkbar"><span class="n">'+picked.length+' SELECTED</span>'+
+          '<button id="lbToday">MOVE TO TODAY</button>'+
+          '<button id="lbOff">TAKE OFF TODAY</button>'+
+          '<button id="lbCsv">EXPORT CSV ↓</button>'+
+          '<button class="danger" id="lbDel">DELETE</button>'+
+          '<button id="lbClear">CLEAR</button></div>');
+        bar.querySelector("#lbToday").addEventListener("click", function(){ ltMoveToToday(picked); renderResults(); });
+        bar.querySelector("#lbOff").addEventListener("click", function(){ ltTakeOffToday(picked); renderResults(); });
+        bar.querySelector("#lbCsv").addEventListener("click", function(){ ltExportCsv(picked); });
+        bar.querySelector("#lbDel").addEventListener("click", function(){ if(ltDeleteContacts(picked)) render(); });
+        bar.querySelector("#lbClear").addEventListener("click", function(){ ltSel={}; renderResults(); });
+        resultsHost.appendChild(bar);
       }
       resultsHost.appendChild(table);
       if(rows.length>60) resultsHost.appendChild(el('<div class="lt-tfoot">'+(rows.length-60)+' MORE · SORTED BY WHO NEEDS YOU</div>'));
@@ -3590,6 +3695,8 @@
     cmdrow.querySelector("#ltCmdImport").addEventListener("click", function(){ contactsMode="add"; setView("contacts"); });
     cmdrow.querySelector("#ltCmdCold").addEventListener("click", function(){ ltContactFilter="cold"; ltContactsOpenIdx=null; renderFilters(); renderResults(); });
     cmdrow.querySelector("#ltCmdToday").addEventListener("click", function(){ setView("home"); });
+    // With nothing ticked, export means "what I'm looking at" rather than nothing.
+    cmdrow.querySelector("#ltCmdCsv").addEventListener("click", function(){ ltExportCsv(ltSelected(contacts).length ? ltSelected(contacts) : currentRows()); });
 
     renderFilters();
     renderResults();

@@ -21,6 +21,15 @@ export default async function handler(req, res) {
   // Enforce the free monthly AI quota (Pro and founding members are unlimited).
   const user = await kv.get(userKey(s.sub));
   if (!user) return send(res, 401, { error: 'unauthorized' });
+
+  // Drafting spends the operator's API budget, so it is the one thing an
+  // unconfirmed address cannot reach. The demo (?demo=1) never calls this —
+  // it runs on seeded sample data with no account at all, which is how someone
+  // sees the product before handing over an email.
+  if (!user.verified) {
+    return send(res, 403, { error: 'Confirm your email before drafting — check your inbox, or resend it from the banner up top.' });
+  }
+
   const mk = monthKey();
   user.ai = user.ai || {};
   const used = user.ai[mk] || 0;
