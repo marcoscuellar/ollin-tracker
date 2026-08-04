@@ -244,8 +244,8 @@
 /* ===================== Ollin : Vamos — front end (coral / GLVE) ===================== */
 :root{
   --vm-paper:#0B0D11; --vm-surface:#141821; --vm-surface2:#1A2029; --vm-surface3:#212936;
-  --vm-line:#262F3D; --vm-line2:#333F50;
-  --vm-ink:#EEF2F8; --vm-dim:#94A3B6; --vm-dim2:#63718A;
+  --vm-line:#2E3947; --vm-line2:#3D4A5C;
+  --vm-ink:#F2F5FA; --vm-dim:#AEBACA; --vm-dim2:#8B99AB;
   --c:#EA7987; --c-dim:#C4606D; --c-soft:rgba(234,121,135,.12);
   --vm-warn:#FBBF24; --vm-no:#F87171; --vm-cool:#7DD3FC; --vm-ok:#4ADE80;
   --arch:"Archivo",ui-sans-serif,-apple-system,"Segoe UI",Inter,sans-serif;
@@ -291,9 +291,9 @@
 /* type */
 .vm-h1{font-family:var(--arch);font-weight:800;font-size:34px;letter-spacing:-.034em;
   margin:0 0 10px;line-height:1.12;text-shadow:0 0 34px rgba(234,121,135,.20)}
-.vm-sub{color:var(--vm-dim);margin:0 0 26px;font-size:15px;line-height:1.62}
-.mn{font-family:var(--mono);font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;
-  color:var(--vm-dim2);font-weight:500}
+.vm-sub{color:#B9C4D3;margin:0 0 26px;font-size:16.5px;line-height:1.62}
+.mn{font-family:var(--mono);font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--vm-dim2);font-weight:600}
 .vm-card{background:var(--vm-surface);border:1px solid var(--vm-line);border-radius:16px;
   padding:22px;margin-bottom:16px}
 .vm-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
@@ -345,34 +345,34 @@
 .dot3.on{background:var(--c);box-shadow:0 0 10px rgba(234,121,135,.6)}
 .kname{font-family:var(--arch);font-size:38px;font-weight:800;letter-spacing:-.038em;line-height:1.05;
   margin:0 0 12px;text-shadow:0 0 34px rgba(234,121,135,.30),0 0 74px rgba(234,121,135,.12)}
-.klede{font-size:15px;line-height:1.66;color:var(--vm-dim);margin:0 0 20px;max-width:64ch}
+.klede{font-size:16.5px;line-height:1.64;color:#B9C4D3;margin:0 0 20px;max-width:64ch}
 .klede b{color:var(--vm-ink);font-weight:650}
 .kpill{display:flex;align-items:center;gap:12px;background:var(--vm-surface2);border:1px solid var(--vm-line);
   border-radius:99px;padding:9px 20px 9px 9px;margin-bottom:20px}
 .kpill .bdg{flex:0 0 auto;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;
   background:var(--vm-surface3);color:var(--c);font-size:13px}
-.kpill .tx{font-size:13.5px;line-height:1.5;color:var(--vm-dim)}
+.kpill .tx{font-size:15px;line-height:1.55;color:#C3CDDA}
 .kpill .tx b{color:var(--vm-ink);font-weight:700}
 .tri{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px}
 .tbox{border:1px solid var(--vm-line);border-radius:15px;padding:17px;background:rgba(255,255,255,.012)}
 .tbox .ic{color:var(--c);margin-bottom:13px;display:block;opacity:.9}
 .tbox .tl{margin-bottom:7px;color:var(--c)}
-.tbox .tv{font-size:13.5px;line-height:1.55;color:var(--vm-dim);overflow-wrap:anywhere}
+.tbox .tv{font-size:15px;line-height:1.55;color:#C3CDDA;overflow-wrap:anywhere}
 .tbox .tv b{color:var(--vm-ink);font-weight:650}
 .rule{height:1px;background:var(--vm-line);margin:24px 0 20px}
 .tabs{display:flex;gap:7px;margin-bottom:11px;flex-wrap:wrap;align-items:center}
-.tab{background:transparent;color:var(--vm-dim);border:1px solid var(--vm-line);padding:7px 14px;
-  font-size:12.5px;border-radius:99px;transition:.15s;font-weight:600}
+.tab{background:transparent;color:#BCC7D5;border:1px solid var(--vm-line2);padding:8px 16px;
+  font-size:13.5px;border-radius:99px;transition:.15s;font-weight:600}
 .tab.on{background:var(--c);color:#2E0F14;border-color:var(--c);font-weight:800}
 .tab:hover:not(.on){color:var(--vm-ink);border-color:var(--vm-line2)}
 .mini{background:var(--vm-surface2);border:1px solid var(--vm-line);color:var(--vm-dim2);
   padding:6px 11px;font-size:12px;transition:.15s}
 .mini:hover{color:var(--c);border-color:var(--c-dim)}
-.len{font-size:11.5px;color:var(--vm-dim2);text-align:right;margin-top:5px}
+.len{font-size:12.5px;color:var(--vm-dim2);text-align:right;margin-top:6px}
 .go{display:flex;gap:9px;flex-wrap:wrap;margin:14px 0 4px}
 .go a,.go .gb{display:inline-flex;align-items:center;gap:7px;text-decoration:none;
-  background:var(--vm-surface2);border:1px solid var(--vm-line);color:var(--vm-ink);padding:11px 16px;
-  border-radius:10px;font-size:13.5px;font-weight:650;transition:.15s}
+  background:var(--vm-surface2);border:1px solid var(--vm-line);color:var(--vm-ink);padding:12px 17px;
+  border-radius:10px;font-size:14.5px;font-weight:650;transition:.15s}
 .go a:hover,.go .gb:hover{border-color:var(--c);color:var(--c);transform:translateY(-1px)}
 .go .off{opacity:.32;pointer-events:none}
 .kcta{width:100%;display:flex;align-items:center;gap:14px;background:var(--c);color:#2E0F14;
@@ -390,9 +390,9 @@
 .k2 .kr:hover{color:var(--vm-no);border-color:rgba(248,113,113,.45)}
 
 /* contacts */
-.vm-tbl{width:100%;border-collapse:collapse;font-size:13.5px}
+.vm-tbl{width:100%;border-collapse:collapse;font-size:15px}
 .vm-tbl th,.vm-tbl td{text-align:left;padding:11px 10px;border-bottom:1px solid var(--vm-line)}
-.vm-tbl th{color:var(--vm-dim2);font-family:var(--mono);font-size:10px;letter-spacing:.13em;
+.vm-tbl th{color:#94A2B4;font-family:var(--mono);font-size:11px;letter-spacing:.12em;
   text-transform:uppercase;font-weight:500}
 .vm-tbl tr.clk{cursor:pointer}
 .vm-tbl tr.clk:hover td{background:rgba(234,121,135,.05)}
@@ -475,7 +475,7 @@ body.gd-on{background:var(--gd-bg)}
 .gd-h{font-family:var(--arch);font-weight:800;font-size:44px;line-height:1.14;letter-spacing:-.035em;
   color:var(--gd-ink);text-align:center;margin:0 0 18px;max-width:15ch;
   text-shadow:0 0 34px rgba(234,121,135,.16),0 0 80px rgba(234,121,135,.06)}
-.gd-p{font-size:16.5px;line-height:1.62;color:#9A9AA4;text-align:center;margin:0 0 34px;
+.gd-p{font-size:17.5px;line-height:1.62;color:#B4B4BE;text-align:center;margin:0 0 34px;
   max-width:44ch}
 .gd-p b{color:var(--gd-ink);font-weight:650}
 .gd-bar{display:flex;align-items:center;gap:10px;width:min(560px,100%);
@@ -497,8 +497,8 @@ body.gd-on{background:var(--gd-bg)}
   box-shadow:0 0 34px rgba(234,121,135,.7),0 0 76px rgba(234,121,135,.32)}
 .gd-chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:26px;
   width:min(600px,100%)}
-.gd-chip{background:transparent;border:1px solid #22242C;color:#7C7C87;font-size:12.5px;
-  padding:9px 15px;border-radius:99px;transition:.16s;cursor:pointer;font-weight:550}
+.gd-chip{background:transparent;border:1px solid #2C2F39;color:#A2A2AE;font-size:13.5px;
+  padding:10px 17px;border-radius:99px;transition:.16s;cursor:pointer;font-weight:550}
 .gd-chip:hover{color:var(--gd-ink);border-color:#3C4049}
 .gd-chip.key{border-color:rgba(234,121,135,.48);color:var(--gd-teal)}
 .gd-chip.key:hover{background:rgba(234,121,135,.10);border-color:var(--gd-teal)}
@@ -523,8 +523,8 @@ body.gd-on{background:var(--gd-bg)}
   box-shadow:0 0 18px rgba(234,121,135,.34),0 0 44px rgba(234,121,135,.13)}
 #appMain .gd-go:hover{background:var(--gd-teal-d);
   box-shadow:0 0 34px rgba(234,121,135,.75),0 0 78px rgba(234,121,135,.34)}
-#appMain .gd-chip{border:1px solid #24262F;border-radius:99px;background:transparent;
-  color:#7C7C87;padding:9px 15px;font-size:12.5px;font-weight:550}
+#appMain .gd-chip{border:1px solid #2C2F39;border-radius:99px;background:transparent;
+  color:#A2A2AE;padding:10px 17px;font-size:13.5px;font-weight:600}
 #appMain .gd-chip:hover{color:var(--gd-ink);border-color:#3C4049}
 #appMain .gd-chip.key{border-color:rgba(234,121,135,.48);color:var(--gd-teal);
   box-shadow:0 0 22px rgba(234,121,135,.13)}
@@ -644,23 +644,119 @@ body.gd-on{background:var(--gd-bg)}
 .ihr{color:var(--vm-cool)} .ihg{color:var(--vm-warn)}
 .ipull{font-style:normal;font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;
   color:var(--vm-dim2);margin-left:auto;text-transform:none}
-.fx{display:grid;grid-template-columns:78px minmax(0,1fr);gap:12px;padding:8px 0;
+.fx{display:grid;grid-template-columns:88px minmax(0,1fr);gap:14px;padding:11px 0;
   border-bottom:1px solid rgba(38,47,61,.6);align-items:baseline}
 .fx:last-child{border-bottom:none}
-.fxk{color:var(--vm-dim2);font-size:9.5px;letter-spacing:.13em;padding-top:2px}
-.fxv{font-size:13.5px;line-height:1.5;color:var(--vm-ink);overflow-wrap:anywhere}
+.fxk{color:#94A2B4;font-size:10.5px;letter-spacing:.12em;padding-top:3px;font-weight:600}
+.fxv{font-size:15.5px;line-height:1.52;color:#F2F5FA;overflow-wrap:anywhere;font-weight:450}
 .fxs{display:block;font-style:normal;font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;
-  text-transform:uppercase;color:var(--c);opacity:.72;margin-top:4px}
-.fx-off .fxv{color:#4A5568;font-family:var(--mono);font-size:10.5px;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--c);opacity:.95;margin-top:5px;font-size:10.5px}
+.fx-off .fxv{color:#78879B;font-family:var(--mono);font-size:11.5px;letter-spacing:.12em;
   text-transform:uppercase}
 .iread{background:rgba(125,211,252,.045);border:1px solid rgba(125,211,252,.16);
   border-radius:13px;padding:15px 16px}
-.ird{margin:0;padding-left:17px;font-size:13.3px;line-height:1.62;color:var(--vm-dim)}
+.ird{margin:0;padding-left:18px;font-size:14.8px;line-height:1.64;color:#BCC7D5}
 .ird li{margin-bottom:8px} .ird li:last-child{margin-bottom:0}
 .igap{background:rgba(251,191,36,.05);border:1px solid rgba(251,191,36,.17);
   border-radius:13px;padding:14px 16px}
-.igp{margin:0;font-size:12.8px;line-height:1.6;color:var(--vm-dim)}
+.igp{margin:0;font-size:14px;line-height:1.62;color:#B4BFCE}
 @media(max-width:900px){.body2{grid-template-columns:1fr;gap:22px}}
+
+/* readability pass */
+#appMain textarea,#appMain .subwrap input{font-size:16px;line-height:1.68}
+#appMain #vmBody{font-size:16px;line-height:1.7;color:#F2F5FA}
+#appMain #vmBody::placeholder{color:#8B99AB}
+.ih{font-size:12px;letter-spacing:.13em}
+.isec{margin-bottom:26px}
+.iread,.igap{padding:17px 18px}
+.vm-tbl td{padding:13px 10px}
+.pill{font-size:11px;padding:4px 10px}
+.ktag{font-size:11px;padding:6px 11px}
+
+/* ===================== WHITE CARDS ===================== */
+.sheet{background:#FFFFFF;border:1px solid #E4E2DF;color:#0A0A0A;
+  box-shadow:0 24px 64px rgba(0,0,0,.55),0 2px 6px rgba(0,0,0,.3)}
+.sheet::before{background:radial-gradient(120% 90% at 22% -12%,rgba(234,121,135,.13),transparent 62%)}
+.g1,.g2{background:#E9E7E4;border-color:#D8D5D1}
+
+.kname{color:#0A0A0A;text-shadow:none}
+.klede{color:#4A4A4A}
+.klede b{color:#0A0A0A}
+.sheet .mn{color:#8A8A85}
+.ktag{border-color:#DAD7D3}
+.kt-new{color:#B4485A;border-color:rgba(180,72,90,.34);background:rgba(234,121,135,.10)}
+.kt-fu{color:#2C7A9E;border-color:rgba(44,122,158,.3);background:rgba(125,211,252,.12)}
+.kt-late{color:#9A6B00;border-color:rgba(154,107,0,.3);background:rgba(251,191,36,.14)}
+.dot3{background:#DAD7D3}
+.dot3.on{background:var(--c);box-shadow:0 0 8px rgba(234,121,135,.5)}
+
+.kpill{background:#F7F5F3;border-color:#E4E2DF}
+.kpill .bdg{background:#FFFFFF;border:1px solid #E4E2DF;color:var(--c)}
+.kpill .tx{color:#4A4A4A}
+.kpill .tx b{color:#0A0A0A}
+
+.ih{color:#B4485A}
+.ihr{color:#2C7A9E} .ihg{color:#9A6B00}
+.ipull{color:#9A9A95}
+.fx{border-bottom:1px solid #EFEDEA}
+.fxk{color:#8A8A85}
+.fxv{color:#0A0A0A}
+.fxs{color:#B4485A;opacity:1}
+.fx-off .fxv{color:#A8A8A2}
+
+.iread{background:#F2F7FB;border-color:#D6E6F2}
+.ird{color:#3E4C57}
+.igap{background:#FDF8EC;border-color:#EDE0C2}
+.igp{color:#5A5044}
+
+.rule{background:#EAE8E5}
+.tab{color:#5A5A55;border-color:#DAD7D3}
+.tab:hover:not(.on){color:#0A0A0A;border-color:#B9B5B0}
+.tab.on{background:var(--c);color:#3B1016;border-color:var(--c)}
+.mini{background:#F7F5F3;border-color:#E4E2DF;color:#7A7A75}
+.mini:hover{color:#B4485A;border-color:var(--c)}
+
+.sheet textarea,#appMain .sheet textarea,#appMain .sheet .subwrap input,
+#appMain .sheet input{background:#FBFAF9;border:1px solid #E4E2DF;color:#0A0A0A}
+#appMain .sheet textarea::placeholder,#appMain .sheet input::placeholder{color:#A0A09A}
+#appMain .sheet textarea:focus,#appMain .sheet input:focus{border-color:var(--c);
+  box-shadow:0 0 0 3px rgba(234,121,135,.14)}
+.len{color:#9A9A95}
+
+.go a,.go .gb{background:#FBFAF9;border-color:#E4E2DF;color:#1A1A1A}
+.go a:hover,.go .gb:hover{border-color:var(--c);color:#B4485A;background:#FFF6F7}
+.k2 button{border-color:#E4E2DF;color:#6A6A65}
+.k2 .kl:hover{color:#8A5F00;border-color:#E0C879;background:#FFFBF0}
+.k2 .kr:hover{color:#B03A3A;border-color:#EDB4B4;background:#FFF5F5}
+.kcta{color:#3B1016;box-shadow:0 8px 22px rgba(234,121,135,.30)}
+
+/* ---- inline ask bar (replaces the killed chat bubble) ---- */
+.ask{margin:16px 0 4px}
+.ask-bar{display:flex;align-items:center;gap:8px;background:#FBFAF9;border:1px solid #E4E2DF;
+  border-radius:99px;padding:6px 6px 6px 20px;transition:.18s}
+.ask-bar:focus-within{border-color:var(--c);box-shadow:0 0 0 4px rgba(234,121,135,.11)}
+#appMain .ask-bar input{flex:1;background:transparent;border:none;border-radius:0;box-shadow:none;
+  padding:11px 0;font-size:15.5px;color:#0A0A0A;width:auto}
+#appMain .ask-bar input::placeholder{color:#A0A09A}
+#appMain .ask-go{flex:0 0 auto;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;
+  background:var(--c);color:#3B1016;border:none;padding:0;transition:.16s;
+  box-shadow:0 0 16px rgba(234,121,135,.36)}
+#appMain .ask-go:hover{background:#D2596A;transform:scale(1.05)}
+#appMain .ask-go.busy{opacity:.5;pointer-events:none;animation:gdpulse 1s ease-in-out infinite}
+.ask-chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:11px}
+#appMain .ask-chip{background:#FFFFFF;border:1px solid #E4E2DF;color:#5A5A55;font-size:13px;
+  padding:8px 14px;border-radius:99px;font-weight:600;transition:.15s}
+#appMain .ask-chip:hover{color:#B4485A;border-color:var(--c);background:#FFF6F7}
+#appMain .ask-chip.key{background:var(--c);color:#3B1016;border-color:var(--c);font-weight:800}
+#appMain .ask-chip.key:hover{background:#D2596A;color:#3B1016}
+.ask-say{margin-top:12px;font-size:14px;line-height:1.6;color:#4A4A4A;
+  background:#F7F5F3;border:1px solid #EAE8E5;border-radius:12px;padding:12px 15px;
+  animation:vmin .26s ease}
+.ask-say b{color:#0A0A0A}
+/* the ID rule from the readability pass was winning — force dark on the white card */
+#appMain .sheet #vmBody{color:#0A0A0A;background:#FBFAF9;border:1px solid #E4E2DF}
+#appMain .sheet #vmBody::placeholder{color:#A0A09A}
+#appMain .sheet #vmAsk{color:#0A0A0A}
 
 </style>
 
@@ -676,31 +772,6 @@ body.gd-on{background:var(--gd-bg)}
   </div>
   <div id="vmBanners"></div>
   <div class="vm-wrap" id="vmView"></div>
-</div>
-
-<button class="gbub" id="gbub" title="Your guide (G)">
-  <svg width="30" height="30" viewBox="0 0 32 32" fill="none">
-    <circle cx="16" cy="16" r="12.5" stroke="#2E0F14" stroke-width="1.7" opacity=".55"/>
-    <circle cx="16" cy="16" r="7.5" stroke="#2E0F14" stroke-width="1.7"/>
-    <circle cx="16" cy="16" r="2.8" fill="#2E0F14"/></svg>
-  <span class="gnd hide" id="gnd"></span>
-</button>
-
-<div class="gpanel hide" id="gpanel">
-  <div class="ghead">
-    <span class="gav"><svg width="17" height="17" viewBox="0 0 32 32" fill="none">
-      <circle cx="16" cy="16" r="12.5" stroke="#2E0F14" stroke-width="2" opacity=".55"/>
-      <circle cx="16" cy="16" r="7.5" stroke="#2E0F14" stroke-width="2"/>
-      <circle cx="16" cy="16" r="3" fill="#2E0F14"/></svg></span>
-    <div><div class="t">Your guide</div><div class="s">Ollin : Vamos</div></div>
-    <button class="gx" id="gx">&times;</button>
-  </div>
-  <div class="gbody" id="gbody"></div>
-  <div class="gchips" id="gchips"></div>
-  <div class="gask">
-    <input id="gin" placeholder="Ask your T&iacute;o / T&iacute;a&hellip;" maxlength="240">
-    <button id="gsend">Ask</button>
-  </div>
 </div>
 
 <!-- EXTRACTED VERBATIM from index.html lines 1784-1820 (#lockScreen incl. #authOverlay)
@@ -2052,8 +2123,6 @@ function chrome() {
     var q = VM.mode === "card" && VM.queue.length ? (VM.i / VM.queue.length * 100) : 0;
     f.style.width = q + "%";
   }
-  var gb2 = document.getElementById("gbub");
-  if (gb2) gb2.classList[VM.mode === "card" ? "remove" : "add"]("hide");
   var c = document.getElementById("vmCount");
   if (c) c.textContent = VM.mode === "card"
     ? (Math.min(VM.i, VM.queue.length) + " / " + VM.queue.length + " · " + doneToday() + " sent")
@@ -2383,8 +2452,19 @@ function viewCard(v) {
     "</span></div>" +
     '<textarea id="vmBody" rows="12" placeholder="Ask your guide to draft this — bottom right, or press G.">' + esc(draft) + "</textarea>" +
     '<div class="len" id="vmLen">' + countLabel(draft) + "</div>" +
+    '<div class="ask">' +
+      '<div class="ask-bar">' +
+        '<input id="vmAsk" placeholder="Ask your T\u00edo / T\u00eda\u2026" maxlength="240" autocomplete="off">' +
+        '<button class="ask-go" id="vmAskGo" title="Ask">' + IC_GO + '</button>' +
+      '</div>' +
+      '<div class="ask-chips">' +
+        CARD_STEERS.map(function (c, ci) {
+          return '<button class="ask-chip' + (ci === 0 ? " key" : "") + '" data-steer="' + c[1] + '">' + esc(c[0]) + '</button>';
+        }).join("") +
+      '</div>' +
+      '<div id="vmSay"></div>' +
+    '</div>' +
     '<div class="go">' +
-    '<button class="gb" id="vmDraft">✦ ' + (draft ? "Redraft with Ollin" : "Draft with Ollin") + "</button>" +
     '<a id="vmMail" class="' + (t.email ? "" : "off") + '" href="#">✉ Open in email</a>' +
     '<a href="' + esc(liUrl) + '" target="_blank" rel="noopener">◉ Open LinkedIn</a>' +
     '<button class="gb" id="vmCopy">Copy</button></div>' +
@@ -2399,7 +2479,6 @@ function viewCard(v) {
     "</div></div>";
 
   wireCard(t);
-  guideCard(t);
 }
 function syncMail(t) {
   var a = document.getElementById("vmMail");
@@ -2427,7 +2506,15 @@ function wireCard(t) {
   document.getElementById("vmCopy").onclick = function () {
     vmCopy(ta.value); toast(ta.value ? "Copied" : "Nothing to copy");
   };
-  document.getElementById("vmDraft").onclick = function () { askOllin(""); };
+  var ai = document.getElementById("vmAsk");
+  document.getElementById("vmAskGo").onclick = function () { cardAsk(); };
+  ai.addEventListener("keydown", function (e) { if (e.key === "Enter") cardAsk(); });
+  Array.prototype.forEach.call(document.querySelectorAll("[data-steer]"), function (b) {
+    b.onclick = function () {
+      var s = b.dataset.steer;
+      askOllin(s === "draft" ? "" : s);
+    };
+  });
   document.getElementById("vmSent").onclick = function () { decide("sent", t); };
   document.getElementById("vmLater").onclick = function () { decide("later", t); };
   document.getElementById("vmSkip").onclick = function () { decide("skip", t); };
@@ -2466,15 +2553,41 @@ function vmCopyFB(txt) {
   document.body.removeChild(a);
 }
 
+/* Steers offered on the card. First one is the plain draft. */
+var CARD_STEERS = [
+  ["Draft it", "draft"],
+  ["Shorter", "Make it shorter."],
+  ["More conversational", "More conversational."],
+  ["Different angle", "Try a different angle."],
+  ["Push nearshore", "Lean into our nearshore capabilities."]
+];
+function vmSay(html) {
+  var s = document.getElementById("vmSay");
+  if (s) s.innerHTML = '<div class="ask-say">' + html + '</div>';
+}
+function cardAsk() {
+  var i = document.getElementById("vmAsk");
+  if (!i) return;
+  var q = i.value.trim();
+  if (!q) return;
+  i.value = "";
+  var lq = q.toLowerCase();
+  if (/reply|respond|objection|says no|push ?back/.test(lq))
+    return vmSay('<b>&ldquo;Send them over.&rdquo;</b> Two profiles, ask for a yes/no by Friday. &nbsp;&middot;&nbsp; ' +
+      '<b>&ldquo;We&rsquo;re all set.&rdquo;</b> &ldquo;When the next req lands, want me ready?&rdquo; then close it out. &nbsp;&middot;&nbsp; ' +
+      '<b>Silence.</b> That&rsquo;s what the cadence is for.');
+  askOllin(q);
+}
+
 /* ---------- /api/write ---------- */
 function askOllin(steer) {
-  if (VM.mode !== "card") return gmsg("Open a card first and I'll draft for it.");
+  if (VM.mode !== "card") return;
   if (VM.drafting) return;
   var t = VM.queue[VM.i];
   if (!t) return;
   VM.drafting = true;
-  setChips(GUIDE_CHIPS, false, true);
-  gmsg(steer ? "Redrafting — " + esc(steer) + "…" : "Drafting with Ollin…");
+  vmSay(steer ? "Redrafting &mdash; " + esc(steer) : "Drafting&hellip;");
+  var gbtn = document.getElementById("vmAskGo"); if (gbtn) gbtn.classList.add("busy");
   fetch("/api/write", {
     method: "POST", headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -2486,20 +2599,21 @@ function askOllin(steer) {
     return r.json().then(function (d) { return { ok: r.ok, d: d }; });
   }).then(function (res) {
     if (!res.ok || !res.d || !res.d.text) {
-      gmsg(esc((res.d && res.d.error) || "Ollin couldn't draft that — try again"));
+      vmSay(esc((res.d && res.d.error) || "Ollin couldn't draft that — try again"));
       toast((res.d && res.d.error) || "Ollin couldn't draft that — try again");
       return;
     }
     state.notes[t.id] = res.d.text; persistNotes();
     var ta = document.getElementById("vmBody");
     if (ta) { ta.value = res.d.text; document.getElementById("vmLen").textContent = countLabel(res.d.text); syncMail(t); }
-    if (res.d.angleWarning) gmsg(esc(res.d.angleWarning));
-    gmsg(steer ? "Redrafted with your direction. It's in the box — yours to edit." : "Drafted. It's in the box — yours to edit.");
+    vmSay(res.d.angleWarning ? esc(res.d.angleWarning)
+      : (steer ? "Redrafted &mdash; it&rsquo;s in the box, yours to edit." : "Drafted &mdash; it&rsquo;s in the box, yours to edit."));
     toast(steer ? "Redrafted with your direction." : "Drafted. Yours to edit.");
   }).catch(function () {
-    gmsg("Network hiccup — try again"); toast("Network hiccup — try again");
+    vmSay("Network hiccup &mdash; try again"); toast("Network hiccup — try again");
   }).then(function () {
-    VM.drafting = false; setChips(GUIDE_CHIPS, false, false);
+    VM.drafting = false;
+    var g2 = document.getElementById("vmAskGo"); if (g2) g2.classList.remove("busy");
   });
 }
 
@@ -2510,7 +2624,7 @@ var GAV = '<span class="av"><svg width="15" height="15" viewBox="0 0 32 32" fill
   '<circle cx="16" cy="16" r="12.5" stroke="#2E0F14" stroke-width="2.2" opacity=".55"/>' +
   '<circle cx="16" cy="16" r="7.5" stroke="#2E0F14" stroke-width="2.2"/>' +
   '<circle cx="16" cy="16" r="3" fill="#2E0F14"/></svg></span>';
-function gopen() {
+function gopen_unused() {
   var p = document.getElementById("gpanel");
   if (p) p.classList.remove("hide");
   var n = document.getElementById("gnd");
@@ -2561,9 +2675,8 @@ function guideDoor_unused() {
     opts.push(["Import a list", "go_contacts"]);
     setChips(opts, true);
   }
-  gopen();
 }
-function guideCard(t) {
+function guideCard_unused(t) {
   if (VM.greeted[VM.i]) { setChips(GUIDE_CHIPS); return; }
   VM.greeted[VM.i] = 1;
   var body = document.getElementById("gbody");
@@ -2724,25 +2837,10 @@ function viewAccount(v) {
   fi.onchange = function (e) { var f = e.target.files[0]; if (f) handleImportFile(f); e.target.value = ""; };
   document.body.appendChild(fi);
 
-  var gb = document.getElementById("gbub");
-  if (gb) gb.onclick = function () {
-    var p = document.getElementById("gpanel");
-    p.classList.toggle("hide");
-    var n = document.getElementById("gnd");
-    if (n) n.classList.add("hide");
-    if (!p.classList.contains("hide")) document.getElementById("gin").focus();
-  };
-  var gx = document.getElementById("gx");
-  if (gx) gx.onclick = function () { document.getElementById("gpanel").classList.add("hide"); };
-  var gs = document.getElementById("gsend");
-  if (gs) gs.onclick = gask;
-  var gi = document.getElementById("gin");
-  if (gi) gi.addEventListener("keydown", function (e) { if (e.key === "Enter") gask(); });
 
   document.addEventListener("keydown", function (e) {
     var tg = e.target.tagName;
     if (tg === "INPUT" || tg === "TEXTAREA" || tg === "SELECT") return;
-    if (e.key === "g" || e.key === "G") { var b = document.getElementById("gbub"); if (b) b.click(); return; }
     if (VM.mode !== "card") return;
     var t = VM.queue[VM.i];
     if (!t) return;
