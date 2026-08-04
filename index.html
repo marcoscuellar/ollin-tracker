@@ -4,12 +4,12 @@
 <link rel="icon" type="image/svg+xml" href="assets/ollin-tracker-icon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 /* login.css - CSS for keep/login.html, copied VERBATIM from the <style> block
    of index.html. Source order is preserved so the cascade behaves identically.
    Fonts required (from index.html <head>):
-   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800;900&family=Geist+Mono:wght@400;500;600&family=Sora:wght@500;700;800&family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet"> */
+   */
 
 /* ===== index.html 9-29 - :root design tokens (light / default) ===== */
   :root{
@@ -195,14 +195,14 @@
   .ol-card{position:relative;width:420px;max-width:calc(100vw - 40px);padding:44px 40px 40px;background:#141412;border:1px solid #26262B;border-radius:10px;}
   .ol-brand{text-align:center;margin-bottom:36px;}
   .ol-mark{font-size:30px;font-weight:800;letter-spacing:-.05em;line-height:1;color:#F8F7F4;}
-  .ol-lbl{margin-top:8px;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;letter-spacing:.16em;color:#9A968B;text-transform:uppercase;}
+  .ol-lbl{margin-top:8px;font-family:'Geist Mono',monospace;font-size:11px;font-weight:600;letter-spacing:.16em;color:#9A968B;text-transform:uppercase;}
   .ol-h{font-size:22px;font-weight:700;letter-spacing:-.02em;text-align:center;margin-bottom:28px;color:#F8F7F4;}
   .ol-form{display:flex;flex-direction:column;gap:18px;}
-  .ol-field label{display:block;margin-bottom:8px;font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;letter-spacing:.14em;color:#9A968B;text-transform:uppercase;}
+  .ol-field label{display:block;margin-bottom:8px;font-family:'Geist Mono',monospace;font-size:10px;font-weight:600;letter-spacing:.14em;color:#9A968B;text-transform:uppercase;}
   .ol-field input{width:100%;background:#0A0A0A;border:1px solid #26262B;border-radius:6px;padding:13px 14px;font-family:'Archivo',sans-serif;font-size:15px;color:#F8F7F4;outline:none;transition:border-color .18s ease;}
   .ol-field input::placeholder{color:#5A564C;}
   .ol-field input:focus{border-color:#5A564C;}
-  .ol-go{width:100%;background:#F8F7F4;color:#0A0A0A;border:none;border-radius:6px;padding:14px 22px;font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;letter-spacing:.14em;cursor:pointer;transition:background .18s ease;}
+  .ol-go{width:100%;background:#F8F7F4;color:#0A0A0A;border:none;border-radius:6px;padding:14px 22px;font-family:'Geist Mono',monospace;font-size:12px;font-weight:600;letter-spacing:.14em;cursor:pointer;transition:background .18s ease;}
   .ol-go:hover{background:#E7E5E0;}
   .ol-go:disabled{opacity:.6;cursor:default;}
   .ol-err{min-height:16px;margin-top:14px;text-align:center;font-size:13px;font-weight:500;color:#C97A6A;}
@@ -213,7 +213,7 @@
 
 /* ===== index.html 1006-1008 - toast stack (.o2-stack / .o2-note) ===== */
   .o2-stack{position:fixed;right:24px;bottom:24px;display:flex;flex-direction:column;gap:10px;align-items:flex-end;z-index:200;pointer-events:none;}
-  .o2-note{display:flex;align-items:center;gap:10px;background:var(--o2-ink);color:#fff;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:1.2px;padding:13px 18px;white-space:nowrap;transform-origin:right bottom;transition:transform .3s cubic-bezier(.16,1,.3,1),filter .3s ease,opacity .3s ease;}
+  .o2-note{display:flex;align-items:center;gap:10px;background:var(--o2-ink);color:#fff;font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:1.2px;padding:13px 18px;white-space:nowrap;transform-origin:right bottom;transition:transform .3s cubic-bezier(.16,1,.3,1),filter .3s ease,opacity .3s ease;}
   .o2-note .dot{width:7px;height:7px;background:var(--o2-accent);flex:none;}
 
 /* ===== index.html 1247 - .btn:hover rebrand override ===== */
@@ -249,7 +249,7 @@
   --c:#EA7987; --c-dim:#C4606D; --c-soft:rgba(234,121,135,.12);
   --vm-warn:#FBBF24; --vm-no:#F87171; --vm-cool:#7DD3FC; --vm-ok:#4ADE80;
   --arch:"Archivo",ui-sans-serif,-apple-system,"Segoe UI",Inter,sans-serif;
-  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  --mono:"Geist Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
 }
 #appMain{background:var(--vm-paper);color:var(--vm-ink);min-height:100vh;
   font-family:ui-sans-serif,-apple-system,"Segoe UI",Inter,Roboto,sans-serif;
@@ -758,6 +758,377 @@ body.gd-on{background:var(--gd-bg)}
 #appMain .sheet #vmBody::placeholder{color:#A0A09A}
 #appMain .sheet #vmAsk{color:#0A0A0A}
 
+/* ===================== GLVE modal proportions ===================== */
+.sheet{padding:54px 54px 44px;border-radius:20px;
+  box-shadow:0 30px 80px rgba(0,0,0,.5),0 3px 10px rgba(0,0,0,.28)}
+.sheet::before{background:none}
+.khead{margin-bottom:26px;gap:14px}
+.ktag{border-radius:6px;padding:6px 12px;font-size:10.5px;letter-spacing:.14em;
+  background:#F5F5F4;border:1px solid #E7E5E4;color:#57534E}
+.kt-new{background:#FFF1F2;border-color:#F6D6DA;color:#B4485A}
+.kt-fu{background:#EFF6FF;border-color:#D3E4F7;color:#2C6E9E}
+.kt-late{background:#FFFBEB;border-color:#F0E0BC;color:#92400E}
+.sheet .mn{color:#8C8C86;font-size:11px;letter-spacing:.16em}
+
+.kname{font-size:46px;letter-spacing:-.042em;line-height:1.02;margin:0 0 18px;font-weight:800}
+.klede{font-size:17.5px;line-height:1.62;color:#525252;max-width:60ch;margin:0 0 30px}
+.klede b{color:#0A0A0A;font-weight:600}
+
+.kpill{background:#F5F5F4;border:none;border-radius:99px;padding:10px 26px 10px 10px;
+  gap:15px;margin-bottom:34px}
+.kpill .bdg{width:31px;height:31px;background:#FFFFFF;border:1px solid #E7E5E4;
+  color:#0A0A0A;font-size:12px}
+.kpill .tx{font-size:15px;line-height:1.5;color:#57534E}
+.kpill .tx b{color:#0A0A0A;font-weight:700}
+
+.body2{gap:44px;margin-bottom:8px}
+
+/* intel sections read as GLVE boxes */
+.isec{border:1px solid #E7E5E4;border-radius:14px;padding:24px;margin-bottom:14px;background:#fff}
+.ih{margin-bottom:16px;display:flex;align-items:center;gap:9px;font-size:11px;letter-spacing:.15em}
+.ih svg{opacity:.85}
+.ihk{color:#059669} .ihb{color:#57534E} .ihr{color:#2C6E9E} .ihg{color:#92400E}
+.fx{grid-template-columns:92px minmax(0,1fr);gap:16px;padding:13px 0;border-bottom:1px solid #F0EEEB}
+.fxk{color:#8C8C86;font-size:10.5px;letter-spacing:.13em;font-weight:600}
+.fxv{font-size:15.5px;line-height:1.55;color:#1A1A1A;font-weight:450}
+.fxs{color:#B4485A;font-size:10.5px;letter-spacing:.11em;margin-top:6px;opacity:1}
+.fx-off .fxv{color:#B0B0AA}
+.iread{background:#F7FAFC;border-color:#DCE7EF}
+.ird{color:#41505C;font-size:14.8px}
+.igap{background:#FFFBEB;border-color:#F0E0BC}
+.igp{color:#6B5A3E;font-size:14px}
+
+/* compose column */
+.compose .mn{margin-bottom:16px}
+.tabs{gap:8px;margin-bottom:14px}
+.tab{padding:9px 18px;font-size:13.5px;border-radius:99px;border-color:#E7E5E4;color:#57534E;
+  font-weight:600}
+.tab:hover:not(.on){border-color:#0A0A0A;color:#0A0A0A}
+.tab.on{background:#0A0A0A;color:#fff;border-color:#0A0A0A}
+#appMain .sheet #vmBody{border-radius:14px;padding:18px 20px;font-size:16px;line-height:1.72;
+  border:1px solid #E7E5E4;background:#FFFFFF}
+.len{color:#A8A8A2;font-size:12px;margin-top:8px}
+.rule{background:#EAE8E5;margin:34px 0 26px}
+
+/* ask bar */
+.ask{margin:20px 0 6px}
+.ask-bar{background:#F5F5F4;border:1px solid #EAE8E5;padding:6px 6px 6px 22px}
+#appMain .ask-bar input{font-size:15.5px;padding:12px 0}
+.ask-chips{gap:8px;margin-top:13px}
+#appMain .ask-chip{padding:9px 16px;font-size:13px;border-color:#E7E5E4;color:#57534E}
+.ask-say{background:#F5F5F4;border-color:#EAE8E5;border-radius:14px;padding:14px 17px;
+  font-size:14px;color:#525252}
+
+.go{gap:10px;margin:22px 0 0}
+.go a,.go .gb{background:#fff;border-color:#E7E5E4;color:#0A0A0A;padding:12px 18px;
+  border-radius:99px;font-size:14px}
+.go a:hover,.go .gb:hover{border-color:#0A0A0A;color:#0A0A0A;background:#FAFAF9}
+
+/* the black GLVE CTA bar */
+.kcta{background:#0A0A0A;color:#FFFFFF;border-radius:99px;padding:9px 28px 9px 9px;
+  font-size:15.5px;font-weight:700;gap:16px;margin-top:38px;box-shadow:none}
+.kcta:hover{background:#1F1F1F;transform:none;filter:none}
+.kcta .bdg{width:36px;height:36px;background:var(--c);color:#2E0F14;font-size:15px}
+.kcta .sm{color:rgba(255,255,255,.55);font-size:10.5px;letter-spacing:.13em}
+.k2{gap:12px;margin-top:14px}
+.k2 button{border-radius:99px;border-color:#E7E5E4;color:#78716C;padding:13px;font-size:13.5px}
+
+@media(max-width:900px){.sheet{padding:32px 26px}.kname{font-size:32px}.body2{gap:26px}}
+@media(max-width:640px){.sheet{padding:24px 20px}.kname{font-size:27px}.klede{font-size:16px}}
+
+/* ===================== LIGHT APP + WIDER CARD ===================== */
+#appMain{background:#FAFAF9;color:#0A0A0A}
+.vm-wrap{max-width:1180px;padding:32px 26px 70px}
+.vm-top{background:rgba(255,255,255,.95);border-bottom:1px solid #E7E5E4}
+.vm-topin{max-width:1180px;padding:14px 26px}
+.vm-brand{color:#0A0A0A}
+.vm-brand em{color:var(--c)}
+.vm-brand b{color:var(--c);text-shadow:none}
+.vm-tabs button{color:#78716C}
+.vm-tabs button:hover{color:#0A0A0A}
+.vm-tabs button.on{background:#F0EFED;color:#0A0A0A}
+.vm-bar{background:#EAE8E5;height:6px}
+.vm-count{color:#78716C}
+.vm-av{background:#FFFFFF;border:1px solid #E7E5E4;color:#57534E}
+.vm-av:hover{border-color:#0A0A0A;color:#0A0A0A}
+
+.vm-h1{color:#0A0A0A;text-shadow:none}
+.vm-sub{color:#57534E}
+.vm-card{background:#FFFFFF;border:1px solid #E7E5E4;border-radius:16px;padding:26px}
+.vm-gh{background:#FFFFFF;border:1px solid #E7E5E4;color:#0A0A0A;border-radius:99px;padding:12px 20px}
+.vm-gh:hover{border-color:#0A0A0A;color:#0A0A0A;background:#FAFAF9}
+.vm-pri{background:#0A0A0A;color:#FFFFFF;border-radius:99px}
+.vm-pri:hover{background:#1F1F1F;filter:none}
+#appMain .vm-card input,#appMain .vm-card select,#appMain .vm-card textarea{
+  background:#FFFFFF;border:1px solid #E7E5E4;color:#0A0A0A}
+.drop{border:2px dashed #D6D3D1;border-radius:16px}
+.drop:hover,.drop.hot{border-color:var(--c);background:#FFF6F7}
+.drop .big{color:#0A0A0A}
+.drop .sm{color:#78716C}
+.vm-tbl th{color:#8C8C86;border-bottom:1px solid #E7E5E4}
+.vm-tbl td{border-bottom:1px solid #F0EEEB;color:#1A1A1A}
+.vm-tbl td span[style]{color:#78716C !important}
+.vm-tbl tr.clk:hover td{background:#FDF6F7}
+.p-due{background:#FFF1F2;color:#B4485A}
+.p-late{background:#FFFBEB;color:#92400E}
+.p-rest{background:#F5F5F4;color:#78716C}
+.p-done{background:#ECFDF5;color:#047857}
+.mn{color:#8C8C86}
+
+/* stack ghosts */
+.g1,.g2{background:#F0EFED;border-color:#E4E2DF}
+
+/* WIDER, BALANCED CARD */
+.stack{max-width:1180px;margin:6px auto 0}
+.body2{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:40px;align-items:start}
+.fx{grid-template-columns:84px minmax(0,1fr);gap:18px}
+.compose{position:sticky;top:86px}
+@media(max-width:1000px){.compose{position:static}.body2{grid-template-columns:1fr;gap:26px}}
+
+/* toast on light */
+.o2-note,.o2-stack > *{color:#fff}
+
+/* ===================== BIGGER TYPE ===================== */
+.kname{font-size:54px}
+.klede{font-size:20px;line-height:1.58;max-width:56ch}
+.kpill{padding:13px 30px 13px 12px}
+.kpill .tx{font-size:17px}
+.kpill .bdg{width:34px;height:34px;font-size:13px}
+.ktag{font-size:12px;padding:7px 13px}
+.sheet .mn{font-size:12.5px;letter-spacing:.15em}
+.ih{font-size:12.5px}
+.ih svg{width:19px;height:19px}
+
+.fx{grid-template-columns:100px minmax(0,1fr);gap:20px;padding:15px 0}
+.fxk{font-size:11.5px}
+.fxv{font-size:17.5px;line-height:1.5}
+.fxs{font-size:11.5px;margin-top:7px}
+.fx-off .fxv{font-size:13px}
+
+.ird{font-size:16.5px;line-height:1.6}
+.ird li{margin-bottom:11px}
+.igp{font-size:16px;line-height:1.6}
+.isec{padding:28px}
+
+.tab{font-size:15px;padding:10px 20px}
+#appMain .sheet #vmBody{font-size:17.5px;line-height:1.7;padding:22px 24px}
+.len{font-size:13px}
+#appMain .ask-bar input{font-size:17px;padding:14px 0}
+.ask-bar{padding:7px 7px 7px 24px}
+#appMain .ask-go{width:44px;height:44px}
+#appMain .ask-chip{font-size:14.5px;padding:10px 18px}
+.ask-say{font-size:16px;padding:16px 19px}
+.go a,.go .gb{font-size:15.5px;padding:13px 21px}
+.kcta{font-size:18px;padding:10px 32px 10px 10px}
+.kcta .bdg{width:42px;height:42px;font-size:17px}
+.kcta .sm{font-size:11.5px}
+.k2 button{font-size:15px;padding:15px}
+
+/* the rest of the app */
+.vm-h1{font-size:40px}
+.vm-sub{font-size:18px}
+.vm-tbl{font-size:16.5px}
+.vm-tbl th{font-size:12px}
+.vm-tbl td{padding:15px 12px}
+.pill{font-size:12px;padding:5px 12px}
+.drop .big{font-size:19px}
+.drop .sm{font-size:14.5px}
+.vm-gh,.vm-pri{font-size:15.5px}
+.mn{font-size:12.5px}
+.vm-tabs button{font-size:12px}
+.vm-count{font-size:14px}
+
+@media(max-width:900px){.kname{font-size:34px}.klede{font-size:17px}.fxv{font-size:16px}}
+@media(max-width:640px){.kname{font-size:29px}.vm-h1{font-size:28px}}
+
+/* ---- message header: deliberate, not wrapped ---- */
+.mhead{display:flex;align-items:center;justify-content:space-between;gap:16px;
+  padding-bottom:16px;border-bottom:1px solid #EAE8E5;margin-bottom:18px}
+.seg{display:inline-flex;background:#F5F5F4;border:1px solid #E7E5E4;border-radius:99px;padding:3px}
+#appMain .seg button{background:transparent;border:none;border-radius:99px;padding:8px 18px;
+  font-size:14px;font-weight:600;color:#78716C;transition:.15s}
+#appMain .seg button:hover{color:#0A0A0A}
+#appMain .seg button.on{background:#0A0A0A;color:#FFFFFF}
+.anglerow{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:18px}
+.arl{flex:0 0 auto}
+.anglerow .tabs{display:inline-flex;gap:8px;margin:0;flex-wrap:wrap}
+
+/* ===================== BLACK CARD ON WHITE CONTAINER ===================== */
+#appMain{background:#FFFFFF}
+.vm-top{background:rgba(255,255,255,.96);border-bottom:1px solid #EDEBE8}
+.g1,.g2{background:#1C1C1A;border-color:#2A2A27}
+
+.sheet{background:#0A0A0A;border:1px solid #0A0A0A;color:#F8F7F4;
+  box-shadow:0 40px 90px rgba(10,10,10,.30),0 6px 18px rgba(10,10,10,.14)}
+.sheet::before{display:block;content:"";position:absolute;top:0;right:0;width:60%;height:340px;
+  background:radial-gradient(75% 100% at 88% 0%,rgba(234,121,135,.20),transparent 68%)}
+
+.sheet .mn{color:#7A7A74}
+.ktag{background:#161614;border-color:#2A2A27;color:#B5B5AE}
+.kt-new{background:rgba(234,121,135,.13);border-color:rgba(234,121,135,.35);color:#F0929E}
+.kt-fu{background:rgba(125,211,252,.12);border-color:rgba(125,211,252,.32);color:#8ECCF0}
+.kt-late{background:rgba(251,191,36,.12);border-color:rgba(251,191,36,.32);color:#E7BE5C}
+.dot3{background:#2E2E2A}
+.dot3.on{background:var(--c);box-shadow:0 0 12px rgba(234,121,135,.65)}
+
+.kname{color:#FFFFFF;text-shadow:0 0 60px rgba(234,121,135,.22)}
+.klede{color:#A8A8A1}
+.klede b{color:#FFFFFF;font-weight:650}
+
+.kpill{background:#141412;border:1px solid #26262B}
+.kpill .bdg{background:#0A0A0A;border:1px solid #2E2E2A;color:var(--c)}
+.kpill .tx{color:#A8A8A1}
+.kpill .tx b{color:#FFFFFF}
+
+.isec{background:#111110;border:1px solid #232320}
+.ihk{color:#5FD3A8} .ihb{color:#9A968B} .ihr{color:#8ECCF0} .ihg{color:#E7BE5C}
+.fx{border-bottom:1px solid #1E1E1B}
+.fxk{color:#7A7A74}
+.fxv{color:#F8F7F4}
+.fxs{color:#F0929E}
+.fx-off .fxv{color:#55554F}
+.iread{background:rgba(142,204,240,.05);border-color:rgba(142,204,240,.16)}
+.ird{color:#B3BFC8}
+.igap{background:rgba(231,190,92,.05);border-color:rgba(231,190,92,.18)}
+.igp{color:#C4B48A}
+.ipull{color:#5F5F59}
+
+.mhead{border-bottom:1px solid #232320}
+.seg{background:#141412;border-color:#2A2A27}
+#appMain .seg button{color:#9A968B}
+#appMain .seg button:hover{color:#F8F7F4}
+#appMain .seg button.on{background:#F8F7F4;color:#0A0A0A}
+.tab{border-color:#2A2A27;color:#A8A8A1;background:transparent}
+.tab:hover:not(.on){border-color:#4A4A44;color:#F8F7F4}
+.tab.on{background:var(--c);color:#2E0F14;border-color:var(--c)}
+
+#appMain .sheet #vmBody{background:#111110;border:1px solid #26262B;color:#F8F7F4}
+#appMain .sheet #vmBody::placeholder{color:#5F5F59}
+#appMain .sheet #vmBody:focus{border-color:var(--c);box-shadow:0 0 0 3px rgba(234,121,135,.16)}
+.len{color:#5F5F59}
+.rule{background:#232320}
+
+.ask-bar{background:#141412;border:1px solid #26262B}
+.ask-bar:focus-within{border-color:var(--c);box-shadow:0 0 0 4px rgba(234,121,135,.14)}
+#appMain .ask-bar input{color:#F8F7F4}
+#appMain .ask-bar input::placeholder{color:#5F5F59}
+#appMain .ask-go{background:var(--c);color:#2E0F14;box-shadow:0 0 22px rgba(234,121,135,.45)}
+#appMain .ask-chip{background:transparent;border-color:#2A2A27;color:#A8A8A1}
+#appMain .ask-chip:hover{color:#F8F7F4;border-color:#4A4A44;background:#141412}
+#appMain .ask-chip.key{background:var(--c);color:#2E0F14;border-color:var(--c)}
+.ask-say{background:#141412;border-color:#26262B;color:#A8A8A1}
+.ask-say b{color:#FFFFFF}
+
+.go a,.go .gb{background:transparent;border-color:#2A2A27;color:#F8F7F4}
+.go a:hover,.go .gb:hover{border-color:var(--c);color:#F0929E;background:#141412}
+
+.kcta{background:var(--c);color:#2E0F14;box-shadow:0 10px 34px rgba(234,121,135,.28)}
+.kcta:hover{background:#F0929E;transform:translateY(-1px)}
+.kcta .bdg{background:rgba(46,15,20,.20);color:#2E0F14}
+.kcta .sm{color:rgba(46,15,20,.62)}
+.k2 button{border-color:#2A2A27;color:#8F8F88;background:transparent}
+.k2 .kl:hover{color:#E7BE5C;border-color:rgba(231,190,92,.5);background:#141412}
+.k2 .kr:hover{color:#F08A8A;border-color:rgba(240,138,138,.5);background:#141412}
+/* corner glow: span the whole card so there's no visible box edge */
+.sheet::before{top:0;left:0;right:0;bottom:0;width:auto;height:auto;
+  background:radial-gradient(58% 40% at 94% -6%,rgba(234,121,135,.22),transparent 60%)}
+
+/* ===================== ONE ASK SYSTEM (bar · chips · reply) ===================== */
+:root{ --as-surface:#141412; --as-line:#26262B; --as-line-hi:#3A3A34; --as-ink:#F8F7F4;
+       --as-mute:#9A968B; --as-dim:#5F5F59; }
+
+/* bar */
+.ask{margin:22px 0 6px}
+.ask-bar{background:var(--as-surface);border:1px solid var(--as-line);border-radius:99px;
+  padding:7px 7px 7px 24px;transition:.18s}
+.ask-bar:focus-within{border-color:var(--c);box-shadow:0 0 0 4px rgba(234,121,135,.13)}
+#appMain .ask-bar input{color:var(--as-ink);font-size:17px;padding:14px 0}
+#appMain .ask-bar input::placeholder{color:var(--as-dim)}
+#appMain .ask-go{width:44px;height:44px;background:var(--c);color:#2E0F14;
+  box-shadow:0 0 20px rgba(234,121,135,.40)}
+#appMain .ask-go:hover{background:#F0929E;box-shadow:0 0 28px rgba(234,121,135,.60)}
+
+/* chips — same surface family as the bar */
+.ask-chips{gap:8px;margin-top:12px}
+#appMain .ask-chip{background:var(--as-surface);border:1px solid var(--as-line);
+  color:var(--as-mute);border-radius:99px;padding:10px 18px;font-size:14.5px;font-weight:600}
+#appMain .ask-chip:hover{background:#1A1A17;border-color:var(--as-line-hi);color:var(--as-ink)}
+#appMain .ask-chip.key{background:var(--c);border-color:var(--c);color:#2E0F14;font-weight:800}
+#appMain .ask-chip.key:hover{background:#F0929E;color:#2E0F14}
+
+/* reply — reads as Ollin speaking, same surface, softened corner */
+.ask-say{display:flex;gap:12px;align-items:flex-start;
+  background:var(--as-surface);border:1px solid var(--as-line);
+  border-radius:18px;border-top-left-radius:6px;padding:16px 20px;margin-top:14px;
+  font-size:16px;line-height:1.6;color:var(--as-mute);animation:vmin .26s ease}
+.ask-say .as-mark{flex:0 0 auto;width:26px;height:26px;border-radius:50%;display:grid;
+  place-items:center;background:rgba(234,121,135,.14);color:var(--c);margin-top:1px}
+.ask-say .as-body{min-width:0}
+.ask-say .as-who{display:block;color:var(--c);font-size:10.5px;letter-spacing:.16em;
+  margin-bottom:5px;opacity:.9}
+.ask-say b{color:var(--as-ink);font-weight:650}
+
+/* landing bar uses the exact same tokens */
+.gd-bar{background:var(--as-surface);border:1px solid var(--as-line);padding:7px 7px 7px 24px}
+.gd-bar:focus-within{border-color:var(--c);box-shadow:0 0 0 4px rgba(234,121,135,.13)}
+#appMain .gd-bar input{color:var(--as-ink);font-size:17px;padding:14px 0}
+#appMain .gd-bar input::placeholder{color:var(--as-dim)}
+#appMain .gd-ic{border:1px solid var(--as-line);color:var(--as-mute);width:44px;height:44px}
+#appMain .gd-ic:hover{color:var(--as-ink);border-color:var(--as-line-hi)}
+#appMain .gd-go{width:44px;height:44px;background:var(--c);color:#2E0F14;
+  box-shadow:0 0 20px rgba(234,121,135,.40)}
+#appMain .gd-go:hover{background:#F0929E;box-shadow:0 0 28px rgba(234,121,135,.60)}
+#appMain .gd-chip{background:var(--as-surface);border:1px solid var(--as-line);
+  color:var(--as-mute);padding:10px 18px;font-size:14.5px;font-weight:600}
+#appMain .gd-chip:hover{background:#1A1A17;border-color:var(--as-line-hi);color:var(--as-ink)}
+#appMain .gd-chip.key{background:var(--c);border-color:var(--c);color:#2E0F14;font-weight:800;
+  box-shadow:0 0 22px rgba(234,121,135,.20)}
+#appMain .gd-chip.key:hover{background:#F0929E;color:#2E0F14}
+.gd-say{background:var(--as-surface);border:1px solid var(--as-line);border-radius:18px;
+  border-top-left-radius:6px;padding:16px 20px;color:var(--as-mute);font-size:16px;
+  max-width:52ch;text-align:left}
+.gd-say b{color:var(--as-ink)}
+
+/* ===================== LOGIN — same system ===================== */
+.lock,.ol-page{background:#0A0A0A}
+.ol-hatch,.ol-vig{opacity:.5}
+.ol-card{background:#111110;border:1px solid #232320;border-radius:20px;padding:44px 40px 36px;
+  box-shadow:0 40px 90px rgba(0,0,0,.6);position:relative;overflow:hidden}
+.ol-card::before{content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(58% 40% at 94% -6%,rgba(234,121,135,.20),transparent 60%)}
+.ol-card > *{position:relative;z-index:1}
+.ol-brand{margin-bottom:28px;text-align:center}
+.vm-word{font-family:"Archivo",ui-sans-serif,sans-serif;font-weight:800;font-size:21px;
+  letter-spacing:-.015em;color:#F8F7F4;display:inline-flex;align-items:center;gap:7px}
+.vm-word i{font-style:normal;color:var(--c);font-weight:600;opacity:.85}
+.vm-word b{color:var(--c);font-weight:800;
+  text-shadow:0 0 22px rgba(234,121,135,.6),0 0 50px rgba(234,121,135,.26)}
+.ol-h{font-family:"Archivo",ui-sans-serif,sans-serif;font-weight:800;font-size:30px;
+  letter-spacing:-.03em;color:#FFFFFF;text-align:center;margin-bottom:28px}
+.ol-field{margin-bottom:16px}
+.ol-field label{font-family:"Geist Mono",ui-monospace,Menlo,monospace;font-size:10.5px;
+  letter-spacing:.16em;text-transform:uppercase;color:#7A7A74;display:block;margin-bottom:8px}
+.ol-field input{background:#141412;border:1px solid #26262B;border-radius:12px;
+  padding:14px 16px;font-size:16px;color:#F8F7F4;width:100%;outline:none;transition:.16s}
+.ol-field input::placeholder{color:#5F5F59}
+.ol-field input:focus{border-color:var(--c);box-shadow:0 0 0 4px rgba(234,121,135,.13)}
+.ol-go{width:100%;background:var(--c);color:#2E0F14;border:none;border-radius:99px;
+  padding:16px;font-family:"Archivo",sans-serif;font-weight:800;font-size:16px;cursor:pointer;
+  margin-top:8px;transition:.16s;display:flex;align-items:center;justify-content:center;gap:10px;
+  box-shadow:0 10px 30px rgba(234,121,135,.26)}
+.ol-go:hover{background:#F0929E;transform:translateY(-1px);
+  box-shadow:0 14px 38px rgba(234,121,135,.34)}
+.ol-arrow{font-size:17px}
+.ol-err{color:#F08A8A;font-size:14px;text-align:center;margin:14px 0 0;min-height:1em}
+.ol-alt{text-align:center;font-size:14px;color:#8F8F88;margin-top:12px}
+.ol-alt a{color:#C9C9C2;text-decoration:none;border-bottom:1px solid #3A3A34;cursor:pointer}
+.ol-alt a:hover{color:var(--c);border-color:var(--c)}
+.lock-card{background:#111110;border:1px solid #232320;border-radius:20px}
+.ll-rule{background:#26262B}
+.ll-tag{font-family:"Geist Mono",ui-monospace,monospace;font-size:11px;letter-spacing:.2em;
+  text-transform:uppercase;color:#7A7A74}
+.lock-err{color:#F08A8A}
+
 </style>
 
 <div id="appMain" class="hide">
@@ -788,7 +1159,7 @@ body.gd-on{background:var(--gd-bg)}
   <div class="ol-page">
     <div class="ol-hatch"></div><div class="ol-vig"></div>
     <div class="ol-card">
-      <div class="ol-brand"><div class="ol-mark">ŌLLIN</div><div class="ol-lbl">Tracker</div></div>
+      <div class="ol-brand"><div class="vm-word">Ollin <i>:</i> <b>Vamos</b></div></div>
       <div class="ol-h">Log in here</div>
       <form id="lpLoginForm" class="ol-form" autocomplete="on">
         <div class="ol-field">
@@ -799,7 +1170,7 @@ body.gd-on{background:var(--gd-bg)}
           <label for="lpPassInput">Password</label>
           <input type="password" id="lpPassInput" name="password" autocomplete="current-password" placeholder="••••••••">
         </div>
-        <button type="submit" id="lpLoginGo" class="ol-go">LOG IN →</button>
+        <button type="submit" id="lpLoginGo" class="ol-go">Log in <span class="ol-arrow">→</span></button>
       </form>
       <p class="ol-err" id="lpErr"></p>
       <div class="ol-alt">New here? <a id="lpSignupLink">Create an account</a></div>
@@ -812,7 +1183,7 @@ body.gd-on{background:var(--gd-bg)}
     <div class="lock-card">
       <button class="lp-close" id="authClose" aria-label="Close">&times;</button>
       <div class="logo-lockup">
-        <div class="ll-word brandmark"><svg viewBox="0 0 72 62" width="52" height="45"><circle cx="36" cy="36" r="21" stroke="#16130F" stroke-width="2.5" fill="none"/><circle cx="36" cy="6" r="5" fill="#1E9DA8"/><circle class="mv-dot" cx="61.98" cy="51" r="9" fill="#A83246"/><circle cx="10.02" cy="51" r="5" fill="#F5B700"/></svg><span class="bm-word">ōllin</span></div>
+        <div class="vm-word"><span>Ollin</span> <i>:</i> <b>Vamos</b></div>
         <div class="ll-rule"></div>
         <div class="ll-tag">We got you.</div>
       </div>
@@ -2203,7 +2574,7 @@ function viewDoor(v) {
     '<h1 class="gd-h">' + gdWords(g.head) + '</h1>' +
     '<p class="gd-p">' + g.sub + '</p>' +
     '<div class="gd-bar">' +
-    '<input id="gdIn" placeholder="Ask your Tío / Tía…" maxlength="240" autocomplete="off">' +
+    '<input id="gdIn" placeholder="Ask Ollin…" maxlength="240" autocomplete="off">' +
     '<button class="gd-ic" id="gdMic" title="Speak">' + IC_MIC + '</button>' +
     '<button class="gd-go" id="gdGo" title="Ask">' + IC_GO + '</button>' +
     '</div>' +
@@ -2296,6 +2667,13 @@ function startQueue(which) {
   return q.length;
 }
 
+var IH_ICON = {
+  who:'<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="3.6"/><path d="M4.6 20a7.4 7.4 0 0114.8 0"/></svg>',
+  acct:'<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3.5" y="7.5" width="17" height="12" rx="2"/><path d="M8.5 7.5V5.6a2 2 0 012-2h3a2 2 0 012 2v1.9"/></svg>',
+  read:'<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3.5a6 6 0 00-3.4 10.9V17h6.8v-2.6A6 6 0 0012 3.5z"/><path d="M9.8 20.2h4.4"/></svg>',
+  gap:'<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="8.5"/><path d="M12 8.2v4.4M12 15.6v.2"/></svg>'
+};
+
 /* ---------- client intel ---------- */
 /* Provenance rule, inherited from the old build: a claim is only ever shown
    next to one of the real source types. No source -> NOT TRACKED, never a
@@ -2350,7 +2728,7 @@ function intelPanel(t) {
 
   return '<aside class="intel">' +
     '<div class="isec">' +
-      '<div class="mn ih">What we know about ' + esc(who) + '</div>' +
+      '<div class="mn ih ihk">' + IH_ICON.who + 'What we know about ' + esc(who) + '</div>' +
       fact("Signal", t.signalSrc ? t.signal : "", t.signalSrc) +
       fact("Why now", t.angle, t.angle ? "Your note" : "") +
       fact("Role", t.title, "") +
@@ -2358,7 +2736,7 @@ function intelPanel(t) {
       fact("Route", t.email || t.li || "", t.email ? "Email" : (t.li ? "LinkedIn" : "")) +
     '</div>' +
     '<div class="isec">' +
-      '<div class="mn ih">The account' + (pulled ? ' <em class="ipull">pulled ' + pulled + '</em>' : '') + '</div>' +
+      '<div class="mn ih ihb">' + IH_ICON.acct + 'The account' + (pulled ? ' <em class="ipull">pulled ' + pulled + '</em>' : '') + '</div>' +
       fact("Hiring", a.hiring, a.hiringSrc) +
       fact("Building", a.building, a.buildingSrc) +
       fact("Stack", a.stack, a.stackSrc) +
@@ -2369,7 +2747,7 @@ function intelPanel(t) {
       fact("Revenue", a.revenue, "") +
     '</div>' +
     '<div class="isec iread">' +
-      '<div class="mn ih ihr">Their reality &mdash; inferred, not sourced</div>' +
+      '<div class="mn ih ihr">' + IH_ICON.read + 'Their reality &mdash; inferred</div>' +
       '<ul class="ird">' + reads.map(function (r) { return "<li>" + r + "</li>"; }).join("") + '</ul>' +
     '</div>' +
     (gaps.length ? '<div class="isec igap"><div class="mn ih ihg">Missing</div>' +
@@ -2441,20 +2819,26 @@ function viewCard(v) {
     '<h2 class="kname">' + esc(t.company || t.who || "—") + "</h2>" +
     '<p class="klede">' + lede + "</p>" + pill +
     '<div class="body2">' + intelPanel(t) + '<div class="compose">' +
-    '<div class="mn" style="margin-bottom:12px">The message</div>' +
-    '<div class="tabs">' +
-    VM_ANGLES.map(function (a) {
-      return '<button class="tab' + (VM.angle === a[0] ? " on" : "") + '" data-a="' + a[0] + '">' + a[1] + "</button>";
-    }).join("") +
-    '<span style="margin-left:auto;display:flex;gap:7px">' +
-    '<button class="tab' + (VM.channel === "li" ? " on" : "") + '" data-ch="li">LinkedIn</button>' +
-    '<button class="tab' + (VM.channel === "em" ? " on" : "") + '" data-ch="em">Email</button>' +
-    "</span></div>" +
+    '<div class="mhead">' +
+      '<span class="mn">The message</span>' +
+      '<span class="seg">' +
+        '<button class="' + (VM.channel === "li" ? "on" : "") + '" data-ch="li">LinkedIn</button>' +
+        '<button class="' + (VM.channel === "em" ? "on" : "") + '" data-ch="em">Email</button>' +
+      '</span>' +
+    '</div>' +
+    '<div class="anglerow">' +
+      '<span class="mn arl">Angle</span>' +
+      '<span class="tabs">' +
+        VM_ANGLES.map(function (a) {
+          return '<button class="tab' + (VM.angle === a[0] ? " on" : "") + '" data-a="' + a[0] + '">' + a[1] + '</button>';
+        }).join("") +
+      '</span>' +
+    '</div>' +
     '<textarea id="vmBody" rows="12" placeholder="Ask your guide to draft this — bottom right, or press G.">' + esc(draft) + "</textarea>" +
     '<div class="len" id="vmLen">' + countLabel(draft) + "</div>" +
     '<div class="ask">' +
       '<div class="ask-bar">' +
-        '<input id="vmAsk" placeholder="Ask your T\u00edo / T\u00eda\u2026" maxlength="240" autocomplete="off">' +
+        '<input id="vmAsk" placeholder="Ask Ollin\u2026" maxlength="240" autocomplete="off">' +
         '<button class="ask-go" id="vmAskGo" title="Ask">' + IC_GO + '</button>' +
       '</div>' +
       '<div class="ask-chips">' +
@@ -2563,7 +2947,13 @@ var CARD_STEERS = [
 ];
 function vmSay(html) {
   var s = document.getElementById("vmSay");
-  if (s) s.innerHTML = '<div class="ask-say">' + html + '</div>';
+  if (!s) return;
+  s.innerHTML = '<div class="ask-say">' +
+    '<span class="as-mark"><svg width="13" height="13" viewBox="0 0 32 32" fill="none">' +
+      '<circle cx="16" cy="16" r="12" stroke="currentColor" stroke-width="2.4" opacity=".5"/>' +
+      '<circle cx="16" cy="16" r="4.6" fill="currentColor"/></svg></span>' +
+    '<span class="as-body"><span class="mn as-who">Ollin</span>' + html + '</span>' +
+  '</div>';
 }
 function cardAsk() {
   var i = document.getElementById("vmAsk");
