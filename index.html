@@ -1431,6 +1431,182 @@ body.gd-on{background:var(--gd-bg)}
 .dot3.on{background:var(--j);box-shadow:0 0 10px rgba(47,179,122,.55)}
 .kt-new{background:rgba(47,179,122,.14);border-color:rgba(47,179,122,.4);color:#6FD8A8}
 
+/* ══════════════════════════════════════════════════════════════════
+   OPTION A — EDITORIAL DARK.  Values taken from the mockup.
+   ══════════════════════════════════════════════════════════════════ */
+:root{
+  --A-page:#e8e6df; --A-card:#0c0d0b;
+  --A-ink:#f6f7f4; --A-dim:#a9afa4; --A-faint:#6d736b;
+  --A-line:rgba(255,255,255,.07);
+  --A-green:#9cc3ac; --A-greenS:#4f8f68; --A-amber:#e0bd76;
+}
+#appMain{background:var(--A-page);color:#1c1e1a;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif}
+
+/* top bar */
+.vm-top{background:var(--A-page);border-bottom:none}
+.vm-topin{padding:18px 26px 14px;gap:20px}
+.vm-brand{font-family:inherit;font-weight:700;font-size:15px;color:#2c2e2a;letter-spacing:0}
+.vm-brand em{color:var(--A-greenS);font-weight:700;font-style:normal}
+.vm-brand b{color:var(--A-greenS);text-shadow:none;font-weight:700}
+.vm-tabs{gap:24px}
+.vm-tabs button{font-family:inherit;font-size:12.5px;letter-spacing:.06em;color:#8a8d84;
+  background:transparent;padding:0;border-radius:0;font-weight:500}
+.vm-tabs button:hover{color:#1c1e1a}
+.vm-tabs button.on{color:#1c1e1a;font-weight:600;background:transparent}
+.vm-bar{max-width:210px;height:4px;background:#d3d1c8}
+.vm-bar i{background:#b4b2a9}
+.vm-count{font-size:12.5px;color:#6b6e66;font-family:inherit;letter-spacing:0}
+.vm-av{width:26px;height:26px;background:#c9c7bd;border:none;color:#4a4c46;font-size:12px}
+.vm-av:hover{background:#b9b7ad;color:#2c2e2a}
+
+/* the card */
+.vm-wrap{max-width:1180px;padding:0 18px 26px}
+.stack{max-width:1180px}
+.cardv{background:var(--A-card);border:1px solid rgba(0,0,0,.5);border-radius:22px;
+  box-shadow:0 40px 80px -40px rgba(0,0,0,.55);color:var(--A-ink)}
+.cardv::before{display:none}
+
+.cv-head{padding:34px 38px 26px;border-bottom:none;gap:24px;align-items:flex-start}
+.cv-eyebrow{font-size:11px;letter-spacing:.18em;color:var(--A-greenS);font-weight:700;
+  margin-bottom:14px;text-transform:uppercase;font-family:inherit}
+.cv-co{font-family:inherit;color:var(--A-ink);font-size:40px;font-weight:800;
+  letter-spacing:-1px;line-height:1;margin:0;text-shadow:none}
+.cv-who{margin-top:14px;font-size:14px;color:var(--A-dim);display:block}
+.cv-who b{color:var(--A-ink);font-weight:600;font-family:inherit;letter-spacing:0}
+.cv-who .mail{color:var(--A-faint);margin-left:10px}
+.cv-hr{display:flex;flex-direction:column;align-items:flex-end;gap:12px;flex:0 0 auto}
+.cv-badge{font-size:10.5px;letter-spacing:.1em;font-weight:700;color:var(--A-amber);
+  border:1px solid rgba(224,189,118,.4);background:rgba(224,189,118,.1);
+  padding:7px 12px;border-radius:8px;white-space:nowrap;font-family:inherit}
+.cv-badge.ok{color:var(--A-green);border-color:rgba(156,195,172,.35);background:rgba(156,195,172,.09)}
+.cv-page{font-size:12px;color:var(--A-faint);font-family:inherit;letter-spacing:0}
+.cv-meta{display:flex;gap:8px;padding:0 38px 22px;font-size:12.5px;color:var(--A-faint);
+  flex-wrap:wrap;border-bottom:1px solid var(--A-line);margin:0;align-items:center}
+.cv-meta span:not(:last-child)::after{content:"·";margin-left:8px;color:#33362f}
+
+.cv-body{grid-template-columns:minmax(0,1fr) minmax(0,1.1fr)}
+.cv-left{padding:26px 34px;border-right:1px solid var(--A-line)}
+.cv-right{padding:24px 30px;display:flex;flex-direction:column;gap:0}
+
+/* why now */
+.whyhero{background:linear-gradient(180deg,rgba(131,227,167,.08),rgba(131,227,167,0));
+  border:1px solid rgba(131,227,167,.18);border-radius:14px;padding:16px 18px;margin-bottom:24px}
+.whyhero .k{font-size:10.5px;letter-spacing:.18em;color:var(--A-green);font-weight:700;
+  text-transform:uppercase}
+.whyhero h3{margin:9px 0 0;color:var(--A-ink);font-size:20px;font-weight:600;
+  letter-spacing:-.3px;line-height:1.25;font-family:inherit}
+.whyhero.none{background:none;border-color:var(--A-line)}
+.whyhero.none .k{color:var(--A-faint)}
+.whyhero.none h3{color:var(--A-dim);font-size:16px}
+
+/* signals */
+.sh{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.sh .t{font-size:10.5px;letter-spacing:.16em;color:var(--A-faint);font-weight:700;text-transform:uppercase}
+.sh .c{font-size:11px;color:var(--A-faint)}
+.sig{display:grid;grid-template-columns:90px 1fr auto;align-items:baseline;gap:12px;
+  padding:12px 2px;border-top:1px solid var(--A-line)}
+.sig .lbl{font-size:10.5px;letter-spacing:.12em;color:var(--A-faint);font-weight:700;text-transform:uppercase}
+.sig .val{font-size:14.5px;color:var(--A-ink);line-height:1.35;overflow-wrap:anywhere}
+.sig .val.off{color:#4a4f47;font-size:12.5px;letter-spacing:.08em;text-transform:uppercase}
+.sig .src{font-size:9.5px;letter-spacing:.1em;color:var(--A-green);font-weight:700;
+  white-space:nowrap;text-transform:uppercase}
+.sig .src.soft{color:var(--A-faint)}
+
+details.read{margin-top:18px}
+.read summary{list-style:none;cursor:pointer;font-size:10.5px;letter-spacing:.14em;
+  color:var(--A-faint);font-weight:700;display:flex;gap:8px;align-items:center;text-transform:uppercase}
+.read summary::-webkit-details-marker{display:none}
+.read summary .n{background:#1c1f19;border-radius:6px;padding:1px 7px;color:var(--A-dim);
+  letter-spacing:.04em;text-transform:none}
+.read summary:hover{color:var(--A-dim)}
+.read .rb{margin-top:11px;font-size:13px;color:var(--A-dim);line-height:1.6}
+.read .rb.pre{white-space:pre-wrap;max-height:200px;overflow:auto}
+.cv-missing{margin-top:16px;background:rgba(224,189,118,.1);border:1px solid rgba(224,189,118,.35);
+  border-radius:10px;padding:12px 14px;font-size:12.5px;color:var(--A-amber)}
+
+/* compose */
+.cv-tabs{display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap;flex:0 0 auto}
+.toggle{display:flex;background:#181a15;border-radius:9px;padding:3px}
+#appMain .toggle button{border:0;background:transparent;color:var(--A-dim);font-size:13px;
+  font-weight:600;padding:6px 14px;border-radius:7px}
+#appMain .toggle button.on{background:#f6f7f4;color:#14150f}
+.angles{display:flex;gap:16px;flex-wrap:wrap}
+#appMain .angles button{border:0;background:transparent;font-size:14px;color:var(--A-faint);
+  padding:6px 2px;border-bottom:2px solid transparent;border-radius:0;font-weight:500}
+#appMain .angles button:hover{color:var(--A-dim)}
+#appMain .angles button.on{color:var(--A-ink);border-color:var(--A-greenS);font-weight:600}
+
+#appMain .cv-right textarea.canvas{background:#fff;border:0;border-radius:14px;flex:1 1 auto;
+  min-height:200px;padding:20px 22px;color:#14150f;font-size:15px;line-height:1.6;
+  font-family:inherit;resize:none;box-shadow:none}
+#appMain .cv-right textarea.canvas::placeholder{color:#9aa0a6}
+#appMain .cv-right textarea.canvas:focus{box-shadow:0 0 0 2px rgba(79,143,104,.5)}
+.cfoot{display:flex;align-items:center;gap:16px;margin:12px 2px 16px;font-size:12px;
+  color:var(--A-faint);flex:0 0 auto}
+.cfoot .len{font-family:inherit;letter-spacing:.04em;color:var(--A-faint);margin:0;font-size:12px}
+.cfoot .grow{flex:1}
+#appMain .cfoot .lnk{color:var(--A-green);font-weight:600;cursor:pointer;text-decoration:none;
+  background:none;border:0;padding:0;font-size:12px}
+#appMain .cfoot .lnk:hover{color:var(--A-ink)}
+#appMain .cfoot .lnk.off{opacity:.35;pointer-events:none}
+#appMain .cfoot .plain{color:var(--A-dim);cursor:pointer;background:none;border:0;padding:0;font-size:12px}
+#appMain .cfoot .plain:hover{color:var(--A-ink)}
+
+.ask{flex:0 0 auto;position:relative;margin:0}
+.ask-glow{left:-4%;right:-4%;top:-10px;height:100px;
+  background:radial-gradient(closest-side ellipse at 50% 42%,
+    rgba(131,227,167,.22) 0%,rgba(131,227,167,.11) 36%,transparent 100%)}
+.ask-bar{display:flex;align-items:center;gap:10px;background:#101208;
+  border:1px solid rgba(131,227,167,.28);border-radius:14px;padding:8px 8px 8px 18px;box-shadow:none}
+.ask-bar:focus-within{border-color:rgba(131,227,167,.6);box-shadow:0 0 0 3px rgba(79,143,104,.16)}
+#appMain .ask-bar input{flex:1;border:0;background:transparent;color:var(--A-ink);font-size:15px;
+  padding:10px 0;font-family:inherit}
+#appMain .ask-bar input::placeholder{color:#5f645c}
+#appMain .ask-ic{width:34px;height:34px;border-radius:50%;background:#1b1e17;border:0;
+  color:var(--A-dim);box-shadow:none}
+#appMain .ask-ic:hover{color:var(--A-ink);background:#232720}
+#appMain .ask-go{width:38px;height:38px;border-radius:50%;background:var(--A-greenS);border:0;
+  color:#f2f8f4;box-shadow:none}
+#appMain .ask-go:hover{background:#5da278;box-shadow:none}
+.ask-chips{display:flex;gap:9px;flex-wrap:wrap;margin-top:14px}
+#appMain .ask-chip{border:1px solid rgba(255,255,255,.14);background:transparent;color:var(--A-dim);
+  font-size:13px;padding:8px 15px;border-radius:99px;font-weight:500;box-shadow:none}
+#appMain .ask-chip:hover{border-color:rgba(255,255,255,.3);color:var(--A-ink);background:transparent}
+#appMain .ask-chip.key{border-color:var(--A-greenS);color:var(--A-green);
+  background:rgba(131,227,167,.08);box-shadow:none;font-weight:600}
+.ask-say{margin-top:12px;background:#101208;border:1px solid rgba(131,227,167,.2);
+  border-radius:12px;padding:12px 15px;color:var(--A-dim);font-size:13px}
+.ask-say .as-mark{background:rgba(131,227,167,.14);color:var(--A-green)}
+.ask-say .as-who{color:var(--A-green)}
+.ask-say b{color:var(--A-ink)}
+
+/* footer */
+.cv-foot{display:flex;align-items:center;gap:18px;padding:16px 30px;
+  border-top:1px solid var(--A-line);background:transparent}
+#appMain .cta{flex:1;display:flex;align-items:center;gap:14px;background:var(--A-greenS);
+  color:#f2f8f4;border:0;border-radius:12px;padding:14px 18px;box-shadow:none;font-family:inherit}
+#appMain .cta:hover{background:#5da278;transform:none}
+.cta .arw{width:30px;height:30px;border-radius:50%;background:rgba(12,26,16,.18);
+  display:grid;place-items:center;flex:0 0 auto}
+.cta .lab{font-size:15px;font-weight:700}
+.cta .next{margin-left:auto;font-size:11px;letter-spacing:.1em;font-weight:700;opacity:.7}
+#appMain .alt{background:transparent;border:0;color:var(--A-dim);font-size:14px;
+  display:flex;gap:7px;align-items:center;padding:0;border-radius:0;font-family:inherit}
+#appMain .alt:hover{color:var(--A-ink)}
+.alt .n{background:#1c1f19;border-radius:6px;padding:1px 7px;font-size:12px;color:var(--A-faint)}
+
+/* toast on the bone page */
+.o2-stack > *{background:#12140f;border-color:#2a2d26;color:#f6f7f4}
+
+@media(max-width:900px){
+  .cv-head{padding:24px 22px 18px}.cv-co{font-size:30px}
+  .cv-meta{padding:0 22px 18px}
+  .cv-left,.cv-right{padding:20px 22px}
+  .cv-foot{padding:14px 20px;flex-wrap:wrap}
+  #appMain .cta{flex:1 1 100%}
+}
+
 </style>
 
 <div id="appMain" class="hide">
@@ -2321,6 +2497,10 @@ body.gd-on{background:var(--gd-bg)}
       building:find("building"), buildingsrc:find("building source"),
       stack:find("stack","tech stack"), stacksrc:find("stack source"),
       money:find("money","funding"), moneysrc:find("money source"),
+      leadership:find("leadership","leadership change","new leader"), leadershipsrc:find("leadership source"),
+      product:find("product","product news","shipped"), productsrc:find("product source"),
+      expansion:find("expansion","new office","new market"), expansionsrc:find("expansion source"),
+      timing:find("timing","fiscal","budget cycle"), timingsrc:find("timing source"),
       contractor:find("contractor","is contractor"),
       t1:pick(find("touch 1 copy","touch 1","touch1 copy","linkedin 1","touch 1 message"), findC("outreach 1"), findC("linkedin","day 1")),
       t2subj:pick(find("touch 2 subject","email 1 subject","touch2 subject"), findC("email","subject")),
@@ -2356,7 +2536,7 @@ body.gd-on{background:var(--gd-bg)}
   }
   // Company-level intel (hiring/building/stack/money) — same honesty rule as a
   // contact signal: a claim without one of these real source types stays untracked.
-  var COMPANY_FACT_SOURCES = ["LinkedIn","Press","Job Board","Earnings","CRM","Product Data"];
+  var COMPANY_FACT_SOURCES = ["LinkedIn","Press","Job Board","Earnings","CRM","Product Data","Blog","Inferred"];
   function normCompanyFactSource(s){
     s=(s||"").trim().toLowerCase();
     for(var i=0;i<COMPANY_FACT_SOURCES.length;i++){ if(COMPANY_FACT_SOURCES[i].toLowerCase()===s) return COMPANY_FACT_SOURCES[i]; }
@@ -2379,6 +2559,14 @@ body.gd-on{background:var(--gd-bg)}
     if(stack && stackSrc){ f.stack=stack; f.stackSrc=stackSrc; }
     var money=get(cm.money), moneySrc=normCompanyFactSource(get(cm.moneysrc));
     if(money && moneySrc){ f.money=money; f.moneySrc=moneySrc; }
+    var leadership=get(cm.leadership), leadershipSrc=normCompanyFactSource(get(cm.leadershipsrc));
+    if(leadership && leadershipSrc){ f.leadership=leadership; f.leadershipSrc=leadershipSrc; }
+    var product=get(cm.product), productSrc=normCompanyFactSource(get(cm.productsrc));
+    if(product && productSrc){ f.product=product; f.productSrc=productSrc; }
+    var expansion=get(cm.expansion), expansionSrc=normCompanyFactSource(get(cm.expansionsrc));
+    if(expansion && expansionSrc){ f.expansion=expansion; f.expansionSrc=expansionSrc; }
+    var timing=get(cm.timing), timingSrc=normCompanyFactSource(get(cm.timingsrc));
+    if(timing && timingSrc){ f.timing=timing; f.timingSrc=timingSrc; }
     return f;
   }
   function applyCompanyFacts(acct, facts){ for(var k in facts){ acct[k]=facts[k]; } }
@@ -2696,7 +2884,14 @@ var COMEBACK = { away: 0, show: false };
 
 var VM = { i: 0, queue: [], mode: "door", angle: "gap", channel: null, drafting: false, greeted: {} };
 var VM_TABS = [["today", "TODAY"], ["contacts", "CONTACTS"], ["account", "ACCOUNT"]];
-var VM_ANGLES = [["gap", "The gap"], ["cow", "Cost of waiting"], ["person", "The person"]];
+var VM_ANGLES = [["gap", "The gap"], ["cow", "Cost of waiting"], ["person", "The person"], ["free", "\u270E Freestyle"]];
+/* Account facts rendered in SIGNALS, in order. [field, sourceField, LABEL] */
+var FACTS = [
+  ["hiring","hiringSrc","Hiring"], ["building","buildingSrc","Building"],
+  ["stack","stackSrc","Stack"], ["money","moneySrc","Money"],
+  ["leadership","leadershipSrc","Leadership"], ["product","productSrc","Product"],
+  ["expansion","expansionSrc","Expansion"], ["timing","timingSrc","Timing"]
+];
 
 /* ---------- required by the keep layer ---------- */
 function countLabel(s) {
@@ -3023,10 +3218,10 @@ function readOf(t, a) {
 }
 function gapsOf(t, a) {
   var g = [];
-  if (!t.signal || !t.signalSrc) g.push("a sourced signal");
+  if (!t.signal || !t.signalSrc) g.push("a sourced signal on this person");
   if (!a.hiring) g.push("what they are hiring");
   if (!a.money) g.push("funding");
-  if (!a.stack) g.push("stack");
+  if (!a.leadership) g.push("who is new in the room");
   if (!t.email && !t.li) g.push("a route to them");
   return g;
 }
@@ -3083,113 +3278,116 @@ function viewCard(v) {
   var t = VM.queue[VM.i];
   var a = acctOf(t.acctId);
   var td = todayStr(), d = dueOf(t), late = d < td, lateN = daysBetween(d, td);
-  var tag = t.touchNo === 1
-    ? { k: "new", l: late ? "First touch · " + lateN + "d overdue" : "First touch" }
-    : { k: late ? "late" : "fu", l: "Follow-up " + (t.touchNo - 1) + (late ? " · " + lateN + "d overdue" : "") };
-  if (t.touchNo === 1 && late) tag.k = "late";
+  var stage = t.touchNo === 1 ? "First touch" : "Follow-up " + (t.touchNo - 1);
   if (VM.channel === null) VM.channel = t.ch === "call" ? "li" : t.ch;
   var pv = prevTouch(t);
+  var free = VM.angle === "free";
 
-  var dots = "";
-  for (var i = 0; i < CADENCE.length; i++)
-    dots += '<span class="dot3' + (i < t.touchNo - 1 ? " on" : "") + '"></span>';
-
-  /* ---- condensed intel rows: label · value · source, one line each ---- */
-  function row(k, val, src) {
-    if (!val) return '';
-    return '<div class="r"><span class="r-k">' + k + '</span>' +
-      '<span class="r-v">' + esc(val) + '</span>' +
-      (src ? '<span class="r-s">' + esc(src) + '</span>' : '<span class="r-s r-s0">—</span>') + '</div>';
-  }
-  var facts = "";
-  facts += row("Hiring", a.hiring, a.hiringSrc);
-  facts += row("Building", a.building, a.buildingSrc);
-  facts += row("Stack", a.stack, a.stackSrc);
-  facts += row("Money", a.money, a.moneySrc);
-  facts += row("Signal", t.signalSrc ? t.signal : "", t.signalSrc);
-
+  /* meta strip: sector · where · size · revenue */
   var meta = [];
   if (a.sector) meta.push(a.sector);
   if (a.place) meta.push(a.place);
   if (a.size) meta.push(a.size);
   if (a.revenue) meta.push(a.revenue);
 
-  var reads = readOf(t, a), gaps = gapsOf(t, a);
+  /* signals — every fact, sourced or not */
+  var rows = "", sourced = 0, missing = 0;
+  FACTS.forEach(function (f) {
+    var val = a[f[0]], src = a[f[1]];
+    if (val) { sourced++; } else { missing++; }
+    rows += '<div class="sig">' +
+      '<span class="lbl">' + f[2] + '</span>' +
+      (val ? '<span class="val">' + esc(val) + '</span>'
+           : '<span class="val off">Not tracked</span>') +
+      (val && src
+        ? '<span class="src' + (/inferred/i.test(src) ? ' soft' : '') + '">' + esc(src) + '</span>'
+        : '<span class="src soft">&mdash;</span>') +
+    '</div>';
+  });
+  /* the contact's own signal sits with the account facts */
+  if (t.signal && t.signalSrc) {
+    rows = '<div class="sig"><span class="lbl">Signal</span>' +
+      '<span class="val">' + esc(t.signal) + '</span>' +
+      '<span class="src">' + esc(t.signalSrc) + '</span></div>' + rows;
+    sourced++;
+  }
 
-  /* ---- the route: one button, matched to the chosen channel ---- */
+  var reads = readOf(t, a), gaps = gapsOf(t, a);
   var liUrl = t.li || ("https://www.linkedin.com/search/results/people/?keywords=" +
     encodeURIComponent((t.who || "") + " " + (t.company || "")));
-  var routeBtn = VM.channel === "em"
-    ? '<a id="vmMail" class="rt' + (t.email ? "" : " off") + '" href="#">Open in email</a>'
-    : '<a class="rt" href="' + esc(liUrl) + '" target="_blank" rel="noopener">Open LinkedIn</a>';
-
   var draft = state.notes[t.id] || "";
   var nextIn = t.touchNo < CADENCE.length
-    ? "Next +" + (CADENCE[t.touchNo].off - CADENCE[t.touchNo - 1].off) + "d"
-    : "Last touch";
+    ? "NEXT +" + (CADENCE[t.touchNo].off - CADENCE[t.touchNo - 1].off) + "D"
+    : "LAST TOUCH";
 
   v.innerHTML =
   '<div class="cardv" id="sheet">' +
 
-    /* ---------- header: identity + state, one strip ---------- */
     '<header class="cv-head">' +
       '<div class="cv-id">' +
+        '<div class="cv-eyebrow">' + esc(stage) + '</div>' +
         '<h2 class="cv-co">' + esc(t.company || t.who || "—") + '</h2>' +
-        '<div class="cv-who">' + (t.who ? '<b>' + esc(t.who) + '</b>' : '<b>No contact</b>') +
-          (t.title ? '<span class="sep">·</span>' + esc(t.title) : '') +
-          (t.email || t.li ? '<span class="sep">·</span><span class="cv-rt">' +
-            esc(t.email || "LinkedIn only") + '</span>' : '') +
+        '<div class="cv-who">' +
+          (t.who ? '<b>' + esc(t.who) + '</b>' : '<b>No contact</b>') +
+          (t.title ? ' · ' + esc(t.title) : '') +
+          (t.email ? '<span class="mail">' + esc(t.email) + '</span>' : '') +
         '</div>' +
       '</div>' +
-      '<div class="cv-state">' +
-        '<span class="ktag kt-' + tag.k + '">' + esc(tag.l) + '</span>' +
-        '<span class="kdots">' + dots + '</span>' +
-        '<span class="cv-n">' + (VM.i + 1) + ' / ' + VM.queue.length + '</span>' +
+      '<div class="cv-hr">' +
+        (late ? '<div class="cv-badge">⏱ ' + lateN + ' DAY' + (lateN > 1 ? 'S' : '') + ' OVERDUE</div>'
+              : '<div class="cv-badge ok">ON TIME</div>') +
+        '<div class="cv-page">' + (VM.i + 1) + ' / ' + VM.queue.length + '</div>' +
       '</div>' +
     '</header>' +
 
-    '<div class="cv-body">' +
+    (meta.length ? '<div class="cv-meta">' +
+      meta.map(function (m) { return '<span>' + esc(m) + '</span>'; }).join('') + '</div>' : '') +
 
-      /* ---------- left: context ---------- */
+    '<div class="cv-body">' +
       '<section class="cv-left">' +
-        (t.angle
-          ? '<div class="cv-why"><span class="cv-wl">Why now</span><p>' + esc(t.angle) + '</p></div>'
-          : '<div class="cv-why cv-why0"><span class="cv-wl">No signal</span><p>Nothing sourced on this contact — the draft will read generic.</p></div>') +
-        (facts ? '<div class="cv-facts">' + facts + '</div>' : '') +
-        (meta.length ? '<div class="cv-meta">' + meta.map(esc).join('<i>·</i>') + '</div>' : '') +
-        '<details class="cv-more"' + (reads.length ? '' : ' hidden') + '>' +
-          '<summary>The read <span class="cnt">' + reads.length + '</span></summary>' +
-          '<ul>' + reads.map(function (r) { return '<li>' + r + '</li>'; }).join('') + '</ul>' +
-        '</details>' +
-        (gaps.length ? '<div class="cv-gap">Missing: ' + esc(gaps.join(", ")) + '</div>' : '') +
-        (pv ? '<details class="cv-more"><summary>What you sent last <span class="cnt">' +
-          agoTxt(daysBetween(pv.date, td)) + '</span></summary><pre>' +
-          esc(pv.body.slice(0, 900)) + '</pre></details>' : '') +
+        '<div class="whyhero' + (t.angle ? '' : ' none') + '">' +
+          '<div class="k">' + (t.angle ? 'Why now' : 'No signal') + '</div>' +
+          '<h3>' + esc(t.angle || 'Nothing sourced on this contact yet.') + '</h3>' +
+        '</div>' +
+        '<div class="sh"><span class="t">Signals</span>' +
+          '<span class="c">' + sourced + ' sourced · ' + missing + ' missing</span></div>' +
+        rows +
+        (reads.length ? '<details class="read"><summary>The read <span class="n">' + reads.length + '</span></summary>' +
+          '<div class="rb">' + reads.join(' ') + '</div></details>' : '') +
+        (pv ? '<details class="read"><summary>What you sent last <span class="n">' +
+          agoTxt(daysBetween(pv.date, td)) + '</span></summary><div class="rb pre">' +
+          esc(pv.body.slice(0, 900)) + '</div></details>' : '') +
+        (gaps.length ? '<div class="cv-missing">Missing: ' + esc(gaps.join(", ")) + '</div>' : '') +
       '</section>' +
 
-      /* ---------- right: the work ---------- */
       '<section class="cv-right">' +
-        '<div class="cv-ctl">' +
-          '<span class="seg">' +
+        '<div class="cv-tabs">' +
+          '<div class="toggle">' +
             '<button class="' + (VM.channel === "li" ? "on" : "") + '" data-ch="li">LinkedIn</button>' +
             '<button class="' + (VM.channel === "em" ? "on" : "") + '" data-ch="em">Email</button>' +
-          '</span>' +
-          '<span class="tabs">' +
+          '</div>' +
+          '<div class="angles">' +
             VM_ANGLES.map(function (x) {
-              return '<button class="tab' + (VM.angle === x[0] ? " on" : "") + '" data-a="' + x[0] + '">' + x[1] + '</button>';
+              return '<button class="' + (VM.angle === x[0] ? "on" : "") + '" data-a="' + x[0] + '">' + x[1] + '</button>';
             }).join('') +
-          '</span>' +
+          '</div>' +
         '</div>' +
-        '<textarea id="vmBody" placeholder="Ask Ollin to draft it — below.">' + esc(draft) + '</textarea>' +
-        '<div class="cv-under">' +
+        '<textarea id="vmBody" class="canvas" placeholder="' +
+          (free ? "Freestyle — write it in your own words. Ollin will polish only if you ask."
+                : "Ask Ollin to draft it — below.") + '">' + esc(draft) + '</textarea>' +
+        '<div class="cfoot">' +
           '<span class="len" id="vmLen">' + countLabel(draft) + '</span>' +
-          routeBtn +
-          '<button class="rt" id="vmCopy">Copy</button>' +
+          '<span class="grow"></span>' +
+          (VM.channel === "em"
+            ? '<a class="lnk' + (t.email ? '' : ' off') + '" id="vmMail" href="#">Open email</a>'
+            : '<a class="lnk" href="' + esc(liUrl) + '" target="_blank" rel="noopener">Open LinkedIn</a>') +
+          '<button class="plain" id="vmCopy">Copy</button>' +
         '</div>' +
         '<div class="ask">' +
           '<div class="ask-glow"></div>' +
           '<div class="ask-bar">' +
-            '<input id="vmAsk" placeholder="Ask Ollin…" maxlength="240" autocomplete="off">' +
+            '<input id="vmAsk" placeholder="' + (free ? "Type your own words…" : "Ask Ollin…") +
+              '" maxlength="240" autocomplete="off">' +
             '<button class="ask-ic" id="vmMic" title="Speak">' + IC_MIC + '</button>' +
             '<button class="ask-go" id="vmAskGo" title="Ask">' + IC_GO + '</button>' +
           '</div>' +
@@ -3203,13 +3401,12 @@ function viewCard(v) {
       '</section>' +
     '</div>' +
 
-    /* ---------- the decision: pinned, never scrolls away ---------- */
     '<footer class="cv-foot">' +
-      '<button class="kcta" data-o="Sent"><span class="bdg">' + IC_GO + '</span>' +
-        (t.touchNo === 1 ? "Sent it — log it" : "Followed up — log it") +
-        '<span class="sm">' + nextIn + '</span></button>' +
-      '<button class="cv-alt kl" data-o="Later">Push a day<em>2</em></button>' +
-      '<button class="cv-alt kr" data-o="Skip">Not a fit<em>3</em></button>' +
+      '<button class="cta" data-o="Sent"><span class="arw">' + IC_GO + '</span>' +
+        '<span class="lab">' + (t.touchNo === 1 ? "Sent it — log it" : "Followed up — log it") + '</span>' +
+        '<span class="next">' + nextIn + '</span></button>' +
+      '<button class="alt" data-o="Later">Push a day <span class="n">2</span></button>' +
+      '<button class="alt" data-o="Skip">Not a fit <span class="n">3</span></button>' +
     '</footer>' +
   '</div>';
 
@@ -3332,6 +3529,9 @@ function cardAsk() {
 /* ---------- /api/write ---------- */
 function askOllin(steer) {
   if (VM.mode !== "card") return;
+  if (VM.angle === "free" && !steer) {
+    return vmSay("Freestyle is yours — write it in the box. Ask me and I'll polish what's there.");
+  }
   if (VM.drafting) return;
   var t = VM.queue[VM.i];
   if (!t) return;
