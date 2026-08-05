@@ -1607,6 +1607,34 @@ details.read{margin-top:18px}
   #appMain .cta{flex:1 1 100%}
 }
 
+/* ===================== CONTACTS SEARCH ===================== */
+.srch{padding:18px 20px}
+.srch-bar{display:flex;align-items:center;gap:12px;background:#fff;border:1px solid #d9d7ce;
+  border-radius:12px;padding:2px 14px 2px 16px;transition:.16s}
+.srch-bar:focus-within{border-color:var(--A-greenS);box-shadow:0 0 0 3px rgba(79,143,104,.14)}
+.srch-ic{flex:0 0 auto;color:#8a8d84;display:grid;place-items:center}
+#appMain .srch-bar input{flex:1;border:0;background:transparent;outline:none;box-shadow:none;
+  padding:14px 0;font-size:16.5px;color:#1c1e1a;width:auto;font-family:inherit}
+#appMain .srch-bar input::placeholder{color:#a2a59b}
+#appMain .srch-x{background:transparent;border:0;color:#8a8d84;font-size:22px;line-height:1;
+  padding:0 4px;cursor:pointer;border-radius:0}
+#appMain .srch-x:hover{color:#1c1e1a}
+.srch-f{display:flex;align-items:center;gap:8px;margin-top:13px;flex-wrap:wrap}
+#appMain .sf{display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid #ddd9d0;
+  color:#5c6159;border-radius:99px;padding:8px 14px;font-size:13.5px;font-weight:600;font-family:inherit}
+#appMain .sf:hover{border-color:#12140f;color:#1c1e1a}
+#appMain .sf.on{background:#12140f;border-color:#12140f;color:#fff}
+.sf em{font-style:normal;font-family:var(--mono);font-size:11px;opacity:.65}
+#appMain .sf.on em{opacity:.75}
+.srch-n{margin-left:auto;font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;
+  text-transform:uppercase;color:#8a8d84}
+.srch-hint{margin-top:14px;font-size:12.5px;color:#8a8d84}
+.vm-tbl mark{background:rgba(79,143,104,.22);color:#1c1e1a;border-radius:3px;padding:0 2px}
+.vm-tbl .sub2{font-size:12.5px;color:#8a8d84;margin-top:3px}
+.vm-tbl .mono2{font-family:var(--mono);font-size:13px;color:#5c6159;letter-spacing:0}
+.p-new{background:#eef4f0;color:#3e8560}
+.vm-card p a{color:var(--A-greenS);cursor:pointer;text-decoration:underline}
+
 </style>
 
 <div id="appMain" class="hide">
@@ -3682,35 +3710,143 @@ function gask() {
 }
 
 /* ---------- contacts ---------- */
+/* Search state survives re-renders so typing doesn't reset. */
+var CQ = { q: "", filter: "all" };
+var C_FILTERS = [["all","All"],["late","Overdue"],["today","Due today"],
+                 ["new","Never touched"],["rest","Resting"]];
+
+function matchQ(t, a, q) {
+  if (!q) return true;
+  var hay = [t.who, t.title, t.company, t.email, t.li, t.angle, t.persona,
+             a.sector, a.place, a.hiring, a.building, a.stack, a.money,
+             a.leadership, a.product, a.expansion, a.timing]
+            .filter(Boolean).join(" ").toLowerCase();
+  /* every word must appear somewhere — "dana north" finds Dana at Northlake */
+  return q.toLowerCase().split(/\s+/).filter(Boolean).every(function (w) {
+    return hay.indexOf(w) > -1;
+  });
+}
+function bucketOf(t) {
+  var td = todayStr(), d = dueOf(t);
+  if (t.touchNo === 1 && !state.done[t.acctId + "|" + t.threadId + "|0"] && d > td) return "new";
+  if (d < td) return "late";
+  if (d === td) return "today";
+  if (t.touchNo === 1) return "new";
+  return "rest";
+}
+function hi(s, q) {
+  s = String(s || "");
+  if (!q) return esc(s);
+  var out = esc(s);
+  q.split(/\s+/).filter(Boolean).forEach(function (w) {
+    out = out.replace(new RegExp("(" + w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + ")", "ig"), "<mark>$1</mark>");
+  });
+  return out;
+}
+
 function viewContacts(v) {
   var td = todayStr();
-  var rows = liveTouches().map(function (t) {
-    var d = dueOf(t), st = d < td ? ["p-late", (daysBetween(d, td)) + "d late"]
-      : (d === td ? ["p-due", "due today"] : ["p-rest", "in " + daysBetween(td, d) + "d"]);
+  var all = liveTouches();
+  var counts = { all: all.length, late: 0, today: 0, new: 0, rest: 0 };
+  all.forEach(function (t) { counts[bucketOf(t)]++; });
+
+  var list = all.filter(function (t) {
+    var a = acctOf(t.acctId);
+    if (CQ.filter !== "all" && bucketOf(t) !== CQ.filter) return false;
+    return matchQ(t, a, CQ.q);
+  });
+
+  var rows = list.map(function (t) {
+    var d = dueOf(t), b = bucketOf(t);
+    var st = b === "late" ? ["p-late", daysBetween(d, td) + "d late"]
+      : (b === "today" ? ["p-due", "due today"]
+      : (b === "new" ? ["p-new", "never touched"]
+      : ["p-rest", "in " + daysBetween(td, d) + "d"]));
+    var a = acctOf(t.acctId);
     return '<tr class="clk" data-a="' + esc(t.acctId) + '" data-t="' + esc(t.threadId) + '">' +
-      "<td><b>" + esc(t.who || "—") + "</b><br><span style=\"color:var(--vm-dim2);font-size:12px\">" +
-      esc(t.title || "") + "</span></td>" +
-      "<td>" + esc(t.company || "—") + "</td>" +
-      "<td>" + t.touchNo + " / " + CADENCE.length + "</td>" +
-      '<td><span class="pill ' + st[0] + '">' + st[1] + "</span></td></tr>";
+      '<td><b>' + hi(t.who || "—", CQ.q) + '</b>' +
+        (t.title ? '<div class="sub2">' + hi(t.title, CQ.q) + '</div>' : '') + '</td>' +
+      '<td>' + hi(t.company || "—", CQ.q) +
+        (a.place ? '<div class="sub2">' + hi(a.place, CQ.q) + '</div>' : '') + '</td>' +
+      '<td class="mono2">' + (t.email ? hi(t.email, CQ.q) : (t.li ? 'LinkedIn only' : '—')) + '</td>' +
+      '<td class="mono2">' + t.touchNo + ' / ' + CADENCE.length + '</td>' +
+      '<td><span class="pill ' + st[0] + '">' + st[1] + '</span></td></tr>';
   }).join("");
-  var closed = contactCount() - liveTouches().length;
+
+  var closed = contactCount() - all.length;
   v.innerHTML =
     '<h1 class="vm-h1">Contacts</h1>' +
-    '<p class="vm-sub">' + contactCount() + " tracked · " + liveTouches().length + " still in cadence" +
-    (closed > 0 ? " · " + closed + " finished" : "") +
-    (isUnlimited() ? "" : " · " + freeLeft() + " free slots left") + "</p>" +
+    '<p class="vm-sub">' + contactCount() + ' tracked · ' + all.length + ' in cadence' +
+      (closed > 0 ? ' · ' + closed + ' finished' : '') +
+      (isUnlimited() ? '' : ' · ' + freeLeft() + ' free slots left') + '</p>' +
+
+    '<div class="vm-card srch">' +
+      '<div class="srch-bar">' +
+        '<span class="srch-ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" ' +
+          'stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="6.5"/>' +
+          '<path d="M15.8 15.8L20 20"/></svg></span>' +
+        '<input id="cSearch" placeholder="Search a client or a person…" ' +
+          'value="' + esc(CQ.q) + '" autocomplete="off" spellcheck="false">' +
+        (CQ.q ? '<button class="srch-x" id="cClear">&times;</button>' : '') +
+      '</div>' +
+      '<div class="srch-f">' +
+        C_FILTERS.map(function (f) {
+          return '<button class="sf' + (CQ.filter === f[0] ? ' on' : '') + '" data-f="' + f[0] + '">' +
+            f[1] + '<em>' + counts[f[0]] + '</em></button>';
+        }).join('') +
+        '<span class="srch-n">' + list.length + ' shown</span>' +
+      '</div>' +
+    '</div>' +
+
+    (rows
+      ? '<div class="vm-card"><table class="vm-tbl">' +
+        '<tr><th>Person</th><th>Client</th><th>Route</th><th>Touch</th><th>Next</th></tr>' +
+        rows + '</table>' +
+        (list.length ? '<div class="srch-hint">Click anyone to open their card.</div>' : '') +
+        '</div>'
+      : '<div class="vm-card"><p class="vm-sub" style="margin:0">' +
+        (CQ.q || CQ.filter !== "all"
+          ? 'Nothing matches. <a id="cReset">Clear the search</a>.'
+          : 'Nobody in cadence yet. Import a list below.') + '</p></div>') +
+
     '<div class="vm-card"><div class="drop" id="vmDrop">' +
-    '<div class="big">Drop a CSV or Excel file</div>' +
-    '<div class="sm">Required: Name · Company — everything else is optional</div></div>' +
-    '<div class="vm-row" style="margin-top:13px">' +
-    '<button class="vm-gh" id="vmPick">Choose file</button>' +
-    '<button class="vm-gh" id="vmSheet">Import from Google Sheet</button>' +
-    '<button class="vm-gh" id="vmExport">Export backup</button></div>' +
-    '<div id="vmSheetHost"></div></div>' +
-    (rows ? '<div class="vm-card"><table class="vm-tbl"><tr><th>Person</th><th>Company</th><th>Touch</th><th>Next</th></tr>' +
-      rows + "</table></div>"
-      : '<div class="vm-card"><p class="vm-sub" style="margin:0">Nobody in cadence yet. Drop a list above.</p></div>');
+      '<div class="big">Drop a CSV or Excel file</div>' +
+      '<div class="sm">Required: Name · Company — everything else is optional</div></div>' +
+      '<div class="vm-row" style="margin-top:13px">' +
+        '<button class="vm-gh" id="vmPick">Choose file</button>' +
+        '<button class="vm-gh" id="vmSheet">Import from Google Sheet</button>' +
+        '<button class="vm-gh" id="vmExport">Export backup</button></div>' +
+      '<div id="vmSheetHost"></div></div>';
+
+  /* --- search wiring: no full re-render on keystroke --- */
+  var si = document.getElementById("cSearch");
+  var tmr = null;
+  si.addEventListener("input", function () {
+    CQ.q = si.value;
+    clearTimeout(tmr);
+    tmr = setTimeout(function () {
+      var pos = si.selectionStart;
+      viewContacts(v);
+      var s2 = document.getElementById("cSearch");
+      if (s2) { s2.focus(); try { s2.setSelectionRange(pos, pos); } catch (e) { } }
+    }, 140);
+  });
+  si.addEventListener("keydown", function (e) {
+    if (e.key === "Escape") { CQ.q = ""; viewContacts(v); }
+    if (e.key === "Enter") {
+      var first = v.querySelector("tr.clk");
+      if (first) first.click();
+    }
+  });
+  var cx = document.getElementById("cClear");
+  if (cx) cx.onclick = function () { CQ.q = ""; viewContacts(v); };
+  var cr = document.getElementById("cReset");
+  if (cr) cr.onclick = function () { CQ.q = ""; CQ.filter = "all"; viewContacts(v); };
+  Array.prototype.forEach.call(v.querySelectorAll(".sf"), function (b) {
+    b.onclick = function () { CQ.filter = b.dataset.f; viewContacts(v); };
+  });
+
+  /* --- import wiring --- */
   var fi = document.getElementById("vmFile");
   document.getElementById("vmPick").onclick = function () { fi.click(); };
   var dz = document.getElementById("vmDrop");
@@ -3729,6 +3865,7 @@ function viewContacts(v) {
     showSheetForm(document.getElementById("vmSheetHost"));
   };
   document.getElementById("vmExport").onclick = function () { doExport(); };
+
   Array.prototype.forEach.call(v.querySelectorAll("tr.clk"), function (tr) {
     tr.onclick = function () {
       var t = liveTouches().filter(function (x) {
@@ -3791,6 +3928,12 @@ function viewAccount(v) {
   document.addEventListener("keydown", function (e) {
     var tg = e.target.tagName;
     if (tg === "INPUT" || tg === "TEXTAREA" || tg === "SELECT") return;
+    if (e.key === "/") {
+      e.preventDefault();
+      navView = "contacts"; VM.mode = "door"; render();
+      var s = document.getElementById("cSearch"); if (s) s.focus();
+      return;
+    }
     if (VM.mode !== "card") return;
     var t = VM.queue[VM.i];
     if (!t) return;
