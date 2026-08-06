@@ -528,6 +528,136 @@ select.auth-input{appearance:none}
 .crow .arw{color:var(--coral);flex:none}
 .co-empty{color:var(--mute);font-size:13px;font-weight:600;padding:6px 0}
 
+
+/* ===================== COMPANIES GRID (white cards) ===================== */
+.cogrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:16px}
+@media(max-width:900px){.cogrid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.cogrid{grid-template-columns:1fr}}
+.cocard{background:var(--bone);color:var(--navy);border-radius:14px;padding:16px;box-shadow:0 20px 46px -34px #000;cursor:pointer;transition:transform .15s ease,box-shadow .15s ease;display:flex;flex-direction:column;gap:12px}
+.cocard:hover{transform:translateY(-3px);box-shadow:0 26px 54px -30px #000}
+.cotop{display:flex;align-items:flex-start;gap:11px}
+.cologo{width:40px;height:40px;border-radius:10px;background:var(--navy);color:var(--coral);display:grid;place-items:center;font-weight:900;font-size:16px;flex:none}
+.coname{font-weight:900;font-size:16px;letter-spacing:-.01em;line-height:1.1}
+.cometa{color:#7a8a99;font-size:11.5px;margin-top:3px;font-weight:600}
+.cowhy{margin-left:auto;flex:none}
+.whypill{display:inline-flex;align-items:center;gap:5px;background:#fde3e6;color:#b23a4a;border-radius:999px;padding:3px 8px;font-family:'IBM Plex Mono',monospace;font-size:8.5px;letter-spacing:.05em;font-weight:600;white-space:nowrap}
+.whypill.warm{background:#fdf0dd;color:#b26a1a}
+.whypill.cool{background:#eef1f4;color:#5a6b7d}
+.colead{background:#f7f8f9;border:1px solid #eef1f4;border-radius:10px;padding:10px 12px;font-size:12.5px;font-weight:700;color:#33475f;display:flex;align-items:center;gap:9px}
+.colead .li{width:22px;height:22px;border-radius:6px;background:#fde3e6;display:grid;place-items:center;flex:none}
+.colead.plain .li{background:#eef1f4}
+.cofoot2{border-top:1px solid #edf0f3;padding-top:11px;display:flex;align-items:center;gap:16px;color:#8a97a6;font-size:11.5px;font-weight:600}
+.cofoot2 b{color:var(--navy)}
+.cofoot2 .arrow{margin-left:auto;color:var(--coral);font-weight:800}
+
+/* ===================== CONTACT TILES ===================== */
+.ctgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:16px}
+@media(max-width:900px){.ctgrid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.ctgrid{grid-template-columns:1fr}}
+.ctile{background:var(--bone);color:var(--navy);border-radius:14px;padding:16px;box-shadow:0 20px 46px -34px #000;cursor:pointer;transition:transform .15s ease,box-shadow .15s ease;display:flex;flex-direction:column;gap:12px}
+.ctile:hover{transform:translateY(-3px);box-shadow:0 26px 54px -30px #000}
+.cthd{display:flex;align-items:center;gap:11px}
+.ctav{width:40px;height:40px;border-radius:10px;display:grid;place-items:center;font-weight:900;font-size:14px;flex:none}
+.ctav.gate{background:var(--coral);color:var(--navy)}
+.ctav.econ{background:var(--navy);color:var(--bone)}
+.ctav.hm{background:#e7edf5;color:var(--navy)}
+.ctav.rec{background:#e2f2e9;color:#1f7d4f}
+.ctnm{font-weight:900;font-size:15.5px;letter-spacing:-.01em;line-height:1.15}
+.ctt2{color:#5a6b7d;font-size:12px;line-height:1.3}
+.ctco{display:flex;align-items:center;gap:7px;color:#7a8a99;font-size:11.5px;font-weight:700}
+.ctco .cl{width:18px;height:18px;border-radius:5px;background:var(--navy);color:var(--coral);display:grid;place-items:center;font-size:8px;font-weight:900;flex:none}
+.ctmeta{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.roletag{background:#eef1f4;color:#3a4b5e;border-radius:999px;padding:4px 10px;font-size:10.5px;font-weight:700;white-space:nowrap}
+.stbadge{display:flex;align-items:center;gap:6px;color:#2e5d44;font-size:10.5px;font-weight:700;white-space:nowrap}
+.stbadge .dot{width:7px;height:7px;border-radius:999px;background:#2e7d51}
+.stbadge.pending{color:#7A93A8}
+.stbadge.pending .dot{background:#7A93A8}
+.ctfoot{border-top:1px solid #edf0f3;padding-top:11px;display:flex;align-items:center;justify-content:space-between;color:#8a97a6;font-size:11.5px;font-weight:600}
+.ctfoot .angle{color:var(--coral);font-weight:800}
+
+/* ===================== SHARED CONTACT MODAL ===================== */
+.vmodal-overlay{position:fixed;inset:0;background:rgba(5,10,18,.66);backdrop-filter:blur(3px);display:none;align-items:center;justify-content:center;padding:30px;z-index:80}
+.vmodal-overlay.show{display:flex}
+.vmodal{background:var(--bone);color:var(--navy);border-radius:18px;width:100%;max-width:720px;padding:26px;box-shadow:0 50px 120px -40px #000;animation:pop .28s cubic-bezier(.16,.84,.3,1) both;max-height:90vh;overflow:auto}
+@keyframes pop{from{opacity:0;transform:translateY(10px) scale(.98)}to{opacity:1;transform:none}}
+.vmtop{display:flex;align-items:center;gap:14px;margin-bottom:6px}
+.vmtop .ctav{width:50px;height:50px;border-radius:12px;font-size:18px}
+.vmnm{font-weight:900;font-size:22px;letter-spacing:-.01em;line-height:1.1}
+.vmtt{color:#5a6b7d;font-size:13px}
+.vmtags{margin-left:auto;display:flex;align-items:center;gap:9px}
+.vmtags .roletag{font-size:11px;padding:5px 11px}
+.vmtags .stbadge{background:#e2f2e9;border-radius:999px;padding:5px 11px;font-size:11px}
+.vmtags .stbadge.pending{background:#eef1f4}
+.vmclose{width:34px;height:34px;border-radius:9px;border:1px solid #e2e7ec;background:#fff;display:grid;place-items:center;cursor:pointer;color:#5a6b7d;margin-left:6px;flex:none}
+.vmbody{display:grid;grid-template-columns:1.1fr 1fr;gap:24px;margin-top:16px;border-top:1px solid #edf0f3;padding-top:16px}
+@media(max-width:640px){.vmbody{grid-template-columns:1fr}}
+.vmleft{border-right:1px solid #edf0f3;padding-right:22px}
+@media(max-width:640px){.vmleft{border-right:0;padding-right:0}}
+.vblock{margin-top:14px}
+.vblock:first-child{margin-top:0}
+.vbt{font-family:'IBM Plex Mono',monospace;text-transform:uppercase;letter-spacing:.08em;font-size:10px;color:#8a97a6;font-weight:600;margin-bottom:8px}
+.vchan{display:flex;align-items:center;gap:10px;padding:5px 0;font-size:13px;color:#33475f;font-weight:600}
+.vchan.mute{color:#8a97a6}
+.vchan .ci{width:26px;height:26px;border-radius:7px;background:#eef1f4;display:grid;place-items:center;flex:none;color:#5a6b7d}
+.vconf{margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.04em;color:#2e7d51;background:#e2f2e9;border-radius:999px;padding:3px 8px;font-weight:600}
+.vconf.mid{color:#b26a1a;background:#fdf0dd}
+.vwhy-txt{font-size:13.5px;color:#33475f;font-weight:500;line-height:1.55}
+.vhook{margin:0;padding:0}
+.vhook li{margin-bottom:6px;list-style:none;padding-left:16px;position:relative;font-size:13.5px;color:#33475f;font-weight:500;line-height:1.5}
+.vhook li:before{content:"";position:absolute;left:0;top:8px;width:5px;height:5px;border-radius:999px;background:var(--coral)}
+.vangles{display:flex;gap:9px;flex-wrap:wrap}
+.vangle{border:1px solid #e2e7ec;background:#fff;border-radius:10px;padding:9px 12px;font-size:12.5px;font-weight:700;color:var(--navy);display:flex;align-items:center;gap:8px}
+.vangle .n{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--coral)}
+.vangle.rec{border-color:var(--coral);box-shadow:0 0 0 1px var(--coral)}
+.vcta{margin-top:16px;width:100%;border:0;border-radius:11px;padding:13px;font-family:'Archivo';font-weight:800;font-size:15px;background:var(--coral);color:var(--navy);display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer}
+.vcta:hover{background:var(--coral-2)}
+.vmuted{color:#8a97a6;font-size:13px;font-weight:500}
+
+/* ===================== COMPANY PROFILE (full page) ===================== */
+.cp-crumb{color:var(--mute);font-size:13px;font-weight:600;padding:8px 0 0}
+.cp-crumb b{color:var(--steel);margin:0 4px}
+.cp-crumb .lnk{color:var(--steel);cursor:pointer}
+.cp-crumb .lnk:hover{color:var(--coral)}
+.cp-hero{padding:14px 0 8px;display:flex;align-items:flex-end;gap:20px;flex-wrap:wrap}
+.cp-logo{width:58px;height:58px;border-radius:14px;background:var(--navy);border:1px solid var(--line);display:grid;place-items:center;font-weight:900;font-size:22px;color:var(--coral);flex:none}
+.cp-name{font-weight:900;font-size:40px;letter-spacing:-.03em;line-height:1}
+.cp-meta{display:flex;gap:16px;margin-top:8px;color:var(--steel);font-size:13.5px;font-weight:600;flex-wrap:wrap}
+.cp-meta span{display:flex;align-items:center;gap:6px}
+.cp-whybadge{margin-left:auto;background:#3a1d21;color:var(--coral);border:1px solid rgba(234,121,135,.35);border-radius:999px;padding:10px 16px;font-weight:800;font-size:13px;display:flex;align-items:center;gap:8px;align-self:center}
+.cp-whybadge.warm{background:#2a2213;color:#e6b35a;border-color:rgba(230,179,90,.35)}
+.cp-whybadge.cool{background:var(--navy-2);color:var(--steel);border-color:var(--line)}
+.cp-cols{display:grid;grid-template-columns:1.5fr 1fr;gap:20px;padding:22px 0 10px}
+@media(max-width:900px){.cp-cols{grid-template-columns:1fr}}
+.cp-stack{display:flex;flex-direction:column;gap:20px}
+.cp-card{background:var(--bone);color:var(--navy);border-radius:16px;padding:22px 24px;box-shadow:0 30px 70px -34px #000}
+.cp-ctitle{color:#8a97a6;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.cp-sig{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid #edf0f3}
+.cp-sig:last-child{border-bottom:0;padding-bottom:0}
+.cp-sig .ic{width:30px;height:30px;border-radius:8px;display:grid;place-items:center;flex:none}
+.cp-sig .ic.trig{background:#fde3e6}
+.cp-sig .ic.sec{background:#eef1f4}
+.cp-sig .st{font-weight:800;font-size:14px}
+.cp-sig .sd{color:#5a6b7d;font-size:12.5px;margin-top:2px}
+.cp-sig .badge{margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.05em;color:#b23a4a;background:#fde3e6;border-radius:999px;padding:4px 8px;font-weight:600;height:fit-content;white-space:nowrap}
+.cp-sig .badge.sec{color:#5a6b7d;background:#eef1f4}
+.cp-thesis .row{display:flex;gap:14px;padding:14px 0;border-bottom:1px solid #edf0f3}
+.cp-thesis .row:last-child{border-bottom:0}
+.cp-thesis .k{font-family:'IBM Plex Mono',monospace;text-transform:uppercase;letter-spacing:.08em;font-size:10px;color:#8a97a6;font-weight:600;width:130px;flex:none;padding-top:3px}
+.cp-thesis .v{font-size:14px;font-weight:600;color:#33475f;line-height:1.5}
+.cp-cost{background:#fff5f6;border:1px solid #f6d3d8;border-radius:12px;padding:16px 18px;margin-top:16px;display:flex;align-items:center;gap:16px}
+.cp-cost .big{font-weight:900;font-size:30px;color:var(--coral);letter-spacing:-.02em;line-height:1}
+.cp-cost .lbl{color:#7a5560;font-size:12.5px;font-weight:700}
+.cp-chips{display:flex;flex-wrap:wrap;gap:8px}
+.cp-chip{background:#eef1f4;color:#3a4b5e;border:1px solid #e2e7ec;border-radius:8px;padding:7px 12px;font-size:12.5px;font-weight:700}
+.cp-flag{display:flex;align-items:center;gap:9px;padding:9px 0;font-size:13px;font-weight:600;color:#2e5d44}
+.cp-flag .fi{width:22px;height:22px;border-radius:6px;background:#e2f2e9;display:grid;place-items:center;flex:none}
+.cp-sechead{padding:26px 0 6px;display:flex;align-items:baseline;gap:12px}
+.cp-sechead .t{font-weight:900;font-size:24px;letter-spacing:-.02em}
+.cp-sechead .c{color:var(--mute);font-size:13px;font-weight:600}
+.cp-thin{color:var(--steel);font-size:13.5px;font-weight:500;line-height:1.55}
+.cp-back{background:var(--navy);border:1px solid #1c3a5c;color:var(--bone);border-radius:10px;padding:8px 14px;font-weight:700;font-size:13px;cursor:pointer;font-family:inherit}
+.cp-back:hover{border-color:var(--coral)}
+
 /* ======================= TOAST ======================= */
 .o2-stack{position:fixed;left:0;right:0;bottom:26px;z-index:90;display:flex;flex-direction:column;
   align-items:center;gap:8px;pointer-events:none}
@@ -791,15 +921,40 @@ select.auth-input{appearance:none}
   function seedPublicDemo(){
     var t = todayStr();
     state.accounts = [
-      { id:"demoA", company:"Northwind Retail (sample)", start:t, threads:[
-        {id:"na1", name:"Jordan Blake", title:"VP Engineering", persona:"Economic Buyer", entryDay:1, channel:"em", linkedin:"linkedin.com/in/sample-jordan", email:"jordan@example.com", angle:"Owns the budget — leads with the cost math for a 5-person nearshore pod.", signal:"Promoted to VP — 6 days ago", signalSrc:"LinkedIn", pulledAt:Date.now()-4*60*1000},
-        {id:"na2", name:"Sam Rivera", title:"Director of Data Platform", persona:"Champion", entryDay:1, channel:"li", linkedin:"linkedin.com/in/sample-sam", email:"sam@example.com", angle:"Posted 6 open data-eng reqs in the last 30 days — feels the hiring pain daily.", pulledAt:Date.now()-45*60*1000},
-        {id:"na3", name:"Casey Nguyen", title:"Staff Engineer", persona:"Technical Evaluator", entryDay:1, channel:"li", linkedin:"linkedin.com/in/sample-casey", email:"", angle:"Vets the stack fit — worth a Talent Map for their exact tooling.", pulledAt:Date.now()-3*3600*1000}
+      { id:"demoA", company:"Northwind Logistics", start:t, domain:"northwind.com", size:"350 employees", place:"Chicago, IL", sector:"Logistics",
+        whyNow:"4 Senior Azure roles open 60+ days — $15K/week bleeding.",
+        signals:[
+          {kind:"trigger", text:"4 Senior Azure roles open > 60 days", detail:"Workday ATS · Req #10492"},
+          {kind:"secondary", text:"New Chief AI Officer hired", detail:"Marcus Vance · 45 days ago · press release"}
+        ],
+        thesis:{ what:"Migrating the core supply-chain platform to Azure.", bottleneck:"4 senior engineering roles unfilled past 60 days.", cost:"Project delays + team overtime while the migration stalls." },
+        costOfGap:"$15,000/wk",
+        techStack:["Azure","Kubernetes","Terraform","C# / .NET Core","Snowflake"],
+        flags:["Direct-to-manager friendly","No VMS/MSP restrictions detected"],
+        threads:[
+        {id:"na1", name:"Reyna Ortiz", title:"VP Talent Acquisition", persona:"Additional", roleLabel:"Gatekeeper", entryDay:1, channel:"em", linkedin:"linkedin.com/in/reynaortiz", email:"r.ortiz@northwind.com", emailConf:"95%", city:"Chicago, IL", status:"ok",
+          whyCares:"Reyna owns internal recruitment capacity. When 4 technical reqs stay open past 60 days, her team takes heat from the CTO.",
+          hook:["Joined Northwind 8 months ago from C.H. Robinson.","Posted on LinkedIn 2 weeks ago about scaling the engineering team for Q3."],
+          angles:[{n:"01",label:"The Gap",rec:true},{n:"03",label:"Anon. Senior Azure Candidate"}],
+          angle:"Owns internal recruitment capacity — 4 reqs open 60+ days = heat from the CTO.", pulledAt:Date.now()-4*60*1000},
+        {id:"na2", name:"Marcus Vance", title:"Chief AI Officer", persona:"Economic Buyer", roleLabel:"Economic Buyer", entryDay:1, channel:"em", linkedin:"linkedin.com/in/marcusvance", email:"m.vance@northwind.com", emailConf:"78%", city:"Chicago, IL", status:"ok",
+          whyCares:"Just hired to lead the Azure/AI migration — the unfilled roles are blocking his mandate in his first 90 days.",
+          hook:["Hired 45 days ago (press release).","Owns the platform migration the open roles support."],
+          angles:[{n:"02",label:"Cost of Waiting",rec:true},{n:"03",label:"Anon. Senior Azure Candidate"}],
+          angle:"Hired to run the Azure migration — the open roles block his mandate.", pulledAt:Date.now()-45*60*1000},
+        {id:"na3", name:"Devin Cole", title:"Director, Platform Engineering", persona:"Technical Evaluator", roleLabel:"Hiring Manager", entryDay:1, channel:"li", linkedin:"linkedin.com/in/devincole", email:"", status:"pending",
+          whyCares:"Directly manages the 4 open reqs — feels the overtime and delivery slip firsthand.",
+          hook:["Owns the reqs blocking the migration."],
+          angles:[{n:"01",label:"The Gap",rec:true}],
+          angle:"Manages the 4 open reqs — feels the overtime firsthand.", pulledAt:Date.now()-3*3600*1000}
       ]},
-      { id:"demoB", company:"Aster Health (sample)", start:t, threads:[
-        {id:"ab1", name:"Priya Shah", title:"CTO", persona:"Economic Buyer", entryDay:1, channel:"em", linkedin:"", email:"priya@example.com", angle:"Compliance deadline in Q3 is forcing a hiring decision now.", pulledAt:Date.now()-2*3600*1000},
-        {id:"ab2", name:"Marcus Webb", title:"Eng Manager", persona:"Champion", entryDay:1, channel:"li", linkedin:"", email:"", angle:"Team has been re-posting the same senior role for 90+ days.", pulledAt:Date.now()-26*3600*1000},
-        {id:"ab3", name:"Dana Okafor", title:"Head of Talent", persona:"Gatekeeper", entryDay:1, channel:"em", linkedin:"", email:"dana@example.com", angle:"Runs the req intake — every outside vendor goes through her first.", pulledAt:Date.now()-5*3600*1000}
+      { id:"demoB", company:"Aster Health", start:t, domain:"asterhealth.com", size:"900 employees", place:"Boston, MA", sector:"Healthcare",
+        whyNow:"Q3 compliance deadline forcing a hiring decision now.",
+        signals:[{kind:"trigger", text:"Same senior role reposted 90+ days", detail:"Job board"}],
+        threads:[
+        {id:"ab1", name:"Priya Shah", title:"CTO", persona:"Economic Buyer", roleLabel:"Economic Buyer", entryDay:1, channel:"em", linkedin:"", email:"priya@asterhealth.com", emailConf:"90%", status:"ok", angle:"Compliance deadline in Q3 is forcing a hiring decision now.", whyCares:"A Q3 compliance deadline lands on her — unfilled roles put it at risk.", pulledAt:Date.now()-2*3600*1000},
+        {id:"ab2", name:"Marcus Webb", title:"Eng Manager", persona:"Champion", roleLabel:"Champion", entryDay:1, channel:"li", linkedin:"linkedin.com/in/marcuswebb", email:"", status:"pending", angle:"Team has been re-posting the same senior role for 90+ days.", pulledAt:Date.now()-26*3600*1000},
+        {id:"ab3", name:"Dana Okafor", title:"Head of Talent", persona:"Additional", roleLabel:"Gatekeeper", entryDay:1, channel:"em", linkedin:"", email:"dana@asterhealth.com", emailConf:"88%", status:"ok", angle:"Runs the req intake — every outside vendor goes through her first.", pulledAt:Date.now()-5*3600*1000}
       ]}
     ];
     state.activeId="demoA";
@@ -1476,7 +1631,10 @@ select.auth-input{appearance:none}
       place:find("place","location","hq"),
       city:find("city","town"),
       state:find("state","province","region"),
-      size:find("company size","employee count","size"),
+      whynow:find("why now","why","summary"),
+      hubspot:find("hubspot url","hubspot","hubspot link","crm url"),
+      crmstage:find("stage","crm stage","lifecycle","lifecycle stage"),
+      size:find("company size","employee count","employees","size"),
       revenue:find("revenue","company revenue"),
       hiring:find("hiring"), hiringsrc:find("hiring source"),
       building:find("building"), buildingsrc:find("building source"),
@@ -1624,7 +1782,9 @@ select.auth-input{appearance:none}
   function importRows(rows, upsert){
     if(!rows || rows.length<2) return {ok:false,msg:"No data rows found (need a header row + at least one contact)"};
     var cm=colMap(rows[0]);
-    if(cm.name<0 && cm.first<0) return {ok:false,msg:"No Name column found — check the header row"};
+    if(cm.name<0 && cm.first<0) return {ok:false,msg: cm.company>=0
+      ? "This looks like a company list (no Name column). Add it on the Companies tab → Add companies."
+      : "No Name column found — check the header row"};
     var added=0, updated=0, skipped=0, lastAcctId=null, createdIds={};
     // Worth saying out loud rather than filing everyone under one placeholder
     // and letting the rep discover it in the table.
@@ -1704,8 +1864,40 @@ select.auth-input{appearance:none}
     });
     return { ok:true, added:added, updated:updated };
   }
+  // A blank in these curated exports is spelled out, not left empty.
+  function isBlankFact(v){ v=(v||"").trim(); return !v || /^not tracked$/i.test(v) || /^n\/?a$/i.test(v) || /^none$/i.test(v); }
+  // Master-list exports carry provenance inline — "Aged reqs (JOB BOARD)",
+  // "$130M bank acq (EARNINGS)" — instead of a separate source column. Peel a
+  // trailing "(SOURCE)" only when SOURCE is one of the real whitelisted types.
+  function splitInlineSource(v){
+    v=(v||"").trim();
+    var m=v.match(/^([\s\S]*?)\s*\(([^()]+)\)\s*$/);
+    if(m){ var src=normCompanyFactSource(m[2]); if(src) return { value:m[1].trim(), src:src }; }
+    return { value:v, src:"" };
+  }
+  // Reads company intel from a master/accounts list. Honors both a separate
+  // "<fact> source" column and the inline "(SOURCE)" convention; treats
+  // NOT TRACKED / N/A as empty. Sector/place/size/revenue stay source-free.
+  function readMasterFacts(get, cm){
+    var f={};
+    var sector=get(cm.sector); if(!isBlankFact(sector)) f.sector=sector;
+    var size=get(cm.size); if(!isBlankFact(size)) f.size=size;
+    var revenue=get(cm.revenue); if(!isBlankFact(revenue)) f.revenue=revenue;
+    [["hiring","hiringsrc","hiringSrc"],["building","buildingsrc","buildingSrc"],
+     ["stack","stacksrc","stackSrc"],["money","moneysrc","moneySrc"],
+     ["leadership","leadershipsrc","leadershipSrc"],["product","productsrc","productSrc"],
+     ["expansion","expansionsrc","expansionSrc"],["timing","timingsrc","timingSrc"]].forEach(function(p){
+      var raw=get(cm[p[0]]);
+      if(isBlankFact(raw)) return;
+      var s=splitInlineSource(raw);
+      var src=normCompanyFactSource(get(cm[p[1]])) || s.src;
+      f[p[0]]=s.value; if(src) f[p[2]]=src;
+    });
+    return f;
+  }
   // CSV/Excel with a header row: needs a Company column; reads City/State (or
-  // Place) plus any of the usual directory/intel columns.
+  // Place), Industry, Employees, the 8 intel fields (inline or sourced),
+  // Why Now, and a HubSpot link — everything a master accounts list carries.
   function importCompanyRows(rows){
     if(!rows||rows.length<2) return {ok:false,msg:"Need a header row + at least one company"};
     var cm=colMap(rows[0]);
@@ -1715,10 +1907,14 @@ select.auth-input{appearance:none}
       var r=rows[i];
       var get=function(idx){ return idx>=0 && idx<r.length ? (r[idx]||"").trim() : ""; };
       var company=get(cm.company); if(!company) continue;
-      var facts=readCompanyFacts(get, cm);
-      var place=facts.place || get(cm.place) || [get(cm.city),get(cm.state)].filter(Boolean).join(", ");
-      if(place) facts.place=place;
-      var res=upsertCompany(company, place, facts);
+      var facts=readMasterFacts(get, cm);
+      var place=get(cm.place) || [get(cm.city),get(cm.state)].filter(Boolean).join(", ");
+      if(place && !isBlankFact(place)) facts.place=place;
+      var whyNow=get(cm.whynow);
+      if(!isBlankFact(whyNow) && !/^no engine intel/i.test(whyNow)) facts.whyNow=whyNow;
+      var hub=get(cm.hubspot); if(/^https?:\/\//i.test(hub)) facts.hubspot=hub;
+      var stg=get(cm.crmstage); if(!isBlankFact(stg)) facts.crmStage=stg.toLowerCase();
+      var res=upsertCompany(company, facts.place||place, facts);
       if(res){ res.isNew?added++:updated++; }
     }
     return {ok:true, added:added, updated:updated};
@@ -2109,6 +2305,7 @@ function render() {
   document.body.classList.remove("gd-on");
   if (navView === "pipeline") return viewPipeline(v);
   if (navView === "companies") return viewCompanies(v);
+  if (navView === "companyprofile") return viewCompanyProfile(v);
   if (navView === "contacts") return viewContacts(v);
   if (navView === "account") return viewAccount(v);
   return viewToday(v);
@@ -2632,14 +2829,135 @@ function viewPipeline(v) {
   });
 }
 
-/* ---------- Contacts (white table) ---------- */
+/* ---------- Contacts + Companies + Company profile (designer screens) ---------- */
+/* Persona / role → avatar color + label */
+function ctCls(th) {
+  var s = ((th && (th.roleLabel || th.persona)) || "").toLowerCase();
+  if (s.indexOf("gate") > -1 || s.indexOf("talent acq") > -1) return "gate";
+  if (s.indexOf("econom") > -1 || s.indexOf("buyer") > -1 || /\b(coo|cfo|ceo|cto|chief)\b/.test(s) || s.indexOf("vp eng") > -1) return "econ";
+  if (s.indexOf("hiring") > -1 || s.indexOf("manager") > -1 || s.indexOf("director") > -1 || s.indexOf("evaluat") > -1) return "hm";
+  return "rec";
+}
+function roleLabelOf(th) { return th.roleLabel || th.persona || "Contact"; }
+function initialsOf(name) { return (name || "?").split(/\s+/).map(function (w) { return w[0]; }).join("").slice(0, 2).toUpperCase(); }
+function statusOf(th) { return th.status || (th.email ? "ok" : "pending"); }
+function stBadge(st) {
+  return st === "pending"
+    ? '<span class="stbadge pending"><span class="dot"></span> VERIFYING</span>'
+    : '<span class="stbadge"><span class="dot"></span> ACTIVE</span>';
+}
+/* recommended-angle label for tiles */
+function recAngle(th) {
+  if (th.angles && th.angles.length) { var a = th.angles[0]; return (a.n ? a.n + " " : "") + a.label; }
+  if (th.angle) return "The Gap";
+  return "The Gap";
+}
+
+var IC_C = {
+  mail: '<path d="M22 6l-10 7L2 6M2 6h20v12H2z"/>',
+  in: '<path d="M16 8a6 6 0 0 1 6 6v6h-4v-6a2 2 0 0 0-4 0v6h-4v-12h4v2M6 9H2v11h4zM4 4a2 2 0 1 0 0 4 2 2 0 0 0 0-4z"/>',
+  pin: '<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>'
+};
+function csvg(p, c) { return '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="' + (c || "#5a6b7d") + '" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">' + p + '</svg>'; }
+
+/* build channel rows for the modal from a thread + its account */
+function channelsOf(th, a) {
+  var rows = [];
+  if (th.email) {
+    var conf = th.emailConf || "";
+    var cls = /^([0-7]?\d)%/.test(conf) ? "mid" : "";
+    rows.push({ ic: "mail", text: th.email, conf: conf ? conf.replace("%", "% CONF").toUpperCase() : "", cls: cls });
+  } else {
+    rows.push({ ic: "mail", text: "Email — engine still verifying", conf: "", mute: true });
+  }
+  if (th.linkedin) rows.push({ ic: "in", text: String(th.linkedin).replace(/^https?:\/\//, "") });
+  var loc = th.city || a.place || "";
+  if (loc) rows.push({ ic: "pin", text: loc });
+  return rows;
+}
+function whyOf(th, a) {
+  return th.whyCares || th.angle ||
+    (a.hiring ? "Feels the hiring gap firsthand — " + a.hiring : "Engine-matched at " + (a.company || "this account") + ".");
+}
+function hookOf(th) {
+  if (th.hook && th.hook.length) return th.hook;
+  var h = [];
+  if (th.signal) h.push(th.signal);
+  if (th.angle && th.angle !== th.signal) h.push(th.angle);
+  return h;
+}
+function anglesOf(th) {
+  if (th.angles && th.angles.length) return th.angles;
+  return [{ n: "01", label: "The Gap", rec: true }];
+}
+
+/* ---------- shared contact modal ---------- */
+var MODAL_CTX = null;
+function ensureModal() {
+  var ov = document.getElementById("vModalOverlay");
+  if (ov) return ov;
+  ov = el('<div class="vmodal-overlay" id="vModalOverlay"><div class="vmodal" id="vModal"></div></div>');
+  ov.addEventListener("click", function (e) { if (e.target === ov) closeContactModal(); });
+  document.body.appendChild(ov);
+  return ov;
+}
+function closeContactModal() {
+  var ov = document.getElementById("vModalOverlay");
+  if (ov) ov.classList.remove("show");
+  MODAL_CTX = null;
+}
+function openContactModal(acctId, threadId) {
+  var a = acctOf(acctId);
+  var th = (a.threads || []).filter(function (t) { return t.id === threadId; })[0];
+  if (!th) return;
+  MODAL_CTX = { acctId: acctId, threadId: threadId };
+  var cls = ctCls(th), st = statusOf(th);
+  var chan = channelsOf(th, a).map(function (ch) {
+    var conf = ch.conf ? '<span class="vconf ' + (ch.cls === "mid" ? "mid" : "") + '">' + esc(ch.conf) + '</span>' : "";
+    return '<div class="vchan' + (ch.mute ? " mute" : "") + '"><span class="ci">' + csvg(IC_C[ch.ic]) + '</span> ' + esc(ch.text) + ' ' + conf + '</div>';
+  }).join("");
+  var hook = hookOf(th);
+  var hookHTML = hook.length ? '<ul class="vhook">' + hook.map(function (h) { return "<li>" + esc(h) + "</li>"; }).join("") + "</ul>"
+    : '<div class="vmuted">No personal hook captured yet — paste the agent\'s Contact Note to add one.</div>';
+  var angles = anglesOf(th).map(function (an) {
+    return '<div class="vangle' + (an.rec ? " rec" : "") + '"><span class="n">' + esc(an.n || "") + '</span> ' + esc(an.label) + '</div>';
+  }).join("");
+  var whyTxt = whyOf(th, a);
+
+  ensureModal();
+  document.getElementById("vModal").innerHTML =
+    '<div class="vmtop"><div class="ctav ' + cls + '">' + initialsOf(th.name) + '</div>' +
+      '<div><div class="vmnm">' + esc(th.name || "—") + '</div>' +
+        '<div class="vmtt">' + esc(th.title || "") + (a.company ? ' · ' + esc(a.company) : '') + '</div></div>' +
+      '<div class="vmtags"><span class="roletag">' + esc(roleLabelOf(th)) + '</span>' + stBadge(st) +
+        '<div class="vmclose" id="vmClose"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></div></div>' +
+    '</div>' +
+    '<div class="vmbody"><div class="vmleft"><div class="vblock"><div class="vbt">Contact channels</div>' + chan + '</div></div>' +
+      '<div class="vmright">' +
+        '<div class="vblock"><div class="vbt">Why this person cares</div><div class="vwhy-txt">' + esc(whyTxt) + '</div></div>' +
+        '<div class="vblock"><div class="vbt">Personal hook &amp; context</div>' + hookHTML + '</div>' +
+        '<div class="vblock"><div class="vbt">Recommended outreach angle</div><div class="vangles">' + angles + '</div></div>' +
+        '<button class="vcta" id="vmDraft">Draft outreach with Ollin <span>&rarr;</span></button>' +
+      '</div></div>';
+  document.getElementById("vmClose").onclick = closeContactModal;
+  document.getElementById("vmDraft").onclick = function () { draftFromContact(acctId, threadId); };
+  document.getElementById("vModalOverlay").classList.add("show");
+}
+function draftFromContact(acctId, threadId) {
+  closeContactModal();
+  var map = liveByKey(), id = acctId + "|" + threadId;
+  if (map[id]) { VM.narrow = true; VM.qIds = [id]; VM.i = 0; }
+  navView = "today"; render(); window.scrollTo(0, 0);
+  if (!map[id]) toast("This contact has finished their cadence — nothing due to draft.");
+}
+
+/* ---------- Contacts (global tile grid) ---------- */
 var CQ = { q: "", filter: "all" };
-var C_FILTERS = [["all", "All"], ["late", "Overdue"], ["today", "Due today"],
-                 ["new", "Never touched"], ["rest", "Resting"]];
+var C_FILTERS = [["all", "All"], ["late", "Overdue"], ["today", "Due today"], ["new", "Never touched"], ["rest", "Resting"]];
 function matchQ(t, a, q) {
   if (!q) return true;
-  var hay = [t.who, t.title, t.company, t.email, t.li, t.angle, t.persona,
-    a.sector, a.place, a.hiring, a.building, a.stack, a.money, a.leadership, a.product, a.expansion, a.timing]
+  var hay = [t.who, t.title, t.company, t.email, t.li, t.angle, t.persona, t.roleLabel, t.whyCares,
+    a.sector, a.place, a.hiring, a.building, a.stack, a.money]
     .filter(Boolean).join(" ").toLowerCase();
   return q.toLowerCase().split(/\s+/).filter(Boolean).every(function (w) { return hay.indexOf(w) > -1; });
 }
@@ -2651,309 +2969,437 @@ function bucketOf(t) {
   if (t.touchNo === 1) return "new";
   return "rest";
 }
-function hi(s, q) {
-  s = String(s || "");
-  if (!q) return esc(s);
-  var out = esc(s);
-  q.split(/\s+/).filter(Boolean).forEach(function (w) {
-    out = out.replace(new RegExp("(" + w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + ")", "ig"), "<mark>$1</mark>");
+/* every contact (thread), with its account + live touch (for status/stage) */
+function allContacts() {
+  var map = liveByKey(), out = [];
+  (state.accounts || []).forEach(function (a) {
+    (a.threads || []).forEach(function (th) {
+      if (th.persona === "Blocker") return;
+      out.push({ a: a, th: th, live: map[a.id + "|" + th.id] || null });
+    });
   });
   return out;
 }
-function lastTouchDate(t) {
-  if (t.touchNo <= 1) return "";
-  var k = t.acctId + "|" + t.threadId + "|" + (t.touchNo - 2);
-  return state.done[k] || "";
-}
 function viewContacts(v) {
-  var td = todayStr();
-  var all = liveTouches();
+  var all = allContacts();
   var counts = { all: all.length, late: 0, today: 0, new: 0, rest: 0 };
-  all.forEach(function (t) { counts[bucketOf(t)]++; });
+  all.forEach(function (c) { if (c.live) counts[bucketOf(c.live)]++; });
 
-  var list = all.filter(function (t) {
-    var a = acctOf(t.acctId);
-    if (CQ.filter !== "all" && bucketOf(t) !== CQ.filter) return false;
-    return matchQ(t, a, CQ.q);
+  var list = all.filter(function (c) {
+    var t = c.live ? { who: c.th.name, title: c.th.title, company: c.a.company, email: c.th.email, li: c.th.linkedin, angle: c.th.angle, persona: c.th.persona, roleLabel: c.th.roleLabel, whyCares: c.th.whyCares } : { who: c.th.name, title: c.th.title, company: c.a.company };
+    if (CQ.filter !== "all") { if (!c.live || bucketOf(c.live) !== CQ.filter) return false; }
+    return matchQ(t, c.a, CQ.q);
   });
 
-  var rows = list.map(function (t) {
-    var d = dueOf(t), b = bucketOf(t), a = acctOf(t.acctId);
-    var st = b === "late" ? ["late", daysBetween(d, td) + "d overdue"]
-      : b === "today" ? ["today", "due today"]
-      : b === "new" ? ["new", "never touched"]
-      : ["rest", "in " + daysBetween(td, d) + "d"];
-    var init = (t.who || "?").split(/\s+/).map(function (w) { return w[0]; }).join("").slice(0, 2).toUpperCase();
-    var lt = lastTouchDate(t);
-    var next = b === "late" ? '<b>' + (t.chLabel || (t.ch === "em" ? "Email" : "LinkedIn")) + '</b> · overdue'
-      : b === "today" ? '<b>' + (t.chLabel || (t.ch === "em" ? "Email" : "LinkedIn")) + '</b> · today'
-      : b === "new" ? '<b>' + (t.chLabel || "LinkedIn") + '</b> · first touch'
-      : '<b>' + (t.chLabel || (t.ch === "em" ? "Email" : "LinkedIn")) + '</b> · in ' + daysBetween(td, d) + 'd';
-    return '<tr data-a="' + esc(t.acctId) + '" data-t="' + esc(t.threadId) + '">' +
-      '<td><div class="ccell"><span class="ava">' + esc(init) + '</span><div>' +
-        '<div class="nm">' + hi(t.who || "—", CQ.q) + '</div>' +
-        (t.title ? '<div class="tt">' + hi(t.title, CQ.q) + '</div>' : '') + '</div></div></td>' +
-      '<td><div class="co-name">' + hi(t.company || "—", CQ.q) + '</div>' +
-        (a.place ? '<div class="co-sub">' + hi(a.place, CQ.q) + '</div>' : '') + '</td>' +
-      '<td><span class="spill ' + st[0] + '">' + st[1] + '</span></td>' +
-      '<td class="next">' + (lt ? esc(lt) : '—') + '</td>' +
-      '<td class="next">' + next + '</td>' +
-      '<td><div class="openbtn">' + IC_GO + '</div></td></tr>';
+  var tiles = list.map(function (c) {
+    var th = c.th, a = c.a, cls = ctCls(th);
+    return '<div class="ctile" data-a="' + esc(a.id) + '" data-t="' + esc(th.id) + '">' +
+      '<div class="cthd"><div class="ctav ' + cls + '">' + initialsOf(th.name) + '</div>' +
+        '<div style="min-width:0"><div class="ctnm">' + esc(th.name || "—") + '</div><div class="ctt2">' + esc(th.title || "") + '</div></div></div>' +
+      '<div class="ctco"><span class="cl">' + esc((a.company || "?").slice(0, 1).toUpperCase()) + '</span> ' + esc(a.company || "—") + '</div>' +
+      '<div class="ctmeta"><span class="roletag">' + esc(roleLabelOf(th)) + '</span>' + stBadge(statusOf(th)) + '</div>' +
+      '<div class="ctfoot"><span>Recommended</span><span class="angle">' + esc(recAngle(th)) + ' &rarr;</span></div>' +
+    '</div>';
   }).join("");
 
-  var closed = contactCount() - all.length;
   v.innerHTML =
-    '<div class="mn head-eyebrow rv" style="--d:.06s">Ollin : Vamos · Contacts</div>' +
-    '<h1 class="vm-h1 rv-t" style="--d:.14s">Contacts — <span class="co">' + contactCount() + '</span> people, engine-matched.</h1>' +
-    '<p class="vm-sub rv" style="--d:.2s">' + all.length + ' in cadence' +
-      (closed > 0 ? ' · ' + closed + ' finished' : '') +
-      (isUnlimited() ? '' : ' · ' + freeLeft() + ' free slots left') + '</p>' +
-
-    '<div class="controls rv" style="--d:.24s">' +
+    '<div class="mn head-eyebrow rv" style="--d:.06s">Ollin : Guide</div>' +
+    '<h1 class="vm-h1 rv-t" style="--d:.14s">Contacts — <span class="co">' + all.length + '</span> people, engine-matched.</h1>' +
+    '<div class="controls rv" style="--d:.22s">' +
       askBarHTML("cSearch", "Ask Ollin… or search a name, company, title", { soft: 1, sm: 1 }) +
       '<div class="filters">' + C_FILTERS.map(function (f) {
-        return '<button class="fchip' + (CQ.filter === f[0] ? " on" : "") + '" data-f="' + f[0] + '">' +
-          f[1] + '<em>' + counts[f[0]] + '</em></button>';
+        return '<button class="fchip' + (CQ.filter === f[0] ? " on" : "") + '" data-f="' + f[0] + '">' + f[1] + '<em>' + counts[f[0]] + '</em></button>';
       }).join('') + '</div>' +
     '</div>' +
-
-    (rows
-      ? '<div class="panel rv" style="--d:.32s"><table class="tbl"><thead><tr>' +
-        '<th>Contact</th><th>Company</th><th>Stage</th><th>Last touch</th><th>Next step</th><th></th></tr></thead>' +
-        '<tbody>' + rows + '</tbody></table></div>' +
-        '<div class="rowcount rv" style="--d:.4s">Showing ' + list.length + ' of ' + contactCount() +
-          ' · the rest are staged and waiting in the engines.</div>'
-      : '<div class="panel rv" style="--d:.32s"><div style="padding:22px;color:#5a6b7d;font-weight:600">' +
+    (tiles
+      ? '<div class="ctgrid rv" style="--d:.30s">' + tiles + '</div>'
+      : '<div class="vm-card rv" style="--d:.3s"><p class="vm-sub" style="margin:0">' +
         (CQ.q || CQ.filter !== "all" ? 'Nothing matches. <a id="cReset" style="color:var(--coral);cursor:pointer">Clear it</a>.'
-          : 'Nobody in cadence yet — import a list below.') + '</div></div>') +
+          : 'Nobody yet — import a list under Companies or a CSV.') + '</p></div>');
 
-    '<div class="vm-card" style="margin-top:16px"><div class="drop" id="vmDrop">' +
-      '<div class="big">Drop a CSV or Excel file</div>' +
-      '<div class="sm">Required: Name · Company — everything else is optional</div></div>' +
-      '<div class="vm-row" style="margin-top:13px">' +
-        '<button class="vm-gh" id="vmPick">Choose file</button>' +
-        '<button class="vm-gh" id="vmSheet">Import from Google Sheet</button>' +
-        '<button class="vm-gh" id="vmExport">Export backup</button></div>' +
-      '<div id="vmSheetHost"></div></div>';
-
-  /* search — debounced, no full re-render race */
   var si = document.getElementById("cSearch");
-  var tmr = null;
-  si.value = CQ.q;
+  var tmr = null; si.value = CQ.q;
   si.addEventListener("input", function () {
     CQ.q = si.value; clearTimeout(tmr);
-    tmr = setTimeout(function () {
-      var pos = si.selectionStart; viewContacts(v);
-      var s2 = document.getElementById("cSearch");
-      if (s2) { s2.focus(); try { s2.setSelectionRange(pos, pos); } catch (e) { } }
-    }, 140);
+    tmr = setTimeout(function () { var p = si.selectionStart; viewContacts(v); var s2 = document.getElementById("cSearch"); if (s2) { s2.focus(); try { s2.setSelectionRange(p, p); } catch (e) { } } }, 140);
   });
-  si.addEventListener("keydown", function (e) {
-    if (e.key === "Escape") { CQ.q = ""; viewContacts(v); }
-    if (e.key === "Enter") { var first = v.querySelector("tbody tr"); if (first) first.click(); }
-  });
-  var cg = document.getElementById("cSearchGo");
-  if (cg) cg.onclick = function () { var first = v.querySelector("tbody tr"); if (first) first.click(); };
+  si.addEventListener("keydown", function (e) { if (e.key === "Escape") { CQ.q = ""; viewContacts(v); } });
   var cr = document.getElementById("cReset");
   if (cr) cr.onclick = function () { CQ.q = ""; CQ.filter = "all"; viewContacts(v); };
-  Array.prototype.forEach.call(v.querySelectorAll(".fchip"), function (bt) {
-    bt.onclick = function () { CQ.filter = bt.dataset.f; viewContacts(v); };
-  });
-
-  /* import wiring */
-  var fi = document.getElementById("vmFile");
-  document.getElementById("vmPick").onclick = function () { fi.click(); };
-  var dz = document.getElementById("vmDrop");
-  dz.onclick = function () { fi.click(); };
-  ["dragenter", "dragover"].forEach(function (e) { dz.addEventListener(e, function (ev) { ev.preventDefault(); dz.classList.add("hot"); }); });
-  ["dragleave", "drop"].forEach(function (e) { dz.addEventListener(e, function (ev) { ev.preventDefault(); dz.classList.remove("hot"); }); });
-  dz.addEventListener("drop", function (ev) { var f = ev.dataTransfer && ev.dataTransfer.files[0]; if (f) handleImportFile(f); });
-  document.getElementById("vmSheet").onclick = function () { showSheetForm(document.getElementById("vmSheetHost")); };
-  document.getElementById("vmExport").onclick = function () { doExport(); };
-
-  Array.prototype.forEach.call(v.querySelectorAll("tbody tr"), function (tr) {
-    tr.onclick = function () {
-      var id = tr.dataset.a + "|" + tr.dataset.t;
-      VM.narrow = true; VM.qIds = [id]; VM.i = 0;
-      navView = "today"; render(); window.scrollTo(0, 0);
-    };
-  });
+  Array.prototype.forEach.call(v.querySelectorAll(".fchip"), function (b) { b.onclick = function () { CQ.filter = b.dataset.f; viewContacts(v); }; });
+  Array.prototype.forEach.call(v.querySelectorAll(".ctile"), function (t) { t.onclick = function () { openContactModal(t.dataset.a, t.dataset.t); }; });
 }
 
-/* ---------- Account ---------- */
-/* ---------- Companies (clients) — dark cards, Engine 05 intel + its people ---------- */
+/* ---------- Companies (grid of white cards) ---------- */
 var CO_Q = "";
-var CO_OPEN = {};   /* which company cards are expanded (survives re-render) */
-var IC_CHEV = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>';
-/* account-level read: what the gathered facts most likely mean. Inferred, and
-   labelled as inferred — never mixed in with the sourced facts. */
-function accountRead(a) {
-  var out = [];
-  if (a.hiring) out.push("They're hiring into this — the budget conversation is already over.");
-  if (a.building) out.push("A build is underway, so the pressure is delivery dates, not headcount theory.");
-  if (a.stack) out.push("A named stack means a real skills bar — a generic bench won't clear it.");
-  if (a.money) out.push("Fresh capital means a board expecting the plan to move this quarter.");
-  if (a.leadership) out.push("New leadership resets priorities — a window to get in before the plan sets.");
-  if (a.expansion) out.push("Expansion makes the roles date-bound and visible if they slip.");
-  return out.slice(0, 3);
-}
-function accountGaps(a) {
-  var g = [];
-  if (!a.hiring) g.push("hiring");
-  if (!a.money) g.push("funding");
-  if (!a.leadership) g.push("leadership");
-  if (!a.stack) g.push("stack");
-  if (!(a.threads || []).filter(function (t) { return t.persona !== "Blocker"; }).length) g.push("a contact");
-  return g;
-}
-var CO_FACTS = [
-  ["hiring", "hiringSrc", "Hiring"], ["building", "buildingSrc", "Building"],
-  ["stack", "stackSrc", "Stack"], ["money", "moneySrc", "Money"],
-  ["leadership", "leadershipSrc", "Leadership"], ["product", "productSrc", "Product"],
-  ["expansion", "expansionSrc", "Expansion"], ["timing", "timingSrc", "Timing"]
-];
+var CO_VIEW = null;   /* acctId when viewing a full company profile */
+var CO_FACTS = [["hiring", "hiringSrc", "Hiring"], ["building", "buildingSrc", "Building"], ["stack", "stackSrc", "Stack"],
+  ["money", "moneySrc", "Money"], ["leadership", "leadershipSrc", "Leadership"], ["product", "productSrc", "Product"],
+  ["expansion", "expansionSrc", "Expansion"], ["timing", "timingSrc", "Timing"]];
 function coMatch(a, q) {
   if (!q) return true;
-  var hay = [a.company, a.sector, a.place, a.size, a.revenue, a.hiring, a.building, a.stack,
-    a.money, a.leadership, a.product, a.expansion, a.timing]
+  var hay = [a.company, a.domain, a.sector, a.place, a.size, a.whyNow, a.hiring, a.building, a.stack, a.money]
+    .concat((a.signals || []).map(function (s) { return s.text; }))
     .concat((a.threads || []).map(function (t) { return (t.name || "") + " " + (t.title || ""); }))
     .filter(Boolean).join(" ").toLowerCase();
   return q.toLowerCase().split(/\s+/).filter(Boolean).every(function (w) { return hay.indexOf(w) > -1; });
 }
-function coStagePill(a, th) {
-  var td = todayStr();
-  var live = liveByKey()[a.id + "|" + th.id];
-  if (!live) return '<span class="qpill follow">SEQUENCE DONE</span>';
-  var d = dueOf(live);
-  if (d < td) return '<span class="qpill late">OVERDUE ' + daysBetween(d, td) + "D</span>";
-  if (d === td) return '<span class="qpill due">DUE · TOUCH ' + live.touchNo + "</span>";
-  if (live.touchNo === 1) return '<span class="qpill ready">NEVER TOUCHED</span>';
-  return '<span class="qpill follow">TOUCH ' + live.touchNo + "/" + CADENCE.length + "</span>";
+function coSignals(a) { return a.signals || []; }
+function coFactCount(a) { var n = 0; CO_FACTS.forEach(function (f) { if (a[f[0]]) n++; }); return n; }
+function coSignalCount(a) { return coSignals(a).length + coFactCount(a) + (a.thesis ? 1 : 0) + (a.techStack ? 1 : 0); }
+function coContacts(a) { return (a.threads || []).filter(function (t) { return t.persona !== "Blocker"; }); }
+function coWhyLevel(a) {
+  var sig = coSignals(a);
+  if (sig.some(function (s) { return s.kind === "trigger"; }) || a.thesis || a.costOfGap) return "hot";
+  if (sig.length || a.whyNow || coFactCount(a)) return "warm";
+  return "cool";
 }
+function coLead(a) {
+  var sig = coSignals(a);
+  var trig = sig.filter(function (s) { return s.kind === "trigger"; })[0] || sig[0];
+  if (trig) return trig.text;
+  if (a.whyNow) return a.whyNow;
+  if (a.hiring) return a.hiring;
+  if (a.thesis && a.thesis.bottleneck) return a.thesis.bottleneck;
+  return "Engine-matched — no signal sourced yet";
+}
+var WHY_FLAME = '<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#b23a4a" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/></svg>';
+var WHY_LABEL = { hot: "WHY NOW", warm: "WARMING", cool: "NEW" };
+function coMetaLine(a) {
+  return [a.domain, a.size, a.place].filter(Boolean).join(" · ") || "No details yet";
+}
+
 function viewCompanies(v) {
   var accts = (state.accounts || []).filter(function (a) { return coMatch(a, CO_Q); });
-  accts = accts.slice().sort(function (x, y) { return (x.company || "").localeCompare(y.company || ""); });
+  var CO_WHYF = { all: function () { return true; }, hot: function (a) { return coWhyLevel(a) === "hot"; },
+    sig: function (a) { return coSignalCount(a) > 0; }, con: function (a) { return coContacts(a).length > 0; } };
+  var filt = CO_FILT.f;
+  accts = accts.filter(CO_WHYF[filt] || CO_WHYF.all);
+  accts = accts.slice().sort(function (x, y) {
+    var o = { hot: 0, warm: 1, cool: 2 };
+    var d = o[coWhyLevel(x)] - o[coWhyLevel(y)];
+    return d !== 0 ? d : (x.company || "").localeCompare(y.company || "");
+  });
 
   var cards = accts.map(function (a) {
-    var open = !!CO_OPEN[a.id];
-    var ppl = (a.threads || []).filter(function (t) { return t.persona !== "Blocker"; });
-    var meta = [];
-    if (a.sector) meta.push(a.sector);
-    if (a.place) meta.push(a.place);
-    if (a.size) meta.push(a.size);
-    if (a.revenue) meta.push(a.revenue);
+    var lvl = coWhyLevel(a), pill = lvl === "hot" ? "" : lvl;
+    return '<div class="cocard" data-id="' + esc(a.id) + '">' +
+      '<div class="cotop"><div class="cologo">' + esc((a.company || "?").slice(0, 1).toUpperCase()) + '</div>' +
+        '<div style="min-width:0"><div class="coname">' + esc(a.company || "—") + '</div><div class="cometa">' + esc(coMetaLine(a)) + '</div></div>' +
+        '<span class="cowhy"><span class="whypill ' + pill + '">' + (lvl === "hot" ? WHY_FLAME : "") + WHY_LABEL[lvl] + '</span></span></div>' +
+      '<div class="colead' + (lvl === "hot" ? "" : " plain") + '"><span class="li">' +
+        '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="' + (lvl === "hot" ? "#b23a4a" : "#5a6b7d") + '" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/></svg></span>' +
+        esc(String(coLead(a)).slice(0, 90)) + '</div>' +
+      '<div class="cofoot2"><span><b>' + coSignalCount(a) + '</b> signals</span><span><b>' + coContacts(a).length + '</b> contacts</span><span class="arrow">Open &rarr;</span></div>' +
+    '</div>';
+  }).join("");
 
-    var factRows = "", tracked = 0;
+  var counts = { all: (state.accounts || []).length };
+  v.innerHTML =
+    '<div class="mn head-eyebrow rv" style="--d:.06s">Ollin : Guide</div>' +
+    '<h1 class="vm-h1 rv-t" style="--d:.14s">Companies — <span class="co">' + (state.accounts || []).length + '</span> accounts, engine-scored.</h1>' +
+    '<div class="controls rv" style="--d:.22s">' +
+      askBarHTML("coSearch", "Ask Ollin… or search a company, domain, signal", { soft: 1, sm: 1 }) +
+      '<div class="filters">' +
+        [["all", "All"], ["hot", "Why now"], ["sig", "Has signals"], ["con", "Has contacts"]].map(function (f) {
+          return '<button class="fchip' + (CO_FILT.f === f[0] ? " on" : "") + '" data-cf="' + f[0] + '">' + f[1] + '</button>';
+        }).join('') + '</div>' +
+    '</div>' +
+    (cards ? '<div class="cogrid rv" style="--d:.30s">' + cards + '</div>'
+      : '<div class="vm-card rv" style="--d:.3s"><p class="vm-sub" style="margin:0">' +
+        (CO_Q || CO_FILT.f !== "all" ? 'No companies match. <a id="coReset" style="color:var(--coral);cursor:pointer">Clear it</a>.'
+          : 'No companies yet — add some below.') + '</p></div>') +
+
+    '<div class="vm-card rv" style="--d:.4s;margin-top:20px">' +
+      '<div class="mn" style="color:var(--steel);margin-bottom:6px">Add companies &amp; intel</div>' +
+      '<p class="vm-sub" style="margin:0 0 12px">Paste a list as <b style="color:var(--bone)">Company, City, State</b> — or drop your agent\'s <b style="color:var(--bone)">[ COMPANY NOTE ]</b> / <b style="color:var(--bone)">[ CONTACT NOTE ]</b> blocks and Vamos parses the full intel.</p>' +
+      '<textarea id="coPaste" placeholder="Acme Robotics, Austin, TX&#10;&#10;— or —&#10;&#10;[ COMPANY NOTE ]&#10;COMPANY: Northwind Logistics | Domain: northwind.com | 350 Employees | Chicago, IL&#10;1. LEAD SIGNAL (TRIGGER): ..." ' +
+        'style="width:100%;min-height:120px;background:var(--navy);border:1px solid #1c3a5c;color:var(--bone);border-radius:12px;padding:13px 15px;font-family:Archivo;font-size:14px;line-height:1.6;resize:vertical;outline:0"></textarea>' +
+      '<div class="vm-row" style="margin-top:12px"><button class="vm-pri" id="coAdd">Add</button>' +
+        '<button class="vm-gh" id="coPick">Upload CSV / Excel</button></div>' +
+    '</div>';
+
+  var si = document.getElementById("coSearch");
+  var tmr = null; si.value = CO_Q;
+  si.addEventListener("input", function () {
+    CO_Q = si.value; clearTimeout(tmr);
+    tmr = setTimeout(function () { var p = si.selectionStart; viewCompanies(v); var s2 = document.getElementById("coSearch"); if (s2) { s2.focus(); try { s2.setSelectionRange(p, p); } catch (e) { } } }, 140);
+  });
+  si.addEventListener("keydown", function (e) { if (e.key === "Escape") { CO_Q = ""; viewCompanies(v); } });
+  var cr = document.getElementById("coReset"); if (cr) cr.onclick = function () { CO_Q = ""; CO_FILT.f = "all"; viewCompanies(v); };
+  Array.prototype.forEach.call(v.querySelectorAll("[data-cf]"), function (b) { b.onclick = function () { CO_FILT.f = b.dataset.cf; viewCompanies(v); }; });
+  Array.prototype.forEach.call(v.querySelectorAll(".cocard"), function (c) {
+    c.onclick = function () { CO_VIEW = c.dataset.id; navView = "companyprofile"; render(); window.scrollTo(0, 0); };
+  });
+  var coAdd = document.getElementById("coAdd");
+  if (coAdd) coAdd.onclick = function () {
+    var box = document.getElementById("coPaste"), txt = box ? box.value : "";
+    if (!txt.trim()) return toast("Paste a company or an agent note first.");
+    addCompaniesSmart(txt);
+  };
+  var coPick = document.getElementById("coPick");
+  if (coPick) coPick.onclick = function () { var f = document.getElementById("coFile"); if (f) f.click(); };
+}
+var CO_FILT = { f: "all" };
+
+/* ---------- Company profile (full page) ---------- */
+function viewCompanyProfile(v) {
+  var a = acctOf(CO_VIEW);
+  if (!a || !a.id) { navView = "companies"; return viewCompanies(v); }
+  var lvl = coWhyLevel(a);
+  var sigs = coSignals(a);
+  var contacts = coContacts(a);
+
+  /* signals card (agent signals first; fall back to sourced facts) */
+  var sigRows = "";
+  if (sigs.length) {
+    sigRows = sigs.map(function (s) {
+      var trig = s.kind === "trigger";
+      return '<div class="cp-sig"><div class="ic ' + (trig ? "trig" : "sec") + '">' +
+        (trig ? '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#b23a4a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/></svg>'
+          : '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5a6b7d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8"/></svg>') +
+        '</div><div><div class="st">' + esc(s.text) + '</div>' + (s.detail ? '<div class="sd">' + esc(s.detail) + '</div>' : '') + '</div>' +
+        '<div class="badge ' + (trig ? "" : "sec") + '">' + (trig ? "TRIGGER" : "SECONDARY") + '</div></div>';
+    }).join("");
+  } else {
     CO_FACTS.forEach(function (f) {
-      var val = a[f[0]], src = a[f[1]];
-      if (!val) return;
-      tracked++;
-      factRows += '<div class="cfact"><span class="k">' + f[2] + '</span>' +
-        '<span class="val">' + esc(val) + '</span>' +
-        (src ? '<span class="src">' + esc(src) + '</span>' : '') + '</div>';
+      if (!a[f[0]]) return;
+      sigRows += '<div class="cp-sig"><div class="ic sec"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5a6b7d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M2 12h20"/></svg></div>' +
+        '<div><div class="st">' + esc(a[f[0]]) + '</div><div class="sd">' + f[2] + (a[f[1]] ? ' · ' + esc(a[f[1]]) : '') + '</div></div></div>';
     });
-    var dataPoints = tracked + meta.length;
-    var metaHTML = meta.length ? '<div class="cmeta">' + meta.map(function (m) { return '<span>' + esc(m) + '</span>'; }).join('') + '</div>' : '';
-    var teaser = dataPoints
-      ? dataPoints + ' data point' + (dataPoints > 1 ? 's' : '') + ' gathered' + (ppl.length ? ' · ' + ppl.length + ' contact' + (ppl.length > 1 ? 's' : '') : '') + ' — open for the intel'
-      : (ppl.length ? ppl.length + ' contact' + (ppl.length > 1 ? 's' : '') + ' — open the card' : 'No intel yet — open to add, or the engines will fill it in');
+    if (!sigRows) sigRows = '<div class="cp-thin">No signals sourced yet. Paste the agent\'s Company Note to fill this in.</div>';
+  }
 
-    /* collapsed header — the card */
-    var head = '<button class="chead cclick" data-open="' + esc(a.id) + '">' +
-      '<div class="chead-l"><div class="cname">' + esc(a.company || "—") + '</div>' + metaHTML +
-        '<div class="cteaser">' + teaser + '</div></div>' +
-      '<div class="chead-r"><span class="ctag">' + ppl.length + (ppl.length === 1 ? ' person' : ' people') + '</span>' +
-        '<span class="cchev">' + IC_CHEV + '</span></div>' +
-    '</button>';
+  /* opportunity thesis */
+  var th = a.thesis || null;
+  var thesisCard = "";
+  if (th && (th.what || th.bottleneck || th.cost)) {
+    thesisCard =
+      '<div class="cp-card cp-thesis rv" style="--d:.22s">' +
+        '<div class="cp-ctitle mono">Opportunity thesis</div>' +
+        (th.what ? '<div class="row"><div class="k">What happened</div><div class="v">' + esc(th.what) + '</div></div>' : '') +
+        (th.bottleneck ? '<div class="row"><div class="k">The bottleneck</div><div class="v">' + esc(th.bottleneck) + '</div></div>' : '') +
+        (th.cost ? '<div class="row"><div class="k">Cost of the gap</div><div class="v">' + esc(th.cost) + '</div></div>' : '') +
+        (a.costOfGap ? '<div class="cp-cost"><div class="big">' + esc(a.costOfGap) + '</div><div class="lbl">Estimated cost of the gap —<br>the number your outreach leads with.</div></div>' : '') +
+      '</div>';
+  }
 
-    if (!open) return '<div class="company">' + head + '</div>';
+  /* tech stack + flags */
+  var stackFlags = "";
+  if ((a.techStack && a.techStack.length) || (a.flags && a.flags.length)) {
+    stackFlags = '<div class="cp-card rv" style="--d:.3s">' +
+      (a.techStack && a.techStack.length ? '<div class="cp-ctitle mono">Tech stack</div><div class="cp-chips">' +
+        a.techStack.map(function (s) { return '<span class="cp-chip">' + esc(s) + '</span>'; }).join("") + '</div>' : '') +
+      (a.flags && a.flags.length ? '<div class="cp-ctitle mono" style="margin-top:22px">Account notes &amp; flags</div>' +
+        a.flags.map(function (fl) {
+          return '<div class="cp-flag"><span class="fi"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#2e7d51" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span> ' + esc(fl) + '</div>';
+        }).join("") : '') +
+    '</div>';
+  }
 
-    /* expanded body — everything we've gathered */
-    var intel = tracked
-      ? '<div class="cintel">' + factRows + '</div>'
-      : '<div class="cthin">No sourced intel yet — the engines fill this in per account.</div>';
-    var reads = accountRead(a);
-    var readHTML = reads.length
-      ? '<div class="cread"><div class="mn cread-h">The read — inferred</div><ul>' +
-        reads.map(function (r) { return '<li>' + r + '</li>'; }).join('') + '</ul></div>' : '';
-    var gaps = accountGaps(a);
-    var missHTML = gaps.length ? '<div class="cmiss">Not tracked yet: ' + esc(gaps.join(', ')) + '. Add it and the drafts get sharper.</div>' : '';
-    var rows = ppl.length ? ppl.map(function (th) {
-      var init = (th.name || "?").split(/\s+/).map(function (w) { return w[0]; }).join("").slice(0, 2).toUpperCase();
-      return '<div class="crow" data-a="' + esc(a.id) + '" data-t="' + esc(th.id) + '">' +
-        '<span class="ava">' + esc(init) + '</span>' +
-        '<div><div class="nm">' + esc(th.name || "—") + '</div>' +
-          (th.title ? '<div class="tt">' + esc(th.title) + (th.persona ? ' · ' + esc(th.persona) : '') + '</div>' : '') + '</div>' +
-        '<span class="grow"></span>' + coStagePill(a, th) +
-        '<span class="arw">' + IC_GO + '</span></div>';
-    }).join("") : '<div class="co-empty">No contacts on this account yet — add people under Contacts.</div>';
+  var leftStack = thesisCard + stackFlags;
+  if (!leftStack) leftStack = '<div class="cp-card rv" style="--d:.22s"><div class="cp-ctitle mono">Intel</div>' +
+    '<div class="cp-thin">No deep intel on this account yet. Paste the agent\'s <b>[ COMPANY NOTE ]</b> from the Companies tab and the thesis, cost, stack, and flags fill in here.</div></div>';
 
-    return '<div class="company open">' + head +
-      '<div class="cbody">' + intel + readHTML + missHTML +
-        '<div class="mn cppl-h">People here</div><div class="cppl">' + rows + '</div>' +
-      '</div>' +
+  var tiles = contacts.map(function (t) {
+    var cls = ctCls(t);
+    return '<div class="ctile" data-a="' + esc(a.id) + '" data-t="' + esc(t.id) + '">' +
+      '<div class="cthd"><div class="ctav ' + cls + '">' + initialsOf(t.name) + '</div>' +
+        '<div style="min-width:0"><div class="ctnm">' + esc(t.name || "—") + '</div><div class="ctt2">' + esc(t.title || "") + '</div></div></div>' +
+      '<div class="ctmeta"><span class="roletag">' + esc(roleLabelOf(t)) + '</span>' + stBadge(statusOf(t)) + '</div>' +
+      '<div class="ctfoot"><span>Recommended</span><span class="angle">' + esc(recAngle(t)) + ' &rarr;</span></div>' +
     '</div>';
   }).join("");
 
   v.innerHTML =
-    '<div class="mn head-eyebrow rv" style="--d:.06s">Ollin : Vamos · Companies</div>' +
-    '<h1 class="vm-h1 rv-t" style="--d:.14s">Companies — <span class="co">' + (state.accounts || []).length + '</span> clients, engine-mapped.</h1>' +
-    '<p class="vm-sub rv" style="--d:.2s">The account side of the pipeline. Look a client up, see the intel the engines pulled, and jump to anyone inside.</p>' +
-    '<div class="controls rv" style="--d:.24s">' +
-      askBarHTML("coSearch", "Ask Ollin… or search a company, sector, place", { soft: 1, sm: 1 }) +
+    '<div class="cp-crumb rv" style="--d:.04s"><span class="lnk" id="cpBack">Companies</span> <b>&rsaquo;</b> ' + esc(a.company || "—") + '</div>' +
+    '<div class="cp-hero rv" style="--d:.12s">' +
+      '<div class="cp-logo">' + esc((a.company || "?").slice(0, 1).toUpperCase()) + '</div>' +
+      '<div><div class="cp-name">' + esc(a.company || "—") + '</div>' +
+        '<div class="cp-meta">' +
+          (a.domain ? '<span>' + esc(a.domain) + '</span>' : '') +
+          (a.size ? '<span>' + esc(a.size) + (String(a.size).match(/employee/i) ? '' : ' employees') + '</span>' : '') +
+          (a.place ? '<span>' + esc(a.place) + '</span>' : '') +
+          (a.sector ? '<span>' + esc(a.sector) + '</span>' : '') +
+        '</div></div>' +
+      '<div class="cp-whybadge ' + (lvl === "hot" ? "" : lvl) + '">' +
+        (lvl === "hot" ? '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#EA7987" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/></svg>' : '') +
+        (lvl === "hot" ? "WHY NOW · HIGH INTENT" : lvl === "warm" ? "WARMING" : "NEW ACCOUNT") + '</div>' +
     '</div>' +
-    (cards
-      ? '<div class="rv" style="--d:.32s">' + cards + '</div>'
-      : '<div class="vm-card rv" style="--d:.32s"><p class="vm-sub" style="margin:0">' +
-        (CO_Q ? 'No companies match. <a id="coReset" style="color:var(--coral);cursor:pointer">Clear it</a>.'
-          : 'No companies yet — add a list below, or import contacts under Contacts.') + '</p></div>') +
 
-    '<div class="vm-card rv" style="--d:.4s;margin-top:16px">' +
-      '<div class="mn" style="color:var(--steel);margin-bottom:6px">Add companies</div>' +
-      '<p class="vm-sub" style="margin:0 0 12px">One per line — <b style="color:var(--bone)">Company, City, State</b>. That\'s all it needs; the engines fill in the rest.</p>' +
-      '<textarea id="coPaste" placeholder="Acme Robotics, Austin, TX&#10;Globex Health, Denver, CO&#10;Northwind Retail, Columbus, OH" ' +
-        'style="width:100%;min-height:110px;background:var(--navy);border:1px solid #1c3a5c;color:var(--bone);border-radius:12px;padding:13px 15px;font-family:Archivo;font-size:14px;line-height:1.6;resize:vertical;outline:0"></textarea>' +
-      '<div class="vm-row" style="margin-top:12px">' +
-        '<button class="vm-pri" id="coAdd">Add companies</button>' +
-        '<button class="vm-gh" id="coPick">Upload CSV / Excel</button>' +
-      '</div>' +
-      '<div class="vm-sub" style="margin:10px 0 0;font-size:12px">CSV/Excel: a <b style="color:var(--steel)">Company</b> column is required; <b style="color:var(--steel)">City</b> and <b style="color:var(--steel)">State</b> (or Place) optional.</div>' +
-    '</div>';
+    '<div class="cp-cols">' +
+      '<div class="cp-stack">' + leftStack + '</div>' +
+      '<div class="cp-stack"><div class="cp-card rv" style="--d:.26s"><div class="cp-ctitle mono">Signals</div>' + sigRows + '</div></div>' +
+    '</div>' +
 
-  var si = document.getElementById("coSearch");
-  var tmr = null;
-  si.value = CO_Q;
-  si.addEventListener("input", function () {
-    CO_Q = si.value; clearTimeout(tmr);
-    tmr = setTimeout(function () {
-      var pos = si.selectionStart; viewCompanies(v);
-      var s2 = document.getElementById("coSearch");
-      if (s2) { s2.focus(); try { s2.setSelectionRange(pos, pos); } catch (e) { } }
-    }, 140);
+    '<div class="cp-sechead rv" style="--d:.34s"><div class="t">Contacts at ' + esc((a.company || "").split(" ")[0] || "this account") + '</div>' +
+      '<div class="c">' + contacts.length + ' engine-matched · click a card for full intel</div></div>' +
+    (tiles ? '<div class="ctgrid rv" style="--d:.4s">' + tiles + '</div>'
+      : '<div class="vm-card rv" style="--d:.4s"><p class="vm-sub" style="margin:0">No contacts on this account yet — paste a <b style="color:var(--bone)">[ CONTACT NOTE ]</b> on the Companies tab.</p></div>');
+
+  document.getElementById("cpBack").onclick = function () { navView = "companies"; render(); window.scrollTo(0, 0); };
+  Array.prototype.forEach.call(v.querySelectorAll(".ctile"), function (t) { t.onclick = function () { openContactModal(t.dataset.a, t.dataset.t); }; });
+}
+
+/* ---------- ingestion: smart paste (company list OR agent notes) ---------- */
+function addCompaniesSmart(text) {
+  if (/\[\s*(COMPANY|CONTACT)\s+NOTE/i.test(text)) {
+    var parsed = parseAgentNotes(text);
+    if (!parsed.ok) return toast("Couldn't read those notes — check the [ COMPANY NOTE ] / [ CONTACT NOTE ] headers.");
+    var res = applyAgentNotes(parsed);
+    state.seeded = true; persistAccounts(); render();
+    toast("Intel: " + res.companies + " companies, " + res.contacts + " contacts.");
+  } else {
+    if (applyCompanyImport(addCompaniesFromText(text))) { /* re-rendered by applyCompanyImport */ }
+  }
+}
+
+/* Parse the agent's [ COMPANY NOTE ] / [ CONTACT NOTE ] text blocks. */
+function agBullets(s) {
+  var out = [], cur = null;
+  String(s || "").split(/\n/).forEach(function (l) {
+    var t = l.trim(); if (!t) return;
+    if (/^[=_—–-]{4,}$/.test(t)) return;              /* skip divider rules */
+    var m = t.match(/^[•\-\*]\s*(.*)$/);
+    if (m) { if (cur != null) out.push(cur); cur = m[1].trim(); }
+    else { if (cur != null) cur += " " + t; else cur = t; }
   });
-  si.addEventListener("keydown", function (e) { if (e.key === "Escape") { CO_Q = ""; viewCompanies(v); } });
-  var cr = document.getElementById("coReset");
-  if (cr) cr.onclick = function () { CO_Q = ""; viewCompanies(v); };
-  var coAdd = document.getElementById("coAdd");
-  if (coAdd) coAdd.onclick = function () {
-    var box = document.getElementById("coPaste");
-    var txt = box ? box.value : "";
-    if (!txt.trim()) return toast("Paste a company or two first.");
-    if (applyCompanyImport(addCompaniesFromText(txt))) { /* re-rendered */ }
-  };
-  var coPick = document.getElementById("coPick");
-  if (coPick) coPick.onclick = function () { var f = document.getElementById("coFile"); if (f) f.click(); };
-  Array.prototype.forEach.call(v.querySelectorAll(".cclick"), function (h) {
-    h.onclick = function () { var id = h.dataset.open; CO_OPEN[id] = !CO_OPEN[id]; viewCompanies(v); };
+  if (cur != null) out.push(cur);
+  return out.filter(Boolean);
+}
+/* find a header line by keyword ("COMPANY"/"CONTACT"), skipping divider rules */
+function agHeader(body, kw) {
+  var lines = String(body || "").split(/\n/), i, t;
+  for (i = 0; i < lines.length; i++) { t = lines[i].trim(); if (new RegExp("^" + kw + "\\s*:", "i").test(t)) return t; }
+  for (i = 0; i < lines.length; i++) { t = lines[i].trim(); if (t && !/^[=_—–-]{4,}$/.test(t)) return t; }
+  return "";
+}
+function agSection(body, n) {
+  var re = new RegExp("(?:^|\\n)\\s*" + n + "\\.[^\\n]*\\n([\\s\\S]*?)(?=\\n\\s*" + (n + 1) + "\\.|$)");
+  var m = body.match(re); return m ? m[1] : "";
+}
+function agFirstLine(body) {
+  var lines = String(body || "").split(/\n/);
+  for (var i = 0; i < lines.length; i++) { var t = lines[i].trim(); if (t) return t; }
+  return "";
+}
+function parseCompanyNote(body) {
+  var head = agHeader(body, "COMPANY");
+  var c = { signals: [] };
+  head.split("|").forEach(function (seg) {
+    seg = seg.trim();
+    var mv = seg.match(/^([^:]+):\s*(.+)$/);
+    if (mv && /company/i.test(mv[1])) c.company = mv[2].trim();
+    else if (mv && /domain/i.test(mv[1])) c.domain = mv[2].trim();
+    else if (mv && /industry|sector/i.test(mv[1])) c.sector = mv[2].trim();
+    else if (/\d[\d,]*\s*employees/i.test(seg)) c.size = seg.replace(/employees/i, "").trim() + " employees";
+    else if (/^[A-Za-z].*,\s*[A-Za-z]/.test(seg) && !mv) c.place = seg;
   });
-  Array.prototype.forEach.call(v.querySelectorAll(".crow"), function (r) {
-    r.onclick = function () {
-      var map = liveByKey(), id = r.dataset.a + "|" + r.dataset.t;
-      if (!map[id]) return toast("This contact has finished their cadence.");
-      VM.narrow = true; VM.qIds = [id]; VM.i = 0;
-      navView = "today"; render(); window.scrollTo(0, 0);
-    };
+  agBullets(agSection(body, 1)).forEach(function (t) { c.signals.push({ kind: "trigger", text: t, detail: agSourceOf(t) }); });
+  agBullets(agSection(body, 2)).forEach(function (t) { c.signals.push({ kind: "secondary", text: t, detail: agSourceOf(t) }); });
+  var thesis = {};
+  agBullets(agSection(body, 3)).forEach(function (t) {
+    var m = t.match(/^([^:]+):\s*(.+)$/); if (!m) return;
+    var k = m[1].toLowerCase(), val = m[2].trim();
+    if (/happen/.test(k)) thesis.what = val;
+    else if (/bottleneck/.test(k)) thesis.bottleneck = val;
+    else if (/cost/.test(k)) { thesis.cost = val; var cm = val.match(/\$[\d,]+\s*(?:\/|per\s*)?\s*(?:wk|week|mo|month|day|hr|hour)?/i); if (cm) c.costOfGap = cm[0].replace(/\s+/g, "").replace(/per/i, "/"); }
   });
+  if (Object.keys(thesis).length) c.thesis = thesis;
+  var st = agBullets(agSection(body, 4)).join(", ");
+  if (st) c.techStack = st.split(/[,\n]/).map(function (x) { return x.trim().replace(/\.$/, ""); }).filter(Boolean);
+  var flags = [];
+  agBullets(agSection(body, 5)).forEach(function (t) { t.split(/\.\s+/).forEach(function (p) { p = p.replace(/\.$/, "").trim(); if (p) flags.push(p); }); });
+  if (flags.length) c.flags = flags;
+  return c.company ? c : null;
+}
+function agSourceOf(t) {
+  var m = String(t).match(/\(([^)]+)\)\s*$/);
+  return m ? m[1].trim() : "";
+}
+function parseContactNote(body) {
+  var head = agHeader(body, "CONTACT");
+  var ct = {};
+  var segs = head.split("|");
+  segs.forEach(function (seg, i) {
+    seg = seg.trim();
+    var mv = seg.match(/^([^:]+):\s*(.+)$/);
+    if (mv && /contact/i.test(mv[1])) ct.name = mv[2].trim();
+    else if (mv && /role/i.test(mv[1])) ct.role = mv[2].trim();
+    else if (!mv && i > 0 && !ct.title) ct.title = seg;
+    else if (mv && /title/i.test(mv[1])) ct.title = mv[2].trim();
+  });
+  var stLine = (body.match(/status:\s*(.+)/i) || [])[1] || "";
+  ct.status = /passed|active|confirmed/i.test(stLine) ? "ok" : (stLine ? "ok" : "pending");
+  agBullets(agSection(body, 1)).forEach(function (t) {
+    var em = t.match(/([\w.+-]+@[\w.-]+\.\w+)/);
+    if (em) { ct.email = em[1]; var cf = t.match(/(\d{1,3})\s*%/); if (cf) ct.emailConf = cf[1] + "%"; }
+    else if (/linkedin\.com|linkedin[:]/i.test(t)) { var li = t.match(/(linkedin\.com\/\S+)/i); ct.linkedin = li ? li[1] : t.replace(/.*linkedin[:\s]*/i, "").trim(); }
+    else if (/location|based|,\s*[A-Z]{2}\b/i.test(t)) { ct.city = t.replace(/^location[:\s]*/i, "").trim(); }
+  });
+  var why = agBullets(agSection(body, 2)).join(" "); if (why) ct.whyCares = why;
+  var hook = agBullets(agSection(body, 3)); if (hook.length) ct.hook = hook;
+  var angText = agSection(body, 4);
+  var angles = [], am, re = /Angle\s*(\d+)\s*\(([^)]+)\)/gi;
+  while ((am = re.exec(angText))) angles.push({ n: ("0" + am[1]).slice(-2), label: am[2].trim(), rec: angles.length === 0 });
+  if (angles.length) ct.angles = angles;
+  return ct.name ? ct : null;
+}
+function parseAgentNotes(text) {
+  text = String(text || "");
+  var re = /\[\s*(COMPANY|CONTACT)\s+NOTE\s*\]/gi, m, idx = [];
+  while ((m = re.exec(text))) idx.push({ type: m[1].toUpperCase(), hend: re.lastIndex, start: m.index });
+  if (!idx.length) return { ok: false, companies: [], contacts: [] };
+  var companies = [], contacts = [], last = null;
+  for (var i = 0; i < idx.length; i++) {
+    var body = text.slice(idx[i].hend, i + 1 < idx.length ? idx[i + 1].start : text.length);
+    if (idx[i].type === "COMPANY") { var c = parseCompanyNote(body); if (c) { companies.push(c); last = c; } }
+    else { var ct = parseContactNote(body); if (ct) { ct._co = last; contacts.push(ct); } }
+  }
+  return { ok: true, companies: companies, contacts: contacts };
+}
+function personaFromRole(role) {
+  var s = (role || "").toLowerCase();
+  if (s.indexOf("econom") > -1 || s.indexOf("buyer") > -1 || /\b(coo|cfo|ceo|cto|chief)\b/.test(s)) return "Economic Buyer";
+  if (s.indexOf("champion") > -1) return "Champion";
+  if (s.indexOf("evaluat") > -1 || s.indexOf("technical") > -1 || s.indexOf("hiring") > -1 || s.indexOf("manager") > -1) return "Technical Evaluator";
+  return "Additional";
+}
+function applyAgentNotes(parsed) {
+  var comp = 0, con = 0;
+  parsed.companies.forEach(function (c) {
+    var facts = {};
+    ["domain", "size", "sector", "signals", "thesis", "costOfGap", "techStack", "flags", "whyNow"].forEach(function (k) {
+      if (c[k] != null && !(Array.isArray(c[k]) && !c[k].length)) facts[k] = c[k];
+    });
+    var r = upsertCompany(c.company, c.place || "", facts);
+    if (r) { comp++; c._acct = r.acct; }
+  });
+  parsed.contacts.forEach(function (ct) {
+    var acct = (ct._co && ct._co._acct) || null;
+    if (!acct && ct.email) { var dom = ct.email.split("@")[1]; acct = (state.accounts || []).filter(function (a) { return a.domain && a.domain.toLowerCase() === (dom || "").toLowerCase(); })[0]; }
+    if (!acct) { var nm = ct.email ? (ct.email.split("@")[1] || "Account").split(".")[0] : "Unassigned"; var r2 = upsertCompany(nm.charAt(0).toUpperCase() + nm.slice(1), ct.city || "", ct.email ? { domain: ct.email.split("@")[1] } : {}); acct = r2 && r2.acct; }
+    if (!acct) return;
+    acct.threads = acct.threads || [];
+    var th = acct.threads.filter(function (t) { return (ct.email && t.email && t.email.toLowerCase() === ct.email.toLowerCase()) || (t.name && ct.name && t.name.toLowerCase() === ct.name.toLowerCase()); })[0];
+    if (!th) { th = { id: "t" + Date.now() + "_" + Math.floor(Math.random() * 99999) }; acct.threads.push(th); }
+    th.name = ct.name || th.name; th.title = ct.title || th.title;
+    if (ct.role) { th.roleLabel = ct.role; th.persona = personaFromRole(ct.role); }
+    if (!th.persona) th.persona = "Additional";
+    th.email = ct.email || th.email; th.linkedin = ct.linkedin || th.linkedin;
+    if (ct.emailConf) th.emailConf = ct.emailConf;
+    if (ct.city) th.city = ct.city;
+    th.status = ct.status || (th.email ? "ok" : "pending");
+    if (ct.whyCares) th.whyCares = ct.whyCares;
+    if (ct.hook) th.hook = ct.hook;
+    if (ct.angles) th.angles = ct.angles;
+    if (th.entryDay == null) th.entryDay = 1;
+    if (!th.channel) th.channel = th.linkedin ? "li" : (th.email ? "em" : "li");
+    if (ct.whyCares && !th.angle) th.angle = ct.whyCares;
+    th.pulledAt = Date.now();
+    con++;
+  });
+  return { companies: comp, contacts: con };
 }
 
 function viewAccount(v) {
