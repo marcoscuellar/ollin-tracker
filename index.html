@@ -484,11 +484,26 @@ select.auth-input{appearance:none}
 .sc-fine{color:var(--mute);font-size:12px;margin-top:10px}
 
 /* ======================= COMPANIES (dark cards — the inverse of Contacts) ======================= */
-.company{background:var(--navy);border:1px solid var(--line);border-radius:16px;padding:20px 22px;margin-bottom:14px;
-  box-shadow:0 26px 60px -36px #000}
-.chead{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.company{background:var(--navy);border:1px solid var(--line);border-radius:16px;padding:0;margin-bottom:14px;
+  overflow:hidden;box-shadow:0 26px 60px -36px #000;transition:border-color .18s}
+.company.open{border-color:#26507e}
+.chead{width:100%;text-align:left;background:transparent;border:0;cursor:pointer;font-family:inherit;color:inherit;
+  display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:18px 22px}
+.chead:hover .cname{color:var(--coral-2)}
+.chead-l{min-width:0}
+.chead-r{display:flex;align-items:center;gap:12px;flex:none}
+.cchev{color:var(--steel);transition:transform .2s;display:flex}
+.company.open .cchev{transform:rotate(180deg);color:var(--coral)}
 .chead .cname{font-weight:900;font-size:22px;letter-spacing:-.02em}
 .chead .cmeta{color:var(--steel);font-size:12.5px;font-weight:600;margin-top:5px;display:flex;gap:5px 12px;flex-wrap:wrap}
+.cteaser{color:var(--mute);font-size:12.5px;font-weight:600;margin-top:9px}
+.company.open .cteaser{display:none}
+.cbody{padding:2px 22px 20px;animation:rise .38s cubic-bezier(.16,.84,.3,1) both}
+.cread{margin-top:14px;background:var(--navy-2);border:1px solid var(--line);border-radius:12px;padding:12px 15px}
+.cread-h{color:var(--steel);margin-bottom:8px}
+.cread ul{margin:0;padding-left:16px;color:#cdd7e0;font-size:12.5px;line-height:1.55}
+.cread li{margin-bottom:4px}
+.cmiss{margin-top:12px;color:var(--mute);font-size:12px;font-weight:600}
 .ctag{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;
   color:var(--navy);background:var(--coral);border-radius:999px;padding:4px 9px;white-space:nowrap}
 .cintel{display:grid;grid-template-columns:1fr 1fr;gap:0 26px;margin:16px 0 4px}
@@ -2768,6 +2783,29 @@ function viewContacts(v) {
 /* ---------- Account ---------- */
 /* ---------- Companies (clients) — dark cards, Engine 05 intel + its people ---------- */
 var CO_Q = "";
+var CO_OPEN = {};   /* which company cards are expanded (survives re-render) */
+var IC_CHEV = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>';
+/* account-level read: what the gathered facts most likely mean. Inferred, and
+   labelled as inferred — never mixed in with the sourced facts. */
+function accountRead(a) {
+  var out = [];
+  if (a.hiring) out.push("They're hiring into this — the budget conversation is already over.");
+  if (a.building) out.push("A build is underway, so the pressure is delivery dates, not headcount theory.");
+  if (a.stack) out.push("A named stack means a real skills bar — a generic bench won't clear it.");
+  if (a.money) out.push("Fresh capital means a board expecting the plan to move this quarter.");
+  if (a.leadership) out.push("New leadership resets priorities — a window to get in before the plan sets.");
+  if (a.expansion) out.push("Expansion makes the roles date-bound and visible if they slip.");
+  return out.slice(0, 3);
+}
+function accountGaps(a) {
+  var g = [];
+  if (!a.hiring) g.push("hiring");
+  if (!a.money) g.push("funding");
+  if (!a.leadership) g.push("leadership");
+  if (!a.stack) g.push("stack");
+  if (!(a.threads || []).filter(function (t) { return t.persona !== "Blocker"; }).length) g.push("a contact");
+  return g;
+}
 var CO_FACTS = [
   ["hiring", "hiringSrc", "Hiring"], ["building", "buildingSrc", "Building"],
   ["stack", "stackSrc", "Stack"], ["money", "moneySrc", "Money"],
@@ -2797,6 +2835,7 @@ function viewCompanies(v) {
   accts = accts.slice().sort(function (x, y) { return (x.company || "").localeCompare(y.company || ""); });
 
   var cards = accts.map(function (a) {
+    var open = !!CO_OPEN[a.id];
     var ppl = (a.threads || []).filter(function (t) { return t.persona !== "Blocker"; });
     var meta = [];
     if (a.sector) meta.push(a.sector);
@@ -2813,10 +2852,32 @@ function viewCompanies(v) {
         '<span class="val">' + esc(val) + '</span>' +
         (src ? '<span class="src">' + esc(src) + '</span>' : '') + '</div>';
     });
+    var dataPoints = tracked + meta.length;
+    var metaHTML = meta.length ? '<div class="cmeta">' + meta.map(function (m) { return '<span>' + esc(m) + '</span>'; }).join('') + '</div>' : '';
+    var teaser = dataPoints
+      ? dataPoints + ' data point' + (dataPoints > 1 ? 's' : '') + ' gathered' + (ppl.length ? ' · ' + ppl.length + ' contact' + (ppl.length > 1 ? 's' : '') : '') + ' — open for the intel'
+      : (ppl.length ? ppl.length + ' contact' + (ppl.length > 1 ? 's' : '') + ' — open the card' : 'No intel yet — open to add, or the engines will fill it in');
+
+    /* collapsed header — the card */
+    var head = '<button class="chead cclick" data-open="' + esc(a.id) + '">' +
+      '<div class="chead-l"><div class="cname">' + esc(a.company || "—") + '</div>' + metaHTML +
+        '<div class="cteaser">' + teaser + '</div></div>' +
+      '<div class="chead-r"><span class="ctag">' + ppl.length + (ppl.length === 1 ? ' person' : ' people') + '</span>' +
+        '<span class="cchev">' + IC_CHEV + '</span></div>' +
+    '</button>';
+
+    if (!open) return '<div class="company">' + head + '</div>';
+
+    /* expanded body — everything we've gathered */
     var intel = tracked
       ? '<div class="cintel">' + factRows + '</div>'
       : '<div class="cthin">No sourced intel yet — the engines fill this in per account.</div>';
-
+    var reads = accountRead(a);
+    var readHTML = reads.length
+      ? '<div class="cread"><div class="mn cread-h">The read — inferred</div><ul>' +
+        reads.map(function (r) { return '<li>' + r + '</li>'; }).join('') + '</ul></div>' : '';
+    var gaps = accountGaps(a);
+    var missHTML = gaps.length ? '<div class="cmiss">Not tracked yet: ' + esc(gaps.join(', ')) + '. Add it and the drafts get sharper.</div>' : '';
     var rows = ppl.length ? ppl.map(function (th) {
       var init = (th.name || "?").split(/\s+/).map(function (w) { return w[0]; }).join("").slice(0, 2).toUpperCase();
       return '<div class="crow" data-a="' + esc(a.id) + '" data-t="' + esc(th.id) + '">' +
@@ -2825,15 +2886,12 @@ function viewCompanies(v) {
           (th.title ? '<div class="tt">' + esc(th.title) + (th.persona ? ' · ' + esc(th.persona) : '') + '</div>' : '') + '</div>' +
         '<span class="grow"></span>' + coStagePill(a, th) +
         '<span class="arw">' + IC_GO + '</span></div>';
-    }).join("") : '<div class="co-empty">No contacts on this account yet.</div>';
+    }).join("") : '<div class="co-empty">No contacts on this account yet — add people under Contacts.</div>';
 
-    return '<div class="company">' +
-      '<div class="chead"><div><div class="cname">' + esc(a.company || "—") + '</div>' +
-        (meta.length ? '<div class="cmeta">' + meta.map(function (m) { return '<span>' + esc(m) + '</span>'; }).join('') + '</div>' : '') +
-      '</div><span class="ctag">Engine 05 · ' + ppl.length + (ppl.length === 1 ? ' person' : ' people') + '</span></div>' +
-      intel +
-      '<div class="mn cppl-h">People here</div>' +
-      '<div class="cppl">' + rows + '</div>' +
+    return '<div class="company open">' + head +
+      '<div class="cbody">' + intel + readHTML + missHTML +
+        '<div class="mn cppl-h">People here</div><div class="cppl">' + rows + '</div>' +
+      '</div>' +
     '</div>';
   }).join("");
 
@@ -2885,6 +2943,9 @@ function viewCompanies(v) {
   };
   var coPick = document.getElementById("coPick");
   if (coPick) coPick.onclick = function () { var f = document.getElementById("coFile"); if (f) f.click(); };
+  Array.prototype.forEach.call(v.querySelectorAll(".cclick"), function (h) {
+    h.onclick = function () { var id = h.dataset.open; CO_OPEN[id] = !CO_OPEN[id]; viewCompanies(v); };
+  });
   Array.prototype.forEach.call(v.querySelectorAll(".crow"), function (r) {
     r.onclick = function () {
       var map = liveByKey(), id = r.dataset.a + "|" + r.dataset.t;
