@@ -483,6 +483,36 @@ select.auth-input{appearance:none}
 .sc-then b{color:var(--bone)}
 .sc-fine{color:var(--mute);font-size:12px;margin-top:10px}
 
+/* ======================= COMPANIES (dark cards — the inverse of Contacts) ======================= */
+.company{background:var(--navy);border:1px solid var(--line);border-radius:16px;padding:20px 22px;margin-bottom:14px;
+  box-shadow:0 26px 60px -36px #000}
+.chead{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.chead .cname{font-weight:900;font-size:22px;letter-spacing:-.02em}
+.chead .cmeta{color:var(--steel);font-size:12.5px;font-weight:600;margin-top:5px;display:flex;gap:5px 12px;flex-wrap:wrap}
+.ctag{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;
+  color:var(--navy);background:var(--coral);border-radius:999px;padding:4px 9px;white-space:nowrap}
+.cintel{display:grid;grid-template-columns:1fr 1fr;gap:0 26px;margin:16px 0 4px}
+@media(max-width:620px){.cintel{grid-template-columns:1fr}}
+.cfact{display:flex;align-items:baseline;gap:10px;padding:9px 0;border-bottom:1px solid var(--line);font-size:13px}
+.cfact .k{color:var(--steel);min-width:82px;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.08em;
+  text-transform:uppercase;font-weight:600;flex:none}
+.cfact .val{color:var(--bone);font-weight:600;flex:1}
+.cfact .src{color:var(--mute);font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.06em;text-transform:uppercase}
+.cfact.off .val{color:var(--mute);font-weight:500}
+.cthin{color:var(--mute);font-size:12px;font-weight:600;margin:14px 0 4px;font-style:italic}
+.cppl-h{color:var(--steel);margin:18px 0 10px}
+.cppl{display:flex;flex-direction:column;gap:8px}
+.crow{display:flex;align-items:center;gap:12px;background:var(--navy-2);border:1px solid var(--line);border-radius:11px;
+  padding:10px 12px;cursor:pointer;transition:border-color .18s}
+.crow:hover{border-color:var(--coral)}
+.crow .ava{width:32px;height:32px;border-radius:9px;background:#16304f;color:var(--coral-2);display:grid;place-items:center;
+  font-weight:800;font-size:11px;flex:none}
+.crow .nm{font-weight:800;font-size:14px}
+.crow .tt{color:var(--steel);font-size:12px}
+.crow .grow{flex:1}
+.crow .arw{color:var(--coral);flex:none}
+.co-empty{color:var(--mute);font-size:13px;font-weight:600;padding:6px 0}
+
 /* ======================= TOAST ======================= */
 .o2-stack{position:fixed;left:0;right:0;bottom:26px;z-index:90;display:flex;flex-direction:column;
   align-items:center;gap:8px;pointer-events:none}
@@ -1825,7 +1855,7 @@ var COMEBACK = { away: 0, show: false };
    narrow is false the day's actionable work (overdue + due + fresh) is used. */
 var VM = { i: 0, qIds: null, narrow: false, channel: null, angle: "gap",
            drafting: false, activeKey: null, lastDraft: "", lastSteer: "" };
-var VM_TABS = [["today", "Today"], ["pipeline", "Pipeline"], ["contacts", "Contacts"]];
+var VM_TABS = [["today", "Today"], ["pipeline", "Pipeline"], ["companies", "Companies"], ["contacts", "Contacts"]];
 var VM_ANGLES = [["gap", "The gap"], ["cow", "Cost of waiting"], ["person", "The person"], ["free", "Freestyle"]];
 /* exactly three, per the editor spec */
 var CARD_STEERS = [["Shorter", "Make it shorter."],
@@ -1978,6 +2008,7 @@ function render() {
   if (!v) return;
   document.body.classList.remove("gd-on");
   if (navView === "pipeline") return viewPipeline(v);
+  if (navView === "companies") return viewCompanies(v);
   if (navView === "contacts") return viewContacts(v);
   if (navView === "account") return viewAccount(v);
   return viewToday(v);
@@ -2650,6 +2681,114 @@ function viewContacts(v) {
 }
 
 /* ---------- Account ---------- */
+/* ---------- Companies (clients) — dark cards, Engine 05 intel + its people ---------- */
+var CO_Q = "";
+var CO_FACTS = [
+  ["hiring", "hiringSrc", "Hiring"], ["building", "buildingSrc", "Building"],
+  ["stack", "stackSrc", "Stack"], ["money", "moneySrc", "Money"],
+  ["leadership", "leadershipSrc", "Leadership"], ["product", "productSrc", "Product"],
+  ["expansion", "expansionSrc", "Expansion"], ["timing", "timingSrc", "Timing"]
+];
+function coMatch(a, q) {
+  if (!q) return true;
+  var hay = [a.company, a.sector, a.place, a.size, a.revenue, a.hiring, a.building, a.stack,
+    a.money, a.leadership, a.product, a.expansion, a.timing]
+    .concat((a.threads || []).map(function (t) { return (t.name || "") + " " + (t.title || ""); }))
+    .filter(Boolean).join(" ").toLowerCase();
+  return q.toLowerCase().split(/\s+/).filter(Boolean).every(function (w) { return hay.indexOf(w) > -1; });
+}
+function coStagePill(a, th) {
+  var td = todayStr();
+  var live = liveByKey()[a.id + "|" + th.id];
+  if (!live) return '<span class="qpill follow">SEQUENCE DONE</span>';
+  var d = dueOf(live);
+  if (d < td) return '<span class="qpill late">OVERDUE ' + daysBetween(d, td) + "D</span>";
+  if (d === td) return '<span class="qpill due">DUE · TOUCH ' + live.touchNo + "</span>";
+  if (live.touchNo === 1) return '<span class="qpill ready">NEVER TOUCHED</span>';
+  return '<span class="qpill follow">TOUCH ' + live.touchNo + "/" + CADENCE.length + "</span>";
+}
+function viewCompanies(v) {
+  var accts = (state.accounts || []).filter(function (a) { return coMatch(a, CO_Q); });
+  accts = accts.slice().sort(function (x, y) { return (x.company || "").localeCompare(y.company || ""); });
+
+  var cards = accts.map(function (a) {
+    var ppl = (a.threads || []).filter(function (t) { return t.persona !== "Blocker"; });
+    var meta = [];
+    if (a.sector) meta.push(a.sector);
+    if (a.place) meta.push(a.place);
+    if (a.size) meta.push(a.size);
+    if (a.revenue) meta.push(a.revenue);
+
+    var factRows = "", tracked = 0;
+    CO_FACTS.forEach(function (f) {
+      var val = a[f[0]], src = a[f[1]];
+      if (!val) return;
+      tracked++;
+      factRows += '<div class="cfact"><span class="k">' + f[2] + '</span>' +
+        '<span class="val">' + esc(val) + '</span>' +
+        (src ? '<span class="src">' + esc(src) + '</span>' : '') + '</div>';
+    });
+    var intel = tracked
+      ? '<div class="cintel">' + factRows + '</div>'
+      : '<div class="cthin">No sourced intel yet — the engines fill this in per account.</div>';
+
+    var rows = ppl.length ? ppl.map(function (th) {
+      var init = (th.name || "?").split(/\s+/).map(function (w) { return w[0]; }).join("").slice(0, 2).toUpperCase();
+      return '<div class="crow" data-a="' + esc(a.id) + '" data-t="' + esc(th.id) + '">' +
+        '<span class="ava">' + esc(init) + '</span>' +
+        '<div><div class="nm">' + esc(th.name || "—") + '</div>' +
+          (th.title ? '<div class="tt">' + esc(th.title) + (th.persona ? ' · ' + esc(th.persona) : '') + '</div>' : '') + '</div>' +
+        '<span class="grow"></span>' + coStagePill(a, th) +
+        '<span class="arw">' + IC_GO + '</span></div>';
+    }).join("") : '<div class="co-empty">No contacts on this account yet.</div>';
+
+    return '<div class="company">' +
+      '<div class="chead"><div><div class="cname">' + esc(a.company || "—") + '</div>' +
+        (meta.length ? '<div class="cmeta">' + meta.map(function (m) { return '<span>' + esc(m) + '</span>'; }).join('') + '</div>' : '') +
+      '</div><span class="ctag">Engine 05 · ' + ppl.length + (ppl.length === 1 ? ' person' : ' people') + '</span></div>' +
+      intel +
+      '<div class="mn cppl-h">People here</div>' +
+      '<div class="cppl">' + rows + '</div>' +
+    '</div>';
+  }).join("");
+
+  v.innerHTML =
+    '<div class="mn head-eyebrow rv" style="--d:.06s">Ollin : Vamos · Companies</div>' +
+    '<h1 class="vm-h1 rv-t" style="--d:.14s">Companies — <span class="co">' + (state.accounts || []).length + '</span> clients, engine-mapped.</h1>' +
+    '<p class="vm-sub rv" style="--d:.2s">The account side of the pipeline. Look a client up, see the intel the engines pulled, and jump to anyone inside.</p>' +
+    '<div class="controls rv" style="--d:.24s">' +
+      askBarHTML("coSearch", "Ask Ollin… or search a company, sector, place", { soft: 1, sm: 1 }) +
+    '</div>' +
+    (cards
+      ? '<div class="rv" style="--d:.32s">' + cards + '</div>'
+      : '<div class="vm-card rv" style="--d:.32s"><p class="vm-sub" style="margin:0">' +
+        (CO_Q ? 'No companies match. <a id="coReset" style="color:var(--coral);cursor:pointer">Clear it</a>.'
+          : 'No companies yet — import a list under Contacts and they\'ll appear here.') + '</p></div>');
+
+  var si = document.getElementById("coSearch");
+  var tmr = null;
+  si.value = CO_Q;
+  si.addEventListener("input", function () {
+    CO_Q = si.value; clearTimeout(tmr);
+    tmr = setTimeout(function () {
+      var pos = si.selectionStart; viewCompanies(v);
+      var s2 = document.getElementById("coSearch");
+      if (s2) { s2.focus(); try { s2.setSelectionRange(pos, pos); } catch (e) { } }
+    }, 140);
+  });
+  si.addEventListener("keydown", function (e) { if (e.key === "Escape") { CO_Q = ""; viewCompanies(v); } });
+  var cr = document.getElementById("coReset");
+  if (cr) cr.onclick = function () { CO_Q = ""; viewCompanies(v); };
+  Array.prototype.forEach.call(v.querySelectorAll(".crow"), function (r) {
+    r.onclick = function () {
+      var map = liveByKey(), id = r.dataset.a + "|" + r.dataset.t;
+      if (!map[id]) return toast("This contact has finished their cadence.");
+      VM.narrow = true; VM.qIds = [id]; VM.i = 0;
+      navView = "today"; render(); window.scrollTo(0, 0);
+    };
+  });
+}
+
 function viewAccount(v) {
   v.innerHTML =
     '<h1 class="vm-h1">Account</h1>' +
