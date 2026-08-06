@@ -1459,6 +1459,8 @@ select.auth-input{appearance:none}
       status:find("lead status","status"),
       sector:find("sector","industry"),
       place:find("place","location","hq"),
+      city:find("city","town"),
+      state:find("state","province","region"),
       size:find("company size","employee count","size"),
       revenue:find("revenue","company revenue"),
       hiring:find("hiring"), hiringsrc:find("hiring source"),
@@ -1608,7 +1610,7 @@ select.auth-input{appearance:none}
     if(!rows || rows.length<2) return {ok:false,msg:"No data rows found (need a header row + at least one contact)"};
     var cm=colMap(rows[0]);
     if(cm.name<0 && cm.first<0) return {ok:false,msg:"No Name column found — check the header row"};
-    var added=0, updated=0, skipped=0, lastAcctId=null;
+    var added=0, updated=0, skipped=0, lastAcctId=null, createdIds={};
     // Worth saying out loud rather than filing everyone under one placeholder
     // and letting the rep discover it in the table.
     var noCompanyCol = cm.company<0;
@@ -1631,7 +1633,7 @@ select.auth-input{appearance:none}
       };
       var msgs = { 0:get(cm.t1), 1:withSubjG(get(cm.t2subj),get(cm.t2)), 2:get(cm.t3), 3:withSubjG(get(cm.t4subj),get(cm.t4)), 4:get(cm.t5) };
       var acct = state.accounts.find(function(a){ return normCompany(a.company)===normCompany(company); });
-      if(!acct){ acct={ id:"a"+Date.now()+"_"+i+"_"+Math.floor(Math.random()*999), company:company, start:todayStr(), threads:[] }; state.accounts.push(acct); }
+      if(!acct){ acct={ id:"a"+Date.now()+"_"+i+"_"+Math.floor(Math.random()*999), company:company, start:todayStr(), threads:[] }; state.accounts.push(acct); createdIds[acct.id]=1; }
       applyCompanyFacts(acct, readCompanyFacts(get, cm));
       acct.threads=acct.threads||[];
       var thread=null;
@@ -1651,10 +1653,93 @@ select.auth-input{appearance:none}
       for(var k=0;k<5;k++){ var v=(msgs[k]||"").trim(); if(v) state.notes[acct.id+"|"+thread.id+"|"+k]=v; }
       lastAcctId=acct.id;
     }
-    // drop any account left empty because all its rows hit the cap
-    state.accounts=state.accounts.filter(function(a){ return (a.threads||[]).length>0; });
+    // drop only accounts we created this run that ended up empty (all their rows
+    // hit the free cap). Company-only accounts added on purpose are kept.
+    state.accounts=state.accounts.filter(function(a){ return (a.threads||[]).length>0 || !createdIds[a.id]; });
     if(lastAcctId && state.accounts.some(function(a){return a.id===lastAcctId;})) state.activeId=lastAcctId;
     return {ok:true, added:added, updated:updated, skipped:skipped, noCompanyCol:noCompanyCol};
+  }
+
+  /* ===== company-only import — a known client list needs just Company / City / State ===== */
+  // City + State are plain directory facts (a known location), so — like
+  // sector/place/size/revenue — they carry no source tag. Companies added here
+  // persist with no contacts until the engines (or a contact import) fill people in.
+  function upsertCompany(company, place, facts){
+    company=(company||"").trim();
+    if(!company) return null;
+    var acct=state.accounts.find(function(a){ return normCompany(a.company)===normCompany(company); });
+    var isNew=false;
+    if(!acct){ acct={ id:"a"+Date.now()+"_"+Math.floor(Math.random()*99999), company:company, start:todayStr(), threads:[] }; state.accounts.push(acct); isNew=true; }
+    if(place && !acct.place) acct.place=place; // don't clobber an existing location
+    if(facts){ for(var k in facts){ if(facts[k]!=null && facts[k]!=="") acct[k]=facts[k]; } }
+    return { isNew:isNew, acct:acct };
+  }
+  // Paste box: one company per line — "Company, City, State" (comma or tab).
+  function addCompaniesFromText(text){
+    var lines=String(text||"").split(/\r?\n/), added=0, updated=0;
+    lines.forEach(function(ln){
+      ln=ln.trim(); if(!ln) return;
+      var parts=ln.split(/\t|,/).map(function(x){ return x.trim(); });
+      var company=parts[0]||"";
+      if(!company) return;
+      if(/^(company|company name|account|account name)$/i.test(company)) return; // header line
+      var place=[parts[1]||"", parts[2]||""].filter(Boolean).join(", ");
+      var r=upsertCompany(company, place, null);
+      if(r){ r.isNew?added++:updated++; }
+    });
+    return { ok:true, added:added, updated:updated };
+  }
+  // CSV/Excel with a header row: needs a Company column; reads City/State (or
+  // Place) plus any of the usual directory/intel columns.
+  function importCompanyRows(rows){
+    if(!rows||rows.length<2) return {ok:false,msg:"Need a header row + at least one company"};
+    var cm=colMap(rows[0]);
+    if(cm.company<0) return {ok:false,msg:"No Company column found — add a header with Company (City / State optional)"};
+    var added=0, updated=0;
+    for(var i=1;i<rows.length;i++){
+      var r=rows[i];
+      var get=function(idx){ return idx>=0 && idx<r.length ? (r[idx]||"").trim() : ""; };
+      var company=get(cm.company); if(!company) continue;
+      var facts=readCompanyFacts(get, cm);
+      var place=facts.place || get(cm.place) || [get(cm.city),get(cm.state)].filter(Boolean).join(", ");
+      if(place) facts.place=place;
+      var res=upsertCompany(company, place, facts);
+      if(res){ res.isNew?added++:updated++; }
+    }
+    return {ok:true, added:added, updated:updated};
+  }
+  function applyCompanyImport(res){
+    if(!res.ok){ toast(res.msg||"Couldn't add those"); return false; }
+    if(!res.added && !res.updated){ toast("No companies found to add"); return false; }
+    state.seeded=true; persistAccounts(); render();
+    toast("Companies: "+res.added+" added"+(res.updated?", "+res.updated+" updated":""));
+    return true;
+  }
+  function handleCompanyFile(file){
+    if(!file) return;
+    var nm=(file.name||"").toLowerCase(), ty=(file.type||"").toLowerCase();
+    var isXlsx=/\.(xlsx|xls)$/.test(nm) || ty.indexOf("sheet")>-1 || ty.indexOf("excel")>-1;
+    if(isXlsx){
+      toast("Reading Excel…");
+      loadXLSX().then(function(XLSX){
+        var rd=new FileReader();
+        rd.onload=function(){
+          try{
+            var wb=XLSX.read(new Uint8Array(rd.result), {type:"array"});
+            var sh=wb.Sheets[wb.SheetNames[0]];
+            var rows=XLSX.utils.sheet_to_json(sh, {header:1, blankrows:false, defval:""}).map(function(row){ return (row||[]).map(function(c){ return c==null?"":String(c); }); });
+            applyCompanyImport(importCompanyRows(rows));
+          }catch(e){ toast("Couldn’t read that Excel file"); }
+        };
+        rd.onerror=function(){ toast("Couldn’t read that file"); };
+        rd.readAsArrayBuffer(file);
+      }).catch(function(e){ toast(e.message||"Excel reader failed to load"); });
+    } else {
+      var rd=new FileReader();
+      rd.onload=function(){ applyCompanyImport(importCompanyRows(parseCSV(String(rd.result||"")))); };
+      rd.onerror=function(){ toast("Couldn’t read that file"); };
+      rd.readAsText(file);
+    }
   }
 
   /* ===== index.html lines 2258-2304 - sheetCsvUrl + showSheetForm - Google Sheet URL handling + GET /api/sheet ===== */
@@ -2763,7 +2848,19 @@ function viewCompanies(v) {
       ? '<div class="rv" style="--d:.32s">' + cards + '</div>'
       : '<div class="vm-card rv" style="--d:.32s"><p class="vm-sub" style="margin:0">' +
         (CO_Q ? 'No companies match. <a id="coReset" style="color:var(--coral);cursor:pointer">Clear it</a>.'
-          : 'No companies yet — import a list under Contacts and they\'ll appear here.') + '</p></div>');
+          : 'No companies yet — add a list below, or import contacts under Contacts.') + '</p></div>') +
+
+    '<div class="vm-card rv" style="--d:.4s;margin-top:16px">' +
+      '<div class="mn" style="color:var(--steel);margin-bottom:6px">Add companies</div>' +
+      '<p class="vm-sub" style="margin:0 0 12px">One per line — <b style="color:var(--bone)">Company, City, State</b>. That\'s all it needs; the engines fill in the rest.</p>' +
+      '<textarea id="coPaste" placeholder="Acme Robotics, Austin, TX&#10;Globex Health, Denver, CO&#10;Northwind Retail, Columbus, OH" ' +
+        'style="width:100%;min-height:110px;background:var(--navy);border:1px solid #1c3a5c;color:var(--bone);border-radius:12px;padding:13px 15px;font-family:Archivo;font-size:14px;line-height:1.6;resize:vertical;outline:0"></textarea>' +
+      '<div class="vm-row" style="margin-top:12px">' +
+        '<button class="vm-pri" id="coAdd">Add companies</button>' +
+        '<button class="vm-gh" id="coPick">Upload CSV / Excel</button>' +
+      '</div>' +
+      '<div class="vm-sub" style="margin:10px 0 0;font-size:12px">CSV/Excel: a <b style="color:var(--steel)">Company</b> column is required; <b style="color:var(--steel)">City</b> and <b style="color:var(--steel)">State</b> (or Place) optional.</div>' +
+    '</div>';
 
   var si = document.getElementById("coSearch");
   var tmr = null;
@@ -2779,6 +2876,15 @@ function viewCompanies(v) {
   si.addEventListener("keydown", function (e) { if (e.key === "Escape") { CO_Q = ""; viewCompanies(v); } });
   var cr = document.getElementById("coReset");
   if (cr) cr.onclick = function () { CO_Q = ""; viewCompanies(v); };
+  var coAdd = document.getElementById("coAdd");
+  if (coAdd) coAdd.onclick = function () {
+    var box = document.getElementById("coPaste");
+    var txt = box ? box.value : "";
+    if (!txt.trim()) return toast("Paste a company or two first.");
+    if (applyCompanyImport(addCompaniesFromText(txt))) { /* re-rendered */ }
+  };
+  var coPick = document.getElementById("coPick");
+  if (coPick) coPick.onclick = function () { var f = document.getElementById("coFile"); if (f) f.click(); };
   Array.prototype.forEach.call(v.querySelectorAll(".crow"), function (r) {
     r.onclick = function () {
       var map = liveByKey(), id = r.dataset.a + "|" + r.dataset.t;
@@ -2832,6 +2938,11 @@ function viewAccount(v) {
   fi.type = "file"; fi.id = "vmFile"; fi.accept = ".csv,.xlsx,.xls,text/csv"; fi.className = "hide";
   fi.onchange = function (e) { var f = e.target.files[0]; if (f) handleImportFile(f); e.target.value = ""; };
   document.body.appendChild(fi);
+
+  var cf = document.createElement("input");
+  cf.type = "file"; cf.id = "coFile"; cf.accept = ".csv,.xlsx,.xls,text/csv"; cf.className = "hide";
+  cf.onchange = function (e) { var f = e.target.files[0]; if (f) handleCompanyFile(f); e.target.value = ""; };
+  document.body.appendChild(cf);
 
   document.addEventListener("keydown", function (e) {
     var tg = e.target.tagName;
