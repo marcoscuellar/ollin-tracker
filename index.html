@@ -149,8 +149,16 @@ button{font-family:inherit}
 .gd-say b{color:var(--coral)}
 
 /* two-column today body */
-.tcols{display:grid;grid-template-columns:340px 1fr;gap:24px;padding:24px 0 10px}
+.tcols{display:grid;grid-template-columns:340px 1fr;gap:24px;padding:24px 0 10px;align-items:start}
 @media(max-width:900px){.tcols{grid-template-columns:1fr}}
+/* the queue is a contained, scrollable peek — the page never runs off the bottom */
+.qscroll{max-height:calc(100vh - 300px);overflow-y:auto;overflow-x:hidden;padding-right:6px;margin-right:-6px}
+.qscroll::-webkit-scrollbar{width:8px}
+.qscroll::-webkit-scrollbar-thumb{background:#1c3a5c;border-radius:8px}
+.qscroll::-webkit-scrollbar-track{background:transparent}
+.qmore{color:var(--mute);font-size:12px;font-weight:600;text-align:center;padding:10px 6px 2px}
+#focusWrap{position:sticky;top:86px}
+@media(max-width:900px){.qscroll{max-height:none;overflow:visible}#focusWrap{position:static}}
 
 /* left queue */
 .qhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
@@ -2432,11 +2440,14 @@ function viewToday(v) {
   /* show a couple of just-sent items as checked-off, for the "return moment" */
   var todayKeys = Object.keys(state.done).filter(function (k) { return state.done[k] === todayStr(); });
 
+  var QCAP = 60;   /* render a peek, not a wall of cards */
   var left = "";
   if (q.ids.length) {
     left += '<div class="qhead"><span class="mn" style="color:var(--steel)">' +
       (VM.narrow ? "This set" : "Due queue") + '</span><span class="count">' + q.ids.length + ' left</span></div>';
-    left += q.ids.map(function (id, i) {
+    /* always keep the active card within the rendered window */
+    var cap = Math.max(QCAP, VM.i + 4), extra = Math.max(0, q.ids.length - cap);
+    var cards = q.ids.slice(0, cap).map(function (id, i) {
       var t = q.map[id]; if (!t) return "";
       var on = i === VM.i;
       var why = t.angle || (acctOf(t.acctId).hiring ? "Hiring — " + acctOf(t.acctId).hiring : "") || (t.title || "Engine-matched contact");
@@ -2447,6 +2458,8 @@ function viewToday(v) {
         (t.who ? '<span style="color:var(--mute);font-size:11px;font-weight:600">' + esc(t.who) + '</span>' : '') +
         '</div></div>';
     }).join("");
+    left += '<div class="qscroll" id="qscroll">' + cards +
+      (extra ? '<div class="qmore">+ ' + extra + ' more due — work the top of the stack first</div>' : '') + '</div>';
     var parked = b.resting.length;
     if (parked) left += '<div class="parked">' + parked + ' resting · not due yet</div>';
   } else {
@@ -2472,6 +2485,9 @@ function viewToday(v) {
   Array.prototype.forEach.call(v.querySelectorAll(".qcard"), function (c) {
     c.onclick = function () { VM.i = parseInt(c.dataset.i, 10) || 0; render(); window.scrollTo(0, 0); };
   });
+  /* keep the active card visible inside the scroll panel */
+  var ac = v.querySelector(".qcard.active");
+  if (ac) { try { ac.scrollIntoView({ block: "nearest" }); } catch (e) { } }
   /* greeting ask bar */
   wireAsk("gdIn", gdAsk);
   if (active) wireFocus(active);
