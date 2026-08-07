@@ -682,6 +682,7 @@ select.auth-input{appearance:none}
       <nav class="vm-tabs" id="vmTabs"></nav>
       <div class="vm-right">
         <span class="vm-streak" id="vmStreak"></span>
+        <button class="vm-just" id="vmImport" title="Import a CSV or Excel list">Import</button>
         <button class="vm-just" id="vmJust" title="Open one card"><span class="d"></span>Just this one</button>
         <button class="vm-av" id="vmAv" title="Account"></button>
       </div>
@@ -1926,6 +1927,15 @@ select.auth-input{appearance:none}
     toast("Companies: "+res.added+" added"+(res.updated?", "+res.updated+" updated":""));
     return true;
   }
+  // Route a parsed sheet by what it is: a Name column -> people (contacts),
+  // otherwise -> companies. One upload button handles both.
+  function routeImport(rows){
+    rows=(rows||[]).map(function(row){ return (row||[]).map(function(c){ return c==null?"":String(c); }); });
+    if(rows.length<2){ toast("That file has no rows"); return; }
+    var cm=colMap(rows[0]);
+    if(cm.name>=0 || cm.first>=0){ applyImportRows(rows); }        // contacts (has Name)
+    else { applyCompanyImport(importCompanyRows(rows)); }           // companies
+  }
   function handleCompanyFile(file){
     if(!file) return;
     var nm=(file.name||"").toLowerCase(), ty=(file.type||"").toLowerCase();
@@ -1938,8 +1948,8 @@ select.auth-input{appearance:none}
           try{
             var wb=XLSX.read(new Uint8Array(rd.result), {type:"array"});
             var sh=wb.Sheets[wb.SheetNames[0]];
-            var rows=XLSX.utils.sheet_to_json(sh, {header:1, blankrows:false, defval:""}).map(function(row){ return (row||[]).map(function(c){ return c==null?"":String(c); }); });
-            applyCompanyImport(importCompanyRows(rows));
+            var rows=XLSX.utils.sheet_to_json(sh, {header:1, blankrows:false, defval:""});
+            routeImport(rows);
           }catch(e){ toast("Couldn’t read that Excel file"); }
         };
         rd.onerror=function(){ toast("Couldn’t read that file"); };
@@ -1947,7 +1957,7 @@ select.auth-input{appearance:none}
       }).catch(function(e){ toast(e.message||"Excel reader failed to load"); });
     } else {
       var rd=new FileReader();
-      rd.onload=function(){ applyCompanyImport(importCompanyRows(parseCSV(String(rd.result||"")))); };
+      rd.onload=function(){ routeImport(parseCSV(String(rd.result||""))); };
       rd.onerror=function(){ toast("Couldn’t read that file"); };
       rd.readAsText(file);
     }
@@ -2283,6 +2293,8 @@ function chrome() {
   }
   var jb = document.getElementById("vmJust");
   if (jb) jb.onclick = function () { justThisOne(); };
+  var ib = document.getElementById("vmImport");
+  if (ib) ib.onclick = function () { var f = document.getElementById("coFile"); if (f) f.click(); };
   var av = document.getElementById("vmAv");
   if (av) {
     av.textContent = ((ACCOUNT && ACCOUNT.email) || "?").slice(0, 1).toUpperCase();
@@ -2747,13 +2759,25 @@ function gdAsk() {
     return gdSay("Three moves. <b>One</b> — import a list under Contacts. <b>Two</b> — I tell you who's due; you work them one card at a time. <b>Three</b> — Ollin drafts each message; you edit and send.<br><br>Cadence is LinkedIn day 0 → Email +2 → LinkedIn +3 → Email +3. Four touches, then they're done.");
   if (/reply|respond|objection|says no|push ?back/.test(lq))
     return gdSay("<b>&ldquo;Send them over.&rdquo;</b> Two profiles, ask for a yes/no by Friday.<br><b>&ldquo;We're all set.&rdquo;</b> &ldquo;When the next req lands, want me ready?&rdquo; then close it out.<br><b>Silence.</b> That's what the cadence is for.");
-  if (/import|csv|sheet|upload|add/.test(lq)) { navView = "contacts"; render(); return; }
+  if (/(move|bring|pull|reschedule|set|make).*(all|everyone|them|everything).*(today|now)|(all|everyone|everything).*(today|due now)|clear.*(backlog|queue).*today/.test(lq)) {
+    var n = moveAllToToday();
+    return gdSay(n ? "Moved <b>" + n + "</b> into today — they're all due now. <span class=\"co\">Vamos.</span>" : "Nothing to move — the queue's empty.");
+  }
+  if (/import|csv|sheet|upload/.test(lq)) { var f = document.getElementById("coFile"); if (f) { f.click(); return gdSay("Pick your CSV or Excel — I'll sort people vs. companies automatically."); } navView = "companies"; render(); return; }
   if (/pipeline|funnel|stage/.test(lq)) { navView = "pipeline"; render(); return; }
   if (/overdue|late/.test(lq)) { if (startQueue("late")) { render(); return; } return gdSay("Nothing overdue — nice."); }
   if (/new|fresh|never/.test(lq)) { if (startQueue("fresh")) { render(); return; } return gdSay("No never-touched contacts right now."); }
   if (/due|waiting|today|start|go|work|vamos/.test(lq)) { startQueue("due"); render(); return; }
   gdSay("I run the tracker in here — who's due, what to send, and getting you into the work. " +
     "Ask me to start on what's due, or head to Contacts to import.");
+}
+
+/* Bulk-reschedule every live contact's next touch to today. */
+function moveAllToToday() {
+  var td = todayStr(), n = 0;
+  liveTouches().forEach(function (t) { state.reschedule[t.id] = td; n++; });
+  if (n) { scheduleSave(); VM.narrow = false; VM.qIds = null; VM.i = 0; navView = "today"; render(); toast("Moved " + n + " into today."); }
+  return n;
 }
 
 /* ---------- Pipeline (cadence funnel — honest, driven by sends) ---------- */
