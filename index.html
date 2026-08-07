@@ -149,16 +149,35 @@ button{font-family:inherit}
 .gd-say b{color:var(--coral)}
 
 /* two-column today body */
-.tcols{display:grid;grid-template-columns:340px 1fr;gap:24px;padding:24px 0 10px;align-items:start}
-@media(max-width:900px){.tcols{grid-template-columns:1fr}}
-/* the queue is a contained, scrollable peek — the page never runs off the bottom */
-.qscroll{max-height:calc(100vh - 300px);overflow-y:auto;overflow-x:hidden;padding-right:6px;margin-right:-6px}
-.qscroll::-webkit-scrollbar{width:8px}
-.qscroll::-webkit-scrollbar-thumb{background:#1c3a5c;border-radius:8px}
-.qscroll::-webkit-scrollbar-track{background:transparent}
-.qmore{color:var(--mute);font-size:12px;font-weight:600;text-align:center;padding:10px 6px 2px}
-#focusWrap{position:sticky;top:86px}
-@media(max-width:900px){.qscroll{max-height:none;overflow:visible}#focusWrap{position:static}}
+/* ---------- Today carousel: center card open, neighbors peek & rotate ---------- */
+.carousel{position:relative;padding:22px 0 8px}
+.cxstage{position:relative;display:flex;justify-content:center;align-items:flex-start;min-height:520px;overflow:hidden}
+.cxstage.empty{min-height:auto;overflow:visible}
+.cxcenter{width:100%;max-width:720px;position:relative;z-index:4;animation:cxin .42s cubic-bezier(.16,.84,.3,1) both}
+@keyframes cxin{from{opacity:0;transform:translateX(56px) scale(.975)}to{opacity:1;transform:none}}
+.cxpeek{position:absolute;top:30px;width:320px;z-index:1;cursor:pointer;transition:transform .35s cubic-bezier(.16,.84,.3,1),opacity .35s}
+.cxpeekcard{background:var(--bone);color:var(--navy);border-radius:16px;padding:18px 20px;box-shadow:0 30px 70px -42px #000}
+.cxp-eye{color:var(--steel);font-size:9px;margin-bottom:6px}
+.cxp-nm{font-weight:900;font-size:20px;letter-spacing:-.01em;line-height:1.1}
+.cxp-sub{color:#5a6b7d;font-size:12px;margin-top:3px}
+.cxp-why{color:#5a6b7d;font-size:12.5px;margin-top:10px;line-height:1.45}
+.cxpeek.l1{left:0;transform:translateX(-58%) scale(.9);opacity:.5}
+.cxpeek.l2{left:0;transform:translateX(-82%) scale(.8);opacity:.24;z-index:0}
+.cxpeek.r1{right:0;transform:translateX(58%) scale(.9);opacity:.5}
+.cxpeek.r2{right:0;transform:translateX(82%) scale(.8);opacity:.24;z-index:0}
+.cxpeek.l1:hover{transform:translateX(-46%) scale(.93);opacity:.82}
+.cxpeek.r1:hover{transform:translateX(46%) scale(.93);opacity:.82}
+.cxnav{position:absolute;top:180px;z-index:6;width:46px;height:46px;border-radius:999px;background:var(--navy);
+  border:1px solid #1c3a5c;color:var(--bone);font-size:26px;font-weight:700;cursor:pointer;display:grid;place-items:center;
+  line-height:1;padding-bottom:3px;box-shadow:0 12px 30px -12px #000}
+.cxnav:hover{border-color:var(--coral);color:var(--coral)}
+.cxnav.prev{left:0}
+.cxnav.next{right:0}
+.cxcount{text-align:center;color:var(--steel);font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.12em;
+  text-transform:uppercase;font-weight:600;margin-top:16px}
+.cxcount span{color:var(--mute);margin:0 4px}
+@media(max-width:1120px){.cxpeek{display:none}}
+@media(max-width:900px){.cxstage{min-height:auto}.cxnav{top:auto;bottom:-4px}.cxnav.prev{left:6px}.cxnav.next{right:6px}}
 
 /* left queue */
 .qhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
@@ -2425,6 +2444,66 @@ function queuePill(t, b) {
   if (t.touchNo === 1) return '<span class="qpill ready">NEW · NEVER TOUCHED</span>';
   return '<span class="qpill follow">FOLLOW-UP · +' + daysBetween(td, d) + "D</span>";
 }
+/* a side card in the carousel — a compact preview of an upcoming/prior contact */
+function cxPeek(t) {
+  var a = acctOf(t.acctId);
+  var why = t.angle || (a.hiring ? "Hiring — " + a.hiring : "") || t.title || "Engine-matched";
+  var stage = t.touchNo === 1 ? "First touch" : "Follow-up " + (t.touchNo - 1);
+  return '<div class="cxpeekcard">' +
+    '<div class="mn cxp-eye">' + esc(stage) + '</div>' +
+    '<div class="cxp-nm">' + esc(t.company || t.who || "—") + '</div>' +
+    (t.who ? '<div class="cxp-sub">' + esc(t.who) + (t.title ? ' · ' + esc(t.title) : '') + '</div>' : '') +
+    '<div class="cxp-why">' + esc(String(why).slice(0, 110)) + '</div>' +
+  '</div>';
+}
+function carouselGo(dir) {
+  var q = resolveQueue();
+  if (!q.ids.length) return;
+  VM.i = Math.max(0, Math.min(q.ids.length - 1, VM.i + dir));
+  render();
+}
+/* account-level "read": what the gathered facts most likely mean (inferred) */
+function accountRead(a) {
+  var out = [];
+  if (a.hiring) out.push("They're hiring into this — the budget conversation is already over.");
+  if (a.building) out.push("A build is underway, so the pressure is delivery dates, not headcount theory.");
+  if (a.stack || (a.techStack && a.techStack.length)) out.push("A named stack means a real skills bar — a generic bench won't clear it.");
+  if (a.money) out.push("Fresh capital means a board expecting the plan to move this quarter.");
+  if (a.leadership || (a.signals || []).some(function (s) { return /officer|vp|chief|ceo|cfo|cto/i.test(s.text); })) out.push("New leadership resets priorities — a window to get in before the plan sets.");
+  if (a.expansion) out.push("Expansion makes the roles date-bound and visible if they slip.");
+  return out.slice(0, 3);
+}
+/* Grounded answer about a contact/account's intel — a conversation with Ollin,
+   built only from what's been captured (no invented facts). */
+function explainIntel(t, a, q) {
+  var lq = (q || "").toLowerCase(), out = [], who = (t.who || "they").split(" ")[0];
+  if (/person|contact|they care|why (do|does).*care|who (is|are)|\bhook\b|\bangle\b|reach|approach|say to/.test(lq)) {
+    if (t.whyCares) out.push("<b>Why " + esc(who) + " cares:</b> " + esc(t.whyCares));
+    var hk = hookOf(t); if (hk.length) out.push("<b>Hook:</b> " + esc(hk.join(" · ")));
+    var an = anglesOf(t); if (an.length) out.push("<b>Lead angle:</b> " + esc(an[0].label) + ".");
+  } else if (/stack|tech|tooling|skills/.test(lq) && a.techStack && a.techStack.length) {
+    out.push("<b>Stack:</b> " + esc(a.techStack.join(", ")) + ". A named stack sets a real skills bar — a generic bench won't clear it.");
+  } else if (/cost|money|budget|\$|worth|roi|expensive|waiting/.test(lq)) {
+    if (a.costOfGap) out.push("<b>Cost of the gap:</b> " + esc(a.costOfGap) + " — that's the number your outreach leads with.");
+    if (a.thesis && a.thesis.bottleneck) out.push("<b>Bottleneck:</b> " + esc(a.thesis.bottleneck));
+  } else {
+    var sigs = a.signals || [];
+    if (sigs.length) out.push("<b>Signals:</b> " + sigs.map(function (s) { return esc(s.text) + (s.detail ? " (" + esc(s.detail) + ")" : ""); }).join(" · "));
+    if (a.thesis) { if (a.thesis.what) out.push("<b>What's happening:</b> " + esc(a.thesis.what)); if (a.thesis.bottleneck) out.push("<b>The bottleneck:</b> " + esc(a.thesis.bottleneck)); }
+    if (a.costOfGap) out.push("<b>Cost of waiting:</b> " + esc(a.costOfGap) + ".");
+    var reads = accountRead(a); if (reads.length) out.push("<b>The read:</b> " + esc(reads[0]));
+  }
+  if (!out.length) out.push("No sourced intel on that yet for <b>" + esc(a.company || "this account") + "</b>. Paste the agent's Company or Contact note and I'll have more to go on.");
+  return out.join("<br><br>");
+}
+/* Is this Ask-Ollin input a question about the intel, vs a draft instruction? */
+function isIntelQuestion(s) {
+  s = (s || "").trim().toLowerCase();
+  if (/\?$/.test(s)) return true;
+  if (/^(what|why|who|how|when|where|which|explain|tell me|break down|walk me|help me understand|summar|whats|what's|give me|should i|is this|are they|do they|does |can you (explain|tell))/.test(s)) return true;
+  if (/\b(mean|means|meaning|going on|the read|so what|makes them|why now)\b/.test(s)) return true;
+  return false;
+}
 
 function viewToday(v) {
   var q = resolveQueue(), b = q.b, active = q.active;
@@ -2440,34 +2519,24 @@ function viewToday(v) {
   /* show a couple of just-sent items as checked-off, for the "return moment" */
   var todayKeys = Object.keys(state.done).filter(function (k) { return state.done[k] === todayStr(); });
 
-  var QCAP = 60;   /* render a peek, not a wall of cards */
-  var left = "";
-  if (q.ids.length) {
-    left += '<div class="qhead"><span class="mn" style="color:var(--steel)">' +
-      (VM.narrow ? "This set" : "Due queue") + '</span><span class="count">' + q.ids.length + ' left</span></div>';
-    /* always keep the active card within the rendered window */
-    var cap = Math.max(QCAP, VM.i + 4), extra = Math.max(0, q.ids.length - cap);
-    var cards = q.ids.slice(0, cap).map(function (id, i) {
-      var t = q.map[id]; if (!t) return "";
-      var on = i === VM.i;
-      var why = t.angle || (acctOf(t.acctId).hiring ? "Hiring — " + acctOf(t.acctId).hiring : "") || (t.title || "Engine-matched contact");
-      return '<div class="qcard' + (on ? " active" : "") + '" data-i="' + i + '">' +
-        '<div class="qn">' + esc(t.company || t.who || "—") + '</div>' +
-        '<div class="qwhy">' + esc(String(why).slice(0, 90)) + '</div>' +
-        '<div class="qmeta">' + queuePill(t, b) +
-        (t.who ? '<span style="color:var(--mute);font-size:11px;font-weight:600">' + esc(t.who) + '</span>' : '') +
-        '</div></div>';
-    }).join("");
-    left += '<div class="qscroll" id="qscroll">' + cards +
-      (extra ? '<div class="qmore">+ ' + extra + ' more due — work the top of the stack first</div>' : '') + '</div>';
-    var parked = b.resting.length;
-    if (parked) left += '<div class="parked">' + parked + ' resting · not due yet</div>';
+  /* carousel: the active card is centered + expanded, neighbors peek and
+     rotate in from the right as you advance. One card at a time, open. */
+  var stageHTML;
+  if (active) {
+    var idx = VM.i, ids = q.ids, N = ids.length;
+    var peek = function (k, cls) { var t = q.map[ids[k]]; return t ? '<div class="cxpeek ' + cls + '" data-i="' + k + '">' + cxPeek(t) + '</div>' : ''; };
+    stageHTML =
+      '<div class="cxstage">' +
+        peek(idx - 2, "l2") + peek(idx - 1, "l1") +
+        '<div class="cxcenter">' + focusCardHTML(active) + '</div>' +
+        peek(idx + 1, "r1") + peek(idx + 2, "r2") +
+        (idx > 0 ? '<button class="cxnav prev" title="Previous (←)">&lsaquo;</button>' : '') +
+        (idx < N - 1 ? '<button class="cxnav next" title="Next (→)">&rsaquo;</button>' : '') +
+      '</div>' +
+      '<div class="cxcount">' + (idx + 1) + ' <span>/</span> ' + N + (VM.narrow ? ' · this set' : ' due') + '</div>';
   } else {
-    left += '<div class="qempty">Queue\'s clear. Anything you send today shows up in your streak. ' +
-      (b.resting.length ? b.resting.length + ' resting for later.' : 'Import more under Contacts.') + '</div>';
+    stageHTML = '<div class="cxstage empty">' + doneStateHTML(b) + '</div>';
   }
-
-  var right = active ? focusCardHTML(active) : doneStateHTML(b);
 
   v.innerHTML =
     '<div class="today">' +
@@ -2475,20 +2544,15 @@ function viewToday(v) {
       '<h1 class="gtext rv-t" style="--d:.14s">' + g + '</h1>' +
       '<div class="gbar rv" style="--d:.30s">' + askBarHTML("gdIn", "Ask Ollin…", { soft: 1 }) + '</div>' +
       '<div id="gdSay"></div>' +
-      '<div class="tcols">' +
-        '<div class="rv" style="--d:.42s">' + left + '</div>' +
-        '<div class="rv-s" style="--d:.5s" id="focusWrap">' + right + '</div>' +
-      '</div>' +
+      '<div class="carousel rv" style="--d:.42s">' + stageHTML + '</div>' +
     '</div>';
 
-  /* queue clicks */
-  Array.prototype.forEach.call(v.querySelectorAll(".qcard"), function (c) {
-    c.onclick = function () { VM.i = parseInt(c.dataset.i, 10) || 0; render(); window.scrollTo(0, 0); };
+  var pv = v.querySelector(".cxnav.prev"), nx = v.querySelector(".cxnav.next");
+  if (pv) pv.onclick = function () { carouselGo(-1); };
+  if (nx) nx.onclick = function () { carouselGo(1); };
+  Array.prototype.forEach.call(v.querySelectorAll(".cxpeek"), function (pk) {
+    pk.onclick = function () { VM.i = parseInt(pk.dataset.i, 10) || 0; render(); };
   });
-  /* keep the active card visible inside the scroll panel */
-  var ac = v.querySelector(".qcard.active");
-  if (ac) { try { ac.scrollIntoView({ block: "nearest" }); } catch (e) { } }
-  /* greeting ask bar */
   wireAsk("gdIn", gdAsk);
   if (active) wireFocus(active);
 }
@@ -2621,6 +2685,8 @@ function wireFocus(t) {
     var lq = qq.toLowerCase();
     if (/reply|respond|objection|says no|push ?back/.test(lq))
       return vmSay('<b>&ldquo;Send them over.&rdquo;</b> Two profiles, ask for a yes/no by Friday. &nbsp;·&nbsp; <b>&ldquo;We\'re all set.&rdquo;</b> &ldquo;When the next req lands, want me ready?&rdquo; then close it out. &nbsp;·&nbsp; <b>Silence.</b> That\'s what the cadence is for.');
+    /* a question about the intel is a conversation, not a redraft */
+    if (isIntelQuestion(qq)) return vmSay(explainIntel(t, acctOf(t.acctId), qq));
     askOllin(qq);
   });
   Array.prototype.forEach.call(document.querySelectorAll("[data-o]"), function (bt) {
@@ -3496,6 +3562,8 @@ function viewAccount(v) {
     if (tg === "INPUT" || tg === "TEXTAREA" || tg === "SELECT") return;
     if (e.key === "/") { e.preventDefault(); navView = "contacts"; render(); var s = document.getElementById("cSearch"); if (s) s.focus(); return; }
     if (navView !== "today") return;
+    if (e.key === "ArrowLeft") { e.preventDefault(); return carouselGo(-1); }
+    if (e.key === "ArrowRight") { e.preventDefault(); return carouselGo(1); }
     var t = curTouch(); if (!t) return;
     if (e.key === "1") decide("sent", t);
     else if (e.key === "2") decide("later", t);
