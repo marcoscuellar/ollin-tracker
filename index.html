@@ -429,7 +429,7 @@ button{font-family:inherit}
 .ob-lnk{color:var(--steel);font-size:14px;font-weight:600;background:transparent;border:0;cursor:pointer;font-family:inherit}
 .ob-lnk:hover{color:var(--bone)}
 .ob-prog{margin-top:24px;display:flex;gap:9px}
-.ob-prog i{height:3px;width:56px;border-radius:2px;background:#26374a}
+.ob-prog i{height:3px;width:56px;border-radius:2px;background:var(--line)}
 .ob-prog i.on{background:var(--coral)}
 
 /* ======================= LOCK / LOGIN (kept, restyled) ======================= */
@@ -437,13 +437,13 @@ button{font-family:inherit}
   radial-gradient(1000px 560px at 50% -10%, rgba(255,232,31,.05), transparent 60%),var(--black);padding:24px}
 .ol-page{width:100%;display:grid;place-items:center}
 .ol-hatch,.ol-vig{display:none}
-.ol-card{width:400px;max-width:100%;background:var(--navy-2);border:1px solid var(--line);border-radius:18px;
-  padding:34px 32px;box-shadow:0 50px 120px -50px #000}
-.ol-brand{margin-bottom:20px}
-.vm-word{font-weight:900;font-size:20px;letter-spacing:-.03em}
-.vm-word i,.vm-word em{color:var(--steel);font-style:normal;margin:0 2px}
-.vm-word b{color:var(--bone);font-weight:900}
-.ol-h{font-weight:800;font-size:26px;letter-spacing:-.02em;margin-bottom:18px}
+.ol-card{width:420px;max-width:100%;background:var(--card);border:1px solid var(--line-soft);border-radius:22px;
+  padding:34px 32px;box-shadow:0 60px 130px -50px #000,0 0 60px -30px rgba(255,232,31,.12)}
+.ol-eyebrow{color:var(--mute);font-size:11px;letter-spacing:.2em;margin-bottom:14px}
+.ol-h{font-weight:900;font-size:40px;line-height:.96;letter-spacing:-.03em;text-transform:uppercase;color:var(--bone);margin-bottom:22px}
+.vm-word{font-family:'IBM Plex Mono',monospace;text-transform:uppercase;letter-spacing:.2em;font-size:11px;font-weight:600;color:var(--mute)}
+.vm-word b,.vm-word span{color:var(--mute);font-weight:600}
+.vm-word i,.vm-word em{color:var(--mute);font-style:normal;margin:0 3px}
 .ol-form{display:flex;flex-direction:column;gap:12px}
 .ol-field{display:flex;flex-direction:column;gap:6px}
 .ol-field label{font-size:12px;font-weight:700;color:var(--steel)}
@@ -463,8 +463,11 @@ button{font-family:inherit}
 /* auth overlay + upgrade share the .lp-overlay / .lock-card shell */
 .lp-overlay{position:fixed;inset:0;z-index:70;background:rgba(5,8,14,.72);backdrop-filter:blur(6px);
   display:grid;place-items:center;padding:24px}
-.lock-card{width:420px;max-width:100%;background:var(--navy-2);border:1px solid var(--line);border-radius:18px;
-  padding:32px 30px;box-shadow:0 50px 120px -50px #000;position:relative}
+.lock-card{width:420px;max-width:100%;background:var(--card);border:1px solid var(--line-soft);border-radius:22px;
+  padding:32px 30px;box-shadow:0 60px 130px -50px #000,0 0 60px -30px rgba(255,232,31,.12);position:relative}
+.lock-card .ll-tag{display:none}
+.lock-card .ll-rule{margin:10px 0 4px}
+.lock-h{font-weight:900;font-size:36px;line-height:.98;letter-spacing:-.03em;text-transform:uppercase;color:var(--bone);margin:14px 0 8px}
 .lp-close,.sc-close{position:absolute;top:16px;right:16px;background:transparent;border:0;color:var(--steel);
   font-size:24px;line-height:1;cursor:pointer}
 .lp-close:hover,.sc-close:hover{color:var(--bone)}
@@ -503,7 +506,7 @@ button{font-family:inherit}
 select.auth-input{appearance:none}
 .sc-err{color:var(--coral-2);font-size:13px;font-weight:600;min-height:16px;margin-bottom:6px}
 .sc-steps{display:flex;gap:8px;margin-bottom:20px}
-.sc-dot{width:8px;height:8px;border-radius:999px;background:#26374a}
+.sc-dot{width:8px;height:8px;border-radius:999px;background:var(--line)}
 .sc-dot.on{background:var(--coral)}
 .sc-step{display:none}
 .sc-step.on{display:block}
@@ -865,8 +868,8 @@ select.auth-input{appearance:none}
   <div class="ol-page">
     <div class="ol-hatch"></div><div class="ol-vig"></div>
     <div class="ol-card">
-      <div class="ol-brand"><div class="vm-word">Ollin <i>:</i> <b>Vamos</b></div></div>
-      <div class="ol-h">Log in here</div>
+      <div class="ol-eyebrow mono">Ollin : Vamos</div>
+      <div class="ol-h">Log in</div>
       <form id="lpLoginForm" class="ol-form" autocomplete="on">
         <div class="ol-field">
           <label for="lpEmailInput">Email</label>
@@ -1484,6 +1487,7 @@ select.auth-input{appearance:none}
     lockErr("");
     var isSignup = mode==="signup";
     lockBody(
+      '<div class="lock-h">'+(isSignup?"Create account":"Log in")+'</div>'+
       '<p class="auth-lead">'+(isSignup?"Create your account. Your pipeline, private to you.":"Welcome back. Log in to your pipeline.")+'</p>'+
       '<form id="authFormEl" autocomplete="on">'+
         '<input class="auth-input" id="authEmail" name="email" type="email" autocomplete="username" placeholder="you@work.com" autocapitalize="off" autocorrect="off">'+
@@ -1510,6 +1514,7 @@ select.auth-input{appearance:none}
   function renderResetForm(token){
     lockErr("");
     lockBody(
+      '<div class="lock-h">New password</div>'+
       '<p class="auth-lead">Set a new password for your account.</p>'+
       '<input class="auth-input" id="rsPass" type="password" placeholder="New password (8+ characters)" autocomplete="new-password">'+
       '<button class="btn" id="rsGo">Set password</button>'+
