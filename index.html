@@ -19,8 +19,8 @@
   --navy-2:#08182B;     /* panel / cool-shifted ground */
   --surf:#0F2A4A;       /* raised element */
   --steel:#7A93A8;      /* secondary text / labels */
-  --coral:#EA7987;      /* THE SPARK — send, primary CTA, active accent. ~8% max */
-  --coral-2:#F2A0AA;    /* lighter coral, hovers */
+  --coral:#FFE81F;      /* THE SPARK — send, primary CTA, active accent. ~8% max */
+  --coral-2:#FFEF7A;    /* lighter coral, hovers */
   --bone:#F5F5F4;       /* WHITE cards + light type */
   --mute:#7f8a95;
   --line:rgba(255,255,255,.09);
@@ -31,8 +31,8 @@
   --vm-no:#c05a5a;
   --radius:16px;
   --shadow:0 40px 90px -44px #000;
-  --glow:0 14px 40px -8px rgba(234,121,135,.55),0 0 0 1px rgba(234,121,135,.16);
-  --glow-soft:0 14px 40px -8px rgba(234,121,135,.5),0 0 0 1px rgba(234,121,135,.14);
+  --glow:0 14px 40px -8px rgba(255,232,31,.55),0 0 0 1px rgba(255,232,31,.16);
+  --glow-soft:0 14px 40px -8px rgba(255,232,31,.5),0 0 0 1px rgba(255,232,31,.14);
 }
 
 *{box-sizing:border-box;margin:0;padding:0}
@@ -364,7 +364,7 @@ button{font-family:inherit}
 /* import area (contacts) */
 .drop{border:1.5px dashed #26507e;border-radius:14px;padding:26px 18px;text-align:center;cursor:pointer;
   transition:border-color .2s,background .2s}
-.drop:hover,.drop.hot{border-color:var(--coral);background:rgba(234,121,135,.05)}
+.drop:hover,.drop.hot{border-color:var(--coral);background:rgba(255,232,31,.05)}
 .drop .big{font-weight:800;font-size:15px}
 .drop .sm{color:var(--steel);font-size:12.5px;margin-top:4px}
 .sheetform{margin-top:12px;display:flex;gap:8px;flex-wrap:wrap}
@@ -650,7 +650,7 @@ select.auth-input{appearance:none}
 .cp-name{font-weight:900;font-size:40px;letter-spacing:-.03em;line-height:1}
 .cp-meta{display:flex;gap:16px;margin-top:8px;color:var(--steel);font-size:13.5px;font-weight:600;flex-wrap:wrap}
 .cp-meta span{display:flex;align-items:center;gap:6px}
-.cp-whybadge{margin-left:auto;background:#3a1d21;color:var(--coral);border:1px solid rgba(234,121,135,.35);border-radius:999px;padding:10px 16px;font-weight:800;font-size:13px;display:flex;align-items:center;gap:8px;align-self:center}
+.cp-whybadge{margin-left:auto;background:#3a1d21;color:var(--coral);border:1px solid rgba(255,232,31,.35);border-radius:999px;padding:10px 16px;font-weight:800;font-size:13px;display:flex;align-items:center;gap:8px;align-self:center}
 .cp-whybadge.warm{background:#2a2213;color:#e6b35a;border-color:rgba(230,179,90,.35)}
 .cp-whybadge.cool{background:var(--navy-2);color:var(--steel);border-color:var(--line)}
 .cp-cols{display:grid;grid-template-columns:1.5fr 1fr;gap:20px;padding:22px 0 10px}
@@ -685,6 +685,106 @@ select.auth-input{appearance:none}
 .cp-back{background:var(--navy);border:1px solid #1c3a5c;color:var(--bone);border-radius:10px;padding:8px 14px;font-weight:700;font-size:13px;cursor:pointer;font-family:inherit}
 .cp-back:hover{border-color:var(--coral)}
 
+
+/* ================= TODAY — accordion (collapse → expand the v3 card) ================= */
+.qlab{display:flex;justify-content:space-between;align-items:center;margin:22px 2px 12px}
+.qlab .qn{color:var(--coral);font-weight:800;font-size:12.5px}
+.acc{display:flex;flex-direction:column;gap:12px;padding-bottom:40px}
+.arow{background:var(--bone);color:var(--navy);border-radius:16px;box-shadow:0 20px 46px -34px #000;overflow:hidden;
+  outline:2px solid transparent;transition:outline-color .25s,box-shadow .25s}
+.arow.open{outline:2px solid var(--coral);box-shadow:0 40px 90px -40px #000,0 0 0 5px rgba(255,232,31,.14)}
+.arow .rhead{display:flex;align-items:center;gap:14px;padding:16px 18px;cursor:pointer;user-select:none}
+.arow .rhead:hover{background:#fbfbfa}
+.rav{width:40px;height:40px;border-radius:10px;background:var(--navy);color:var(--coral);display:grid;place-items:center;font-weight:900;font-size:14px;flex:none}
+.rmain{min-width:0;flex:1}
+.reye{color:#8a97a6;font-size:9px;margin-bottom:4px}
+.rco{font-weight:900;font-size:16px;letter-spacing:-.01em;line-height:1.1;color:var(--navy)}
+.rwho{color:#5a6b7d;font-size:12.5px;margin-top:2px}
+.rwhy{color:#5a6b7d;font-size:12px;margin-top:5px;line-height:1.4}
+.arow.open .rwhy{display:none}
+.rpill{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.05em;font-weight:600;border-radius:999px;
+  padding:5px 9px;background:#2a2410;color:var(--coral-2);white-space:nowrap;flex:none}
+.rpill.follow{background:#eef1f5;color:#5a6b7d}
+.rchev{width:24px;height:24px;flex:none;color:#9aa8b6;transition:transform .3s;display:grid;place-items:center}
+.arow.open .rchev{transform:rotate(180deg);color:var(--navy)}
+.rbody{max-height:0;opacity:0;overflow:hidden;transition:max-height .42s cubic-bezier(.16,.84,.3,1),opacity .3s}
+.arow.open .rbody{opacity:1}
+.accdone{background:var(--bone);color:var(--navy);border-radius:16px;padding:22px 24px;box-shadow:0 20px 46px -34px #000}
+.accdone .fname{font-weight:900;font-size:22px;letter-spacing:-.02em}
+.accdone .fsub{color:#5a6b7d;font-size:14px;margin-top:8px;line-height:1.5}
+.accdone .fsub b{color:var(--navy)}
+
+/* ---- the v3 card body (namespaced .v3) ---- */
+.v3{padding:0 20px 20px}
+.v3 .divide{height:1px;background:#e7ebf0;margin:2px 0 16px}
+.v3 .cmeta{color:#8795a3;font-size:13px;font-weight:600;margin:0 0 10px}
+.v3 .clinks{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:6px}
+.v3 .chn{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:#33475f;text-decoration:none}
+.v3 .chn.link{color:#0a66c2;cursor:pointer}
+.v3 .chn.link:hover{text-decoration:underline}
+.v3 .conf{font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:600;color:var(--green);background:#eaf5ee;border-radius:999px;padding:3px 7px}
+.v3 .sep{color:#cfd6df;font-weight:700}
+.v3 .passed{display:inline-flex;align-items:center;gap:7px;background:#eaf5ee;color:var(--green);border:1px solid #cfe8d8;border-radius:999px;padding:6px 12px;font-size:11.5px;font-weight:800;white-space:nowrap;margin-left:auto}
+.v3 .passed.pending{background:#f4f6f8;color:#7A93A8;border-color:#e2e7ec}
+.v3 .idrow{display:flex;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+
+.v3 .know{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px}
+@media(max-width:640px){.v3 .know{grid-template-columns:1fr}}
+.v3 .kblock{border-radius:16px;padding:16px 18px}
+.v3 .kblock.org{background:var(--coral);color:var(--navy)}
+.v3 .kblock.con{background:var(--navy);color:#fff}
+.v3 .kh{font-family:'IBM Plex Mono',monospace;text-transform:uppercase;letter-spacing:.08em;font-size:9.5px;font-weight:600;margin-bottom:13px}
+.v3 .kblock.org .kh{color:#6b5c00}
+.v3 .kblock.con .kh{color:#9fc0e6}
+.v3 .kli{display:flex;gap:9px;font-size:13px;line-height:1.5;margin-bottom:11px}
+.v3 .kli:last-child{margin-bottom:0}
+.v3 .kli .b{flex:none;width:6px;height:6px;border-radius:999px;margin-top:6px}
+.v3 .kblock.org .kli{color:#1a2f4d}.v3 .kblock.org .kli .b{background:#5a4a00}.v3 .kblock.org .kli b{color:#000}
+.v3 .kblock.con .kli{color:#d6e2f0}.v3 .kblock.con .kli .b{background:var(--coral)}.v3 .kblock.con .kli b{color:#fff}
+.v3 .kli .tag{display:block;font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.05em;margin-top:3px}
+.v3 .kblock.org .kli .tag{color:#7a6a1a}.v3 .kblock.con .kli .tag{color:#7f9bbd}
+
+.v3 .crow{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:14px}
+.v3 .chan{display:inline-flex;background:#eef1f5;border-radius:11px;padding:4px}
+.v3 .chan button{border:0;background:transparent;font-family:'Archivo';font-weight:700;font-size:13px;color:#5a6b7d;padding:8px 15px;border-radius:8px;display:flex;align-items:center;gap:7px;cursor:pointer}
+.v3 .chan button.on{background:#fff;color:var(--navy);box-shadow:0 2px 6px -2px rgba(10,31,61,.2)}
+.v3 .chan button.on .ic{color:#b58900}.v3 .chan .ic{display:grid;place-items:center}
+.v3 .angles{display:flex;gap:7px;flex-wrap:wrap}
+.v3 .angle{border:1px solid #e7ebf0;border-radius:999px;padding:8px 13px;font-family:'Archivo';font-weight:700;font-size:12px;background:#F7F8FA;color:#33475f;cursor:pointer}
+.v3 .angle.on{background:var(--coral);color:var(--navy);border-color:var(--coral)}
+.v3 .subj{display:flex;align-items:center;gap:10px;border:1px solid #e7ebf0;border-radius:11px;padding:11px 14px;margin-bottom:11px}
+.v3 .subj .lab{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.06em;text-transform:uppercase;color:#8795a3;flex:none}
+.v3 .subj input{flex:1;border:0;outline:0;font-family:'Archivo';font-size:14.5px;font-weight:700;color:var(--navy);background:transparent}
+.v3 textarea.body{width:100%;min-height:160px;resize:vertical;border:1px solid #e7ebf0;border-radius:12px;padding:15px 16px;font-family:'Archivo';font-size:14px;color:#3a4a5c;line-height:1.65;outline:0;background:#fff}
+.v3 textarea.body:focus{border-color:var(--coral)}
+.v3 textarea.body::placeholder{color:#b3bdc7}
+.v3 .draftmeta{display:flex;justify-content:space-between;align-items:center;color:#8795a3;font-family:'IBM Plex Mono',monospace;font-size:9.5px;margin:8px 0 14px}
+.v3 .draftmeta a{color:#33475f;font-family:'Archivo';font-weight:700;font-size:12px;margin-left:14px;cursor:pointer}
+.v3 .doit{display:flex;align-items:center;gap:12px}
+.v3 .ask{flex:1;display:flex;align-items:center;gap:10px;background:#0E1116;border-radius:999px;padding:7px 7px 7px 18px;
+  box-shadow:0 12px 34px -14px rgba(255,232,31,.5),0 0 0 1px rgba(255,232,31,.16)}
+.v3 .ask input{flex:1;background:transparent;border:0;outline:0;color:#e7ecf1;font-family:'Archivo';font-size:14px;font-weight:500}
+.v3 .ask input::placeholder{color:#8a929c}
+.v3 .ask .mic{width:34px;height:34px;border-radius:999px;border:1.5px solid #333a45;display:grid;place-items:center;flex:none;color:#8a929c;cursor:pointer;background:transparent}
+.v3 .ask .mic.rec{border-color:var(--coral);color:var(--coral)}
+.v3 .ask .send{width:36px;height:36px;border-radius:999px;background:var(--coral);border:0;display:grid;place-items:center;flex:none;color:var(--navy);cursor:pointer}
+.v3 .ask .send.busy{opacity:.6;pointer-events:none}
+.v3 .go{flex:none;border:0;border-radius:999px;padding:14px 24px;font-family:'Archivo';font-weight:900;font-size:15px;background:var(--coral);color:var(--navy);
+  display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;box-shadow:0 16px 40px -14px rgba(255,232,31,.55)}
+.v3 .go:hover{background:var(--coral-2)}
+.v3 .v3foot{display:flex;gap:18px;margin-top:12px;justify-content:flex-end}
+.v3 .v3foot a{color:#8795a3;font-size:12.5px;font-weight:700;cursor:pointer}
+.v3 .v3foot a:hover{color:var(--navy)}
+.v3 .ask-say{margin-top:12px;display:flex;gap:9px;align-items:flex-start;font-size:12.5px;line-height:1.55;color:#3a4a5c}
+.v3 .ask-say .as-mark{color:#b58900;flex:none;margin-top:1px}
+.v3 .ask-say .as-who{font-family:'IBM Plex Mono',monospace;text-transform:uppercase;letter-spacing:.08em;font-size:9px;color:#b58900;margin-right:6px}
+.v3 .ask-say b{color:var(--navy)}
+.v3 .ask-say .act{color:#b58900;font-weight:800;cursor:pointer;margin-left:8px}
+
+/* ---- amber ink fixes: coral-as-text-on-white would be invisible in yellow ---- */
+.openbtn,.cofoot2 .arrow,.ctfoot .angle,.cp-cost .big,.cfoot .lnk,.fstatus{color:#b58900}
+.chan button.on .ic{color:#b58900}
+
 /* ======================= TOAST ======================= */
 .o2-stack{position:fixed;left:0;right:0;bottom:26px;z-index:90;display:flex;flex-direction:column;
   align-items:center;gap:8px;pointer-events:none}
@@ -699,10 +799,10 @@ select.auth-input{appearance:none}
     <div class="vm-topin">
       <div class="vm-brand">
         <svg width="28" height="28" viewBox="0 0 86 86" fill="none" aria-hidden="true">
-          <circle cx="30" cy="43" r="9" fill="#EA7987"/>
+          <circle cx="30" cy="43" r="9" fill="#FFE81F"/>
           <path d="M44 22 A24 24 0 0 1 44 64" stroke="#F5F5F4" stroke-width="7" stroke-linecap="round" fill="none"/>
           <path d="M56 30 A15 15 0 0 1 56 56" stroke="#7A93A8" stroke-width="7" stroke-linecap="round" fill="none"/>
-          <path d="M60 34 l14 9 -14 9" stroke="#EA7987" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          <path d="M60 34 l14 9 -14 9" stroke="#FFE81F" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
         </svg>
         <span class="wm">vamos</span>
       </div>
@@ -1174,10 +1274,10 @@ select.auth-input{appearance:none}
     var ans={ name:s.name||"", role:s.company||"", help:s.credibility||"", intro:(s.intro&&s.intro!==DEFAULT_SENDER_INTRO?s.intro:"") };
     var step=0, saving=false;
     var mkSvg='<svg width="26" height="26" viewBox="0 0 86 86" fill="none">'+
-      '<circle cx="30" cy="43" r="9" fill="#EA7987"/>'+
+      '<circle cx="30" cy="43" r="9" fill="#FFE81F"/>'+
       '<path d="M44 22 A24 24 0 0 1 44 64" stroke="#F5F5F4" stroke-width="7" stroke-linecap="round" fill="none"/>'+
       '<path d="M56 30 A15 15 0 0 1 56 56" stroke="#7A93A8" stroke-width="7" stroke-linecap="round" fill="none"/>'+
-      '<path d="M60 34 l14 9 -14 9" stroke="#EA7987" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>';
+      '<path d="M60 34 l14 9 -14 9" stroke="#FFE81F" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>';
     var ov=el('<div class="ob-screen"><div class="ob-inner">'+
       '<div class="ob-half ob-left" id="obLeft"></div>'+
       '<div class="ob-half ob-right" id="obRight"></div>'+
@@ -2200,6 +2300,7 @@ var IC_MIC = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke
 var IC_GO = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
 var IC_MAIL = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2.5" y="5" width="19" height="14" rx="2.5"/><path d="M3 7l9 6 9-6"/></svg>';
 var IC_LI = '<svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5A2.5 2.5 0 1 0 5 8.5a2.5 2.5 0 0 0 0-5zM3 9h4v12H3zM9 9h3.8v1.7h.05c.53-1 1.83-2.05 3.77-2.05 4.03 0 4.78 2.65 4.78 6.1V21h-4v-5.4c0-1.3 0-2.95-1.8-2.95s-2.08 1.4-2.08 2.85V21H9z"/></svg>';
+var IC_CHEV = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>';
 var IC_FLAME = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c1 3 4 4.5 4 8a4 4 0 0 1-8 0c0-1 .4-2 1-2.6C9 10 8 11 8 13a4 4 0 0 0 8 0c0-4-3-7-4-10z"/></svg>';
 var IC_SEARCH = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="6.5"/><path d="M15.8 15.8L20 20"/></svg>';
 var IC_MARK = '<span class="as-mark"><svg width="13" height="13" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="12" stroke="currentColor" stroke-width="2.4" opacity=".5"/><circle cx="16" cy="16" r="4.6" fill="currentColor"/></svg></span>';
@@ -2407,10 +2508,11 @@ function gapsOf(t, a) {
    value shown only when we actually have it, else "Not tracked yet". */
 function intelTriples(t, a) {
   var gap = t.angle || (t.signalSrc ? t.signal : "") || a.building || a.hiring || "";
-  var cost = a.timing || "";
+  var cost = a.costOfGap ? (a.costOfGap + (a.timing ? " — " + a.timing : " in delays")) : (a.timing || "");
   if (!cost) { var r = readOf(t, a); cost = r.length ? r[0] : ""; }
-  var person = (t.signalSrc ? t.signal : "") ||
-    (t.persona && t.title ? t.persona + " — " + t.title : (t.title || t.persona || ""));
+  var lead = (a.signals || []).filter(function (s) { return /officer|vp|chief|cfo|cto|ceo|new /i.test(s.text); })[0];
+  var person = lead ? lead.text : ((t.signalSrc ? t.signal : "") ||
+    (t.persona && t.title ? t.persona + " — " + t.title : (t.title || t.persona || "")));
   return [
     { l: "The Gap", v: gap, from: "Engine 02 · Signals" },
     { l: "Cost of Waiting", v: cost, from: "Engine 01 · Timing" },
@@ -2505,210 +2607,287 @@ function isIntelQuestion(s) {
   return false;
 }
 
+/* ================= TODAY — accordion of v3 cards ================= */
+/* Collapsed rows in one column; the active row expands IN PLACE into the full
+   v3 card. No re-render on browse (no "refresh" flash). One Ollin bar that both
+   writes the email and answers questions about the intel. */
 function viewToday(v) {
   var q = resolveQueue(), b = q.b, active = q.active;
-  /* reset draft controls when the active contact changes */
   var ak = active ? keyOf(active) : null;
-  if (ak !== VM.activeKey) {
-    VM.activeKey = ak; VM.channel = null; VM.angle = "gap";
-  }
+  if (ak !== VM.activeKey) { VM.activeKey = ak; VM.channel = null; VM.angle = "gap"; }
   if (active && VM.channel === null) VM.channel = active.ch === "call" ? "li" : active.ch;
-
   var g = greeting(b);
-  var recentDone = [];
-  /* show a couple of just-sent items as checked-off, for the "return moment" */
-  var todayKeys = Object.keys(state.done).filter(function (k) { return state.done[k] === todayStr(); });
 
-  /* carousel: the active card is centered + expanded, neighbors peek and
-     rotate in from the right as you advance. One card at a time, open. */
-  var stageHTML;
-  if (active) {
-    var idx = VM.i, ids = q.ids, N = ids.length;
-    var peek = function (k, cls) { var t = q.map[ids[k]]; return t ? '<div class="cxpeek ' + cls + '" data-i="' + k + '">' + cxPeek(t) + '</div>' : ''; };
-    stageHTML =
-      '<div class="cxstage">' +
-        peek(idx - 2, "l2") + peek(idx - 1, "l1") +
-        '<div class="cxcenter">' + focusCardHTML(active) + '</div>' +
-        peek(idx + 1, "r1") + peek(idx + 2, "r2") +
-        (idx > 0 ? '<button class="cxnav prev" title="Previous (←)">&lsaquo;</button>' : '') +
-        (idx < N - 1 ? '<button class="cxnav next" title="Next (→)">&rsaquo;</button>' : '') +
-      '</div>' +
-      '<div class="cxcount">' + (idx + 1) + ' <span>/</span> ' + N + (VM.narrow ? ' · this set' : ' due') + '</div>';
-  } else {
-    stageHTML = '<div class="cxstage empty">' + doneStateHTML(b) + '</div>';
-  }
+  var rows = q.ids.length
+    ? q.ids.map(function (id, i) { var t = q.map[id]; return t ? rowHTML(t, i, i === VM.i) : ""; }).join("")
+    : "";
 
   v.innerHTML =
     '<div class="today">' +
       '<div class="mn gd-eyebrow rv" style="--d:.06s">Ollin : Guide</div>' +
       '<h1 class="gtext rv-t" style="--d:.14s">' + g + '</h1>' +
-      '<div class="gbar rv" style="--d:.30s">' + askBarHTML("gdIn", "Ask Ollin…", { soft: 1 }) + '</div>' +
       '<div id="gdSay"></div>' +
-      '<div class="carousel rv" style="--d:.42s">' + stageHTML + '</div>' +
+      (q.ids.length
+        ? '<div class="qlab rv" style="--d:.22s"><span class="mn" style="color:var(--steel)">' +
+            (VM.narrow ? "This set" : "Due queue") + '</span><span class="qn">' + q.ids.length + ' left</span></div>' +
+          '<div class="acc rv" id="acc" style="--d:.28s">' + rows + '</div>'
+        : '<div class="acc rv" style="--d:.24s"><div class="accdone">' + doneBody(b) + '</div></div>') +
     '</div>';
 
-  var pv = v.querySelector(".cxnav.prev"), nx = v.querySelector(".cxnav.next");
-  if (pv) pv.onclick = function () { carouselGo(-1); };
-  if (nx) nx.onclick = function () { carouselGo(1); };
-  Array.prototype.forEach.call(v.querySelectorAll(".cxpeek"), function (pk) {
-    pk.onclick = function () { VM.i = parseInt(pk.dataset.i, 10) || 0; render(); };
+  Array.prototype.forEach.call(v.querySelectorAll(".arow"), function (r) {
+    r.querySelector(".rhead").addEventListener("click", function () { openRow(parseInt(r.dataset.i, 10) || 0); });
   });
-  wireAsk("gdIn", gdAsk);
-  if (active) wireFocus(active);
+  if (active) mountCard(VM.i);
 }
 
-function doneStateHTML(b) {
-  return '<div class="focus"><div class="frow1"><div><div class="mn" style="color:var(--steel)">Nothing in the chair</div>' +
-    '<div class="fname" style="margin-top:6px">You\'re clear.</div></div></div>' +
-    '<p class="fsub" style="margin-top:12px">' +
+function doneBody(b) {
+  return '<div class="fname">You\'re clear.</div>' +
+    '<p class="fsub">' +
     (b.resting.length ? b.resting.length + ' contact' + (b.resting.length > 1 ? 's are' : ' is') + ' resting — nothing due yet. ' : '') +
-    'Sent today: <b>' + doneToday() + '</b>. Come back tomorrow, or open Contacts to add more.</p></div>';
+    'Sent today: <b>' + doneToday() + '</b>. Come back tomorrow, or open Contacts to add more.</p>';
 }
 
-/* ---------- the white focus card / in-card editor ---------- */
-function focusCardHTML(t) {
+function rowPill(t) {
+  var td = todayStr(), d = dueOf(t);
+  if (d < td) return '<span class="rpill">OVERDUE ' + daysBetween(d, td) + 'D</span>';
+  if (d === td) return '<span class="rpill">DUE · TOUCH ' + t.touchNo + '</span>';
+  if (t.touchNo === 1) return '<span class="rpill">NEW · TOUCH 1</span>';
+  return '<span class="rpill follow">FOLLOW-UP · +' + daysBetween(td, d) + 'D</span>';
+}
+function rowHTML(t, i, open) {
   var a = acctOf(t.acctId);
-  var td = todayStr(), d = dueOf(t), late = d < td, lateN = daysBetween(d, td);
-  var stage = t.touchNo === 1 ? "First touch" : "Follow-up " + (t.touchNo - 1);
-  var draft = state.notes[t.id] || "";
+  var stage = t.touchNo === 1 ? "First touch · Touch 1" : "Follow-up " + (t.touchNo - 1);
+  var why = t.angle || (a.hiring ? "Hiring — " + a.hiring : "") || t.title || "Engine-matched contact";
+  return '<div class="arow' + (open ? " open" : "") + '" data-i="' + i + '">' +
+    '<div class="rhead">' +
+      '<div class="rav">' + initialsOf(t.who) + '</div>' +
+      '<div class="rmain"><div class="mn reye">' + esc(stage) + '</div>' +
+        '<div class="rco">' + esc(t.who || t.company || "—") + '</div>' +
+        '<div class="rwho">' + (t.title ? esc(t.title) + ' · ' : '') + esc(t.company || "") + '</div>' +
+        '<div class="rwhy">' + esc(String(why).slice(0, 100)) + '</div></div>' +
+      rowPill(t) +
+      '<span class="rchev">' + IC_CHEV + '</span>' +
+    '</div>' +
+    '<div class="rbody"></div>' +
+  '</div>';
+}
+
+/* inject the full card into the open row and animate it open (no full render) */
+function mountCard(i) {
+  var col = document.getElementById("acc"); if (!col) return;
+  var q = resolveQueue(); var t = q.map[q.ids[i]]; if (!t) return;
+  var row = col.querySelector('.arow[data-i="' + i + '"]'); if (!row) return;
+  row.classList.add("open");
+  var body = row.querySelector(".rbody");
+  body.innerHTML = cardBodyHTML(t, acctOf(t.acctId));
+  body.style.maxHeight = body.scrollHeight + "px";
+  setTimeout(function () { if (row.classList.contains("open")) body.style.maxHeight = "none"; }, 440);
+  wireCard(t);
+}
+function openRow(i) {
+  var q = resolveQueue();
+  i = Math.max(0, Math.min(q.ids.length - 1, i));
+  if (i === VM.i && document.querySelector('.arow[data-i="' + i + '"].open')) return;
+  var col = document.getElementById("acc"); if (!col) return;
+  var cur = col.querySelector(".arow.open");
+  if (cur) {
+    var cb = cur.querySelector(".rbody");
+    cb.style.maxHeight = cb.scrollHeight + "px";
+    requestAnimationFrame(function () { cb.style.maxHeight = "0"; cb.style.opacity = "0"; });
+    cur.classList.remove("open");
+    setTimeout(function () { cb.innerHTML = ""; cb.style.opacity = ""; }, 400);
+  }
+  VM.i = i; VM.channel = null; VM.angle = "gap";
+  var t = q.map[q.ids[i]];
+  if (t) { VM.activeKey = keyOf(t); VM.channel = t.ch === "call" ? "li" : t.ch; }
+  mountCard(i);
+  setTimeout(function () { var r = col.querySelector('.arow[data-i="' + i + '"]'); if (r) r.scrollIntoView({ behavior: "smooth", block: "start" }); }, 70);
+}
+/* rebuild just the open card body in place (used on channel switch) */
+function reopenBody() {
+  var col = document.getElementById("acc"); var row = col && col.querySelector(".arow.open"); if (!row) return;
+  var q = resolveQueue(); var t = q.map[q.ids[VM.i]]; if (!t) return;
+  var body = row.querySelector(".rbody");
+  body.innerHTML = cardBodyHTML(t, acctOf(t.acctId));
+  body.style.maxHeight = "none";
+  wireCard(t);
+}
+
+/* ---- the v3 card body ---- */
+function splitDraft(txt) {
+  var subj = "", body = txt || "";
+  var m = body.match(/^\s*Subject:\s*(.+)$/im);
+  if (m) { subj = m[1].trim(); body = body.replace(m[0], "").replace(/^\s+/, ""); }
+  return { subj: subj, body: body };
+}
+function threadOf(t) {
+  var a = acctOf(t.acctId);
+  return (a.threads || []).filter(function (x) { return x.id === t.threadId; })[0] || {};
+}
+function cardBodyHTML(t, a) {
+  var th = threadOf(t);                       /* rich fields live on the thread, not the touch */
+  var full = state.notes[t.id] || "";
+  var sp = splitDraft(full);
+  var email = VM.channel !== "li";
   var trip = intelTriples(t, a);
-  var meta = [];
-  if (a.sector) meta.push(a.sector);
-  if (a.place) meta.push(a.place);
-  if (a.size) meta.push(a.size);
-  if (a.revenue) meta.push(a.revenue);
+  var liUrl = t.li || ("https://www.linkedin.com/search/results/people/?keywords=" + encodeURIComponent((t.who || "") + " " + (t.company || "")));
+  var metaBits = [a.sector, a.place, a.size].filter(Boolean).join(" · ");
+  var pass = (th.status === "pending")
+    ? '<span class="passed pending">Verifying…</span>'
+    : '<span class="passed"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#2E7D51" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg> Active · PASSED</span>';
 
-  var subjLine = "";
-  var m = draft.match(/^\s*Subject:\s*(.+)$/im);
-  if (m) subjLine = m[1].trim();
+  var links = '';
+  if (t.email) links += '<span class="chn">' + IC_MAIL + ' ' + esc(t.email) + (th.emailConf ? ' <span class="conf">' + esc(th.emailConf) + '</span>' : '') + '</span>';
+  if (t.email && t.li) links += '<span class="sep">//</span>';
+  if (t.li) links += '<a class="chn link" href="' + esc(liUrl) + '" target="_blank" rel="noopener">' + IC_LI + ' LinkedIn</a>';
 
-  var nextIn = t.touchNo < CADENCE.length
-    ? "NEXT +" + (CADENCE[t.touchNo].off - CADENCE[t.touchNo - 1].off) + "D"
-    : "LAST TOUCH";
-  var liUrl = t.li || ("https://www.linkedin.com/search/results/people/?keywords=" +
-    encodeURIComponent((t.who || "") + " " + (t.company || "")));
+  var org = '<div class="kblock org"><div class="kh">What we know about the org</div>' +
+    trip.map(function (x) { return x.v ? '<div class="kli"><span class="b"></span><span>' + esc(String(x.v)) + '<span class="tag">' + x.from.toUpperCase() + '</span></span></div>' : ''; }).join('') +
+    '</div>';
+  var hk = (th.hook && th.hook.length) ? th.hook : (t.angle && t.angle !== th.whyCares ? [t.angle] : []);
+  var con = '<div class="kblock con"><div class="kh">What we know about the contact</div>' +
+    (th.whyCares ? '<div class="kli"><span class="b"></span><span>' + esc(th.whyCares) + '<span class="tag">WHY THEY CARE</span></span></div>' : '') +
+    (hk.length ? '<div class="kli"><span class="b"></span><span>' + esc(hk.join(" · ")) + '<span class="tag">PERSONAL HOOK</span></span></div>' : '') +
+    (!th.whyCares && !hk.length ? '<div class="kli"><span class="b"></span><span>No contact-level intel yet — paste the agent\'s Contact Note.</span></div>' : '') +
+    '</div>';
 
-  return '<div class="focus" id="focusCard">' +
-    '<div class="frow1">' +
-      '<div><div class="mn" style="color:var(--steel)">' + esc(stage) + '</div>' +
-        '<div class="fname">' + esc(t.company || t.who || "—") + '</div>' +
-        '<div class="fsub"><b>' + esc(t.who || "No contact") + '</b>' +
-          (t.title ? ' · ' + esc(t.title) : '') + ' · <span class="co">touch ' + t.touchNo + '</span></div>' +
-      '</div>' +
-      (late
-        ? '<div class="fstatus late"><span class="dot"></span>' + lateN + ' DAY' + (lateN > 1 ? 'S' : '') + ' LATE</div>'
-        : '<div class="fstatus"><span class="dot"></span>' + (draft ? 'DRAFT' : 'READY') + '</div>') +
-    '</div>' +
-    (meta.length ? '<div class="fmeta">' + meta.map(function (x) { return '<span>' + esc(x) + '</span>'; }).join('') + '</div>' : '') +
+  return '<div class="v3">' +
+    '<div class="divide"></div>' +
+    (metaBits ? '<div class="cmeta">' + esc(metaBits) + '</div>' : '') +
+    '<div class="idrow">' + (links ? '<div class="clinks">' + links + '</div>' : '') + pass + '</div>' +
 
-    '<div class="intel3">' + trip.map(function (x) {
-      return '<div class="b"><small>' + x.l + '</small>' +
-        (x.v ? '<p>' + esc(String(x.v).slice(0, 120)) + '</p>' : '<p class="off">Not tracked yet</p>') +
-        '<span class="from">' + x.from + '</span></div>';
-    }).join('') + '</div>' +
+    '<div class="know">' + org + con + '</div>' +
 
-    '<div class="chan">' +
-      '<button data-ch="em" class="' + (VM.channel === "em" ? "on" : "") + '"><span class="ic">' + IC_MAIL + '</span>Email</button>' +
-      '<button data-ch="li" class="' + (VM.channel === "li" ? "on" : "") + '"><span class="ic">' + IC_LI + '</span>LinkedIn</button>' +
+    '<div class="crow"><div class="chan">' +
+      '<button data-ch="em" class="' + (email ? "on" : "") + '"><span class="ic">' + IC_MAIL + '</span> Email</button>' +
+      '<button data-ch="li" class="' + (!email ? "on" : "") + '"><span class="ic">' + IC_LI + '</span> LinkedIn</button></div>' +
+      '<div class="angles">' + VM_ANGLES.map(function (x) {
+        return '<button class="angle ' + (VM.angle === x[0] ? "on" : "") + '" data-a="' + x[0] + '">' + x[1] + '</button>';
+      }).join('') + '</div>' +
     '</div>' +
 
-    '<div class="draft">' +
-      (VM.channel === "em"
-        ? '<div class="subj">Subject · <b style="color:var(--navy);font-family:Archivo;text-transform:none;letter-spacing:0;font-size:13px;font-weight:800">' +
-            (subjLine ? esc(subjLine) : 'Ollin will write one when you draft') + '</b></div>'
-        : '') +
-      '<textarea id="vmBody" placeholder="' +
-        (VM.angle === "free" ? "Freestyle — your words. Ask Ollin to polish only if you want."
-          : "Empty. Hit the coral arrow in Ask Ollin to draft it, or write your own.") +
-        '">' + esc(draft) + '</textarea>' +
-      '<div class="cfoot"><span class="len" id="vmLen">' + countLabel(draft) + '</span><span class="grow"></span>' +
-        (VM.channel === "em"
-          ? '<a class="lnk' + (t.email ? '' : ' off') + '" id="vmMail" href="#">Open email</a>'
-          : '<a class="lnk" href="' + esc(liUrl) + '" target="_blank" rel="noopener">Open LinkedIn</a>') +
-        '<button class="plain" id="vmCopy">Copy</button></div>' +
-    '</div>' +
+    (email ? '<div class="subj"><span class="lab">Subject</span><input id="vmSubj" value="' + esc(sp.subj) + '" placeholder="Ollin writes one when you draft"></div>' : '') +
+    '<textarea id="vmBody" class="body" placeholder="Ask Ollin to write it — or type your own.">' + esc(sp.body) + '</textarea>' +
+    '<div class="draftmeta"><span id="vmMeta">' + countLabel(full) + (full.trim() ? ' · AUDITED ✓' : '') + '</span>' +
+      '<span>' + (t.email ? '<a id="vmMail">Open email</a>' : '') + '<a id="vmCopy">Copy</a></span></div>' +
 
-    '<div class="angles">' + VM_ANGLES.map(function (x) {
-      return '<button data-a="' + x[0] + '" class="' + (VM.angle === x[0] ? "on" : "") + '">' + x[1] + '</button>';
-    }).join('') + '</div>' +
-
-    askBarHTML("vmAsk", VM.angle === "free" ? "Type your own words…" : "Ask Ollin…", {}) +
-
-    '<div class="chips">' + CARD_STEERS.map(function (c) {
-      return '<button class="chip" data-steer="' + esc(c[1]) + '">' + esc(c[0]) + '</button>';
-    }).join('') + '</div>' +
+    '<div class="doit"><div class="ask">' +
+      '<input id="vmAsk" placeholder="Ask Ollin to write it — or ask about the intel…">' +
+      '<button class="mic" id="vmMic" title="Speak">' + IC_MIC + '</button>' +
+      '<button class="send" id="vmAskGo" title="Send">' + IC_GO + '</button></div>' +
+      '<button class="go" id="vmSend">Let\'s go <span>»</span></button></div>' +
     '<div id="vmSay"></div>' +
-
-    '<div class="cvfoot">' +
-      '<button class="cta" data-o="Sent">' + IC_GO + '<span>Let\'s go — send &amp; log</span><span class="next">' + nextIn + '</span></button>' +
-      '<button class="ghost" data-o="Later">Push a day</button>' +
-      '<button class="ghost" data-o="Skip">Not a fit</button>' +
-    '</div>' +
+    '<div class="v3foot"><a data-o="Later">Push a day</a><a data-o="Skip">Not a fit</a></div>' +
   '</div>';
 }
 
 function syncMail(t) {
-  var a = document.getElementById("vmMail");
-  var body = document.getElementById("vmBody");
-  if (!a || !t.email || !body) return;
-  var txt = body.value, subj = "";
-  var m = txt.match(/^\s*Subject:\s*(.+)$/im);
-  if (m) { subj = m[1].trim(); txt = txt.replace(m[0], "").replace(/^\s+/, ""); }
+  var a = document.getElementById("vmMail"); if (!a || !t.email) return;
+  var ta = document.getElementById("vmBody"), si = document.getElementById("vmSubj");
   a.href = "mailto:" + encodeURIComponent(t.email) +
-    "?subject=" + encodeURIComponent(subj) + "&body=" + encodeURIComponent(txt);
+    "?subject=" + encodeURIComponent(si ? si.value : "") + "&body=" + encodeURIComponent(ta ? ta.value : "");
 }
-function wireFocus(t) {
-  var ta = document.getElementById("vmBody");
-  if (ta) {
-    ta.addEventListener("input", function () {
-      state.notes[t.id] = ta.value; persistNotes();
-      var l = document.getElementById("vmLen"); if (l) l.textContent = countLabel(ta.value);
-      syncMail(t);
-    });
-    syncMail(t);
-  }
-  Array.prototype.forEach.call(document.querySelectorAll("[data-ch]"), function (bt) {
-    bt.onclick = function () { VM.channel = bt.dataset.ch; render(); };
+function recombine(t) {
+  var si = document.getElementById("vmSubj"), ta = document.getElementById("vmBody");
+  var body = ta ? ta.value : "", subj = si ? si.value.trim() : "";
+  var full = (VM.channel !== "li" && subj) ? "Subject: " + subj + "\n\n" + body : body;
+  state.notes[t.id] = full; persistNotes();
+  var m = document.getElementById("vmMeta"); if (m) m.textContent = countLabel(full) + (full.trim() ? " · AUDITED ✓" : "");
+  syncMail(t);
+}
+
+function wireCard(t) {
+  var si = document.getElementById("vmSubj"), ta = document.getElementById("vmBody");
+  if (ta) ta.addEventListener("input", function () { recombine(t); });
+  if (si) si.addEventListener("input", function () { recombine(t); });
+  syncMail(t);
+  Array.prototype.forEach.call(document.querySelectorAll(".v3 [data-ch]"), function (bt) {
+    bt.onclick = function () { VM.channel = bt.dataset.ch; reopenBody(); };
   });
-  Array.prototype.forEach.call(document.querySelectorAll("[data-a]"), function (bt) {
-    bt.onclick = function () { VM.angle = bt.dataset.a; render(); };
+  Array.prototype.forEach.call(document.querySelectorAll(".v3 [data-a]"), function (bt) {
+    bt.onclick = function () {
+      VM.angle = bt.dataset.a;
+      Array.prototype.forEach.call(document.querySelectorAll(".v3 [data-a]"), function (x) { x.classList.toggle("on", x === bt); });
+    };
   });
   var cp = document.getElementById("vmCopy");
-  if (cp) cp.onclick = function () { vmCopy(ta ? ta.value : ""); toast(ta && ta.value ? "Copied" : "Nothing to copy"); };
-  Array.prototype.forEach.call(document.querySelectorAll("[data-steer]"), function (bt) {
-    bt.onclick = function () { askOllin(bt.dataset.steer); };
-  });
+  if (cp) cp.onclick = function () { vmCopy(state.notes[t.id] || ""); toast((state.notes[t.id] || "").trim() ? "Copied" : "Nothing to copy"); };
   wireAsk("vmAsk", function () {
     var i = document.getElementById("vmAsk"); if (!i) return;
     var qq = i.value.trim(); i.value = "";
-    if (!qq) return askOllin("");           /* empty send = plain draft */
+    if (!qq) return v3Draft(t, "");                 /* empty send = write it */
     var lq = qq.toLowerCase();
-    if (/reply|respond|objection|says no|push ?back/.test(lq))
-      return vmSay('<b>&ldquo;Send them over.&rdquo;</b> Two profiles, ask for a yes/no by Friday. &nbsp;·&nbsp; <b>&ldquo;We\'re all set.&rdquo;</b> &ldquo;When the next req lands, want me ready?&rdquo; then close it out. &nbsp;·&nbsp; <b>Silence.</b> That\'s what the cadence is for.');
-    /* a question about the intel is a conversation, not a redraft */
-    if (isIntelQuestion(qq)) return vmSay(explainIntel(t, acctOf(t.acctId), qq));
-    askOllin(qq);
+    if (/(move|bring|pull).*(all|everyone|them|everything).*(today|now)/.test(lq)) { moveAllToToday(); return; }
+    if (isIntelQuestion(qq)) return askOllinChat(qq); /* a question → answer */
+    v3Draft(t, qq);                                   /* an instruction → write/edit */
   });
-  Array.prototype.forEach.call(document.querySelectorAll("[data-o]"), function (bt) {
-    bt.onclick = function () {
-      var o = bt.dataset.o;
-      decide(o === "Sent" ? "sent" : (o === "Later" ? "later" : "skip"), t);
-    };
+  Array.prototype.forEach.call(document.querySelectorAll(".v3 [data-o]"), function (bt) {
+    bt.onclick = function () { decide(bt.dataset.o === "Later" ? "later" : "skip", t); };
   });
+  var go = document.getElementById("vmSend");
+  if (go) go.onclick = function () { decide("sent", t); };
+}
+
+/* draft/redraft via /api/write; splits Subject/body into the fields in place */
+function v3Draft(steerT, steer) {
+  var t = steerT || curTouch(); if (!t) return;
+  if (VM.angle === "free" && !steer) return vmSay("Freestyle is yours — write it in the box. Ask me to sharpen it.");
+  if (VM.drafting) return;
+  VM.drafting = true;
+  VM.lastDraft = state.notes[t.id] || ""; VM.lastSteer = steer || "";
+  vmSay(steer ? "Writing — " + esc(steer) + "&hellip;" : "Writing&hellip;");
+  var gb = document.getElementById("vmAskGo"); if (gb) gb.classList.add("busy");
+  fetch("/api/write", {
+    method: "POST", headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      name: t.who || "", title: t.title || "", company: t.company || "",
+      angle: t.angle || "", channel: VM.channel || "li", step: t.touchNo,
+      steer: steer || "", angleFrame: VM.angle
+    })
+  }).then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
+    .then(function (res) {
+      if (!res.ok || !res.d || !res.d.text) { var m = (res.d && res.d.error) || "Ollin couldn't write that — try again"; vmSay(esc(m)); toast(m); return; }
+      var sp = splitDraft(res.d.text);
+      var full = (VM.channel !== "li" && sp.subj) ? "Subject: " + sp.subj + "\n\n" + sp.body : sp.body;
+      state.notes[t.id] = full; persistNotes();
+      var si = document.getElementById("vmSubj"); if (si) si.value = sp.subj;
+      var ta = document.getElementById("vmBody"); if (ta) ta.value = sp.body;
+      var mm = document.getElementById("vmMeta"); if (mm) mm.textContent = countLabel(full) + " · AUDITED ✓";
+      syncMail(t);
+      var did = steer ? ("Ollin reworked it" + (/short/i.test(steer) ? " — shorter" : /convers|warm/i.test(steer) ? " — warmer" : /angle/i.test(steer) ? " — new angle" : "")) : "Ollin wrote it";
+      vmSay((res.d.angleWarning ? esc(res.d.angleWarning) + ' &nbsp;·&nbsp; ' : '') + did + ', in the box. <span class="act undo">Undo</span> <span class="act retry">Try again</span>');
+      toast(steer ? "Reworked." : "Drafted. Yours to edit.");
+    }).catch(function () { vmSay("Network hiccup — try again"); toast("Network hiccup — try again"); })
+    .then(function () { VM.drafting = false; var g2 = document.getElementById("vmAskGo"); if (g2) g2.classList.remove("busy"); });
+}
+
+/* Typed activity log (date only, no time) — sent / pushed / skipped. Rides in
+   the already-persisted `extra` blob, so "sent" means actually sent. */
+function logActivity(action, t) {
+  state.extra = state.extra || {};
+  state.extra.log = state.extra.log || [];
+  state.extra.log.unshift({
+    date: todayStr(), action: action, acctId: t.acctId, threadId: t.threadId,
+    company: t.company || "", who: t.who || "", touchNo: t.touchNo,
+    ch: VM.channel || t.ch || ""
+  });
+  if (state.extra.log.length > 1000) state.extra.log.length = 1000;
 }
 function decide(kind, t) {
   if (kind === "sent") {
-    state.done[t.id] = todayStr(); persistDone();
+    state.done[t.id] = todayStr(); logActivity("sent", t); persistDone();
     toast(t.touchNo >= CADENCE.length ? "Cadence complete. Vamos." : "Logged. Next touch scheduled.");
   } else if (kind === "later") {
-    state.reschedule[t.id] = iso(addDays(todayStr(), 1)); scheduleSave();
+    state.reschedule[t.id] = iso(addDays(todayStr(), 1)); logActivity("pushed", t); scheduleSave();
     toast("Pushed to tomorrow.");
   } else {
+    logActivity("skipped", t);
     touchesOfThread(t.acctId, t.threadId).forEach(function (x) { if (!state.done[x.id]) state.done[x.id] = todayStr(); });
     persistDone(); toast("Closed out.");
   }
-  var fc = document.getElementById("focusCard");
-  if (fc) fc.classList.add("out");
+  /* fade the open card out, then re-render (the next one opens) */
+  var row = document.querySelector(".arow.open");
+  if (row) row.style.opacity = "0.35";
   VM.channel = null; VM.angle = "gap"; VM.activeKey = null;
   setTimeout(render, 160);
 }
@@ -2762,11 +2941,14 @@ function vmSay(html) {
   if (u) u.onclick = function () {
     var t = curTouch(); if (!t) return;
     state.notes[t.id] = VM.lastDraft; persistNotes();
-    var ta = document.getElementById("vmBody");
-    if (ta) { ta.value = VM.lastDraft; var l = document.getElementById("vmLen"); if (l) l.textContent = countLabel(VM.lastDraft); syncMail(t); }
+    var sp = splitDraft(VM.lastDraft);
+    var si = document.getElementById("vmSubj"); if (si) si.value = sp.subj;
+    var ta = document.getElementById("vmBody"); if (ta) ta.value = sp.body;
+    var mm = document.getElementById("vmMeta"); if (mm) mm.textContent = countLabel(VM.lastDraft) + (VM.lastDraft.trim() ? " · AUDITED ✓" : "");
+    syncMail(t);
     vmSay("Reverted. Back to what you had.");
   };
-  if (r) r.onclick = function () { askOllin(VM.lastSteer); };
+  if (r) r.onclick = function () { v3Draft(curTouch(), VM.lastSteer); };
 }
 function curTouch() { var q = resolveQueue(); return q.active; }
 function vmCopy(txt) {
@@ -3329,7 +3511,7 @@ function viewCompanyProfile(v) {
           (a.sector ? '<span>' + esc(a.sector) + '</span>' : '') +
         '</div></div>' +
       '<div class="cp-whybadge ' + (lvl === "hot" ? "" : lvl) + '">' +
-        (lvl === "hot" ? '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#EA7987" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/></svg>' : '') +
+        (lvl === "hot" ? '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#FFE81F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/></svg>' : '') +
         (lvl === "hot" ? "WHY NOW · HIGH INTENT" : lvl === "warm" ? "WARMING" : "NEW ACCOUNT") + '</div>' +
     '</div>' +
 
@@ -3562,8 +3744,8 @@ function viewAccount(v) {
     if (tg === "INPUT" || tg === "TEXTAREA" || tg === "SELECT") return;
     if (e.key === "/") { e.preventDefault(); navView = "contacts"; render(); var s = document.getElementById("cSearch"); if (s) s.focus(); return; }
     if (navView !== "today") return;
-    if (e.key === "ArrowLeft") { e.preventDefault(); return carouselGo(-1); }
-    if (e.key === "ArrowRight") { e.preventDefault(); return carouselGo(1); }
+    if (e.key === "ArrowUp" || e.key === "ArrowLeft") { e.preventDefault(); return openRow(VM.i - 1); }
+    if (e.key === "ArrowDown" || e.key === "ArrowRight") { e.preventDefault(); return openRow(VM.i + 1); }
     var t = curTouch(); if (!t) return;
     if (e.key === "1") decide("sent", t);
     else if (e.key === "2") decide("later", t);
