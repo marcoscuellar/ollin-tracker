@@ -743,8 +743,11 @@ select.auth-input{appearance:none}
 .vangle{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:9px 12px;font-size:12.5px;font-weight:700;color:var(--bone);display:flex;align-items:center;gap:8px}
 .vangle .n{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--accent-ink)}
 .vangle.rec{border-color:var(--accent-ink);box-shadow:0 0 0 1px var(--coral)}
-.vcta{margin-top:16px;width:100%;border:0;border-radius:11px;padding:13px;font-family:'Archivo';font-weight:800;font-size:15px;background:var(--coral);color:var(--navy);display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer}
+.vcta-row{margin-top:16px;display:flex;gap:10px}
+.vcta{width:100%;flex:1;border:0;border-radius:11px;padding:13px;font-family:'Archivo';font-weight:800;font-size:15px;background:var(--coral);color:var(--navy);display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer}
 .vcta:hover{background:var(--coral-2)}
+.vcta2{flex:none;border:1px solid var(--line);background:transparent;color:var(--bone);border-radius:11px;padding:13px 18px;font-family:'Archivo';font-weight:800;font-size:14px;cursor:pointer;white-space:nowrap}
+.vcta2:hover{border-color:var(--accent-ink);color:var(--accent-ink)}
 .vmuted{color:var(--mute);font-size:13px;font-weight:500}
 
 /* ===================== COMPANY PROFILE (full page) ===================== */
@@ -2692,7 +2695,7 @@ function greeting(b) {
   var lead = greetWord() + (name ? ", " + esc(name) : "") + ".";
   if (due || fresh) {
     var bits = [];
-    if (due) bits.push('<span class="co">' + due + " due" + (b.late.length ? " (incl. " + b.late.length + " overdue)" : "") + '</span>');
+    if (due) bits.push('<span class="co">' + due + " ready</span>");
     if (fresh) bits.push('<span class="co">' + fresh + " never touched</span>");
     return lead + " You've got " + bits.join(" and ") + '. <span class="co">Vamos!</span>';
   }
@@ -2702,7 +2705,7 @@ function greeting(b) {
 
 function queuePill(t, b) {
   var td = todayStr(), d = dueOf(t);
-  if (d < td) return '<span class="qpill late">OVERDUE ' + daysBetween(d, td) + "D</span>";
+  if (d < td) return '<span class="qpill late">READY</span>';
   if (d === td) return '<span class="qpill due">DUE · TOUCH ' + t.touchNo + "</span>";
   if (t.touchNo === 1) return '<span class="qpill ready">NEW · NEVER TOUCHED</span>';
   return '<span class="qpill follow">FOLLOW-UP · +' + daysBetween(td, d) + "D</span>";
@@ -2811,7 +2814,7 @@ function doneBody(b) {
 
 function rowPill(t) {
   var td = todayStr(), d = dueOf(t);
-  if (d < td) return '<span class="rpill over">OVERDUE ' + daysBetween(d, td) + 'D</span>';
+  if (d < td) return '<span class="rpill over">READY</span>';
   if (d === td) return '<span class="rpill">DUE · TOUCH ' + t.touchNo + '</span>';
   if (t.touchNo === 1) return '<span class="rpill">NEW · TOUCH 1</span>';
   return '<span class="rpill follow">FOLLOW-UP · +' + daysBetween(td, d) + 'D</span>';
@@ -3212,7 +3215,7 @@ function gdAsk() {
   }
   if (/import|csv|sheet|upload/.test(lq)) { var f = document.getElementById("coFile"); if (f) { f.click(); return gdSay("Pick your CSV or Excel — I'll sort people vs. companies automatically."); } navView = "companies"; render(); return; }
   if (/pipeline|funnel|stage/.test(lq)) { navView = "pipeline"; render(); return; }
-  if (/overdue|late/.test(lq)) { if (startQueue("late")) { render(); return; } return gdSay("Nothing overdue — nice."); }
+  if (/overdue|late/.test(lq)) { if (startQueue("late")) { render(); return; } return gdSay("You're all caught up — nice."); }
   if (/new|fresh|never/.test(lq)) { if (startQueue("fresh")) { render(); return; } return gdSay("No never-touched contacts right now."); }
   if (/due|waiting|today|start|go|work|vamos/.test(lq)) { startQueue("due"); render(); return; }
   gdSay("I run the tracker in here — who's due, what to send, and getting you into the work. " +
@@ -3409,12 +3412,25 @@ function openContactModal(acctId, threadId) {
         '<div class="vblock"><div class="vbt">Why this person cares</div><div class="vwhy-txt">' + esc(whyTxt) + '</div></div>' +
         '<div class="vblock"><div class="vbt">Personal hook &amp; context</div>' + hookHTML + '</div>' +
         '<div class="vblock"><div class="vbt">Recommended outreach angle</div><div class="vangles">' + angles + '</div></div>' +
-        '<button class="vcta" id="vmDraft">Draft outreach with Ollin <span>&rarr;</span></button>' +
+        '<div class="vcta-row"><button class="vcta2" id="vmToday">Do today</button>' +
+        '<button class="vcta" id="vmDraft">Draft outreach with Ollin <span>&rarr;</span></button></div>' +
       '</div></div>';
   document.getElementById("vmClose").onclick = closeContactModal;
   document.getElementById("vmEdit").onclick = function () { openContactEdit(acctId, threadId); };
   document.getElementById("vmDraft").onclick = function () { draftFromContact(acctId, threadId); };
+  document.getElementById("vmToday").onclick = function () { bringToToday(acctId, threadId); };
   document.getElementById("vModalOverlay").classList.add("show");
+}
+/* pull a contact into today's queue — you decide who you're calling */
+function bringToToday(acctId, threadId) {
+  var ts = touchesOfThread(acctId, threadId) || [], nx = null;
+  for (var i = 0; i < ts.length; i++) { if (!state.done[ts[i].id]) { nx = ts[i]; break; } }
+  if (!nx) { toast("This one's already wrapped."); return; }
+  var already = dueOf(nx) === todayStr();
+  state.reschedule[nx.id] = todayStr(); scheduleSave();
+  closeContactModal();
+  VM.narrow = false; VM.qIds = null; VM.i = 0; navView = "today"; render(); window.scrollTo(0, 0);
+  toast(already ? "Already on today." : "Added to today.");
 }
 function draftFromContact(acctId, threadId) {
   closeContactModal();
@@ -3426,7 +3442,7 @@ function draftFromContact(acctId, threadId) {
 
 /* ---------- Contacts (global tile grid) ---------- */
 var CQ = { q: "", filter: "all" };
-var C_FILTERS = [["all", "All"], ["late", "Overdue"], ["today", "Due today"], ["new", "Never touched"], ["rest", "Resting"]];
+var C_FILTERS = [["all", "All"], ["late", "Ready"], ["today", "Due today"], ["new", "Never touched"], ["rest", "Resting"]];
 function matchQ(t, a, q) {
   if (!q) return true;
   var hay = [t.who, t.title, t.company, t.email, t.li, t.angle, t.persona, t.roleLabel, t.whyCares,
