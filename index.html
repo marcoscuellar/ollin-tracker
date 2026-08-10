@@ -157,14 +157,14 @@ button{font-family:inherit}
 .vm-right{margin-left:auto;display:flex;align-items:center;gap:14px}
 .vm-streak{font-size:13px;font-weight:700;color:var(--steel);display:flex;align-items:center;gap:7px;white-space:nowrap}
 .vm-streak b{color:var(--accent-ink)}
-.vm-just{background:var(--navy);border:1px solid #2a2a26;color:var(--bone);
+.vm-just{background:var(--navy);border:1px solid var(--line);color:var(--bone);
   border-radius:999px;padding:9px 16px;font-weight:700;font-size:13px;cursor:pointer;
   display:flex;align-items:center;gap:8px;font-family:inherit}
 .vm-just:hover{border-color:var(--accent-ink)}
 .vm-just .d{width:7px;height:7px;border-radius:999px;background:var(--coral)}
 .vm-theme{width:34px;height:34px;border-radius:10px;border:1px solid var(--line);background:var(--navy);color:var(--steel);display:grid;place-items:center;cursor:pointer;flex:none}
 .vm-theme:hover{border-color:var(--accent-ink);color:var(--bone)}
-.vm-av{width:34px;height:34px;border-radius:10px;border:1px solid #2a2a26;
+.vm-av{width:34px;height:34px;border-radius:10px;border:1px solid var(--line);
   background:var(--navy);color:var(--bone);font-weight:900;font-size:14px;cursor:pointer;flex:none}
 .vm-av:hover{border-color:var(--accent-ink)}
 /* progress bar (card mode) sits under the nav */
@@ -174,7 +174,7 @@ button{font-family:inherit}
 
 #vmBanners{max-width:1240px;margin:0 auto;padding:0 30px}
 .demobar,.verifybar{margin-top:12px;border-radius:12px;padding:11px 15px;font-size:13px;font-weight:600}
-.demobar{background:#141412;color:var(--ink-2)}
+.demobar{background:var(--surface);color:var(--ink-2)}
 .verifybar{background:rgba(255,85,0,.14);color:var(--coral-2)}
 .demobar a,.verifybar a{color:var(--accent-ink);font-weight:800;cursor:pointer;text-decoration:underline;margin-left:6px}
 
@@ -189,7 +189,7 @@ button{font-family:inherit}
 /* generic dark card + controls used by Contacts import / Account */
 .vm-card{background:var(--navy-2);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin-bottom:14px}
 .vm-row{display:flex;flex-wrap:wrap;gap:10px}
-.vm-gh{background:var(--navy);border:1px solid #2a2a26;color:var(--bone);border-radius:10px;
+.vm-gh{background:var(--navy);border:1px solid var(--line);color:var(--bone);border-radius:10px;
   padding:10px 15px;font-weight:700;font-size:13px;cursor:pointer;font-family:inherit}
 .vm-gh:hover{border-color:var(--accent-ink)}
 .vm-pri{background:var(--coral);border:0;color:var(--navy);border-radius:10px;
@@ -211,7 +211,7 @@ button{font-family:inherit}
 .askbar input{flex:1;background:transparent;border:0;outline:0;font-family:'Archivo';
   font-size:14px;font-weight:500;color:var(--bone)}
 .askbar input::placeholder{color:var(--mute)}
-.ask-mic{width:36px;height:36px;border-radius:999px;border:1.5px solid #2a2a26;background:transparent;
+.ask-mic{width:36px;height:36px;border-radius:999px;border:1.5px solid var(--line);background:transparent;
   display:grid;place-items:center;flex:none;cursor:pointer;color:var(--ink-2)}
 .ask-mic.rec{border-color:var(--accent-ink);color:var(--accent-ink)}
 .ask-send{width:40px;height:40px;border-radius:999px;background:var(--coral);border:0;
@@ -245,7 +245,7 @@ button{font-family:inherit}
 .cxpeek.l1:hover{transform:translateX(-46%) scale(.93);opacity:.82}
 .cxpeek.r1:hover{transform:translateX(46%) scale(.93);opacity:.82}
 .cxnav{position:absolute;top:180px;z-index:6;width:46px;height:46px;border-radius:999px;background:var(--navy);
-  border:1px solid #2a2a26;color:var(--bone);font-size:26px;font-weight:700;cursor:pointer;display:grid;place-items:center;
+  border:1px solid var(--line);color:var(--bone);font-size:26px;font-weight:700;cursor:pointer;display:grid;place-items:center;
   line-height:1;padding-bottom:3px;box-shadow:0 12px 30px -12px #000}
 .cxnav:hover{border-color:var(--accent-ink);color:var(--accent-ink)}
 .cxnav.prev{left:0}
@@ -271,7 +271,7 @@ button{font-family:inherit}
 .qpill{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;
   font-weight:600;padding:4px 8px;border-radius:999px}
 .qpill.due{background:var(--volt-bg);color:var(--volt)}
-.qpill.ready{background:#141412;color:var(--mute)}
+.qpill.ready{background:var(--surface);color:var(--mute)}
 .qpill.follow{background:var(--surface);color:var(--steel)}
 .qpill.late{background:var(--volt-bg);color:var(--volt)}
 .parked{margin-top:16px;color:var(--mute);font-size:12px;font-weight:600}
@@ -367,7 +367,7 @@ button{font-family:inherit}
 .fstage{background:var(--navy-2);border:1px solid var(--line);border-radius:14px;padding:16px 16px 14px;position:relative}
 .fstage .n{font-weight:900;font-size:30px;letter-spacing:-.02em}
 .fstage .l{color:var(--steel);font-size:12.5px;font-weight:700;margin-top:2px}
-.fstage .barw{margin-top:12px;height:5px;border-radius:3px;background:#141412;overflow:hidden}
+.fstage .barw{margin-top:12px;height:5px;border-radius:3px;background:var(--surface);overflow:hidden}
 .fstage .barw i{display:block;height:100%;background:var(--coral);width:0;transition:width .6s cubic-bezier(.16,.84,.3,1)}
 .fstage .cv{position:absolute;top:16px;right:16px;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--mute)}
 
@@ -377,7 +377,7 @@ button{font-family:inherit}
 .colh .ct{font-weight:800;font-size:14px}
 .colh .cc{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--navy);background:var(--coral);
   border-radius:999px;padding:2px 8px;font-weight:700}
-.colh .cc.zero{background:#141412;color:var(--mute)}
+.colh .cc.zero{background:var(--surface);color:var(--mute)}
 .pcard{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:13px 14px;margin-bottom:10px;
   box-shadow:0 12px 26px -18px rgba(0,0,0,.7);cursor:pointer;transition:transform .15s}
 .pcard:hover{transform:translateY(-2px)}
@@ -400,7 +400,7 @@ button{font-family:inherit}
 .controls{display:flex;align-items:center;gap:14px;margin:6px 0 14px;flex-wrap:wrap}
 .controls .askbar{flex:1;max-width:520px}
 .filters{display:flex;gap:8px;margin-left:auto;flex-wrap:wrap}
-.fchip{border:1px solid var(--line);color:#b8c2cc;border-radius:999px;padding:8px 14px;font-size:12.5px;
+.fchip{border:1px solid var(--line);color:var(--steel);border-radius:999px;padding:8px 14px;font-size:12.5px;
   font-weight:700;background:transparent;cursor:pointer;font-family:inherit}
 .fchip:hover{border-color:#3a3a34;color:var(--bone)}
 .fchip.on{background:var(--coral);color:var(--navy);border-color:var(--accent-ink)}
@@ -445,7 +445,7 @@ button{font-family:inherit}
 .drop .big{font-weight:800;font-size:15px}
 .drop .sm{color:var(--steel);font-size:12.5px;margin-top:4px}
 .sheetform{margin-top:12px;display:flex;gap:8px;flex-wrap:wrap}
-.sheetform input{flex:1;min-width:220px;background:var(--navy);border:1px solid #2a2a26;color:var(--bone);
+.sheetform input{flex:1;min-width:220px;background:var(--navy);border:1px solid var(--line);color:var(--bone);
   border-radius:10px;padding:10px 13px;font-family:inherit;font-size:13px}
 
 /* ======================= ONBOARDING — the 4-question arc ======================= */
@@ -460,7 +460,7 @@ button{font-family:inherit}
 .ob-brand .wm{font-weight:900;font-size:18px;letter-spacing:-.03em}
 .ob-brand .tag{color:var(--accent-ink);font-weight:700;font-size:12px}
 .ob-htitle{font-weight:800;font-size:32px;line-height:1.08;letter-spacing:-.025em;color:var(--bone)}
-.ob-hsub{margin-top:12px;color:#b8c2cc;font-size:14.5px;line-height:1.5;max-width:330px}
+.ob-hsub{margin-top:12px;color:var(--steel);font-size:14.5px;line-height:1.5;max-width:330px}
 /* filling profile card */
 .profile{margin-top:30px;background:var(--navy);border:1px solid var(--line);border-radius:16px;
   padding:20px 22px;max-width:400px;box-shadow:0 24px 60px -30px #000}
@@ -468,11 +468,11 @@ button{font-family:inherit}
 .prow{display:flex;align-items:center;gap:13px}
 .pav{width:42px;height:42px;border-radius:11px;display:grid;place-items:center;font-weight:900;font-size:17px}
 .pav.on{background:var(--coral);color:var(--navy)}
-.pav.off{background:#141412;color:#4a668a}
+.pav.off{background:var(--surface);color:var(--mute)}
 .pname{font-weight:800;font-size:16px;color:var(--bone)}
-.pname.dim{color:#4a668a}
+.pname.dim{color:var(--mute)}
 .prole{color:var(--steel);font-size:13.5px}
-.prole.dim{color:#3f5a78}
+.prole.dim{color:var(--mute)}
 .pline{margin-top:16px;padding-top:14px;border-top:1px solid var(--line);font-size:13.5px}
 .pline.hint{color:var(--mute);font-style:italic}
 .pline.real{color:var(--ink-2)}
@@ -480,14 +480,14 @@ button{font-family:inherit}
 /* question column */
 .ob-kick{color:var(--steel);margin-bottom:14px}
 .ob-q{font-weight:800;font-size:34px;line-height:1.06;letter-spacing:-.025em;color:var(--bone)}
-.ob-qsub{margin-top:12px;color:#b8c2cc;font-size:14.5px;font-weight:400;max-width:340px;line-height:1.5}
+.ob-qsub{margin-top:12px;color:var(--steel);font-size:14.5px;font-weight:400;max-width:340px;line-height:1.5}
 .ob-field{margin-top:20px}
-.ob-field input,.ob-field textarea{width:100%;background:var(--navy);border:1px solid #2a2a26;border-radius:14px;
-  padding:16px 18px;color:#e7ecf1;font-family:'Archivo';font-size:16px;font-weight:500;outline:0}
+.ob-field input,.ob-field textarea{width:100%;background:var(--surface);border:1px solid var(--line);border-radius:14px;
+  padding:16px 18px;color:var(--bone);font-family:'Archivo';font-size:16px;font-weight:500;outline:0}
 .ob-field textarea{min-height:92px;resize:vertical;line-height:1.5}
 .ob-field input:focus,.ob-field textarea:focus{border-color:var(--accent-ink)}
-.ob-field input::placeholder,.ob-field textarea::placeholder{color:#4a668a}
-.ob-tag{display:inline-block;margin-top:14px;background:#141412;color:var(--mute);font-size:12px;font-weight:600;
+.ob-field input::placeholder,.ob-field textarea::placeholder{color:var(--mute)}
+.ob-tag{display:inline-block;margin-top:14px;background:var(--surface);color:var(--mute);font-size:12px;font-weight:600;
   border-radius:999px;padding:6px 12px}
 .ob-tag b{color:var(--accent-ink)}
 .ob-err{color:var(--coral-2);font-size:13px;font-weight:600;margin-top:12px;min-height:16px}
@@ -595,7 +595,7 @@ button{font-family:inherit}
 .sender-card{width:460px;max-width:100%;background:var(--navy-2);border:1px solid var(--line);border-radius:18px;
   padding:32px 30px;box-shadow:0 50px 120px -50px #000;position:relative}
 .sender-card h2{font-weight:800;font-size:24px;letter-spacing:-.02em;margin-bottom:6px}
-.sc-help{color:#b8c2cc;font-size:13.5px;line-height:1.5;margin-bottom:16px}
+.sc-help{color:var(--steel);font-size:13.5px;line-height:1.5;margin-bottom:16px}
 .fld{display:flex;flex-direction:column;gap:6px;margin-bottom:13px}
 .fld label{font-size:12px;font-weight:700;color:var(--steel)}
 .fld .opt{color:var(--mute);font-weight:600;text-transform:none;letter-spacing:0}
@@ -654,7 +654,7 @@ select.auth-input{appearance:none}
 .crow{display:flex;align-items:center;gap:12px;background:var(--navy-2);border:1px solid var(--line);border-radius:11px;
   padding:10px 12px;cursor:pointer;transition:border-color .18s}
 .crow:hover{border-color:var(--accent-ink)}
-.crow .ava{width:32px;height:32px;border-radius:9px;background:#141412;color:var(--coral-2);display:grid;place-items:center;
+.crow .ava{width:32px;height:32px;border-radius:9px;background:var(--surface);color:var(--coral-2);display:grid;place-items:center;
   font-weight:800;font-size:11px;flex:none}
 .crow .nm{font-weight:800;font-size:14px}
 .crow .tt{color:var(--steel);font-size:12px}
@@ -789,7 +789,7 @@ select.auth-input{appearance:none}
 .cp-sechead .t{font-weight:900;font-size:24px;letter-spacing:-.02em}
 .cp-sechead .c{color:var(--mute);font-size:13px;font-weight:600}
 .cp-thin{color:var(--steel);font-size:13.5px;font-weight:500;line-height:1.55}
-.cp-back{background:var(--navy);border:1px solid #2a2a26;color:var(--bone);border-radius:10px;padding:8px 14px;font-weight:700;font-size:13px;cursor:pointer;font-family:inherit}
+.cp-back{background:var(--navy);border:1px solid var(--line);color:var(--bone);border-radius:10px;padding:8px 14px;font-weight:700;font-size:13px;cursor:pointer;font-family:inherit}
 .cp-back:hover{border-color:var(--accent-ink)}
 
 
@@ -889,7 +889,7 @@ select.auth-input{appearance:none}
   box-shadow:0 14px 40px -16px rgba(255,85,0,.45)}
 .v3 .ask input{flex:1;background:transparent;border:0;outline:0;color:var(--bone);font-family:'Archivo';font-size:14px;font-weight:500}
 .v3 .ask input::placeholder{color:var(--mute)}
-.v3 .ask .mic{width:34px;height:34px;border-radius:999px;border:1.5px solid #2a2a26;display:grid;place-items:center;flex:none;color:var(--ink-2b);cursor:pointer;background:transparent}
+.v3 .ask .mic{width:34px;height:34px;border-radius:999px;border:1.5px solid var(--line);display:grid;place-items:center;flex:none;color:var(--ink-2b);cursor:pointer;background:transparent}
 .v3 .ask .mic.rec{border-color:var(--accent-ink);color:var(--accent-ink)}
 .v3 .ask .send{width:36px;height:36px;border-radius:999px;background:var(--coral);border:0;display:grid;place-items:center;flex:none;color:var(--navy);cursor:pointer}
 .v3 .ask .send.busy{opacity:.6;pointer-events:none}
@@ -3580,7 +3580,7 @@ function viewCompanies(v) {
       '<div class="mn" style="color:var(--steel);margin-bottom:6px">Add companies &amp; intel</div>' +
       '<p class="vm-sub" style="margin:0 0 12px">Paste a list as <b style="color:var(--bone)">Company, City, State</b> — or drop your agent\'s <b style="color:var(--bone)">[ COMPANY NOTE ]</b> / <b style="color:var(--bone)">[ CONTACT NOTE ]</b> blocks and Vamos parses the full intel.</p>' +
       '<textarea id="coPaste" placeholder="Acme Robotics, Austin, TX&#10;&#10;— or —&#10;&#10;[ COMPANY NOTE ]&#10;COMPANY: Northwind Logistics | Domain: northwind.com | 350 Employees | Chicago, IL&#10;1. LEAD SIGNAL (TRIGGER): ..." ' +
-        'style="width:100%;min-height:120px;background:var(--navy);border:1px solid #2a2a26;color:var(--bone);border-radius:12px;padding:13px 15px;font-family:Archivo;font-size:14px;line-height:1.6;resize:vertical;outline:0"></textarea>' +
+        'style="width:100%;min-height:120px;background:var(--navy);border:1px solid var(--line);color:var(--bone);border-radius:12px;padding:13px 15px;font-family:Archivo;font-size:14px;line-height:1.6;resize:vertical;outline:0"></textarea>' +
       '<div class="vm-row" style="margin-top:12px"><button class="vm-pri" id="coAdd">Add</button>' +
         '<button class="vm-gh" id="coPick">Upload CSV / Excel</button></div>' +
     '</div>';
