@@ -3401,6 +3401,7 @@ function openContactModal(acctId, threadId) {
       '<div><div class="vmnm">' + esc(th.name || "—") + '</div>' +
         '<div class="vmtt">' + esc(th.title || "") + (a.company ? ' · ' + esc(a.company) : '') + '</div></div>' +
       '<div class="vmtags"><span class="roletag">' + esc(roleLabelOf(th)) + '</span>' + stBadge(st) +
+        '<button class="vcta2" id="vmEdit" style="padding:6px 12px;font-size:12px">Edit</button>' +
         '<div class="vmclose" id="vmClose"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></div></div>' +
     '</div>' +
     '<div class="vmbody"><div class="vmleft"><div class="vblock"><div class="vbt">Contact channels</div>' + chan + '</div></div>' +
@@ -3411,6 +3412,7 @@ function openContactModal(acctId, threadId) {
         '<button class="vcta" id="vmDraft">Draft outreach with Ollin <span>&rarr;</span></button>' +
       '</div></div>';
   document.getElementById("vmClose").onclick = closeContactModal;
+  document.getElementById("vmEdit").onclick = function () { openContactEdit(acctId, threadId); };
   document.getElementById("vmDraft").onclick = function () { draftFromContact(acctId, threadId); };
   document.getElementById("vModalOverlay").classList.add("show");
 }
@@ -3683,7 +3685,7 @@ function viewCompanyProfile(v) {
   }).join("");
 
   v.innerHTML =
-    '<div class="cp-crumb rv" style="--d:.04s"><span class="lnk" id="cpBack">Companies</span> <b>&rsaquo;</b> ' + esc(a.company || "—") + '</div>' +
+    '<div class="cp-crumb rv" style="--d:.04s;display:flex;align-items:center;gap:8px"><span class="lnk" id="cpBack">Companies</span> <b>&rsaquo;</b> <span>' + esc(a.company || "—") + '</span><button class="cp-back" id="cpEdit" style="margin-left:auto">Edit company</button></div>' +
     '<div class="cp-hero rv" style="--d:.12s">' +
       '<div class="cp-logo">' + esc((a.company || "?").slice(0, 1).toUpperCase()) + '</div>' +
       '<div><div class="cp-name">' + esc(a.company || "—") + '</div>' +
@@ -3709,7 +3711,85 @@ function viewCompanyProfile(v) {
       : '<div class="vm-card rv" style="--d:.4s"><p class="vm-sub" style="margin:0">No contacts on this account yet — paste a <b style="color:var(--bone)">[ CONTACT NOTE ]</b> on the Companies tab.</p></div>');
 
   document.getElementById("cpBack").onclick = function () { navView = "companies"; render(); window.scrollTo(0, 0); };
+  var ce = document.getElementById("cpEdit"); if (ce) ce.onclick = function () { openCompanyEdit(a.id); };
   Array.prototype.forEach.call(v.querySelectorAll(".ctile"), function (t) { t.onclick = function () { openContactModal(t.dataset.a, t.dataset.t); }; });
+}
+
+/* ---------- edit tools: fix anything, or fill intel by hand ---------- */
+function edField(label, id, val, opts) {
+  opts = opts || {};
+  var input = opts.area
+    ? '<textarea class="auth-input" id="' + id + '" rows="' + (opts.rows || 2) + '"' + (opts.ph ? ' placeholder="' + esc(opts.ph) + '"' : '') + '>' + esc(val || "") + '</textarea>'
+    : '<input class="auth-input" id="' + id + '" value="' + esc(val || "") + '"' + (opts.ph ? ' placeholder="' + esc(opts.ph) + '"' : '') + '>';
+  return '<div class="fld"><label>' + esc(label) + (opts.opt ? ' <span class="opt">optional</span>' : '') + '</label>' + input + '</div>';
+}
+function edSection(text) {
+  return '<div style="margin:20px 0 6px;font-family:\'IBM Plex Mono\',monospace;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--steel)">' + esc(text) + '</div>';
+}
+function edOverlay(title, help, fieldsHTML, onSave) {
+  var ov = el('<div class="sender-overlay solid"><div class="sender-card" style="max-height:90vh;overflow:auto">' +
+    '<button class="sc-close" id="edClose" aria-label="Close">&times;</button>' +
+    '<h2>' + esc(title) + '</h2><div class="sc-help">' + esc(help) + '</div>' +
+    fieldsHTML + '<div class="sc-err" id="edErr"></div>' +
+    '<button class="btn" id="edSave">Save</button></div></div>');
+  document.body.appendChild(ov);
+  var close = function () { ov.remove(); };
+  ov.querySelector("#edClose").onclick = close;
+  ov.addEventListener("click", function (e) { if (e.target === ov) close(); });
+  ov.querySelector("#edSave").onclick = function () { onSave(ov, close); };
+  return ov;
+}
+function edVal(ov, id) { var e = ov.querySelector("#" + id); return e ? e.value.trim() : ""; }
+function edLines(s) { return s ? s.split("\n").map(function (x) { return x.trim(); }).filter(Boolean) : []; }
+
+function openCompanyEdit(acctId) {
+  var a = acctOf(acctId); if (!a) return;
+  var th = a.thesis || {};
+  var html =
+    edField("Company name", "ecName", a.company) +
+    edField("Website / domain", "ecDomain", a.domain, { opt: 1, ph: "acme.com" }) +
+    edField("Location", "ecPlace", a.place, { opt: 1, ph: "City, State" }) +
+    edField("Size", "ecSize", a.size, { opt: 1, ph: "350 employees" }) +
+    edField("Sector", "ecSector", a.sector, { opt: 1 }) +
+    edSection("Company intel — shared by every contact here") +
+    edField("Why now / what happened", "ecWhat", th.what, { opt: 1, area: 1, rows: 2 }) +
+    edField("The bottleneck", "ecBott", th.bottleneck, { opt: 1, area: 1, rows: 2 }) +
+    edField("Cost of the gap", "ecCost", a.costOfGap, { opt: 1, ph: "$15,000/week in delays" }) +
+    edField("Tech stack (comma-separated)", "ecStack", (a.techStack || []).join(", "), { opt: 1, ph: "Azure, Databricks" }) +
+    edField("Key signals (one per line)", "ecSignals", (a.signals || []).map(function (s) { return s.text || s; }).join("\n"), { opt: 1, area: 1, rows: 3 }) +
+    edField("Notes & flags (one per line)", "ecFlags", (a.flags || []).join("\n"), { opt: 1, area: 1, rows: 2 });
+  edOverlay("Edit company", "Fix anything, or fill in intel by hand — it flows to every contact at this company.", html, function (ov, close) {
+    var nm = edVal(ov, "ecName"); if (!nm) { ov.querySelector("#edErr").textContent = "A company needs a name."; return; }
+    a.company = nm; a.domain = edVal(ov, "ecDomain"); a.place = edVal(ov, "ecPlace");
+    a.size = edVal(ov, "ecSize"); a.sector = edVal(ov, "ecSector"); a.costOfGap = edVal(ov, "ecCost");
+    a.thesis = a.thesis || {}; a.thesis.what = edVal(ov, "ecWhat"); a.thesis.bottleneck = edVal(ov, "ecBott");
+    var st = edVal(ov, "ecStack"); a.techStack = st ? st.split(",").map(function (x) { return x.trim(); }).filter(Boolean) : [];
+    a.signals = edLines(edVal(ov, "ecSignals")).map(function (t) { return { text: t, kind: "trigger" }; });
+    a.flags = edLines(edVal(ov, "ecFlags"));
+    persistAccounts(); close(); render(); window.scrollTo(0, 0);
+    toast("Company saved — every contact here updated.");
+  });
+}
+function openContactEdit(acctId, threadId) {
+  var a = acctOf(acctId); if (!a) return;
+  var th = (a.threads || []).filter(function (x) { return x.id === threadId; })[0]; if (!th) return;
+  var html =
+    edField("Name", "etName", th.name) +
+    edField("Title", "etTitle", th.title, { opt: 1 }) +
+    edField("Email", "etEmail", th.email, { opt: 1, ph: "name@company.com" }) +
+    edField("LinkedIn", "etLi", th.linkedin, { opt: 1, ph: "linkedin.com/in/…" }) +
+    edSection("Contact intel — just this person") +
+    edField("Why they care", "etWhy", th.whyCares, { opt: 1, area: 1, rows: 2 }) +
+    edField("Personal hook (one per line)", "etHook", (th.hook || []).join("\n"), { opt: 1, area: 1, rows: 2 });
+  edOverlay("Edit contact", "The company intel is shared automatically — this is what's unique to " + esc((th.name || "this person").split(" ")[0]) + ".", html, function (ov, close) {
+    var nm = edVal(ov, "etName"); if (!nm) { ov.querySelector("#edErr").textContent = "A contact needs a name."; return; }
+    th.name = nm; th.title = edVal(ov, "etTitle"); th.email = edVal(ov, "etEmail"); th.linkedin = edVal(ov, "etLi");
+    th.whyCares = edVal(ov, "etWhy"); th.hook = edLines(edVal(ov, "etHook"));
+    persistAccounts(); close();
+    if (document.getElementById("vModalOverlay")) closeContactModal();
+    render();
+    toast("Contact saved.");
+  });
 }
 
 /* ---------- ingestion: smart paste (company list OR agent notes) ---------- */
