@@ -511,7 +511,7 @@ button{font-family:inherit}
 .authhero{background:#0B0C10;color:#fff;position:relative;overflow:hidden;padding:44px 52px;
   display:flex;flex-direction:column;justify-content:space-between;min-height:100vh}
 .authhero::after{content:"";position:absolute;left:-12%;bottom:-24%;width:540px;height:540px;border-radius:50%;
-  background:#FF5500;opacity:.15;filter:blur(94px);pointer-events:none}
+  background:#FFFFFF;opacity:.10;filter:blur(100px);pointer-events:none}
 @media(max-width:860px){.authhero{min-height:auto;padding:34px 30px}}
 .ah-brand{display:flex;align-items:center;gap:11px;position:relative;z-index:1}
 .ah-brand .wm{font-weight:900;font-size:22px;letter-spacing:-.03em;color:#fff}
@@ -830,10 +830,10 @@ select.auth-input{appearance:none}
 .vtop{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:16px}
 .veyebrow{font-family:'IBM Plex Mono',monospace;text-transform:uppercase;letter-spacing:.16em;font-size:10.5px;font-weight:600;color:var(--mute)}
 .veyebrow b{color:var(--accent-ink);font-weight:700}
-.vcore{display:flex;flex-direction:column;align-items:center;gap:5px;color:var(--steel);flex:none}
-.vcore .c{font-family:'Archivo';font-weight:900;font-size:30px;line-height:.8;letter-spacing:-.03em;text-shadow:0 0 18px rgba(148,163,184,.35),0 0 40px rgba(148,163,184,.18)}
+.vcore{display:flex;flex-direction:column;align-items:center;gap:7px;color:var(--steel);flex:none}
+.vcore .ollin{width:34px;height:34px;display:block}
 .vcore .lb{font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:8px;letter-spacing:.22em;text-transform:uppercase}
-.vcore.pending{color:var(--steel)}.vcore.pending .c{text-shadow:none}
+.vcore.pending{opacity:.45}
 .vname{font-weight:900;font-size:44px;line-height:.94;letter-spacing:-.03em;text-transform:uppercase;color:var(--bone)}
 .vrole{margin-top:12px;font-size:15px;font-weight:700;letter-spacing:-.01em;color:var(--ink-2b)}
 .vrole .co{color:var(--accent-ink);text-decoration:none}.vrole .co:hover{text-decoration:underline}
@@ -2903,9 +2903,14 @@ function cardBodyHTML(t, a) {
 
   var grounded = orgFacts.filter(function (f) { return f.v; }).length + conFacts.filter(function (f) { return f.v; }).length;
 
+  var OLLIN_GLYPH = '<svg class="ollin" viewBox="0 0 100 100" fill="none" aria-hidden="true"><g transform="translate(50,50) rotate(-8)">' +
+    '<path d="M0,0 C13,-9 19,-25 11,-36 C5,-43 -5,-43 -11,-36 C-19,-25 -13,-9 0,0 Z" fill="var(--bone)"/>' +
+    '<path d="M0,0 C13,-9 19,-25 11,-36 C5,-43 -5,-43 -11,-36 C-19,-25 -13,-9 0,0 Z" fill="var(--coral)" transform="rotate(120)"/>' +
+    '<path d="M0,0 C13,-9 19,-25 11,-36 C5,-43 -5,-43 -11,-36 C-19,-25 -13,-9 0,0 Z" fill="var(--steel)" transform="rotate(240)"/>' +
+    '<circle r="7.5" fill="#FFFFFF"/></g></svg>';
   var core = (th.status === "pending")
-    ? '<div class="vcore pending"><span class="c">•</span><span class="lb">Verifying…</span></div>'
-    : '<div class="vcore"><span class="c">C</span><span class="lb">Core checked</span></div>';
+    ? '<div class="vcore pending">' + OLLIN_GLYPH + '<span class="lb">Verifying…</span></div>'
+    : '<div class="vcore">' + OLLIN_GLYPH + '<span class="lb">Verified</span></div>';
 
   var meta = '';
   if (t.email) meta += '<span class="it">' + IC_MAIL + ' ' + esc(t.email) + (th.emailConf ? ' <span class="conf">' + esc(th.emailConf) + '</span>' : '') + '</span>';
