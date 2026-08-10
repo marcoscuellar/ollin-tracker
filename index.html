@@ -157,14 +157,14 @@ button{font-family:inherit}
 .vm-right{margin-left:auto;display:flex;align-items:center;gap:14px}
 .vm-streak{font-size:13px;font-weight:700;color:var(--steel);display:flex;align-items:center;gap:7px;white-space:nowrap}
 .vm-streak b{color:var(--accent-ink)}
-.vm-just{background:var(--navy);border:1px solid #2a2a26;color:var(--bone);
+.vm-just{background:var(--navy);border:1px solid var(--line);color:var(--bone);
   border-radius:999px;padding:9px 16px;font-weight:700;font-size:13px;cursor:pointer;
   display:flex;align-items:center;gap:8px;font-family:inherit}
 .vm-just:hover{border-color:var(--accent-ink)}
 .vm-just .d{width:7px;height:7px;border-radius:999px;background:var(--coral)}
 .vm-theme{width:34px;height:34px;border-radius:10px;border:1px solid var(--line);background:var(--navy);color:var(--steel);display:grid;place-items:center;cursor:pointer;flex:none}
 .vm-theme:hover{border-color:var(--accent-ink);color:var(--bone)}
-.vm-av{width:34px;height:34px;border-radius:10px;border:1px solid #2a2a26;
+.vm-av{width:34px;height:34px;border-radius:10px;border:1px solid var(--line);
   background:var(--navy);color:var(--bone);font-weight:900;font-size:14px;cursor:pointer;flex:none}
 .vm-av:hover{border-color:var(--accent-ink)}
 /* progress bar (card mode) sits under the nav */
@@ -174,7 +174,7 @@ button{font-family:inherit}
 
 #vmBanners{max-width:1240px;margin:0 auto;padding:0 30px}
 .demobar,.verifybar{margin-top:12px;border-radius:12px;padding:11px 15px;font-size:13px;font-weight:600}
-.demobar{background:#141412;color:var(--ink-2)}
+.demobar{background:var(--surface);color:var(--ink-2)}
 .verifybar{background:rgba(255,85,0,.14);color:var(--coral-2)}
 .demobar a,.verifybar a{color:var(--accent-ink);font-weight:800;cursor:pointer;text-decoration:underline;margin-left:6px}
 
@@ -189,7 +189,7 @@ button{font-family:inherit}
 /* generic dark card + controls used by Contacts import / Account */
 .vm-card{background:var(--navy-2);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin-bottom:14px}
 .vm-row{display:flex;flex-wrap:wrap;gap:10px}
-.vm-gh{background:var(--navy);border:1px solid #2a2a26;color:var(--bone);border-radius:10px;
+.vm-gh{background:var(--navy);border:1px solid var(--line);color:var(--bone);border-radius:10px;
   padding:10px 15px;font-weight:700;font-size:13px;cursor:pointer;font-family:inherit}
 .vm-gh:hover{border-color:var(--accent-ink)}
 .vm-pri{background:var(--coral);border:0;color:var(--navy);border-radius:10px;
@@ -211,7 +211,7 @@ button{font-family:inherit}
 .askbar input{flex:1;background:transparent;border:0;outline:0;font-family:'Archivo';
   font-size:14px;font-weight:500;color:var(--bone)}
 .askbar input::placeholder{color:var(--mute)}
-.ask-mic{width:36px;height:36px;border-radius:999px;border:1.5px solid #2a2a26;background:transparent;
+.ask-mic{width:36px;height:36px;border-radius:999px;border:1.5px solid var(--line);background:transparent;
   display:grid;place-items:center;flex:none;cursor:pointer;color:var(--ink-2)}
 .ask-mic.rec{border-color:var(--accent-ink);color:var(--accent-ink)}
 .ask-send{width:40px;height:40px;border-radius:999px;background:var(--coral);border:0;
@@ -245,7 +245,7 @@ button{font-family:inherit}
 .cxpeek.l1:hover{transform:translateX(-46%) scale(.93);opacity:.82}
 .cxpeek.r1:hover{transform:translateX(46%) scale(.93);opacity:.82}
 .cxnav{position:absolute;top:180px;z-index:6;width:46px;height:46px;border-radius:999px;background:var(--navy);
-  border:1px solid #2a2a26;color:var(--bone);font-size:26px;font-weight:700;cursor:pointer;display:grid;place-items:center;
+  border:1px solid var(--line);color:var(--bone);font-size:26px;font-weight:700;cursor:pointer;display:grid;place-items:center;
   line-height:1;padding-bottom:3px;box-shadow:0 12px 30px -12px #000}
 .cxnav:hover{border-color:var(--accent-ink);color:var(--accent-ink)}
 .cxnav.prev{left:0}
@@ -271,7 +271,7 @@ button{font-family:inherit}
 .qpill{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;
   font-weight:600;padding:4px 8px;border-radius:999px}
 .qpill.due{background:var(--volt-bg);color:var(--volt)}
-.qpill.ready{background:#141412;color:var(--mute)}
+.qpill.ready{background:var(--surface);color:var(--mute)}
 .qpill.follow{background:var(--surface);color:var(--steel)}
 .qpill.late{background:var(--volt-bg);color:var(--volt)}
 .parked{margin-top:16px;color:var(--mute);font-size:12px;font-weight:600}
@@ -367,7 +367,7 @@ button{font-family:inherit}
 .fstage{background:var(--navy-2);border:1px solid var(--line);border-radius:14px;padding:16px 16px 14px;position:relative}
 .fstage .n{font-weight:900;font-size:30px;letter-spacing:-.02em}
 .fstage .l{color:var(--steel);font-size:12.5px;font-weight:700;margin-top:2px}
-.fstage .barw{margin-top:12px;height:5px;border-radius:3px;background:#141412;overflow:hidden}
+.fstage .barw{margin-top:12px;height:5px;border-radius:3px;background:var(--surface);overflow:hidden}
 .fstage .barw i{display:block;height:100%;background:var(--coral);width:0;transition:width .6s cubic-bezier(.16,.84,.3,1)}
 .fstage .cv{position:absolute;top:16px;right:16px;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--mute)}
 
@@ -377,7 +377,7 @@ button{font-family:inherit}
 .colh .ct{font-weight:800;font-size:14px}
 .colh .cc{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--navy);background:var(--coral);
   border-radius:999px;padding:2px 8px;font-weight:700}
-.colh .cc.zero{background:#141412;color:var(--mute)}
+.colh .cc.zero{background:var(--surface);color:var(--mute)}
 .pcard{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:13px 14px;margin-bottom:10px;
   box-shadow:0 12px 26px -18px rgba(0,0,0,.7);cursor:pointer;transition:transform .15s}
 .pcard:hover{transform:translateY(-2px)}
@@ -400,7 +400,7 @@ button{font-family:inherit}
 .controls{display:flex;align-items:center;gap:14px;margin:6px 0 14px;flex-wrap:wrap}
 .controls .askbar{flex:1;max-width:520px}
 .filters{display:flex;gap:8px;margin-left:auto;flex-wrap:wrap}
-.fchip{border:1px solid var(--line);color:#b8c2cc;border-radius:999px;padding:8px 14px;font-size:12.5px;
+.fchip{border:1px solid var(--line);color:var(--steel);border-radius:999px;padding:8px 14px;font-size:12.5px;
   font-weight:700;background:transparent;cursor:pointer;font-family:inherit}
 .fchip:hover{border-color:#3a3a34;color:var(--bone)}
 .fchip.on{background:var(--coral);color:var(--navy);border-color:var(--accent-ink)}
@@ -445,7 +445,7 @@ button{font-family:inherit}
 .drop .big{font-weight:800;font-size:15px}
 .drop .sm{color:var(--steel);font-size:12.5px;margin-top:4px}
 .sheetform{margin-top:12px;display:flex;gap:8px;flex-wrap:wrap}
-.sheetform input{flex:1;min-width:220px;background:var(--navy);border:1px solid #2a2a26;color:var(--bone);
+.sheetform input{flex:1;min-width:220px;background:var(--navy);border:1px solid var(--line);color:var(--bone);
   border-radius:10px;padding:10px 13px;font-family:inherit;font-size:13px}
 
 /* ======================= ONBOARDING — the 4-question arc ======================= */
@@ -460,7 +460,7 @@ button{font-family:inherit}
 .ob-brand .wm{font-weight:900;font-size:18px;letter-spacing:-.03em}
 .ob-brand .tag{color:var(--accent-ink);font-weight:700;font-size:12px}
 .ob-htitle{font-weight:800;font-size:32px;line-height:1.08;letter-spacing:-.025em;color:var(--bone)}
-.ob-hsub{margin-top:12px;color:#b8c2cc;font-size:14.5px;line-height:1.5;max-width:330px}
+.ob-hsub{margin-top:12px;color:var(--steel);font-size:14.5px;line-height:1.5;max-width:330px}
 /* filling profile card */
 .profile{margin-top:30px;background:var(--navy);border:1px solid var(--line);border-radius:16px;
   padding:20px 22px;max-width:400px;box-shadow:0 24px 60px -30px #000}
@@ -468,11 +468,11 @@ button{font-family:inherit}
 .prow{display:flex;align-items:center;gap:13px}
 .pav{width:42px;height:42px;border-radius:11px;display:grid;place-items:center;font-weight:900;font-size:17px}
 .pav.on{background:var(--coral);color:var(--navy)}
-.pav.off{background:#141412;color:#4a668a}
+.pav.off{background:var(--surface);color:var(--mute)}
 .pname{font-weight:800;font-size:16px;color:var(--bone)}
-.pname.dim{color:#4a668a}
+.pname.dim{color:var(--mute)}
 .prole{color:var(--steel);font-size:13.5px}
-.prole.dim{color:#3f5a78}
+.prole.dim{color:var(--mute)}
 .pline{margin-top:16px;padding-top:14px;border-top:1px solid var(--line);font-size:13.5px}
 .pline.hint{color:var(--mute);font-style:italic}
 .pline.real{color:var(--ink-2)}
@@ -480,14 +480,14 @@ button{font-family:inherit}
 /* question column */
 .ob-kick{color:var(--steel);margin-bottom:14px}
 .ob-q{font-weight:800;font-size:34px;line-height:1.06;letter-spacing:-.025em;color:var(--bone)}
-.ob-qsub{margin-top:12px;color:#b8c2cc;font-size:14.5px;font-weight:400;max-width:340px;line-height:1.5}
+.ob-qsub{margin-top:12px;color:var(--steel);font-size:14.5px;font-weight:400;max-width:340px;line-height:1.5}
 .ob-field{margin-top:20px}
-.ob-field input,.ob-field textarea{width:100%;background:var(--navy);border:1px solid #2a2a26;border-radius:14px;
-  padding:16px 18px;color:#e7ecf1;font-family:'Archivo';font-size:16px;font-weight:500;outline:0}
+.ob-field input,.ob-field textarea{width:100%;background:var(--surface);border:1px solid var(--line);border-radius:14px;
+  padding:16px 18px;color:var(--bone);font-family:'Archivo';font-size:16px;font-weight:500;outline:0}
 .ob-field textarea{min-height:92px;resize:vertical;line-height:1.5}
 .ob-field input:focus,.ob-field textarea:focus{border-color:var(--accent-ink)}
-.ob-field input::placeholder,.ob-field textarea::placeholder{color:#4a668a}
-.ob-tag{display:inline-block;margin-top:14px;background:#141412;color:var(--mute);font-size:12px;font-weight:600;
+.ob-field input::placeholder,.ob-field textarea::placeholder{color:var(--mute)}
+.ob-tag{display:inline-block;margin-top:14px;background:var(--surface);color:var(--mute);font-size:12px;font-weight:600;
   border-radius:999px;padding:6px 12px}
 .ob-tag b{color:var(--accent-ink)}
 .ob-err{color:var(--coral-2);font-size:13px;font-weight:600;margin-top:12px;min-height:16px}
@@ -501,22 +501,49 @@ button{font-family:inherit}
 .ob-prog i{height:3px;width:56px;border-radius:2px;background:var(--line)}
 .ob-prog i.on{background:var(--coral)}
 
-/* ======================= LOCK / LOGIN (kept, restyled) ======================= */
-.lock{min-height:100vh;display:grid;place-items:center;background:
-  radial-gradient(1000px 560px at 50% -10%, rgba(255,85,0,.05), transparent 60%),var(--black);padding:24px}
-.ol-page{width:100%;display:grid;place-items:center}
+/* ======================= LOCK / LOGIN — split screen ======================= */
+.lock{min-height:100vh;background:var(--black)}
 .ol-hatch,.ol-vig{display:none}
-.ol-card{width:420px;max-width:100%;background:var(--card);border:1px solid var(--line-soft);border-radius:22px;
-  padding:34px 32px;box-shadow:0 60px 130px -50px #000,0 0 60px -30px rgba(255,85,0,.12)}
-.ol-eyebrow{color:var(--mute);font-size:11px;letter-spacing:.2em;margin-bottom:14px}
-.ol-h{font-weight:900;font-size:40px;line-height:.96;letter-spacing:-.03em;text-transform:uppercase;color:var(--bone);margin-bottom:22px}
+.authsplit{min-height:100vh;display:grid;grid-template-columns:1.05fr .95fr}
+@media(max-width:860px){.authsplit{grid-template-columns:1fr}}
+
+/* LEFT — Signal Black brand hero (dark in BOTH themes; it's the brand block) */
+.authhero{background:#0B0C10;color:#fff;position:relative;overflow:hidden;padding:44px 52px;
+  display:flex;flex-direction:column;justify-content:space-between;min-height:100vh}
+.authhero::after{content:"";position:absolute;left:-12%;bottom:-24%;width:540px;height:540px;border-radius:50%;
+  background:#FFFFFF;opacity:.10;filter:blur(100px);pointer-events:none}
+@media(max-width:860px){.authhero{min-height:auto;padding:34px 30px}}
+.ah-brand{display:flex;align-items:center;gap:11px;position:relative;z-index:1}
+.ah-brand .wm{font-weight:900;font-size:22px;letter-spacing:-.03em;color:#fff}
+.ah-mid{position:relative;z-index:1;padding:48px 0}
+.ah-eyebrow{display:inline-flex;align-items:center;gap:13px;font-family:'IBM Plex Mono',monospace;text-transform:uppercase;
+  letter-spacing:.18em;font-size:11px;font-weight:600;color:#94A3B8;margin-bottom:26px}
+.ah-eyebrow .dash{width:28px;height:2px;background:#FF5500;display:inline-block}
+.ah-title{font-weight:900;font-size:clamp(38px,4.6vw,58px);line-height:.98;letter-spacing:-.03em;color:#fff;max-width:16ch}
+.ah-title .hl{color:#FF5500}
+.ah-sub{color:#94A3B8;font-size:15.5px;line-height:1.55;margin-top:22px;max-width:42ch}
+.ah-foot{position:relative;z-index:1;font-family:'IBM Plex Mono',monospace;color:#5C6B7C;font-size:10.5px;letter-spacing:.14em}
+
+/* RIGHT — form panel (theme-aware surface) */
+.authform{background:var(--card);display:flex;align-items:center;justify-content:center;padding:44px 40px;min-height:100vh}
+@media(max-width:860px){.authform{min-height:auto;padding:40px 30px}}
+.af-box{width:100%;max-width:364px}
+.af-h{font-weight:900;font-size:34px;letter-spacing:-.02em;color:var(--bone)}
+.af-sub{color:var(--steel);font-size:14px;margin:8px 0 26px}
+.af-alt{margin-top:18px;font-size:13.5px;color:var(--steel)}
+.af-alt a{color:var(--accent-ink);font-weight:800;cursor:pointer}
+.af-help{font-family:'IBM Plex Mono',monospace;color:var(--mute);font-size:10px;letter-spacing:.1em;margin-top:18px;line-height:1.7;text-transform:uppercase}
+.af-links{margin-top:15px;font-size:13px;display:flex;gap:11px;align-items:center}
+.af-links a{color:var(--steel);cursor:pointer}.af-links a:hover{color:var(--accent-ink)}
+.af-links .sep{color:var(--line)}
+.ol-field label.mono{font-family:'IBM Plex Mono',monospace;text-transform:uppercase;letter-spacing:.1em;font-size:10px;color:var(--mute)}
 .vm-word{font-family:'IBM Plex Mono',monospace;text-transform:uppercase;letter-spacing:.2em;font-size:11px;font-weight:600;color:var(--mute)}
 .vm-word b,.vm-word span{color:var(--mute);font-weight:600}
 .vm-word i,.vm-word em{color:var(--mute);font-style:normal;margin:0 3px}
 .ol-form{display:flex;flex-direction:column;gap:12px}
 .ol-field{display:flex;flex-direction:column;gap:6px}
 .ol-field label{font-size:12px;font-weight:700;color:var(--steel)}
-.ol-field input,.auth-input{background:var(--navy);border:1px solid #2a2a26;border-radius:11px;
+.ol-field input,.auth-input{background:var(--surface);border:1px solid var(--line);border-radius:11px;
   padding:12px 14px;color:var(--bone);font-family:inherit;font-size:15px;outline:0;width:100%}
 .ol-field input:focus,.auth-input:focus{border-color:var(--accent-ink)}
 .ol-go,.btn{margin-top:4px;background:var(--coral);border:0;color:var(--navy);border-radius:11px;
@@ -568,7 +595,7 @@ button{font-family:inherit}
 .sender-card{width:460px;max-width:100%;background:var(--navy-2);border:1px solid var(--line);border-radius:18px;
   padding:32px 30px;box-shadow:0 50px 120px -50px #000;position:relative}
 .sender-card h2{font-weight:800;font-size:24px;letter-spacing:-.02em;margin-bottom:6px}
-.sc-help{color:#b8c2cc;font-size:13.5px;line-height:1.5;margin-bottom:16px}
+.sc-help{color:var(--steel);font-size:13.5px;line-height:1.5;margin-bottom:16px}
 .fld{display:flex;flex-direction:column;gap:6px;margin-bottom:13px}
 .fld label{font-size:12px;font-weight:700;color:var(--steel)}
 .fld .opt{color:var(--mute);font-weight:600;text-transform:none;letter-spacing:0}
@@ -627,7 +654,7 @@ select.auth-input{appearance:none}
 .crow{display:flex;align-items:center;gap:12px;background:var(--navy-2);border:1px solid var(--line);border-radius:11px;
   padding:10px 12px;cursor:pointer;transition:border-color .18s}
 .crow:hover{border-color:var(--accent-ink)}
-.crow .ava{width:32px;height:32px;border-radius:9px;background:#141412;color:var(--coral-2);display:grid;place-items:center;
+.crow .ava{width:32px;height:32px;border-radius:9px;background:var(--surface);color:var(--coral-2);display:grid;place-items:center;
   font-weight:800;font-size:11px;flex:none}
 .crow .nm{font-weight:800;font-size:14px}
 .crow .tt{color:var(--steel);font-size:12px}
@@ -762,7 +789,7 @@ select.auth-input{appearance:none}
 .cp-sechead .t{font-weight:900;font-size:24px;letter-spacing:-.02em}
 .cp-sechead .c{color:var(--mute);font-size:13px;font-weight:600}
 .cp-thin{color:var(--steel);font-size:13.5px;font-weight:500;line-height:1.55}
-.cp-back{background:var(--navy);border:1px solid #2a2a26;color:var(--bone);border-radius:10px;padding:8px 14px;font-weight:700;font-size:13px;cursor:pointer;font-family:inherit}
+.cp-back{background:var(--navy);border:1px solid var(--line);color:var(--bone);border-radius:10px;padding:8px 14px;font-weight:700;font-size:13px;cursor:pointer;font-family:inherit}
 .cp-back:hover{border-color:var(--accent-ink)}
 
 
@@ -803,10 +830,10 @@ select.auth-input{appearance:none}
 .vtop{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:16px}
 .veyebrow{font-family:'IBM Plex Mono',monospace;text-transform:uppercase;letter-spacing:.16em;font-size:10.5px;font-weight:600;color:var(--mute)}
 .veyebrow b{color:var(--accent-ink);font-weight:700}
-.vcore{display:flex;flex-direction:column;align-items:center;gap:5px;color:var(--steel);flex:none}
-.vcore .c{font-family:'Archivo';font-weight:900;font-size:30px;line-height:.8;letter-spacing:-.03em;text-shadow:0 0 18px rgba(148,163,184,.35),0 0 40px rgba(148,163,184,.18)}
+.vcore{display:flex;flex-direction:column;align-items:center;gap:7px;color:var(--steel);flex:none}
+.vcore .ollin{width:34px;height:34px;display:block}
 .vcore .lb{font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:8px;letter-spacing:.22em;text-transform:uppercase}
-.vcore.pending{color:var(--steel)}.vcore.pending .c{text-shadow:none}
+.vcore.pending{opacity:.45}
 .vname{font-weight:900;font-size:44px;line-height:.94;letter-spacing:-.03em;text-transform:uppercase;color:var(--bone)}
 .vrole{margin-top:12px;font-size:15px;font-weight:700;letter-spacing:-.01em;color:var(--ink-2b)}
 .vrole .co{color:var(--accent-ink);text-decoration:none}.vrole .co:hover{text-decoration:underline}
@@ -862,7 +889,7 @@ select.auth-input{appearance:none}
   box-shadow:0 14px 40px -16px rgba(255,85,0,.45)}
 .v3 .ask input{flex:1;background:transparent;border:0;outline:0;color:var(--bone);font-family:'Archivo';font-size:14px;font-weight:500}
 .v3 .ask input::placeholder{color:var(--mute)}
-.v3 .ask .mic{width:34px;height:34px;border-radius:999px;border:1.5px solid #2a2a26;display:grid;place-items:center;flex:none;color:var(--ink-2b);cursor:pointer;background:transparent}
+.v3 .ask .mic{width:34px;height:34px;border-radius:999px;border:1.5px solid var(--line);display:grid;place-items:center;flex:none;color:var(--ink-2b);cursor:pointer;background:transparent}
 .v3 .ask .mic.rec{border-color:var(--accent-ink);color:var(--accent-ink)}
 .v3 .ask .send{width:36px;height:36px;border-radius:999px;background:var(--coral);border:0;display:grid;place-items:center;flex:none;color:var(--navy);cursor:pointer}
 .v3 .ask .send.busy{opacity:.6;pointer-events:none}
@@ -935,26 +962,41 @@ select.auth-input{appearance:none}
      The app host element the keep-layer toggles is: <div class="app hide" id="appMain"></div> (index.html line 1782) -->
 
 <div class="lock hide" id="lockScreen">
-  <div class="ol-page">
-    <div class="ol-hatch"></div><div class="ol-vig"></div>
-    <div class="ol-card">
-      <div class="ol-eyebrow mono">Ollin : Vamos</div>
-      <div class="ol-h">Log in</div>
-      <form id="lpLoginForm" class="ol-form" autocomplete="on">
-        <div class="ol-field">
-          <label for="lpEmailInput">Email</label>
-          <input type="email" id="lpEmailInput" name="email" autocomplete="username" placeholder="you@work.com" autocapitalize="off" autocorrect="off">
-        </div>
-        <div class="ol-field">
-          <label for="lpPassInput">Password</label>
-          <input type="password" id="lpPassInput" name="password" autocomplete="current-password" placeholder="••••••••">
-        </div>
-        <button type="submit" id="lpLoginGo" class="ol-go">Log in <span class="ol-arrow">→</span></button>
-      </form>
-      <p class="ol-err" id="lpErr"></p>
-      <div class="ol-alt">New here? <a id="lpSignupLink">Create an account</a></div>
-      <div class="ol-alt"><a id="lpForgotLink">Forgot password?</a></div>
-      <div class="ol-alt"><a href="?demo=1">Watch the demo — no account needed</a></div>
+  <div class="authsplit">
+    <!-- LEFT: brand hero -->
+    <div class="authhero">
+      <div class="ah-brand">
+        <svg width="30" height="30" viewBox="0 0 90 90" fill="none" aria-hidden="true"><circle cx="30" cy="43" r="9" fill="#FF5500"/><path d="M60 34 l14 9 -14 9" stroke="#FF5500" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+        <span class="wm">vamos</span>
+      </div>
+      <div class="ah-mid">
+        <div class="ah-eyebrow"><span class="dash"></span> Outreach, informed</div>
+        <h1 class="ah-title">Walk in already <span class="hl">knowing.</span></h1>
+        <p class="ah-sub">We gather the roles, the timing, the buyer — so every message lands like you spent hours on research you never had to do.</p>
+      </div>
+      <div class="ah-foot">OLLIN : VAMOS · YOUR OUTREACH DESK</div>
+    </div>
+    <!-- RIGHT: sign-in form -->
+    <div class="authform">
+      <div class="af-box">
+        <h2 class="af-h">Sign in</h2>
+        <p class="af-sub">Welcome back. Enter your details to continue.</p>
+        <form id="lpLoginForm" class="ol-form" autocomplete="on">
+          <div class="ol-field">
+            <label class="mono" for="lpEmailInput">Work email</label>
+            <input type="email" id="lpEmailInput" name="email" autocomplete="username" placeholder="you@work.com" autocapitalize="off" autocorrect="off">
+          </div>
+          <div class="ol-field">
+            <label class="mono" for="lpPassInput">Password</label>
+            <input type="password" id="lpPassInput" name="password" autocomplete="current-password" placeholder="••••••••">
+          </div>
+          <button type="submit" id="lpLoginGo" class="ol-go">Sign in <span class="ol-arrow">→</span></button>
+        </form>
+        <p class="ol-err" id="lpErr"></p>
+        <div class="af-alt">New here? <a id="lpSignupLink">Create your account →</a></div>
+        <div class="af-help">First time in? Ollin will get you set up in four quick steps.</div>
+        <div class="af-links"><a id="lpForgotLink">Forgot password?</a><span class="sep">·</span><a href="?demo=1">Watch the demo</a></div>
+      </div>
     </div>
   </div>
 
@@ -2861,9 +2903,14 @@ function cardBodyHTML(t, a) {
 
   var grounded = orgFacts.filter(function (f) { return f.v; }).length + conFacts.filter(function (f) { return f.v; }).length;
 
+  var OLLIN_GLYPH = '<svg class="ollin" viewBox="0 0 100 100" fill="none" aria-hidden="true"><g transform="translate(50,50) rotate(-8)">' +
+    '<path d="M0,0 C13,-9 19,-25 11,-36 C5,-43 -5,-43 -11,-36 C-19,-25 -13,-9 0,0 Z" fill="var(--bone)"/>' +
+    '<path d="M0,0 C13,-9 19,-25 11,-36 C5,-43 -5,-43 -11,-36 C-19,-25 -13,-9 0,0 Z" fill="var(--coral)" transform="rotate(120)"/>' +
+    '<path d="M0,0 C13,-9 19,-25 11,-36 C5,-43 -5,-43 -11,-36 C-19,-25 -13,-9 0,0 Z" fill="var(--steel)" transform="rotate(240)"/>' +
+    '<circle r="7.5" fill="#FFFFFF"/></g></svg>';
   var core = (th.status === "pending")
-    ? '<div class="vcore pending"><span class="c">•</span><span class="lb">Verifying…</span></div>'
-    : '<div class="vcore"><span class="c">C</span><span class="lb">Core checked</span></div>';
+    ? '<div class="vcore pending">' + OLLIN_GLYPH + '<span class="lb">Verifying…</span></div>'
+    : '<div class="vcore">' + OLLIN_GLYPH + '<span class="lb">Verified</span></div>';
 
   var meta = '';
   if (t.email) meta += '<span class="it">' + IC_MAIL + ' ' + esc(t.email) + (th.emailConf ? ' <span class="conf">' + esc(th.emailConf) + '</span>' : '') + '</span>';
@@ -3538,7 +3585,7 @@ function viewCompanies(v) {
       '<div class="mn" style="color:var(--steel);margin-bottom:6px">Add companies &amp; intel</div>' +
       '<p class="vm-sub" style="margin:0 0 12px">Paste a list as <b style="color:var(--bone)">Company, City, State</b> — or drop your agent\'s <b style="color:var(--bone)">[ COMPANY NOTE ]</b> / <b style="color:var(--bone)">[ CONTACT NOTE ]</b> blocks and Vamos parses the full intel.</p>' +
       '<textarea id="coPaste" placeholder="Acme Robotics, Austin, TX&#10;&#10;— or —&#10;&#10;[ COMPANY NOTE ]&#10;COMPANY: Northwind Logistics | Domain: northwind.com | 350 Employees | Chicago, IL&#10;1. LEAD SIGNAL (TRIGGER): ..." ' +
-        'style="width:100%;min-height:120px;background:var(--navy);border:1px solid #2a2a26;color:var(--bone);border-radius:12px;padding:13px 15px;font-family:Archivo;font-size:14px;line-height:1.6;resize:vertical;outline:0"></textarea>' +
+        'style="width:100%;min-height:120px;background:var(--navy);border:1px solid var(--line);color:var(--bone);border-radius:12px;padding:13px 15px;font-family:Archivo;font-size:14px;line-height:1.6;resize:vertical;outline:0"></textarea>' +
       '<div class="vm-row" style="margin-top:12px"><button class="vm-pri" id="coAdd">Add</button>' +
         '<button class="vm-gh" id="coPick">Upload CSV / Excel</button></div>' +
     '</div>';
