@@ -501,22 +501,49 @@ button{font-family:inherit}
 .ob-prog i{height:3px;width:56px;border-radius:2px;background:var(--line)}
 .ob-prog i.on{background:var(--coral)}
 
-/* ======================= LOCK / LOGIN (kept, restyled) ======================= */
-.lock{min-height:100vh;display:grid;place-items:center;background:
-  radial-gradient(1000px 560px at 50% -10%, rgba(255,85,0,.05), transparent 60%),var(--black);padding:24px}
-.ol-page{width:100%;display:grid;place-items:center}
+/* ======================= LOCK / LOGIN — split screen ======================= */
+.lock{min-height:100vh;background:var(--black)}
 .ol-hatch,.ol-vig{display:none}
-.ol-card{width:420px;max-width:100%;background:var(--card);border:1px solid var(--line-soft);border-radius:22px;
-  padding:34px 32px;box-shadow:0 60px 130px -50px #000,0 0 60px -30px rgba(255,85,0,.12)}
-.ol-eyebrow{color:var(--mute);font-size:11px;letter-spacing:.2em;margin-bottom:14px}
-.ol-h{font-weight:900;font-size:40px;line-height:.96;letter-spacing:-.03em;text-transform:uppercase;color:var(--bone);margin-bottom:22px}
+.authsplit{min-height:100vh;display:grid;grid-template-columns:1.05fr .95fr}
+@media(max-width:860px){.authsplit{grid-template-columns:1fr}}
+
+/* LEFT — Signal Black brand hero (dark in BOTH themes; it's the brand block) */
+.authhero{background:#0B0C10;color:#fff;position:relative;overflow:hidden;padding:44px 52px;
+  display:flex;flex-direction:column;justify-content:space-between;min-height:100vh}
+.authhero::after{content:"";position:absolute;left:-12%;bottom:-24%;width:540px;height:540px;border-radius:50%;
+  background:#FF5500;opacity:.15;filter:blur(94px);pointer-events:none}
+@media(max-width:860px){.authhero{min-height:auto;padding:34px 30px}}
+.ah-brand{display:flex;align-items:center;gap:11px;position:relative;z-index:1}
+.ah-brand .wm{font-weight:900;font-size:22px;letter-spacing:-.03em;color:#fff}
+.ah-mid{position:relative;z-index:1;padding:48px 0}
+.ah-eyebrow{display:inline-flex;align-items:center;gap:13px;font-family:'IBM Plex Mono',monospace;text-transform:uppercase;
+  letter-spacing:.18em;font-size:11px;font-weight:600;color:#94A3B8;margin-bottom:26px}
+.ah-eyebrow .dash{width:28px;height:2px;background:#FF5500;display:inline-block}
+.ah-title{font-weight:900;font-size:clamp(38px,4.6vw,58px);line-height:.98;letter-spacing:-.03em;color:#fff;max-width:16ch}
+.ah-title .hl{color:#FF5500}
+.ah-sub{color:#94A3B8;font-size:15.5px;line-height:1.55;margin-top:22px;max-width:42ch}
+.ah-foot{position:relative;z-index:1;font-family:'IBM Plex Mono',monospace;color:#5C6B7C;font-size:10.5px;letter-spacing:.14em}
+
+/* RIGHT — form panel (theme-aware surface) */
+.authform{background:var(--card);display:flex;align-items:center;justify-content:center;padding:44px 40px;min-height:100vh}
+@media(max-width:860px){.authform{min-height:auto;padding:40px 30px}}
+.af-box{width:100%;max-width:364px}
+.af-h{font-weight:900;font-size:34px;letter-spacing:-.02em;color:var(--bone)}
+.af-sub{color:var(--steel);font-size:14px;margin:8px 0 26px}
+.af-alt{margin-top:18px;font-size:13.5px;color:var(--steel)}
+.af-alt a{color:var(--accent-ink);font-weight:800;cursor:pointer}
+.af-help{font-family:'IBM Plex Mono',monospace;color:var(--mute);font-size:10px;letter-spacing:.1em;margin-top:18px;line-height:1.7;text-transform:uppercase}
+.af-links{margin-top:15px;font-size:13px;display:flex;gap:11px;align-items:center}
+.af-links a{color:var(--steel);cursor:pointer}.af-links a:hover{color:var(--accent-ink)}
+.af-links .sep{color:var(--line)}
+.ol-field label.mono{font-family:'IBM Plex Mono',monospace;text-transform:uppercase;letter-spacing:.1em;font-size:10px;color:var(--mute)}
 .vm-word{font-family:'IBM Plex Mono',monospace;text-transform:uppercase;letter-spacing:.2em;font-size:11px;font-weight:600;color:var(--mute)}
 .vm-word b,.vm-word span{color:var(--mute);font-weight:600}
 .vm-word i,.vm-word em{color:var(--mute);font-style:normal;margin:0 3px}
 .ol-form{display:flex;flex-direction:column;gap:12px}
 .ol-field{display:flex;flex-direction:column;gap:6px}
 .ol-field label{font-size:12px;font-weight:700;color:var(--steel)}
-.ol-field input,.auth-input{background:var(--navy);border:1px solid #2a2a26;border-radius:11px;
+.ol-field input,.auth-input{background:var(--surface);border:1px solid var(--line);border-radius:11px;
   padding:12px 14px;color:var(--bone);font-family:inherit;font-size:15px;outline:0;width:100%}
 .ol-field input:focus,.auth-input:focus{border-color:var(--accent-ink)}
 .ol-go,.btn{margin-top:4px;background:var(--coral);border:0;color:var(--navy);border-radius:11px;
@@ -935,26 +962,41 @@ select.auth-input{appearance:none}
      The app host element the keep-layer toggles is: <div class="app hide" id="appMain"></div> (index.html line 1782) -->
 
 <div class="lock hide" id="lockScreen">
-  <div class="ol-page">
-    <div class="ol-hatch"></div><div class="ol-vig"></div>
-    <div class="ol-card">
-      <div class="ol-eyebrow mono">Ollin : Vamos</div>
-      <div class="ol-h">Log in</div>
-      <form id="lpLoginForm" class="ol-form" autocomplete="on">
-        <div class="ol-field">
-          <label for="lpEmailInput">Email</label>
-          <input type="email" id="lpEmailInput" name="email" autocomplete="username" placeholder="you@work.com" autocapitalize="off" autocorrect="off">
-        </div>
-        <div class="ol-field">
-          <label for="lpPassInput">Password</label>
-          <input type="password" id="lpPassInput" name="password" autocomplete="current-password" placeholder="••••••••">
-        </div>
-        <button type="submit" id="lpLoginGo" class="ol-go">Log in <span class="ol-arrow">→</span></button>
-      </form>
-      <p class="ol-err" id="lpErr"></p>
-      <div class="ol-alt">New here? <a id="lpSignupLink">Create an account</a></div>
-      <div class="ol-alt"><a id="lpForgotLink">Forgot password?</a></div>
-      <div class="ol-alt"><a href="?demo=1">Watch the demo — no account needed</a></div>
+  <div class="authsplit">
+    <!-- LEFT: brand hero -->
+    <div class="authhero">
+      <div class="ah-brand">
+        <svg width="30" height="30" viewBox="0 0 90 90" fill="none" aria-hidden="true"><circle cx="30" cy="43" r="9" fill="#FF5500"/><path d="M60 34 l14 9 -14 9" stroke="#FF5500" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+        <span class="wm">vamos</span>
+      </div>
+      <div class="ah-mid">
+        <div class="ah-eyebrow"><span class="dash"></span> Outreach, in motion</div>
+        <h1 class="ah-title">Turn what you know into who you <span class="hl">reach.</span></h1>
+        <p class="ah-sub">Sign in to your desk — every contact that's due, the intel behind them, and the email already drafted.</p>
+      </div>
+      <div class="ah-foot">OLLIN : VAMOS · YOUR OUTREACH DESK</div>
+    </div>
+    <!-- RIGHT: sign-in form -->
+    <div class="authform">
+      <div class="af-box">
+        <h2 class="af-h">Sign in</h2>
+        <p class="af-sub">Welcome back. Enter your details to continue.</p>
+        <form id="lpLoginForm" class="ol-form" autocomplete="on">
+          <div class="ol-field">
+            <label class="mono" for="lpEmailInput">Work email</label>
+            <input type="email" id="lpEmailInput" name="email" autocomplete="username" placeholder="you@work.com" autocapitalize="off" autocorrect="off">
+          </div>
+          <div class="ol-field">
+            <label class="mono" for="lpPassInput">Password</label>
+            <input type="password" id="lpPassInput" name="password" autocomplete="current-password" placeholder="••••••••">
+          </div>
+          <button type="submit" id="lpLoginGo" class="ol-go">Sign in <span class="ol-arrow">→</span></button>
+        </form>
+        <p class="ol-err" id="lpErr"></p>
+        <div class="af-alt">New here? <a id="lpSignupLink">Create your account →</a></div>
+        <div class="af-help">First time in? Ollin will get you set up in four quick steps.</div>
+        <div class="af-links"><a id="lpForgotLink">Forgot password?</a><span class="sep">·</span><a href="?demo=1">Watch the demo</a></div>
+      </div>
     </div>
   </div>
 
