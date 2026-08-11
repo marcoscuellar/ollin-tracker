@@ -807,14 +807,15 @@ select.auth-input{appearance:none}
 /* --- left rail: the queue as collapsed cards --- */
 .rail{display:flex;flex-direction:column;gap:10px;max-height:calc(100vh - 260px);overflow:auto;padding:2px 4px 20px 2px}
 .rail::-webkit-scrollbar{width:8px}.rail::-webkit-scrollbar-thumb{background:var(--line);border-radius:99px}
-.railitem{background:var(--card);border:1px solid var(--line-soft);border-radius:14px;padding:14px 16px;cursor:pointer;
+.railitem{position:relative;background:var(--card);border:1px solid var(--line-soft);border-radius:14px;padding:14px 16px;cursor:pointer;
   transition:border-color .18s,box-shadow .18s,transform .12s}
 .railitem:hover{border-color:rgba(255,255,255,.18);transform:translateY(-1px)}
 .railitem.on{border-color:var(--accent-ink);box-shadow:0 0 0 1px var(--coral),0 20px 44px -26px #000,0 0 34px -12px rgba(255,85,0,.28)}
-.ri-co{font-weight:900;font-size:15px;letter-spacing:-.01em;color:var(--bone);line-height:1.15}
+.ri-tag{position:absolute;top:12px;right:12px}
+.ri-nm{font-weight:900;font-size:15px;letter-spacing:-.01em;color:var(--bone);line-height:1.15;padding-right:70px}
 .ri-role{color:var(--steel);font-size:12px;margin-top:3px}
-.ri-foot{display:flex;align-items:center;gap:9px;margin-top:11px;flex-wrap:wrap}
-.ri-who{color:var(--ink-2b);font-size:12px;font-weight:600}
+.ri-co{display:flex;align-items:center;gap:7px;color:var(--ink-2b);font-size:12px;font-weight:600;margin-top:11px}
+.ri-co .cl{width:16px;height:16px;border-radius:4px;background:var(--surface);color:var(--steel);font-size:9px;font-weight:800;display:inline-flex;align-items:center;justify-content:center;flex:none}
 .rpill{font-family:'IBM Plex Mono',monospace;font-size:8.5px;letter-spacing:.08em;font-weight:600;border-radius:999px;
   padding:4px 9px;background:var(--volt-bg);color:var(--volt);white-space:nowrap;flex:none;text-transform:uppercase}
 .rpill.follow{background:var(--surface);color:var(--steel)}
@@ -2825,9 +2826,10 @@ function rowPill(t) {
 }
 function railHTML(t, i, on) {
   return '<div class="railitem' + (on ? " on" : "") + '" data-i="' + i + '">' +
-    '<div class="ri-co">' + esc(t.company || t.who || "—") + '</div>' +
+    '<span class="ri-tag">' + rowPill(t) + '</span>' +
+    '<div class="ri-nm">' + esc(t.who || t.company || "—") + '</div>' +
     (t.title || t.persona ? '<div class="ri-role">' + esc(t.title || t.persona) + '</div>' : '') +
-    '<div class="ri-foot">' + rowPill(t) + (t.who ? '<span class="ri-who">' + esc(t.who) + '</span>' : '') + '</div>' +
+    (t.company ? '<div class="ri-co"><span class="cl">' + esc((t.company || "?").slice(0, 1).toUpperCase()) + '</span>' + esc(t.company) + '</div>' : '') +
   '</div>';
 }
 /* render the full card into the stage (right panel), swap in place — no full render */
