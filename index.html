@@ -733,6 +733,9 @@ select.auth-input{appearance:none}
 .vchan{display:flex;align-items:center;gap:10px;padding:5px 0;font-size:13px;color:var(--ink-2);font-weight:600}
 .vchan.mute{color:var(--mute)}
 .vchan .ci{width:26px;height:26px;border-radius:7px;background:var(--surface);display:grid;place-items:center;flex:none;color:var(--steel)}
+.vchan.link{text-decoration:none;cursor:pointer}
+.vchan.link:hover{color:var(--accent-ink)}
+.vchan.link:hover .ci{border-color:var(--accent-ink);color:var(--accent-ink)}
 .vconf{margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.04em;color:var(--steel);background:var(--surface);border-radius:999px;padding:3px 8px;font-weight:600}
 .vconf.mid{color:#E6B35A;background:rgba(230,179,90,.14)}
 .vwhy-txt{font-size:13.5px;color:var(--ink-2);font-weight:500;line-height:1.55}
@@ -885,10 +888,10 @@ select.auth-input{appearance:none}
 .v3 .draftmeta a{color:var(--ink-2b);font-family:'Archivo';font-weight:700;font-size:12px;margin-left:14px;cursor:pointer}
 .v3 .draftmeta a:hover{color:var(--bone)}
 .v3 .angles{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.v3 .angles-lo{margin-bottom:0;margin-top:16px;padding-top:14px;border-top:1px solid var(--line-soft)}
 .v3 .angle{border:1px solid var(--line);border-radius:999px;padding:8px 14px;font-family:'Archivo';font-weight:700;font-size:12px;background:transparent;color:var(--ink-2b);cursor:pointer}
 .v3 .angle.on{background:var(--coral);color:var(--navy);border-color:var(--accent-ink)}
-.v3 .doit{display:flex;align-items:center;gap:12px}
-.v3 .ask{flex:1;display:flex;align-items:center;gap:10px;background:#000;border:1px solid rgba(255,85,0,.28);border-radius:999px;padding:7px 7px 7px 18px;
+.v3 .ask{display:flex;align-items:center;gap:10px;background:#000;border:1px solid rgba(255,85,0,.28);border-radius:999px;padding:7px 7px 7px 18px;
   box-shadow:0 14px 40px -16px rgba(255,85,0,.45)}
 .v3 .ask input{flex:1;background:transparent;border:0;outline:0;color:var(--bone);font-family:'Archivo';font-size:14px;font-weight:500}
 .v3 .ask input::placeholder{color:var(--mute)}
@@ -898,6 +901,7 @@ select.auth-input{appearance:none}
 .v3 .ask .send.busy{opacity:.6;pointer-events:none}
 .v3 .go{flex:none;border:0;border-radius:999px;padding:14px 24px;font-family:'Archivo';font-weight:900;font-size:14px;background:var(--coral);color:var(--navy);
   display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;box-shadow:0 18px 46px -16px rgba(255,85,0,.5)}
+.v3 .go.gofull{width:100%;margin-top:10px;font-size:15px;padding:15px 24px}
 .v3 .go:hover{background:var(--coral-2)}
 .v3 .v3foot{display:flex;gap:18px;margin-top:14px;justify-content:flex-end}
 .v3 .v3foot a{color:var(--mute);font-size:12.5px;font-weight:700;cursor:pointer}
@@ -2878,7 +2882,7 @@ function cardBodyHTML(t, a) {
   var sp = splitDraft(full);
   var email = VM.channel !== "li";
   var trip = intelTriples(t, a);
-  var liUrl = t.li || ("https://www.linkedin.com/search/results/people/?keywords=" + encodeURIComponent((t.who || "") + " " + (t.company || "")));
+  var liUrl = t.li ? liProfileUrl(t.li) : ("https://www.linkedin.com/search/results/people/?keywords=" + encodeURIComponent((t.who || "") + " " + (t.company || "")));
   var eyebrow = t.touchNo === 1 ? 'First touch · <b>Touch 1</b>' : 'Follow-up · <b>Touch ' + t.touchNo + '</b>';
 
   /* --- ORG facts: real data + engine/source tags --- */
@@ -2950,15 +2954,15 @@ function cardBodyHTML(t, a) {
         '<textarea id="vmBody" class="body" placeholder="Ask Ollin to write it — or type your own.">' + esc(sp.body) + '</textarea>' +
         '<div class="draftmeta"><span id="vmMeta">' + countLabel(full) + (full.trim() ? ' · <span class="aud">AUDITED ✓</span>' : '') + '</span>' +
           '<span>' + (t.email ? '<a id="vmMail">Open email</a>' : '') + '<a id="vmCopy">Copy</a></span></div>' +
-        '<div class="angles">' + VM_ANGLES.map(function (x) {
-          return '<button class="angle ' + (VM.angle === x[0] ? "on" : "") + '" data-a="' + x[0] + '">' + x[1] + '</button>';
-        }).join('') + '</div>' +
-        '<div class="doit"><div class="ask">' +
+        '<div class="ask">' +
           '<input id="vmAsk" placeholder="Ask Ollin to write it — or ask about the intel…">' +
           '<button class="mic" id="vmMic" title="Speak">' + IC_MIC + '</button>' +
           '<button class="send" id="vmAskGo" title="Send">' + IC_GO + '</button></div>' +
-          '<button class="go" id="vmSend">Let\'s go <span>»</span></button></div>' +
+        '<button class="go gofull" id="vmSend">Let\'s go <span>»</span></button>' +
         '<div id="vmSay"></div>' +
+        '<div class="angles angles-lo">' + VM_ANGLES.map(function (x) {
+          return '<button class="angle ' + (VM.angle === x[0] ? "on" : "") + '" data-a="' + x[0] + '">' + x[1] + '</button>';
+        }).join('') + '</div>' +
         '<div class="v3foot"><a data-o="Later">Push a day</a><a data-o="Skip">Not a fit</a></div>' +
       '</div>' +
     '</div>' +
@@ -3334,17 +3338,24 @@ var IC_C = {
 };
 function csvg(p, c) { return '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="' + (c || "var(--steel)") + '" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">' + p + '</svg>'; }
 
+/* turn a stored LinkedIn value (URL, "linkedin.com/in/x", or a handle) into a real profile URL */
+function liProfileUrl(v) {
+  v = String(v || "").trim(); if (!v) return "";
+  if (/^https?:\/\//i.test(v)) return v;
+  if (/linkedin\.com/i.test(v)) return "https://" + v.replace(/^\/+/, "");
+  return "https://www.linkedin.com/in/" + v.replace(/^\/+/, "").replace(/^in\//i, "");
+}
 /* build channel rows for the modal from a thread + its account */
 function channelsOf(th, a) {
   var rows = [];
   if (th.email) {
     var conf = th.emailConf || "";
     var cls = /^([0-7]?\d)%/.test(conf) ? "mid" : "";
-    rows.push({ ic: "mail", text: th.email, conf: conf ? conf.replace("%", "% CONF").toUpperCase() : "", cls: cls });
+    rows.push({ ic: "mail", text: th.email, conf: conf ? conf.replace("%", "% CONF").toUpperCase() : "", cls: cls, href: "mailto:" + th.email });
   } else {
     rows.push({ ic: "mail", text: "Email — engine still verifying", conf: "", mute: true });
   }
-  if (th.linkedin) rows.push({ ic: "in", text: String(th.linkedin).replace(/^https?:\/\//, "") });
+  if (th.linkedin) rows.push({ ic: "in", text: String(th.linkedin).replace(/^https?:\/\//, ""), href: liProfileUrl(th.linkedin) });
   var loc = th.city || a.place || "";
   if (loc) rows.push({ ic: "pin", text: loc });
   return rows;
@@ -3388,7 +3399,9 @@ function openContactModal(acctId, threadId) {
   var cls = ctCls(th), st = statusOf(th);
   var chan = channelsOf(th, a).map(function (ch) {
     var conf = ch.conf ? '<span class="vconf ' + (ch.cls === "mid" ? "mid" : "") + '">' + esc(ch.conf) + '</span>' : "";
-    return '<div class="vchan' + (ch.mute ? " mute" : "") + '"><span class="ci">' + csvg(IC_C[ch.ic]) + '</span> ' + esc(ch.text) + ' ' + conf + '</div>';
+    var inner = '<span class="ci">' + csvg(IC_C[ch.ic]) + '</span> ' + esc(ch.text) + ' ' + conf;
+    if (ch.href && !ch.mute) return '<a class="vchan link" href="' + esc(ch.href) + '"' + (/^mailto:/.test(ch.href) ? '' : ' target="_blank" rel="noopener"') + '>' + inner + '</a>';
+    return '<div class="vchan' + (ch.mute ? " mute" : "") + '">' + inner + '</div>';
   }).join("");
   var hook = hookOf(th);
   var hookHTML = hook.length ? '<ul class="vhook">' + hook.map(function (h) { return "<li>" + esc(h) + "</li>"; }).join("") + "</ul>"
