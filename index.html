@@ -4,7 +4,7 @@
 <link rel="icon" type="image/svg+xml" href="assets/ollin-tracker-icon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Archivo+Black&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 /* ============================================================================
    Ollin : Vamos — brand front end.  "Momentum, cooled down."
@@ -18,15 +18,15 @@
      Signal Black canvas · Kinetic Orange accent · Hyper Volt urgency · cool slate neutrals. */
   --black:#0B0C10;      /* canvas / Signal Black */
   --paper:#0B0C10;
-  --card:#14161F;       /* Surface Slate — cards */
-  --surface:#1C1F2B;    /* Raised — insets: inputs, toggles, chips */
-  --navy:#0B0C10;       /* on-accent (black text on orange/volt) + darkest ground */
-  --navy-2:#14161F;     /* panel ground */
+  --card:#0C0D12;       /* editorial flat — barely lifted off the black */
+  --surface:#15171F;    /* insets still read (inputs, chips) */
+  --navy:#0B0C10;       /* on-accent (black text on volt) + darkest ground */
+  --navy-2:#0C0D12;     /* panel ground — near-flat */
   --surf:#1C1F2B;       /* raised element */
   --steel:#94A3B8;      /* Muted Steel — secondary text / labels */
-  --coral:#FF5500;      /* KINETIC ORANGE — fills, CTA, active. NEVER as text on light. */
-  --coral-2:#FF7D3D;    /* orange hover */
-  --accent-ink:#FF5500; /* orange as TEXT/icons/links — light mode drops it to #B73D00 */
+  --coral:#D4FF00;      /* VOLT — fills, CTA, active (black text on it). */
+  --coral-2:#E4FF4D;    /* volt hover */
+  --accent-ink:#D4FF00; /* volt as TEXT/icons/links on the dark canvas */
   --bone:#FFFFFF;       /* ink */
   --ink-2b:#C9D3DE;     /* brighter secondary */
   --mute:#94A3B8;
@@ -41,11 +41,52 @@
   /* aliases referenced inline by the keep layer */
   --ink-2:#C9D3DE;
   --vm-no:#FF5C5C;
-  --radius:16px;
-  --shadow:0 40px 90px -44px #000;
-  --glow:0 14px 40px -8px rgba(255,85,0,.5),0 0 0 1px rgba(255,85,0,.18);
-  --glow-soft:0 14px 40px -8px rgba(255,85,0,.42),0 0 0 1px rgba(255,85,0,.14);
+  --radius:4px;
+  --shadow:none;
+  --glow:0 0 0 1px rgba(212,255,0,.28);
+  --glow-soft:0 0 0 1px rgba(212,255,0,.18);
 }
+/* ===== EDITORIAL PREVIEW LAYER — flat black + hairlines, our own blend ===== */
+#appMain{background:var(--black) !important;}          /* kill the corner glows */
+.vm-h1,.v3 .who,.o2-name,.cp-name,.coname{font-family:'Archivo Black','Archivo',sans-serif;font-weight:400;letter-spacing:-.055em;word-spacing:-.04em;line-height:.88}
+.vm-h1{font-size:clamp(40px,5.5vw,72px) !important;line-height:.86 !important}
+.v3 .who{font-size:clamp(46px,5vw,78px) !important;line-height:.84 !important}
+.coname{font-size:22px}
+.panel,.focus,.cxpeekcard{box-shadow:none !important;border:1px solid var(--line);border-radius:6px}
+.vm-card,.qcard,.fstage,.pcard{box-shadow:none !important;border-radius:6px}
+.railitem{border-radius:6px}
+.railitem.on{box-shadow:none;border-color:var(--coral)}   /* Volt hairline, no glow */
+.ri-tag .rpill,.rpill{border-radius:3px}
+.demobar{background:transparent;border:1px solid var(--line)}
+/* ===== WHITE CARDS ON BLACK — tokens re-scoped locally to each card ===== */
+.vcard,.railitem,.ctile,.cocard,.cp-card,.pcard,.qcard,.fstage,.vmodal,.accdone,.ol-card,.cxpeekcard,.sender-card{
+  --card:#FFFFFF; --navy-2:#FFFFFF; --surface:#F1F3F6;
+  --bone:#0B0C10; --ink-2b:#33414E; --ink-2:#33414E;
+  --steel:#5A6875; --mute:#5A6875; --proof:#5A6875;
+  --line:#E7EAEF; --line-soft:#EEF1F5;
+  --accent-ink:#3A4600;      /* olive ink — Volt can't be text on white */
+  --volt-bg:#0B0C10;         /* pills get a dark carrier so Volt text reads */
+  background:#FFFFFF; color:#0B0C10; border:1px solid #E7EAEF;
+}
+.vcard .v3 .ask,.vcard .ask{background:#F1F3F6 !important;border-color:#E7EAEF !important}
+.ctile .ctav{background:#EEF1F5 !important;color:#0B0C10 !important;font-weight:800}   /* readable initials on white */
+.railitem.on{border-color:#0B0C10}         /* selected = ink hairline on white */
+.vcard{box-shadow:0 40px 90px -50px #000 !important}   /* let the white lift off the black */
+/* ===== MUUL-style intro: kicker rules + giant headline + Volt highlight box ===== */
+.gd-kicker{display:flex;align-items:center;gap:18px;margin-bottom:20px}
+.gd-kicker .mn{color:var(--steel);white-space:nowrap;font-size:10px;letter-spacing:.18em}
+.krule{flex:1;height:1px;background:var(--line)}
+.gtext{font-family:'Archivo Black','Archivo',sans-serif !important;font-weight:400 !important;
+  font-size:clamp(38px,4.4vw,60px) !important;line-height:1.0 !important;letter-spacing:-.04em !important;
+  max-width:none !important;text-transform:none;margin-bottom:6px}
+.gtext .hl{box-shadow:0 0 34px rgba(212,255,0,.28)}
+.gtext .co{color:var(--volt)}
+.gtext .hl{background:var(--volt);color:#0B0C10;padding:0 .09em;border-radius:2px;
+  box-shadow:0 0 60px rgba(212,255,0,.35),0 0 20px rgba(212,255,0,.22)}
+/* ===== green header buttons ===== */
+.vm-top .vm-just{background:var(--coral) !important;color:var(--navy) !important;border-color:var(--coral) !important;font-weight:800}
+.vm-top .vm-just:hover{background:var(--coral-2) !important;border-color:var(--coral-2) !important}
+.vm-top .vm-just .d{background:var(--navy)}
 
 /* ===== LIGHT MODE — Cool Paper. A white version when the user wants it. =====
    Rules from the brand doc: orange is a FILL only (text uses Kinetic Ink #B73D00);
@@ -59,9 +100,9 @@ html[data-theme="light"]{
   --navy-2:#FFFFFF;
   --surf:#F6F7F9;
   --steel:#5A6875;      /* muted on light */
-  --coral:#FF5500;      /* FILLS only — unchanged */
+  --coral:#D4FF00;      /* FILLS only — unchanged */
   --coral-2:#FF7D3D;
-  --accent-ink:#B73D00; /* orange as TEXT/links/icons — passes 5.71:1 on white */
+  --accent-ink:#3A4600; /* Volt-family ink for text/links on white (orange retired) */
   --bone:#0B0C10;       /* ink flips to Signal Black */
   --ink-2b:#33414E;
   --ink-2:#33414E;
@@ -93,7 +134,7 @@ html[data-theme="light"] .ol-card,
 html[data-theme="light"] .lock-card{box-shadow:0 1px 2px rgba(11,12,16,.06),0 8px 24px rgba(11,12,16,.06)}
 /* the Ask bar is a dark carrier in both themes (Volt/glow live on black) */
 html[data-theme="light"] .askbar,
-html[data-theme="light"] .v3 .ask{background:#0B0C10;border-color:rgba(255,85,0,.30)}
+html[data-theme="light"] .v3 .ask{background:#0B0C10;border-color:rgba(212,255,0,.30)}
 html[data-theme="light"] .v3 textarea.body,
 html[data-theme="light"] .v3 .subj,
 html[data-theme="light"] .v3 .chan{background:var(--surface)}
@@ -138,8 +179,8 @@ button{font-family:inherit}
 
 /* ============================ APP CHROME (nav) ============================ */
 #appMain{min-height:100vh;background:
-  radial-gradient(1200px 620px at 78% -8%, rgba(255,85,0,.05), transparent 60%),
-  radial-gradient(1000px 560px at 6% 108%, rgba(255,85,0,.035), transparent 60%),
+  radial-gradient(1200px 620px at 78% -8%, rgba(212,255,0,.05), transparent 60%),
+  radial-gradient(1000px 560px at 6% 108%, rgba(212,255,0,.035), transparent 60%),
   var(--black);}
 .vm-top{position:sticky;top:0;z-index:40;background:rgba(10,10,10,.72);
   backdrop-filter:saturate(140%) blur(14px);border-bottom:1px solid var(--line)}
@@ -175,7 +216,7 @@ button{font-family:inherit}
 #vmBanners{max-width:1240px;margin:0 auto;padding:0 30px}
 .demobar,.verifybar{margin-top:12px;border-radius:12px;padding:11px 15px;font-size:13px;font-weight:600}
 .demobar{background:var(--surface);color:var(--ink-2)}
-.verifybar{background:rgba(255,85,0,.14);color:var(--coral-2)}
+.verifybar{background:rgba(212,255,0,.14);color:var(--coral-2)}
 .demobar a,.verifybar a{color:var(--accent-ink);font-weight:800;cursor:pointer;text-decoration:underline;margin-left:6px}
 
 .vm-wrap{max-width:1240px;margin:0 auto;padding:8px 30px 60px}
@@ -204,7 +245,7 @@ button{font-family:inherit}
 
 /* Ask Ollin bar — dark pill, outline mic, solid coral send, coral glow beneath.
    Reused (greeting, focus card, contacts search). */
-.askbar{display:flex;align-items:center;gap:10px;background:#000;border:1px solid rgba(255,85,0,.28);border-radius:999px;
+.askbar{display:flex;align-items:center;gap:10px;background:#000;border:1px solid rgba(212,255,0,.28);border-radius:999px;
   padding:8px 8px 8px 18px;box-shadow:var(--glow)}
 .askbar.soft{box-shadow:var(--glow-soft)}
 .askbar.flat{box-shadow:none}
@@ -441,7 +482,7 @@ button{font-family:inherit}
 /* import area (contacts) */
 .drop{border:1.5px dashed #3a3a34;border-radius:14px;padding:26px 18px;text-align:center;cursor:pointer;
   transition:border-color .2s,background .2s}
-.drop:hover,.drop.hot{border-color:var(--accent-ink);background:rgba(255,85,0,.05)}
+.drop:hover,.drop.hot{border-color:var(--accent-ink);background:rgba(212,255,0,.05)}
 .drop .big{font-weight:800;font-size:15px}
 .drop .sm{color:var(--steel);font-size:12.5px;margin-top:4px}
 .sheetform{margin-top:12px;display:flex;gap:8px;flex-wrap:wrap}
@@ -518,9 +559,9 @@ button{font-family:inherit}
 .ah-mid{position:relative;z-index:1;padding:48px 0}
 .ah-eyebrow{display:inline-flex;align-items:center;gap:13px;font-family:'IBM Plex Mono',monospace;text-transform:uppercase;
   letter-spacing:.18em;font-size:11px;font-weight:600;color:#94A3B8;margin-bottom:26px}
-.ah-eyebrow .dash{width:28px;height:2px;background:#FF5500;display:inline-block}
+.ah-eyebrow .dash{width:28px;height:2px;background:#D4FF00;display:inline-block}
 .ah-title{font-weight:900;font-size:clamp(38px,4.6vw,58px);line-height:.98;letter-spacing:-.03em;color:#fff;max-width:16ch}
-.ah-title .hl{color:#FF5500}
+.ah-title .hl{color:#D4FF00}
 .ah-sub{color:#94A3B8;font-size:15.5px;line-height:1.55;margin-top:22px;max-width:42ch}
 .ah-foot{position:relative;z-index:1;font-family:'IBM Plex Mono',monospace;color:#5C6B7C;font-size:10.5px;letter-spacing:.14em}
 
@@ -560,7 +601,7 @@ button{font-family:inherit}
 .lp-overlay{position:fixed;inset:0;z-index:70;background:rgba(5,8,14,.72);backdrop-filter:blur(6px);
   display:grid;place-items:center;padding:24px}
 .lock-card{width:420px;max-width:100%;background:var(--card);border:1px solid var(--line-soft);border-radius:22px;
-  padding:32px 30px;box-shadow:0 60px 130px -50px #000,0 0 60px -30px rgba(255,85,0,.12);position:relative}
+  padding:32px 30px;box-shadow:0 60px 130px -50px #000,0 0 60px -30px rgba(212,255,0,.12);position:relative}
 .lock-card .ll-tag{display:none}
 .lock-card .ll-rule{margin:10px 0 4px}
 .lock-h{font-weight:900;font-size:36px;line-height:.98;letter-spacing:-.03em;text-transform:uppercase;color:var(--bone);margin:14px 0 8px}
@@ -720,7 +761,7 @@ select.auth-input{appearance:none}
 .vmtt{color:var(--steel);font-size:13px}
 .vmtags{margin-left:auto;display:flex;align-items:center;gap:9px}
 .vmtags .roletag{font-size:11px;padding:5px 11px}
-.vmtags .stbadge{background:rgba(255,85,0,.14);border-radius:999px;padding:5px 11px;font-size:11px}
+.vmtags .stbadge{background:rgba(212,255,0,.14);border-radius:999px;padding:5px 11px;font-size:11px}
 .vmtags .stbadge.pending{background:var(--surface)}
 .vmclose{width:34px;height:34px;border-radius:9px;border:1px solid var(--line);background:var(--surface);display:grid;place-items:center;cursor:pointer;color:var(--steel);margin-left:6px;flex:none}
 .vmbody{display:grid;grid-template-columns:1.1fr 1fr;gap:24px;margin-top:16px;border-top:1px solid var(--line);padding-top:16px}
@@ -784,7 +825,7 @@ select.auth-input{appearance:none}
 .cp-thesis .row:last-child{border-bottom:0}
 .cp-thesis .k{font-family:'IBM Plex Mono',monospace;text-transform:uppercase;letter-spacing:.08em;font-size:10px;color:var(--mute);font-weight:600;width:130px;flex:none;padding-top:3px}
 .cp-thesis .v{font-size:14px;font-weight:600;color:var(--ink-2);line-height:1.5}
-.cp-cost{background:rgba(255,85,0,.06);border:1px solid rgba(255,85,0,.22);border-radius:12px;padding:16px 18px;margin-top:16px;display:flex;align-items:center;gap:16px}
+.cp-cost{background:rgba(212,255,0,.06);border:1px solid rgba(212,255,0,.22);border-radius:12px;padding:16px 18px;margin-top:16px;display:flex;align-items:center;gap:16px}
 .cp-cost .big{font-weight:900;font-size:30px;color:var(--accent-ink);letter-spacing:-.02em;line-height:1}
 .cp-cost .lbl{color:var(--mute);font-size:12.5px;font-weight:700}
 .cp-chips{display:flex;flex-wrap:wrap;gap:8px}
@@ -810,7 +851,7 @@ select.auth-input{appearance:none}
 .railitem{position:relative;background:var(--card);border:1px solid var(--line-soft);border-radius:14px;padding:14px 16px;cursor:pointer;
   transition:border-color .18s,box-shadow .18s,transform .12s}
 .railitem:hover{border-color:rgba(255,255,255,.18);transform:translateY(-1px)}
-.railitem.on{border-color:var(--accent-ink);box-shadow:0 0 0 1px var(--coral),0 20px 44px -26px #000,0 0 34px -12px rgba(255,85,0,.28)}
+.railitem.on{border-color:var(--accent-ink);box-shadow:0 0 0 1px var(--coral),0 20px 44px -26px #000,0 0 34px -12px rgba(212,255,0,.28)}
 .ri-tag{position:absolute;top:12px;right:12px}
 .ri-nm{font-weight:900;font-size:15px;letter-spacing:-.01em;color:var(--bone);line-height:1.15;padding-right:70px}
 .ri-role{color:var(--steel);font-size:12px;margin-top:3px}
@@ -882,7 +923,7 @@ select.auth-input{appearance:none}
 .v3 .subj .lab{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--mute);flex:none}
 .v3 .subj input{flex:1;border:0;outline:0;font-family:'Archivo';font-size:14.5px;font-weight:700;color:var(--bone);background:transparent}
 .v3 textarea.body{width:100%;flex:1;min-height:150px;resize:vertical;border:1px solid var(--line);border-radius:12px;padding:15px 16px;font-family:'Archivo';font-size:14px;color:#E7E7E2;line-height:1.7;outline:0;background:var(--surface)}
-.v3 textarea.body:focus{border-color:rgba(255,85,0,.5)}
+.v3 textarea.body:focus{border-color:rgba(212,255,0,.5)}
 .v3 textarea.body::placeholder{color:var(--mute)}
 .v3 .draftmeta{display:flex;justify-content:space-between;align-items:center;color:var(--mute);font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.05em;margin:9px 0 14px}
 .v3 .draftmeta .aud{color:var(--proof)}
@@ -892,8 +933,8 @@ select.auth-input{appearance:none}
 .v3 .angles-lo{margin-bottom:0;margin-top:16px;padding-top:14px;border-top:1px solid var(--line-soft)}
 .v3 .angle{border:1px solid var(--line);border-radius:999px;padding:8px 14px;font-family:'Archivo';font-weight:700;font-size:12px;background:transparent;color:var(--ink-2b);cursor:pointer}
 .v3 .angle.on{background:var(--coral);color:var(--navy);border-color:var(--accent-ink)}
-.v3 .ask{display:flex;align-items:center;gap:10px;background:#000;border:1px solid rgba(255,85,0,.28);border-radius:999px;padding:7px 7px 7px 18px;
-  box-shadow:0 14px 40px -16px rgba(255,85,0,.45)}
+.v3 .ask{display:flex;align-items:center;gap:10px;background:#000;border:1px solid rgba(212,255,0,.28);border-radius:999px;padding:7px 7px 7px 18px;
+  box-shadow:0 14px 40px -16px rgba(212,255,0,.45)}
 .v3 .ask input{flex:1;background:transparent;border:0;outline:0;color:var(--bone);font-family:'Archivo';font-size:14px;font-weight:500}
 .v3 .ask input::placeholder{color:var(--mute)}
 .v3 .ask .mic{width:34px;height:34px;border-radius:999px;border:1.5px solid var(--line);display:grid;place-items:center;flex:none;color:var(--ink-2b);cursor:pointer;background:transparent}
@@ -901,7 +942,7 @@ select.auth-input{appearance:none}
 .v3 .ask .send{width:36px;height:36px;border-radius:999px;background:var(--coral);border:0;display:grid;place-items:center;flex:none;color:var(--navy);cursor:pointer}
 .v3 .ask .send.busy{opacity:.6;pointer-events:none}
 .v3 .go{flex:none;border:0;border-radius:999px;padding:14px 24px;font-family:'Archivo';font-weight:900;font-size:14px;background:var(--coral);color:var(--navy);
-  display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;box-shadow:0 18px 46px -16px rgba(255,85,0,.5)}
+  display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;box-shadow:0 18px 46px -16px rgba(212,255,0,.5)}
 .v3 .go.gofull{width:100%;margin-top:10px;font-size:15px;padding:15px 24px}
 .v3 .go:hover{background:var(--coral-2)}
 .v3 .v3foot{display:flex;gap:18px;margin-top:14px;justify-content:flex-end}
@@ -936,10 +977,10 @@ select.auth-input{appearance:none}
     <div class="vm-topin">
       <div class="vm-brand">
         <svg width="28" height="28" viewBox="0 0 86 86" fill="none" aria-hidden="true">
-          <circle cx="30" cy="43" r="9" fill="#FF5500"/>
+          <circle cx="30" cy="43" r="9" fill="#D4FF00"/>
           <path d="M44 22 A24 24 0 0 1 44 64" stroke="#F5F5F4" stroke-width="7" stroke-linecap="round" fill="none"/>
           <path d="M56 30 A15 15 0 0 1 56 56" stroke="var(--mute)" stroke-width="7" stroke-linecap="round" fill="none"/>
-          <path d="M60 34 l14 9 -14 9" stroke="#FF5500" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          <path d="M60 34 l14 9 -14 9" stroke="#D4FF00" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
         </svg>
         <span class="wm">vamos</span>
       </div>
@@ -974,7 +1015,7 @@ select.auth-input{appearance:none}
     <!-- LEFT: brand hero -->
     <div class="authhero">
       <div class="ah-brand">
-        <svg width="30" height="30" viewBox="0 0 90 90" fill="none" aria-hidden="true"><circle cx="30" cy="43" r="9" fill="#FF5500"/><path d="M60 34 l14 9 -14 9" stroke="#FF5500" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+        <svg width="30" height="30" viewBox="0 0 90 90" fill="none" aria-hidden="true"><circle cx="30" cy="43" r="9" fill="#D4FF00"/><path d="M60 34 l14 9 -14 9" stroke="#D4FF00" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
         <span class="wm">vamos</span>
       </div>
       <div class="ah-mid">
@@ -1427,10 +1468,10 @@ select.auth-input{appearance:none}
     var ans={ name:s.name||"", role:s.company||"", help:s.credibility||"", intro:(s.intro&&s.intro!==DEFAULT_SENDER_INTRO?s.intro:"") };
     var step=0, saving=false;
     var mkSvg='<svg width="26" height="26" viewBox="0 0 86 86" fill="none">'+
-      '<circle cx="30" cy="43" r="9" fill="#FF5500"/>'+
+      '<circle cx="30" cy="43" r="9" fill="#D4FF00"/>'+
       '<path d="M44 22 A24 24 0 0 1 44 64" stroke="#F5F5F4" stroke-width="7" stroke-linecap="round" fill="none"/>'+
       '<path d="M56 30 A15 15 0 0 1 56 56" stroke="var(--mute)" stroke-width="7" stroke-linecap="round" fill="none"/>'+
-      '<path d="M60 34 l14 9 -14 9" stroke="#FF5500" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>';
+      '<path d="M60 34 l14 9 -14 9" stroke="#D4FF00" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>';
     var ov=el('<div class="ob-screen"><div class="ob-inner">'+
       '<div class="ob-half ob-left" id="obLeft"></div>'+
       '<div class="ob-half ob-right" id="obRight"></div>'+
@@ -2702,7 +2743,7 @@ function greeting(b) {
     var bits = [];
     if (due) bits.push('<span class="co">' + due + " ready</span>");
     if (fresh) bits.push('<span class="co">' + fresh + " never touched</span>");
-    return lead + " You've got " + bits.join(" and ") + '. <span class="co">Vamos!</span>';
+    return lead + " You've got " + bits.join(" and ") + '. <span class="hl">Vamos!</span>';
   }
   if (rest) return lead + " Nothing due — " + rest + (rest === 1 ? " person is" : " people are") + " resting. Go outside.";
   return lead + " No contacts yet — drop a CSV or Sheet under Contacts and I'll build the cadence.";
@@ -2793,7 +2834,7 @@ function viewToday(v) {
 
   v.innerHTML =
     '<div class="today">' +
-      '<div class="mn gd-eyebrow rv" style="--d:.06s">Ollin : Guide</div>' +
+      '<div class="gd-kicker rv" style="--d:.06s"><span class="mn">Ollin : Guide</span><span class="krule"></span><span class="mn">The Daily Run</span><span class="krule"></span><span class="mn">Outreach, Informed</span></div>' +
       '<h1 class="gtext rv-t" style="--d:.14s">' + g + '</h1>' +
       '<div id="gdSay"></div>' +
       (q.ids.length
@@ -3727,7 +3768,7 @@ function viewCompanyProfile(v) {
           (a.sector ? '<span>' + esc(a.sector) + '</span>' : '') +
         '</div></div>' +
       '<div class="cp-whybadge ' + (lvl === "hot" ? "" : lvl) + '">' +
-        (lvl === "hot" ? '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#FF5500" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/></svg>' : '') +
+        (lvl === "hot" ? '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#D4FF00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/></svg>' : '') +
         (lvl === "hot" ? "WHY NOW · HIGH INTENT" : lvl === "warm" ? "WARMING" : "NEW ACCOUNT") + '</div>' +
     '</div>' +
 
