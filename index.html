@@ -95,6 +95,27 @@
 .fxbar .fx-clear{align-self:center;color:var(--steel);font-size:12.5px;font-weight:700;cursor:pointer;text-decoration:underline}
 .fxbar .fx-clear:hover{color:var(--bone)}
 @media(max-width:820px){.fxbar .fx-sel{min-width:0;width:100%}.fxbar .fx-grp{flex:1 1 140px}}
+/* --- what's missing (gaps audit) --- */
+.gapbar{display:flex;align-items:center;gap:14px;margin-top:20px;padding:14px 18px;border:1px solid var(--line);
+  border-radius:10px;background:rgba(255,255,255,.02);cursor:pointer}
+.gapbar:hover{border-color:var(--steel)}
+.gp-t{color:var(--coral);font-size:10px;letter-spacing:.18em;white-space:nowrap}
+.gp-sum{color:var(--ink-2b);font-size:13.5px;font-weight:600}
+.gp-sum b{color:var(--bone)}
+.gp-open{margin-left:auto;color:var(--steel);font-size:12.5px;font-weight:700}
+.gp-head{display:flex;align-items:center;gap:14px}
+.gp-close{margin-left:auto;color:var(--steel);font-size:12.5px;font-weight:700;cursor:pointer;text-decoration:underline}
+.gp-close:hover{color:var(--bone)}
+.gp-list{display:flex;flex-direction:column}
+.gp-row{display:flex;align-items:center;gap:14px;padding:13px 2px;border-top:1px solid var(--line);cursor:pointer;flex-wrap:wrap}
+.gp-row:hover .gp-fix{color:var(--accent-ink)}
+.gp-co{font-weight:800;font-size:14.5px;color:var(--bone);min-width:180px;display:flex;flex-direction:column;gap:2px}
+.gp-n{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.1em;color:var(--mute);font-weight:600;text-transform:uppercase}
+.gp-tags{display:flex;gap:6px;flex-wrap:wrap;align-items:center;flex:1;min-width:0}
+.gp-tag{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.07em;text-transform:uppercase;
+  background:var(--surface);color:var(--steel);border:1px solid var(--line);border-radius:999px;padding:4px 9px;white-space:nowrap}
+.gp-ppl{font-size:12px;color:var(--mute);margin-left:4px}
+.gp-fix{color:var(--steel);font-size:12.5px;font-weight:800;white-space:nowrap}
 .ah-title,.af-h{font-family:'Archivo Black','Archivo',sans-serif !important;font-weight:400 !important;letter-spacing:-.045em}
 .ah-title{line-height:.9}
 /* premium two-tone sign-in: dark brand hero (left) + WHITE form panel (right) */
@@ -3764,6 +3785,34 @@ function coMatch(a, q) {
   return q.toLowerCase().split(/\s+/).filter(Boolean).every(function (w) { return hay.indexOf(w) > -1; });
 }
 function coSignals(a) { return a.signals || []; }
+/* ---------- gaps audit: what is each account actually missing? ----------
+   Runs against the real book so you can see the holes instead of guessing. */
+var GAP_SPEC = [
+  ["Industry",  function (a) { return !!a.sector; }],
+  ["Location",  function (a) { return !!a.place; }],
+  ["Size",      function (a) { return !!a.size; }],
+  ["Signal",    function (a) { return (a.signals || []).length > 0; }],
+  ["Signal 2",  function (a) { return (a.signals || []).length > 1; }],
+  ["Big wins",  function (a) { return !!a.wins; }],
+  ["News",      function (a) { return !!a.news; }],
+  ["Why now",   function (a) { return !!(a.thesis && (a.thesis.what || a.thesis.bottleneck)) || !!a.whyNow; }],
+  ["Cost of gap", function (a) { return !!a.costOfGap; }],
+  ["Contacts",  function (a) { return (a.threads || []).length > 0; }]
+];
+function coGaps(a) {
+  return GAP_SPEC.filter(function (g) { return !g[1](a); }).map(function (g) { return g[0]; });
+}
+/* contact-level holes, summarised per account */
+function coContactGaps(a) {
+  var miss = { email: 0, linkedin: 0, title: 0, signal: 0 };
+  (a.threads || []).forEach(function (t) {
+    if (!t.email) miss.email++;
+    if (!t.linkedin) miss.linkedin++;
+    if (!t.title) miss.title++;
+    if (!t.whyCares && !t.angle && !(t.hook || []).length) miss.signal++;
+  });
+  return miss;
+}
 function coFactCount(a) { var n = 0; CO_FACTS.forEach(function (f) { if (a[f[0]]) n++; }); return n; }
 function coSignalCount(a) { return coSignals(a).length + coFactCount(a) + (a.thesis ? 1 : 0) + (a.techStack ? 1 : 0); }
 function coContacts(a) { return (a.threads || []).filter(function (t) { return t.persona !== "Blocker"; }); }
@@ -3786,6 +3835,51 @@ var WHY_FLAME = '<svg width="9" height="9" viewBox="0 0 24 24" fill="none" strok
 var WHY_LABEL = { hot: "WHY NOW", warm: "WARMING", cool: "NEW" };
 function coMetaLine(a) {
   return [a.domain, a.size, a.place].filter(Boolean).join(" · ") || "No details yet";
+}
+
+/* "What's missing" — a real audit of the book, worst offenders first. */
+var GAPS_OPEN = false;
+function gapsPanelHTML() {
+  var accts = state.accounts || [];
+  if (!accts.length) return "";
+  var rows = accts.map(function (a) { return { a: a, gaps: coGaps(a), cg: coContactGaps(a) }; })
+    .filter(function (r) { return r.gaps.length; })
+    .sort(function (x, y) { return y.gaps.length - x.gaps.length; });
+  var complete = accts.length - rows.length;
+
+  if (!GAPS_OPEN) {
+    return '<div class="gapbar rv" style="--d:.36s" id="gapsToggle">' +
+      '<span class="mn gp-t">What\'s missing</span>' +
+      '<span class="gp-sum">' + (rows.length
+        ? '<b>' + rows.length + '</b> of ' + accts.length + ' account' + (accts.length > 1 ? 's' : '') + ' have gaps'
+        : 'Every account is complete.') + '</span>' +
+      '<span class="gp-open">' + (rows.length ? 'Show me &rarr;' : '') + '</span></div>';
+  }
+  var body = rows.map(function (r) {
+    var cg = r.cg, n = (r.a.threads || []).length;
+    var people = [];
+    if (cg.email) people.push(cg.email + " no email");
+    if (cg.linkedin) people.push(cg.linkedin + " no LinkedIn");
+    if (cg.signal) people.push(cg.signal + " no signal");
+    return '<div class="gp-row" data-gid="' + esc(r.a.id) + '">' +
+      '<div class="gp-co">' + esc(r.a.company || "—") + '<span class="gp-n">' + n + ' contact' + (n === 1 ? '' : 's') + '</span></div>' +
+      '<div class="gp-tags">' + r.gaps.map(function (g) { return '<span class="gp-tag">' + esc(g) + '</span>'; }).join('') +
+        (people.length ? '<span class="gp-ppl">' + esc(people.join(" · ")) + '</span>' : '') + '</div>' +
+      '<span class="gp-fix">Fix &rarr;</span></div>';
+  }).join("");
+  return '<div class="vm-card rv" style="--d:.36s;margin-top:20px">' +
+    '<div class="gp-head"><span class="mn gp-t">What\'s missing</span>' +
+      '<span class="gp-sum">' + rows.length + ' with gaps · ' + complete + ' complete</span>' +
+      '<a class="gp-close" id="gapsToggle">Hide</a></div>' +
+    '<p class="vm-sub" style="margin:2px 0 14px">Click a row to open that company and fill it in — company intel is shared by every contact there.</p>' +
+    '<div class="gp-list">' + (body || '<div class="cp-thin">Nothing missing. Nice.</div>') + '</div></div>';
+}
+function wireGaps() {
+  var t = document.getElementById("gapsToggle");
+  if (t) t.onclick = function () { GAPS_OPEN = !GAPS_OPEN; render(); };
+  Array.prototype.forEach.call(document.querySelectorAll(".gp-row"), function (r) {
+    r.onclick = function () { CO_VIEW = r.dataset.gid; render(); window.scrollTo(0, 0); };
+  });
 }
 
 function viewCompanies(v) {
@@ -3829,6 +3923,8 @@ function viewCompanies(v) {
         (CO_Q || CO_FILT.f !== "all" ? 'No companies match. <a id="coReset" style="color:var(--accent-ink);cursor:pointer">Clear it</a>.'
           : 'No companies yet — add some below.') + '</p></div>') +
 
+    gapsPanelHTML() +
+
     '<div class="vm-card rv" style="--d:.4s;margin-top:20px">' +
       '<div class="mn" style="color:var(--steel);margin-bottom:6px">Add companies &amp; intel</div>' +
       '<p class="vm-sub" style="margin:0 0 12px">Paste a list as <b style="color:var(--bone)">Company, City, State</b> — or drop your agent\'s <b style="color:var(--bone)">[ COMPANY NOTE ]</b> / <b style="color:var(--bone)">[ CONTACT NOTE ]</b> blocks and Vamos parses the full intel.</p>' +
@@ -3850,6 +3946,7 @@ function viewCompanies(v) {
   Array.prototype.forEach.call(v.querySelectorAll(".cocard"), function (c) {
     c.onclick = function () { CO_VIEW = c.dataset.id; navView = "companyprofile"; render(); window.scrollTo(0, 0); };
   });
+  wireGaps();
   var coAdd = document.getElementById("coAdd");
   if (coAdd) coAdd.onclick = function () {
     var box = document.getElementById("coPaste"), txt = box ? box.value : "";
