@@ -104,7 +104,11 @@
 .gp-sum b{color:var(--bone)}
 .gp-open{margin-left:auto;color:var(--steel);font-size:12.5px;font-weight:700}
 .gp-head{display:flex;align-items:center;gap:14px}
-.gp-close{margin-left:auto;color:var(--steel);font-size:12.5px;font-weight:700;cursor:pointer;text-decoration:underline}
+.gp-act{color:var(--steel);font-size:12.5px;font-weight:700;cursor:pointer;border:1px solid var(--line);
+  border-radius:999px;padding:6px 13px;white-space:nowrap;transition:all .15s}
+.gp-act:hover{color:var(--navy);background:var(--coral);border-color:var(--coral)}
+.gp-act:first-of-type{margin-left:auto}
+.gp-close{color:var(--steel);font-size:12.5px;font-weight:700;cursor:pointer;text-decoration:underline}
 .gp-close:hover{color:var(--bone)}
 .gp-list{display:flex;flex-direction:column}
 .gp-row{display:flex;align-items:center;gap:14px;padding:13px 2px;border-top:1px solid var(--line);cursor:pointer;flex-wrap:wrap}
@@ -3870,13 +3874,91 @@ function gapsPanelHTML() {
   return '<div class="vm-card rv" style="--d:.36s;margin-top:20px">' +
     '<div class="gp-head"><span class="mn gp-t">What\'s missing</span>' +
       '<span class="gp-sum">' + rows.length + ' with gaps · ' + complete + ' complete</span>' +
+      '<a class="gp-act" id="gapsPrint">Print</a>' +
+      '<a class="gp-act" id="gapsCsv">Download CSV</a>' +
+      '<a class="gp-act" id="gapsMail">Email me</a>' +
       '<a class="gp-close" id="gapsToggle">Hide</a></div>' +
     '<p class="vm-sub" style="margin:2px 0 14px">Click a row to open that company and fill it in — company intel is shared by every contact there.</p>' +
     '<div class="gp-list">' + (body || '<div class="cp-thin">Nothing missing. Nice.</div>') + '</div></div>';
 }
+/* the audit as plain data — shared by print, CSV and email */
+function gapsReport() {
+  return (state.accounts || []).map(function (a) {
+    var cg = coContactGaps(a), people = [];
+    if (cg.email) people.push(cg.email + " no email");
+    if (cg.linkedin) people.push(cg.linkedin + " no LinkedIn");
+    if (cg.title) people.push(cg.title + " no title");
+    if (cg.signal) people.push(cg.signal + " no signal");
+    return {
+      company: a.company || "—",
+      contacts: (a.threads || []).length,
+      missing: coGaps(a),
+      people: people.join("; ")
+    };
+  }).filter(function (r) { return r.missing.length || r.people; })
+    .sort(function (x, y) { return y.missing.length - x.missing.length; });
+}
+function gapsCsv() {
+  var q = function (s) { return '"' + String(s == null ? "" : s).replace(/"/g, '""') + '"'; };
+  var lines = [["Company", "Contacts", "Missing company fields", "Contact gaps"].map(q).join(",")];
+  gapsReport().forEach(function (r) {
+    lines.push([q(r.company), q(r.contacts), q(r.missing.join("; ")), q(r.people)].join(","));
+  });
+  return lines.join("\n");
+}
+function downloadGapsCsv() {
+  var blob = new Blob([gapsCsv()], { type: "text/csv;charset=utf-8" });
+  var url = URL.createObjectURL(blob), a = document.createElement("a");
+  a.href = url; a.download = "vamos-whats-missing-" + todayStr() + ".csv";
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+  toast("CSV downloaded.");
+}
+function printGaps() {
+  var rows = gapsReport();
+  var w = window.open("", "_blank");
+  if (!w) { toast("Allow pop-ups to print."); return; }
+  var body = rows.map(function (r) {
+    return "<tr><td class='co'>" + esc(r.company) + "</td><td>" + r.contacts +
+      "</td><td>" + esc(r.missing.join(", ") || "—") + "</td><td>" + esc(r.people || "—") + "</td></tr>";
+  }).join("");
+  w.document.write(
+    "<!doctype html><meta charset='utf-8'><title>Vamos — What's missing</title>" +
+    "<style>body{font:14px/1.5 -apple-system,Segoe UI,Helvetica,Arial,sans-serif;color:#111;padding:32px;max-width:1000px;margin:0 auto}" +
+    "h1{font-size:24px;margin:0 0 4px}.sub{color:#666;margin:0 0 22px;font-size:13px}" +
+    "table{width:100%;border-collapse:collapse}th{text-align:left;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#666;border-bottom:2px solid #111;padding:8px 6px}" +
+    "td{padding:9px 6px;border-bottom:1px solid #ddd;vertical-align:top}.co{font-weight:700}" +
+    "@media print{body{padding:0}}</style>" +
+    "<h1>What's missing</h1><p class='sub'>Vamos · " + esc(todayStr()) + " · " + rows.length +
+    " account" + (rows.length === 1 ? "" : "s") + " with gaps</p>" +
+    "<table><tr><th>Company</th><th>Contacts</th><th>Missing company fields</th><th>Contact gaps</th></tr>" +
+    body + "</table>");
+  w.document.close();
+  setTimeout(function () { w.print(); }, 300);
+}
+function emailGaps() {
+  var rows = gapsReport();
+  var lines = rows.map(function (r) {
+    return "• " + r.company + " (" + r.contacts + " contacts)\n    Missing: " +
+      (r.missing.join(", ") || "—") + (r.people ? "\n    Contacts: " + r.people : "");
+  });
+  var body = "Vamos — what's missing (" + todayStr() + ")\n" + rows.length + " accounts with gaps\n\n" + lines.join("\n\n");
+  /* mailto has a length ceiling — send the top slice and point at the CSV for the rest */
+  var MAX = 1800, trimmed = body.length > MAX;
+  if (trimmed) body = body.slice(0, MAX) + "\n\n… list truncated — use Download CSV in Vamos for the full report.";
+  var to = (ACCOUNT && ACCOUNT.email) ? ACCOUNT.email : "";
+  window.location.href = "mailto:" + encodeURIComponent(to) +
+    "?subject=" + encodeURIComponent("Vamos — what's missing (" + todayStr() + ")") +
+    "&body=" + encodeURIComponent(body);
+  if (trimmed) toast("Email opened — long list, use CSV for all of it.");
+}
+
 function wireGaps() {
   var t = document.getElementById("gapsToggle");
   if (t) t.onclick = function () { GAPS_OPEN = !GAPS_OPEN; render(); };
+  var pr = document.getElementById("gapsPrint"); if (pr) pr.onclick = printGaps;
+  var cs = document.getElementById("gapsCsv"); if (cs) cs.onclick = downloadGapsCsv;
+  var em = document.getElementById("gapsMail"); if (em) em.onclick = emailGaps;
   Array.prototype.forEach.call(document.querySelectorAll(".gp-row"), function (r) {
     r.onclick = function () { CO_VIEW = r.dataset.gid; render(); window.scrollTo(0, 0); };
   });
