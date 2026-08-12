@@ -2737,7 +2737,9 @@ function gapsOf(t, a) {
 /* The Gap / Cost of Waiting / The Person — the three engine tiles. Honest:
    value shown only when we actually have it, else "Not tracked yet". */
 function intelTriples(t, a) {
-  var gap = t.angle || (t.signalSrc ? t.signal : "") || a.building || a.hiring || "";
+  var firstSig = (a.signals && a.signals.length) ? (a.signals[0].text || a.signals[0]) : "";
+  var gap = t.angle || (t.signalSrc ? t.signal : "") || firstSig ||
+    (a.thesis && (a.thesis.bottleneck || a.thesis.what)) || a.whyNow || a.building || a.hiring || "";
   var cost = a.costOfGap ? (a.costOfGap + (a.timing ? " — " + a.timing : " in delays")) : (a.timing || "");
   if (!cost) { var r = readOf(t, a); cost = r.length ? r[0] : ""; }
   var lead = (a.signals || []).filter(function (s) { return /officer|vp|chief|cfo|cto|ceo|new /i.test(s.text); })[0];
@@ -2963,10 +2965,18 @@ function cardBodyHTML(t, a) {
   var orgHTML = orgFacts.map(function (f) { return factRow(f, false); }).join('');
 
   /* --- CONTACT facts --- */
-  var hk = (th.hook && th.hook.length) ? th.hook.join(" · ") : (t.angle && t.angle !== th.whyCares ? t.angle : "");
+  /* company intel is shared — fall back to it so a contact without their own
+     note still shows why this account matters instead of "not tracked yet" */
+  var coSig = (a.signals || []).map(function (s) { return s.text || s; }).filter(Boolean);
+  var whyV = th.whyCares || th.angle || t.angle ||
+    (a.thesis && (a.thesis.bottleneck || a.thesis.what)) || a.whyNow || coSig[0] || "";
+  var whySrc = th.whyCares ? "Why they care" : "Company intel";
+  var hk = (th.hook && th.hook.length) ? th.hook.join(" · ")
+    : (t.angle && t.angle !== whyV ? t.angle : (coSig[1] || a.news || a.wins || ""));
+  var hkSrc = (th.hook && th.hook.length) ? "LinkedIn" : (a.news ? "News" : (a.wins ? "Recent win" : "Company intel"));
   var conFacts = [
-    { lab: "Why", v: th.whyCares || "", src: "Why they care" },
-    { lab: "Hook", v: hk, src: "LinkedIn" },
+    { lab: "Why", v: whyV, src: whySrc },
+    { lab: "Hook", v: hk, src: hkSrc },
     { lab: "Status", v: "In cadence touch " + t.touchNo + " of 4", src: "System" }
   ];
   var conHTML = conFacts.map(function (f) { return factRow(f, true); }).join('');
