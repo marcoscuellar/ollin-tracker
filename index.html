@@ -1954,17 +1954,22 @@ select.auth-input{appearance:none}
       seq:find("sequence day","entry day","day"),
       chan:find("first touch channel","channel","first channel"),
       angle:find("outreach angle","angle","why this person"),
-      signal:find("signal","buying signal"),
-      signalsrc:find("signal source","source"),
+      signal:pick(find("signal","buying signal","lead signal description","signal description","lead_signal_description"), findC("signal","description"), findC("lead","signal")),
+      signalsrc:pick(find("signal source","source","signal source url","signal_source_url"), findC("signal","source"), findC("source","url")),
+      signal2:pick(find("signal 2","second signal","secondary signal","signal2"), findC("signal","2")),
+      wins:pick(find("big wins","wins","recent wins","key wins","wins last 8 months"), findC("big","win"), findC("recent","win")),
+      news:pick(find("news","recent news","in the news","press","company news"), findC("news"), findC("press")),
+      thesis:pick(find("opportunity thesis","thesis","opportunity_thesis"), findC("thesis")),
+      costgap:pick(find("cost of gap","cost of the gap","cost of gap estimate","cost_of_gap_estimate"), findC("cost","gap")),
       status:find("lead status","status"),
-      sector:find("sector","industry"),
-      place:find("place","location","hq"),
+      sector:pick(find("sector","industry"), findC("industr")),
+      place:pick(find("place","location","hq"), findC("hq"), findC("location"), findC("headquarter")),
       city:find("city","town"),
       state:find("state","province","region"),
       whynow:find("why now","why","summary"),
       hubspot:find("hubspot url","hubspot","hubspot link","crm url"),
       crmstage:find("stage","crm stage","lifecycle","lifecycle stage"),
-      size:find("company size","employee count","employees","size"),
+      size:pick(find("company size","employee count","employees","size","headcount tier","headcount_tier"), findC("headcount"), findC("employee")),
       revenue:find("revenue","company revenue"),
       hiring:find("hiring"), hiringsrc:find("hiring source"),
       building:find("building"), buildingsrc:find("building source"),
@@ -2024,6 +2029,15 @@ select.auth-input{appearance:none}
     var place=get(cm.place); if(place) f.place=place;
     var size=get(cm.size); if(size) f.size=size;
     var revenue=get(cm.revenue); if(revenue) f.revenue=revenue;
+    var wins=get(cm.wins); if(wins) f.wins=wins;                          // big wins (last 8 months)
+    var news=get(cm.news); if(news) f.news=news;                          // any news on them
+    var thesisWhat=get(cm.thesis); if(thesisWhat) f.thesis={what:thesisWhat};
+    var costgap=get(cm.costgap); if(costgap) f.costOfGap=costgap;
+    // company signals — a URL source counts here (unlike the enum-gated contact signal)
+    var sigList=[];
+    var sig1=get(cm.signal); if(sig1) sigList.push({text:sig1, kind:"trigger", detail:get(cm.signalsrc)||""});
+    var sig2=get(cm.signal2); if(sig2) sigList.push({text:sig2, kind:"secondary", detail:""});
+    if(sigList.length) f.signals=sigList;
     var hiring=get(cm.hiring), hiringSrc=normCompanyFactSource(get(cm.hiringsrc));
     if(hiring && hiringSrc){ f.hiring=hiring; f.hiringSrc=hiringSrc; }
     var building=get(cm.building), buildingSrc=normCompanyFactSource(get(cm.buildingsrc));
@@ -3471,8 +3485,8 @@ function openContactModal(acctId, threadId) {
     '</div>' +
     '<div class="vmbody"><div class="vmleft"><div class="vblock"><div class="vbt">Contact channels</div>' + chan + '</div></div>' +
       '<div class="vmright">' +
-        '<div class="vblock"><div class="vbt">Why this person cares</div><div class="vwhy-txt">' + esc(whyTxt) + '</div></div>' +
-        '<div class="vblock"><div class="vbt">Personal hook &amp; context</div>' + hookHTML + '</div>' +
+        '<div class="vblock"><div class="vbt">Signal 1 · Why them, why now</div><div class="vwhy-txt">' + esc(whyTxt) + '</div></div>' +
+        '<div class="vblock"><div class="vbt">Signal 2 · Context &amp; hook</div>' + hookHTML + '</div>' +
         '<div class="vblock"><div class="vbt">Recommended outreach angle</div><div class="vangles">' + angles + '</div></div>' +
         '<div class="vcta-row"><button class="vcta2" id="vmToday">Do today</button>' +
         '<button class="vcta" id="vmDraft">Draft outreach with Ollin <span>&rarr;</span></button></div>' +
@@ -3748,7 +3762,17 @@ function viewCompanyProfile(v) {
     '</div>';
   }
 
-  var leftStack = thesisCard + stackFlags;
+  /* momentum — big wins (last 8 months) + any news */
+  var momentum = "";
+  if (a.wins || a.news) {
+    momentum = '<div class="cp-card cp-thesis rv" style="--d:.26s">' +
+      '<div class="cp-ctitle mono">Momentum</div>' +
+      (a.wins ? '<div class="row"><div class="k">Big wins · last 8 mo</div><div class="v">' + esc(a.wins) + '</div></div>' : '') +
+      (a.news ? '<div class="row"><div class="k">In the news</div><div class="v">' + esc(a.news) + '</div></div>' : '') +
+    '</div>';
+  }
+
+  var leftStack = thesisCard + momentum + stackFlags;
   if (!leftStack) leftStack = '<div class="cp-card rv" style="--d:.22s"><div class="cp-ctitle mono">Intel</div>' +
     '<div class="cp-thin">No deep intel on this account yet. Paste the agent\'s <b>[ COMPANY NOTE ]</b> from the Companies tab and the thesis, cost, stack, and flags fill in here.</div></div>';
 
@@ -3833,6 +3857,8 @@ function openCompanyEdit(acctId) {
     edField("Why now / what happened", "ecWhat", th.what, { opt: 1, area: 1, rows: 2 }) +
     edField("The bottleneck", "ecBott", th.bottleneck, { opt: 1, area: 1, rows: 2 }) +
     edField("Cost of the gap", "ecCost", a.costOfGap, { opt: 1, ph: "$15,000/week in delays" }) +
+    edField("Big wins (last 8 months)", "ecWins", a.wins, { opt: 1, area: 1, rows: 2, ph: "Raised Series B, launched X, signed marquee client…" }) +
+    edField("Any news on them?", "ecNews", a.news, { opt: 1, area: 1, rows: 2, ph: "Recent press, announcements, moves…" }) +
     edField("Tech stack (comma-separated)", "ecStack", (a.techStack || []).join(", "), { opt: 1, ph: "Azure, Databricks" }) +
     edField("Key signals (one per line)", "ecSignals", (a.signals || []).map(function (s) { return s.text || s; }).join("\n"), { opt: 1, area: 1, rows: 3 }) +
     edField("Notes & flags (one per line)", "ecFlags", (a.flags || []).join("\n"), { opt: 1, area: 1, rows: 2 });
@@ -3840,6 +3866,7 @@ function openCompanyEdit(acctId) {
     var nm = edVal(ov, "ecName"); if (!nm) { ov.querySelector("#edErr").textContent = "A company needs a name."; return; }
     a.company = nm; a.domain = edVal(ov, "ecDomain"); a.place = edVal(ov, "ecPlace");
     a.size = edVal(ov, "ecSize"); a.sector = edVal(ov, "ecSector"); a.costOfGap = edVal(ov, "ecCost");
+    a.wins = edVal(ov, "ecWins"); a.news = edVal(ov, "ecNews");
     a.thesis = a.thesis || {}; a.thesis.what = edVal(ov, "ecWhat"); a.thesis.bottleneck = edVal(ov, "ecBott");
     var st = edVal(ov, "ecStack"); a.techStack = st ? st.split(",").map(function (x) { return x.trim(); }).filter(Boolean) : [];
     a.signals = edLines(edVal(ov, "ecSignals")).map(function (t) { return { text: t, kind: "trigger" }; });
@@ -3857,8 +3884,8 @@ function openContactEdit(acctId, threadId) {
     edField("Email", "etEmail", th.email, { opt: 1, ph: "name@company.com" }) +
     edField("LinkedIn", "etLi", th.linkedin, { opt: 1, ph: "linkedin.com/in/…" }) +
     edSection("Contact intel — just this person") +
-    edField("Why they care", "etWhy", th.whyCares, { opt: 1, area: 1, rows: 2 }) +
-    edField("Personal hook (one per line)", "etHook", (th.hook || []).join("\n"), { opt: 1, area: 1, rows: 2 });
+    edField("Signal 1 · Why them, why now", "etWhy", th.whyCares, { opt: 1, area: 1, rows: 2 }) +
+    edField("Signal 2 · Context / hook (one per line)", "etHook", (th.hook || []).join("\n"), { opt: 1, area: 1, rows: 2 });
   edOverlay("Edit contact", "The company intel is shared automatically — this is what's unique to " + esc((th.name || "this person").split(" ")[0]) + ".", html, function (ov, close) {
     var nm = edVal(ov, "etName"); if (!nm) { ov.querySelector("#edErr").textContent = "A contact needs a name."; return; }
     th.name = nm; th.title = edVal(ov, "etTitle"); th.email = edVal(ov, "etEmail"); th.linkedin = edVal(ov, "etLi");
