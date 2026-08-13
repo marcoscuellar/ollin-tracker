@@ -2017,7 +2017,11 @@ select.auth-input{appearance:none}
 
   /* ===== index.html lines 2787-2820 - plans / founding-member gating + upgrade modal + POST /api/auth?action=founding ===== */
   // ---- plans / founding-member gating ----
-  var FREE_CONTACT_CAP=25;
+  /* Free-tier ceiling for new signups. Kept generous enough that a real book
+     imports whole — a 25-contact cap silently dropped every row of a normal
+     ZoomInfo export and surfaced only as an upgrade wall, which reads as
+     "the import did nothing". Lower this for a stricter free tier. */
+  var FREE_CONTACT_CAP=5000;
   function planName(){ return (ACCOUNT&&ACCOUNT.plan)||"free"; }
   function isUnlimited(){ var p=planName(); return p==="pro"||p==="founding"; }
   function contactCount(){ var n=0; state.accounts.forEach(function(a){ n+=(a.threads||[]).length; }); return n; }
@@ -2229,18 +2233,26 @@ select.auth-input{appearance:none}
   // a signal is only ever shown alongside one of these exact, real source types.
   // Anything that doesn't match stays untracked rather than showing a made-up tag.
   var SIGNAL_SOURCES = ["LinkedIn","CRM","Email Log","Job Boards","Product Data","Call Notes"];
+  /* The rule is "a signal must cite a source" — not "the source must be one of
+     six words". Known types keep their canonical casing; any other non-empty
+     source (a URL, "ZoomInfo intent signal, 2026-08-01", a publication) is
+     accepted as written. Only a genuinely sourceless claim is dropped. */
   function normSignalSource(s){
-    s=(s||"").trim().toLowerCase();
-    for(var i=0;i<SIGNAL_SOURCES.length;i++){ if(SIGNAL_SOURCES[i].toLowerCase()===s) return SIGNAL_SOURCES[i]; }
-    return "";
+    s=(s||"").trim();
+    if(!s) return "";
+    var l=s.toLowerCase();
+    for(var i=0;i<SIGNAL_SOURCES.length;i++){ if(SIGNAL_SOURCES[i].toLowerCase()===l) return SIGNAL_SOURCES[i]; }
+    return s.slice(0,80);
   }
   // Company-level intel (hiring/building/stack/money) — same honesty rule as a
   // contact signal: a claim without one of these real source types stays untracked.
   var COMPANY_FACT_SOURCES = ["LinkedIn","Press","Job Board","Earnings","CRM","Product Data","Blog","Inferred"];
   function normCompanyFactSource(s){
-    s=(s||"").trim().toLowerCase();
-    for(var i=0;i<COMPANY_FACT_SOURCES.length;i++){ if(COMPANY_FACT_SOURCES[i].toLowerCase()===s) return COMPANY_FACT_SOURCES[i]; }
-    return "";
+    s=(s||"").trim();
+    if(!s) return "";
+    var l=s.toLowerCase();
+    for(var i=0;i<COMPANY_FACT_SOURCES.length;i++){ if(COMPANY_FACT_SOURCES[i].toLowerCase()===l) return COMPANY_FACT_SOURCES[i]; }
+    return s.slice(0,80);
   }
   // Reads whichever company-intel columns are present on a CSV row. A
   // hiring/building/stack/money claim without a real source is dropped —
