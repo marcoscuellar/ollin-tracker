@@ -44,6 +44,26 @@ function setSession(res, userId) {
   setCookie(res, SESSION_COOKIE, signSession({ sub: userId, exp: Date.now() + SESSION_TTL_MS }), { maxAge: SESSION_TTL_MS / 1000 });
 }
 
+// Tell the owner a real person signed up. Without this, signups land silently
+// in KV and the only way to notice is to go looking. Best-effort by design:
+// the caller swallows failures so a mail problem can never block a signup.
+// Set SIGNUP_ALERT_EMAIL to route alerts somewhere other than the owner, or
+// to "off" to switch them off.
+async function notifyOwnerOfSignup(user) {
+  const to = (process.env.SIGNUP_ALERT_EMAIL || LEGACY_OWNER_EMAIL || '').trim();
+  if (!to || to.toLowerCase() === 'off') return;
+  const when = new Date(user.createdAt).toISOString().replace('T', ' ').slice(0, 16) + ' UTC';
+  await sendEmail({
+    to,
+    subject: `New VAMOS signup — ${user.email}`,
+    html: emailShell('Someone signed up', `
+      <p style="margin:0 0 10px"><b>${user.email}</b></p>
+      <p style="margin:0 0 4px;color:#6B6B6B;font-size:14px">${when}</p>
+      <p style="margin:14px 0 0;color:#6B6B6B;font-size:14px">
+        They're on the free plan and haven't confirmed their email yet.</p>`),
+  });
+}
+
 async function sendVerifyEmail(req, user) {
   const { origin } = getRP(req);
   const token = signToken({ typ: 'verify', sub: user.id }, VERIFY_TTL_MS);
@@ -98,6 +118,7 @@ async function signup(req, res) {
 
   // Best-effort: never fail signup if the email doesn't send.
   try { await sendVerifyEmail(req, user); } catch (e) { /* ignore */ }
+  try { await notifyOwnerOfSignup(user); } catch (e) { /* ignore */ }
 
   return send(res, 200, { ok: true, email, plan: 'free', verified: false, migrated, sender: null });
 }
