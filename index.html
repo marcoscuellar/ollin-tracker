@@ -2613,6 +2613,20 @@ select.auth-input{appearance:none}
     var sector=get(cm.sector); if(!isBlankFact(sector)) f.sector=sector;
     var size=get(cm.size); if(!isBlankFact(size)) f.size=size;
     var revenue=get(cm.revenue); if(!isBlankFact(revenue)) f.revenue=revenue;
+    /* The company card is Name / Industry / Big wins / News / Signal 1 / Signal 2.
+       This reader used to skip all four of the interesting ones, so a company
+       sheet imported its industry and nothing anyone would act on. */
+    var wins=get(cm.wins); if(!isBlankFact(wins)) f.wins=wins;
+    var news=get(cm.news); if(!isBlankFact(news)) f.news=news;
+    var thesisWhat=get(cm.thesis); if(!isBlankFact(thesisWhat)) f.thesis={what:thesisWhat};
+    var costgap=get(cm.costgap); if(!isBlankFact(costgap)) f.costOfGap=costgap;
+    var sigList=[];
+    var sig1=get(cm.signal);
+    if(!isBlankFact(sig1)){ var s1=splitInlineSource(sig1);
+      sigList.push({text:s1.value, kind:"trigger", detail:get(cm.signalsrc)||s1.src||""}); }
+    var sig2=get(cm.signal2);
+    if(!isBlankFact(sig2)){ var s2=splitInlineSource(sig2); sigList.push({text:s2.value, kind:"secondary", detail:s2.src||""}); }
+    if(sigList.length) f.signals=sigList;
     [["hiring","hiringsrc","hiringSrc"],["building","buildingsrc","buildingSrc"],
      ["stack","stacksrc","stackSrc"],["money","moneysrc","moneySrc"],
      ["leadership","leadershipsrc","leadershipSrc"],["product","productsrc","productSrc"],
