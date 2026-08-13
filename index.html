@@ -363,6 +363,11 @@
   background:var(--surface);color:var(--steel);border:1px solid var(--line);border-radius:999px;padding:4px 9px;white-space:nowrap}
 .gp-ppl{font-size:12px;color:var(--mute);margin-left:4px}
 .gp-fix{color:var(--steel);font-size:12.5px;font-weight:800;white-space:nowrap}
+.gp-junk{font-size:12.5px;line-height:1.5;color:var(--ink-2);background:var(--glass);
+  border:1px solid var(--glass-line);border-radius:10px;padding:11px 14px;margin:0 0 12px;cursor:pointer}
+.gp-junk:hover{border-color:var(--glass-line-2)}
+.gp-junk b{color:var(--bone)}
+.gp-junk-go{color:var(--accent-ink);font-weight:800;white-space:nowrap}
 .ah-title,.af-h{font-family:'Archivo Black','Archivo',sans-serif !important;font-weight:400 !important;letter-spacing:-.045em}
 .ah-title{line-height:.9}
 /* premium two-tone sign-in: dark brand hero (left) + WHITE form panel (right) */
@@ -2531,10 +2536,18 @@ select.auth-input{appearance:none}
       var thread=null;
       if(upsert){ var key=normContact(fields); if(key) thread=acct.threads.find(function(t){ return normContact(t)===key; }); }
       if(thread){
-        thread.name=fields.name; thread.title=fields.title; thread.persona=fields.persona; thread.entryDay=fields.entryDay;
-        thread.channel=fields.channel; thread.linkedin=fields.linkedin; thread.email=fields.email; thread.angle=fields.angle;
-        thread.signal=fields.signal; thread.signalSrc=fields.signalSrc; thread.pulledAt=fields.pulledAt;
-        thread.isContractor=fields.isContractor;
+        /* Merge, never blank out. A sheet that simply lacks a LinkedIn column
+           used to overwrite every stored URL with "" — the enrichment work
+           disappeared on the next sync. Only a column that actually carried a
+           value is allowed to change what is already there. */
+        var fill=function(k){ var v=(fields[k]||"").trim(); if(v) thread[k]=v; };
+        thread.name=fields.name;
+        ["title","linkedin","email","angle"].forEach(fill);
+        if(fields.signalSrc){ thread.signal=fields.signal; thread.signalSrc=fields.signalSrc; }
+        if(cm.thread>=0 || cm.status>=0){ thread.persona=fields.persona; thread.entryDay=fields.entryDay; }
+        if(cm.chan>=0) thread.channel=fields.channel;
+        if(cm.contractor>=0) thread.isContractor=fields.isContractor;
+        thread.pulledAt=fields.pulledAt;
         updated++;
       } else {
         if(added>=budget){ skipped++; continue; } // over the free cap — hold this one back
@@ -2568,18 +2581,18 @@ select.auth-input{appearance:none}
   }
   // Paste box: one company per line — "Company, City, State" (comma or tab).
   function addCompaniesFromText(text){
-    var lines=String(text||"").split(/\r?\n/), added=0, updated=0;
+    var lines=String(text||"").split(/\r?\n/), added=0, updated=0, rejected=0;
     lines.forEach(function(ln){
       ln=ln.trim(); if(!ln) return;
       var parts=ln.split(/\t|,/).map(function(x){ return x.trim(); });
       var company=parts[0]||"";
       if(!company) return;
-      if(/^(company|company name|account|account name)$/i.test(company)) return; // header line
+      if(isJunkCompanyName(company)){ rejected++; return; }
       var place=[parts[1]||"", parts[2]||""].filter(Boolean).join(", ");
       var r=upsertCompany(company, place, null);
       if(r){ r.isNew?added++:updated++; }
     });
-    return { ok:true, added:added, updated:updated };
+    return { ok:true, added:added, updated:updated, rejected:rejected };
   }
   // A blank in these curated exports is spelled out, not left empty.
   function isBlankFact(v){ v=(v||"").trim(); return !v || /^not tracked$/i.test(v) || /^n\/?a$/i.test(v) || /^none$/i.test(v); }
@@ -2638,7 +2651,14 @@ select.auth-input{appearance:none}
   }
   function applyCompanyImport(res){
     if(!res.ok){ toast(res.msg||"Couldn't add those"); return false; }
-    if(!res.added && !res.updated){ toast("No companies found to add"); return false; }
+    if(!res.added && !res.updated){
+      /* Silently swallowing a paste of header cells is how the book filled up
+         with accounts called Name and Account_ID in the first place. */
+      toast(res.rejected
+        ? "Nothing added — those look like header cells or record IDs, not company names."
+        : "No companies found to add");
+      return false;
+    }
     state.seeded=true; persistAccounts(); render();
     toast("Companies: "+res.added+" added"+(res.updated?", "+res.updated+" updated":""));
     return true;
@@ -3119,7 +3139,7 @@ var AX_HOT = [
 function hotAxis(t, a) {
   var sigs = a.signals || [];
   var hasTrigger = sigs.some(function (s) { return s.kind === "trigger"; });
-  var contactSig = !!(t.angle || (t.signalSrc && t.signal) || (threadOf(t) || {}).whyCares);
+  var contactSig = threadHasSignal(t) || threadHasSignal(threadOf(t) || {});
   if (hasTrigger && (a.costOfGap || contactSig)) return "ready";
   if (hasTrigger || a.costOfGap || (a.thesis && a.thesis.bottleneck)) return "warm";
   if (sigs.length || a.whyNow || a.hiring || a.building || a.news || a.wins) return "early";
@@ -4209,6 +4229,13 @@ var GAP_SPEC = [
 function coGaps(a) {
   return GAP_SPEC.filter(function (g) { return !g[1](a); }).map(function (g) { return g[0]; });
 }
+/* One definition of "this contact has a reason to be called", so the audit and
+   the card agree. The audit used to test only whyCares/angle/hook and ignore
+   the signal + source pair that CSV import writes — which reported every
+   imported contact as signal-less no matter how good its signal was. */
+function threadHasSignal(t) {
+  return !!(t.whyCares || t.angle || (t.signalSrc && t.signal) || (t.hook || []).length);
+}
 /* contact-level holes, summarised per account */
 function coContactGaps(a) {
   var miss = { email: 0, linkedin: 0, title: 0, signal: 0 };
@@ -4216,7 +4243,7 @@ function coContactGaps(a) {
     if (!t.email) miss.email++;
     if (!t.linkedin) miss.linkedin++;
     if (!t.title) miss.title++;
-    if (!t.whyCares && !t.angle && !(t.hook || []).length) miss.signal++;
+    if (!threadHasSignal(t)) miss.signal++;
   });
   return miss;
 }
@@ -4240,6 +4267,68 @@ function coLead(a) {
 }
 var WHY_FLAME = '<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="var(--vm-no)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/></svg>';
 var WHY_LABEL = { hot: "WHY NOW", warm: "WARMING", cool: "NEW" };
+/* ---------- bad-import rules ----------
+   A contact sheet fed to the company reader creates one "account" per person,
+   and header cells (Company_Name, Account_ID) become accounts of their own.
+   These two tests catch both, at the door and in the cleanup. */
+var JUNK_NAMES = /^(company|company name|companyname|account|account id|account name|name|full name|first name|last name|contact|contact name|email|email address|title|job title|linkedin|linkedin url|linkedin link|signal|signal source|domain|website|url|industry|sector|city|state|location|size|employees|notes|status)$/;
+function isJunkCompanyName(s) {
+  var n = String(s || "").trim().replace(/[_\-]+/g, " ").replace(/\s+/g, " ").toLowerCase();
+  if (!n) return true;
+  if (JUNK_NAMES.test(n)) return true;
+  if (/^\d[\d\s-]*$/.test(n)) return true;      /* a bare record ID, not a name */
+  return false;
+}
+/* Two or three capitalised words with no company-ish word in them. Only ever
+   consulted for accounts that are otherwise completely empty, so a real
+   company that happens to fit the shape (Sprout Social) is never at risk. */
+var CO_WORDS = /\b(inc|llc|ltd|limited|corp|corporation|co|company|group|holdings|partners|labs|technologies|technology|tech|systems|solutions|services|software|capital|bank|health|media|global|industries|associates|consulting|analytics|networks|network|studio|studios|agency|trading|insurance|financial|finance|university|hospital|clinic|foundation|institute|ventures|brands|logistics|energy|motors|foods|pharma|bio|digital|data|cloud|security|ai)\b/i;
+function looksLikePersonName(s) {
+  var n = String(s || "").trim();
+  if (!/^[A-Z][a-zA-Z'’.\-]+(?: [A-Z][a-zA-Z'’.\-]+){1,2}$/.test(n)) return false;
+  return !CO_WORDS.test(n);
+}
+/* Nothing in it at all — no people, no intel, no location. Every junk row is
+   empty, so this gate is what keeps a real account safe no matter its name. */
+function acctIsEmpty(a) {
+  return !((a.threads || []).length || a.domain || a.sector || a.place || a.size ||
+    (a.signals || []).length || a.wins || a.news || a.whyNow || a.thesis || a.costOfGap ||
+    a.hiring || a.building || a.stack || a.money || a.leadership || a.product || a.expansion || a.timing);
+}
+/* Two confidence levels, deliberately kept apart. "certain" is a header cell or
+   a bare record ID — never a company, safe to state plainly. "likely" is only a
+   name shape, and a real empty account (Dairy Queen, Primo Brands) fits that
+   shape too, so those are always shown by name before anything is removed. */
+function junkKind(a) {
+  if (!acctIsEmpty(a)) return "";
+  var n = String(a.company || "").trim();
+  if (isJunkCompanyName(n)) return "certain";
+  if (looksLikePersonName(n)) return "likely";
+  return "";
+}
+function isJunkAccount(a) { return !!junkKind(a); }
+function junkAccounts() { return (state.accounts || []).filter(isJunkAccount); }
+function doPurgeJunk() {
+  var bad = junkAccounts();
+  if (!bad.length) { toast("No bad import rows found."); return; }
+  var certain = bad.filter(function (a) { return junkKind(a) === "certain"; });
+  var likely = bad.filter(function (a) { return junkKind(a) === "likely"; });
+  var list = function (set) { return set.map(function (a) { return "  · " + (a.company || "—"); }).join("\n"); };
+  var msg = "Remove " + bad.length + " empty account" + (bad.length === 1 ? "" : "s") +
+    "? None has a contact, a location or any intel.\n";
+  if (certain.length) msg += "\nHeader cells and record IDs — never companies:\n" + list(certain) + "\n";
+  if (likely.length) msg += "\nRead as people's names. Check these are not real accounts:\n" + list(likely) + "\n";
+  msg += "\nNothing else is touched.";
+  if (!confirm(msg)) return;
+  var kill = {}; bad.forEach(function (a) { kill[a.id] = 1; });
+  state.accounts = (state.accounts || []).filter(function (a) { return !kill[a.id]; });
+  if (!state.accounts.some(function (a) { return a.id === state.activeId; })) {
+    state.activeId = state.accounts.length ? state.accounts[0].id : null;
+  }
+  persistAccounts(); render();
+  toast("Removed " + bad.length + " bad row" + (bad.length === 1 ? "" : "s") + ".");
+}
+
 /* bad-data rule: a numeric record ID imported as a company name (57233868201)
    falls back to a domain-derived name so the tile is readable. */
 function coDisplayName(a) {
@@ -4256,8 +4345,10 @@ function coMetaLine(a) {
 /* "What's missing" — a real audit of the book, worst offenders first. */
 var GAPS_OPEN = false;
 function gapsPanelHTML() {
-  var accts = state.accounts || [];
-  if (!accts.length) return "";
+  var all = state.accounts || [];
+  if (!all.length) return "";
+  var junk = junkAccounts();
+  var accts = junk.length ? all.filter(function (a) { return !isJunkAccount(a); }) : all;
   var rows = accts.map(function (a) { return { a: a, gaps: coGaps(a), cg: coContactGaps(a) }; })
     .filter(function (r) { return r.gaps.length; })
     .sort(function (x, y) { return y.gaps.length - x.gaps.length; });
@@ -4278,7 +4369,7 @@ function gapsPanelHTML() {
     if (cg.linkedin) people.push(cg.linkedin + " no LinkedIn");
     if (cg.signal) people.push(cg.signal + " no signal");
     return '<div class="gp-row" data-gid="' + esc(r.a.id) + '">' +
-      '<div class="gp-co">' + esc(r.a.company || "—") + '<span class="gp-n">' + n + ' contact' + (n === 1 ? '' : 's') + '</span></div>' +
+      '<div class="gp-co">' + esc(coDisplayName(r.a)) + '<span class="gp-n">' + n + ' contact' + (n === 1 ? '' : 's') + '</span></div>' +
       '<div class="gp-tags">' + r.gaps.map(function (g) { return '<span class="gp-tag">' + esc(g) + '</span>'; }).join('') +
         (people.length ? '<span class="gp-ppl">' + esc(people.join(" · ")) + '</span>' : '') + '</div>' +
       '<span class="gp-fix">Fix &rarr;</span></div>';
@@ -4291,24 +4382,35 @@ function gapsPanelHTML() {
       '<a class="gp-act" id="gapsMail">Email me</a>' +
       '<a class="gp-close" id="gapsToggle">Hide</a></div>' +
     '<p class="vm-sub" style="margin:2px 0 14px">Click a row to open that company and fill it in — company intel is shared by every contact there.</p>' +
+    (junk.length ? '<div class="gp-junk" id="gapsJunk"><b>' + junk.length + '</b> empty account' +
+      (junk.length === 1 ? '' : 's') + ' look like bad import rows — people’s names and header cells that landed in the company list. ' +
+      'They are kept out of this report. <span class="gp-junk-go">Clean them up &rarr;</span></div>' : '') +
     '<div class="gp-list">' + (body || '<div class="cp-thin">Nothing missing. Nice.</div>') + '</div></div>';
 }
 /* the audit as plain data — shared by print, CSV and email */
 function gapsReport() {
-  return (state.accounts || []).map(function (a) {
+  /* Bad import rows are excluded — this report gets printed and emailed, and a
+     page of colleagues' names filed as companies is not something to hand over. */
+  return (state.accounts || []).filter(function (a) { return !isJunkAccount(a); }).map(function (a) {
     var cg = coContactGaps(a), people = [];
     if (cg.email) people.push(cg.email + " no email");
     if (cg.linkedin) people.push(cg.linkedin + " no LinkedIn");
     if (cg.title) people.push(cg.title + " no title");
     if (cg.signal) people.push(cg.signal + " no signal");
     return {
-      company: a.company || "—",
+      company: coDisplayName(a),
       contacts: (a.threads || []).length,
       missing: coGaps(a),
       people: people.join("; ")
     };
   }).filter(function (r) { return r.missing.length || r.people; })
-    .sort(function (x, y) { return y.missing.length - x.missing.length; });
+    .sort(function (x, y) {
+      /* Accounts you have people at come first — that is where filling a gap
+         actually unblocks an outreach today. */
+      if ((y.contacts > 0) !== (x.contacts > 0)) return y.contacts - x.contacts;
+      var d = y.missing.length - x.missing.length;
+      return d !== 0 ? d : x.company.localeCompare(y.company);
+    });
 }
 function gapsCsv() {
   var q = function (s) { return '"' + String(s == null ? "" : s).replace(/"/g, '""') + '"'; };
@@ -4330,21 +4432,34 @@ function printGaps() {
   var rows = gapsReport();
   var w = window.open("", "_blank");
   if (!w) { toast("Allow pop-ups to print."); return; }
+  var withPeople = rows.filter(function (r) { return r.contacts > 0; });
+  var totalC = rows.reduce(function (n, r) { return n + r.contacts; }, 0);
   var body = rows.map(function (r) {
-    return "<tr><td class='co'>" + esc(r.company) + "</td><td>" + r.contacts +
-      "</td><td>" + esc(r.missing.join(", ") || "—") + "</td><td>" + esc(r.people || "—") + "</td></tr>";
+    var n = r.missing.length;
+    /* The same eight field names repeated on every row is a wall, not a report.
+       Lead with the count, then name them. */
+    var miss = n ? "<b>" + n + "</b> <span class='f'>" + esc(r.missing.join(", ")) + "</span>" : "<span class='ok'>complete</span>";
+    return "<tr><td class='co'>" + esc(r.company) + "</td><td class='num'>" + (r.contacts || "—") +
+      "</td><td>" + miss + "</td><td class='ppl'>" + esc(r.people || "—") + "</td></tr>";
   }).join("");
   w.document.write(
     "<!doctype html><meta charset='utf-8'><title>Vamos — What's missing</title>" +
-    "<style>body{font:14px/1.5 -apple-system,Segoe UI,Helvetica,Arial,sans-serif;color:#111;padding:32px;max-width:1000px;margin:0 auto}" +
-    "h1{font-size:24px;margin:0 0 4px}.sub{color:#666;margin:0 0 22px;font-size:13px}" +
-    "table{width:100%;border-collapse:collapse}th{text-align:left;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#666;border-bottom:2px solid #111;padding:8px 6px}" +
-    "td{padding:9px 6px;border-bottom:1px solid #ddd;vertical-align:top}.co{font-weight:700}" +
-    "@media print{body{padding:0}}</style>" +
-    "<h1>What's missing</h1><p class='sub'>Vamos · " + esc(todayStr()) + " · " + rows.length +
-    " account" + (rows.length === 1 ? "" : "s") + " with gaps</p>" +
-    "<table><tr><th>Company</th><th>Contacts</th><th>Missing company fields</th><th>Contact gaps</th></tr>" +
-    body + "</table>");
+    /* An explicit @page margin also drops the browser's own header/footer, so
+       the sheet does not print "about:blank" and a timestamp across the top. */
+    "<style>@page{margin:14mm}" +
+    "body{font:13px/1.5 -apple-system,Segoe UI,Helvetica,Arial,sans-serif;color:#111;margin:0}" +
+    "h1{font-size:23px;margin:0 0 4px}.sub{color:#666;margin:0 0 20px;font-size:12.5px}" +
+    "table{width:100%;border-collapse:collapse}" +
+    "th{text-align:left;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#666;border-bottom:2px solid #111;padding:7px 6px}" +
+    "td{padding:8px 6px;border-bottom:1px solid #ddd;vertical-align:top}" +
+    "tr{break-inside:avoid;page-break-inside:avoid}thead{display:table-header-group}" +
+    ".co{font-weight:700;width:24%}.num{width:8%;color:#444}.f{color:#555}.ppl{width:26%;color:#555}" +
+    ".ok{color:#2E7D32;font-weight:600}</style>" +
+    "<h1>What's missing</h1><p class='sub'>Vamos · " + esc(todayStr()) + " · " +
+    withPeople.length + " account" + (withPeople.length === 1 ? "" : "s") + " with contacts, " +
+    totalC + " contacts · " + rows.length + " account" + (rows.length === 1 ? "" : "s") + " with gaps</p>" +
+    "<table><thead><tr><th>Company</th><th>Contacts</th><th>Missing company fields</th><th>Contact gaps</th></tr></thead><tbody>" +
+    body + "</tbody></table>");
   w.document.close();
   setTimeout(function () { w.print(); }, 300);
 }
@@ -4371,6 +4486,7 @@ function wireGaps() {
   var pr = document.getElementById("gapsPrint"); if (pr) pr.onclick = printGaps;
   var cs = document.getElementById("gapsCsv"); if (cs) cs.onclick = downloadGapsCsv;
   var em = document.getElementById("gapsMail"); if (em) em.onclick = emailGaps;
+  var jk = document.getElementById("gapsJunk"); if (jk) jk.onclick = doPurgeJunk;
   Array.prototype.forEach.call(document.querySelectorAll(".gp-row"), function (r) {
     r.onclick = function () { CO_VIEW = r.dataset.gid; render(); window.scrollTo(0, 0); };
   });
@@ -4681,24 +4797,18 @@ function addCompaniesSmart(text) {
     toast("Intel: " + res.companies + " companies, " + res.contacts + " contacts.");
     return;
   }
-  /* A pasted table with a header row is a contact list, not a company list —
-     route it through the same importer the file upload uses. Without this a
-     copied contact table was read as "Company, City, State" and every person
-     in it was dropped. */
+  /* Anything carrying a real header row goes through the same router the file
+     upload uses: a Name column means people, a Company column means accounts.
+     Reading the first cell of every line as a company name instead is what
+     turned a pasted contact table into one "account" per person, and header
+     cells like Company_Name and Account_ID into accounts of their own.
+     Underscores are flattened first — \bname\b never matched Company_Name. */
   var first = String(text || "").split(/\r?\n/)[0] || "";
-  var looksTabular = /\t|,/.test(first) && /\bname\b/i.test(first) &&
-    /(company|account|email|title|linkedin)/i.test(first);
-  if (looksTabular) {
-    var rows = parseCSV(text);
-    var r = importRows(rows, true);
-    if (!r || !r.ok) return toast((r && r.msg) || "Couldn't read that table.");
-    state.seeded = true; persistAccounts(); render(); window.scrollTo(0, 0);
-    var bits = [];
-    if (r.added) bits.push(r.added + " added");
-    if (r.updated) bits.push(r.updated + " updated");
-    toast(bits.length ? "Contacts: " + bits.join(", ") + "." : "Nothing new in that table.");
-    return;
-  }
+  var hdr = first.replace(/[_\-]+/g, " ").toLowerCase();
+  var looksTabular = /\t|,/.test(first) &&
+    /\b(name|company|account|organization|organisation|employer)\b/.test(hdr) &&
+    /\b(company|account|email|title|linkedin|name|city|state|industry|signal|domain|website)\b/.test(hdr);
+  if (looksTabular) { routeImport(parseCSV(text)); return; }
   if (applyCompanyImport(addCompaniesFromText(text))) { /* re-rendered by applyCompanyImport */ }
 }
 
