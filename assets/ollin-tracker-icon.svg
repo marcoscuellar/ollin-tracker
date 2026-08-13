@@ -1,8 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Ōllin Tracker">
-  <!-- The Ō from the wordmark, drawn rather than typeset: a favicon cannot
-       rely on Archivo being available. Filled tile so it reads on both a
-       light and a dark tab bar; white mark on #0A0A0A is the design system. -->
-  <rect width="64" height="64" rx="12" fill="#0A0A0A"/>
-  <rect x="20" y="13" width="24" height="5" rx="2.5" fill="#F8F7F4"/>
-  <circle cx="32" cy="40" r="13" fill="none" stroke="#F8F7F4" stroke-width="7"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Vamos">
+  <!-- Black ! on a volt tile — the "Vamos!" highlight box, reduced to a mark.
+       Drawn rather than typeset: a favicon cannot rely on Archivo loading.
+       Heavy strokes and a wide bar so it still reads at 16px. -->
+  <rect width="64" height="64" rx="14" fill="#D4FF00"/>
+  <rect x="26" y="13" width="12" height="26" rx="3" fill="#0B0C10"/>
+  <circle cx="32" cy="49" r="6.5" fill="#0B0C10"/>
 </svg>
