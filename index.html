@@ -68,6 +68,11 @@
 .demo-cta .dm-go:hover{background:var(--volt-2)}
 .demo-cta a{color:var(--steel) !important;font-weight:600 !important;font-size:12.5px;text-decoration:none !important}
 .demo-cta a:hover{color:var(--ink) !important}
+/* the intro Ollin will actually open with, shown back to you */
+.id-preview{background:var(--glass);backdrop-filter:blur(14px);border:1px solid var(--glass-line);
+  border-left:2px solid var(--volt);border-radius:10px;padding:13px 16px;
+  font-size:14.5px;line-height:1.55;color:var(--ink-2b)}
+.id-preview.unset{border-left-color:var(--mute);color:var(--mute);font-style:italic}
 /* ---- Onboarding in the glass system: dark brand panel + white form ---- */
 .ob-screen{background:var(--black) !important}
 .ob-inner{border:1px solid var(--glass-line) !important;border-radius:20px !important;overflow:hidden;
@@ -4828,18 +4833,35 @@ function applyAgentNotes(parsed) {
 }
 
 function viewAccount(v) {
+  /* Show the line Ollin will actually open with, so it's obvious this is
+     editable and obvious when it's still the placeholder. */
+  var sd = (ACCOUNT && ACCOUNT.sender) || {};
+  var introSet = sd.intro && sd.intro !== DEFAULT_SENDER_INTRO;
+  var introLine = [
+    sd.name ? "I'm " + sd.name : "",
+    sd.company ? (sd.name ? " with " : "I'm with ") + sd.company : ""
+  ].join("").trim();
+  if (introLine) introLine += ". ";
+  introLine += (sd.intro || DEFAULT_SENDER_INTRO);
+
   v.innerHTML =
-    '<h1 class="vm-h1">Account</h1>' +
+    '<div class="toolbar"><div class="tb-title"><h1>Account</h1></div></div>' +
     '<div class="vm-card"><div class="mn" style="color:var(--steel)">Signed in</div>' +
       '<p class="vm-sub" style="margin:8px 0 14px">' + esc((ACCOUNT && ACCOUNT.email) || "—") +
       (ACCOUNT && ACCOUNT.verified === false ? " · unverified" : "") + "</p>" +
       '<div class="vm-row">' +
-        '<button class="vm-gh" id="acSender">Outreach identity</button>' +
         '<button class="vm-gh" id="acEmail">Change email</button>' +
         '<button class="vm-gh" id="acOut">Log out</button></div></div>' +
+    '<div class="vm-card"><div class="mn" style="color:var(--steel)">Outreach identity</div>' +
+      '<p class="vm-sub" style="margin:8px 0 10px">How Ollin introduces you, after it opens on their company or role.</p>' +
+      '<div class="id-preview' + (introSet ? '' : ' unset') + '">' + esc(introLine) + '</div>' +
+      (introSet ? '' : '<p class="vm-sub" style="margin:10px 0 0;color:var(--mute);font-size:12.5px">' +
+        'That\'s the default line — make it yours.</p>') +
+      '<div class="vm-row" style="margin-top:14px">' +
+        '<button class="vm-pri" id="acSender">' + (introSet ? 'Edit intro' : 'Write your intro') + '</button></div></div>' +
     '<div class="vm-card"><div class="mn" style="color:var(--steel)">Plan</div>' +
       '<p class="vm-sub" style="margin:8px 0 14px">' +
-      (isUnlimited() ? "Unlimited" : "Free — " + freeLeft() + " of 25 contact slots left") + "</p>" +
+      (isUnlimited() ? "Unlimited" : "Free — " + contactCount() + " of " + FREE_CONTACT_CAP + " contacts used") + "</p>" +
       (isUnlimited() ? "" : '<button class="vm-pri" id="acUp">Get unlimited</button>') + "</div>" +
     '<div class="vm-card"><div class="mn" style="color:var(--steel)">Data</div>' +
       '<div class="vm-row" style="margin-top:12px">' +
