@@ -108,6 +108,66 @@
 .tb-hint{color:var(--mute);font-size:13px;flex:1;min-width:220px}
 .toolbar .controls,.toolbar .askbar{margin:0}
 .toolbar .filters{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
+/* ---- Pipeline: glass stat tiles, grouped New column, white in-motion ---- */
+.fstage{background:var(--glass) !important;backdrop-filter:blur(16px);
+  border:1px solid var(--glass-line) !important;border-radius:14px;color:var(--ink) !important}
+.fstage .n{font-family:'Archivo Black','Archivo',sans-serif;font-weight:400;font-size:30px;
+  letter-spacing:-.03em;color:var(--ink)}
+.fstage .l{font-size:12px;color:var(--steel)}
+.fstage .cv{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--mute)}
+.fstage .barw{background:rgba(255,255,255,.07);height:3px}
+.fstage .barw i{background:var(--volt);display:block;height:100%}
+.fstage.live{border-color:rgba(212,255,0,.4) !important;box-shadow:0 0 24px -8px rgba(212,255,0,.3)}
+.pgroup{background:var(--glass);backdrop-filter:blur(14px);border:1px solid var(--glass-line);
+  border-radius:11px;padding:11px 12px;margin-bottom:10px}
+.pgh{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.pgn{font-weight:800;font-size:13px;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pgc{margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:8.5px;letter-spacing:.1em;color:var(--mute);flex:none}
+.pprow{display:flex;align-items:center;gap:8px;padding:6px 0;border-top:1px solid var(--glass-line);cursor:pointer}
+.pgroup .pprow:first-of-type{border-top:0}
+.pprow .ava{width:24px;height:24px;border-radius:7px;background:rgba(255,255,255,.06);color:var(--steel);
+  display:grid;place-items:center;font-size:9px;font-weight:800;flex:none}
+.ppn{font-size:12.5px;font-weight:700;color:var(--ink-2b);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ppt{font-size:11px;color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pcard .pprow{border-top:1px solid var(--w-line-soft);margin-top:8px;padding-top:8px}
+.pcard .ava{background:var(--w-line-soft);color:var(--w-ink)}
+.pcard .ppn{color:var(--w-body)}
+.ptouch{margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.08em;
+  color:var(--red);flex:none}
+.pmore{border:1px dashed var(--glass-line);border-radius:10px;padding:10px 12px;text-align:center;
+  font-size:12px;color:var(--mute);cursor:pointer}
+.pempty{border:1px dashed var(--glass-line);border-radius:10px;padding:16px 12px;text-align:center;
+  font-size:12.5px;color:var(--mute);background:transparent}
+/* ---- Companies: ACT NOW (white) / WATCHING (glass) ---- */
+.actgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(350px,1fr));gap:16px}
+.cocard .cotop{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.cocard .cologo{width:38px;height:38px;border-radius:10px;background:var(--volt);color:#0B0C10;
+  display:grid;place-items:center;font-weight:900;font-size:16px;flex:none}
+.cocard .coname{font-weight:800;font-size:16px;color:var(--w-ink);letter-spacing:-.01em}
+.cocard .cometa{font-size:12.5px;color:var(--w-meta);margin-top:1px}
+.whynow{margin-left:auto;display:inline-flex;align-items:center;gap:6px;background:#0B0C10;color:var(--volt);
+  font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.1em;
+  padding:5px 10px;border-radius:999px;white-space:nowrap;flex:none}
+.cosig{background:var(--w-inset);border-radius:10px;padding:12px 14px;font-size:13.5px;line-height:1.5;
+  color:var(--w-body);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.cosig .k{font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.1em;
+  color:var(--red);margin-right:8px}
+.cocard .cofoot2{display:flex;align-items:center;gap:16px;margin-top:14px;font-size:12.5px;color:var(--w-meta)}
+.cocard .cofoot2 b{color:var(--w-ink)}
+.cocard .cofoot2 .arrow{margin-left:auto;color:var(--w-accent-ink);font-weight:800}
+.watchgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
+.cotile{display:flex;align-items:center;gap:11px;padding:12px 14px;cursor:pointer;
+  background:var(--glass);backdrop-filter:blur(14px);border:1px solid var(--glass-line);
+  border-radius:11px;transition:all .15s}
+.cotile:hover{border-color:var(--glass-line-2);background:var(--glass-2)}
+.cotile-lg{width:30px;height:30px;border-radius:8px;background:rgba(255,255,255,.06);color:var(--steel);
+  display:grid;place-items:center;font-weight:800;font-size:12px;flex:none}
+.cotile-b{display:flex;flex-direction:column;min-width:0;flex:1}
+.cotile-nm{font-weight:800;font-size:13.5px;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cotile-me{font-size:11.5px;color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cotile-n{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--mute);flex:none}
+.cotile:hover .cotile-n{color:var(--volt)}
+@media(max-width:900px){.watchgrid{grid-template-columns:repeat(auto-fill,minmax(200px,1fr))}}
 /* ---- Contacts: one dense grouped glass table (~3x the old card grid) ---- */
 .cttable{overflow:hidden;padding:0;margin-top:6px}
 .ct-head,.ctrow{display:grid;
@@ -3620,33 +3680,60 @@ function viewPipeline(v) {
 
   var funnel = PIPE_STAGES.map(function (s, i) {
     var n = byStage[i].length, pct = Math.round(n / total * 100);
-    return '<div class="fstage rv" style="--d:' + (0.24 + i * 0.06) + 's">' +
+    return '<div class="fstage' + (n ? " live" : "") + ' rv" style="--d:' + (0.24 + i * 0.06) + 's">' +
       '<span class="cv">' + pct + '%</span>' +
       '<div class="n">' + n + '</div><div class="l">' + s[0] + '</div>' +
       '<div class="barw"><i style="width:' + pct + '%"></i></div></div>';
   }).join("");
 
+  var initOf = function (n) {
+    return (n || "?").split(/\s+/).map(function (w) { return w[0]; }).join("").slice(0, 2).toUpperCase();
+  };
   var board = PIPE_STAGES.map(function (s, i) {
-    var col = byStage[i], won = i === 4;
-    var cards = col.slice(0, 6).map(function (c) {
-      var th = c.th, a = c.a;
-      var why = th.angle || (a.hiring ? "Hiring — " + a.hiring : "") || th.title || "Engine-matched";
-      var pillClass = won ? "hot" : (i === 0 ? "wait" : "due");
-      var pillTxt = won ? "SEQUENCE DONE" : (i === 0 ? "QUEUED" : "TOUCH " + c.stage + "/" + CADENCE.length);
-      var init = (th.name || "?").split(/\s+/).map(function (w) { return w[0]; }).join("").slice(0, 2).toUpperCase();
-      return '<div class="pcard' + (won ? " won" : "") + '" data-a="' + esc(a.id) + '" data-t="' + esc(th.id) + '">' +
-        '<div class="pn">' + esc(a.company || th.name || "—") + '</div>' +
-        '<div class="pw">' + esc(String(why).slice(0, 80)) + '</div>' +
-        '<div class="pm"><span class="lpill ' + pillClass + '">' + pillTxt + '</span></div>' +
-        (th.name ? '<div class="who"><span class="ava">' + esc(init) + '</span>' + esc(th.name) +
-          (th.title ? ' · ' + esc(th.title) : '') + '</div>' : '') +
-      '</div>';
-    }).join("");
-    var overflow = col.length > 6 ? '<div class="pempty">+ ' + (col.length - 6) + ' more from the engines</div>' : "";
-    if (!col.length) cards = '<div class="pempty">Nothing here yet.</div>';
+    var col = byStage[i], won = i === 4, cards;
+
+    if (!col.length) {
+      cards = '<div class="pempty">Nothing here yet</div>';
+    } else if (i === 0) {
+      /* New: group by company — never render hundreds of individual cards */
+      var byCo = {}, coOrder = [];
+      col.forEach(function (c) {
+        var k = c.a.company || "—";
+        if (!byCo[k]) { byCo[k] = []; coOrder.push(k); }
+        byCo[k].push(c);
+      });
+      var CAP = 4, shown = coOrder.slice(0, CAP);
+      cards = shown.map(function (co) {
+        var people = byCo[co].map(function (c) {
+          return '<div class="pprow" data-a="' + esc(c.a.id) + '" data-t="' + esc(c.th.id) + '">' +
+            '<span class="ava">' + esc(initOf(c.th.name)) + '</span>' +
+            '<span class="ppn">' + esc(c.th.name || "—") + '</span>' +
+            (c.th.title ? '<span class="ppt">' + esc(String(c.th.title).slice(0, 28)) + '</span>' : '') +
+          '</div>';
+        }).join("");
+        return '<div class="pgroup"><div class="pgh"><span class="pgn">' + esc(co) + '</span>' +
+          '<span class="pgc">' + byCo[co].length + ' QUEUED</span></div>' + people + '</div>';
+      }).join("");
+      var hidden = col.length - shown.reduce(function (n, co) { return n + byCo[co].length; }, 0);
+      if (hidden > 0) cards += '<div class="pmore">+ ' + hidden + ' more — grouped by company</div>';
+    } else {
+      /* In motion = act now, so these are white cards */
+      cards = col.slice(0, 6).map(function (c) {
+        var th = c.th, a = c.a;
+        var why = th.angle || (a.hiring ? "Hiring — " + a.hiring : "") || th.title || "Engine-matched";
+        return '<div class="pcard' + (won ? " won" : "") + '" data-a="' + esc(a.id) + '" data-t="' + esc(th.id) + '">' +
+          '<div class="pn">' + esc(a.company || th.name || "—") + '</div>' +
+          '<div class="pw">' + esc(String(why).slice(0, 80)) + '</div>' +
+          '<div class="pprow"><span class="ava">' + esc(initOf(th.name)) + '</span>' +
+            '<span class="ppn">' + esc(th.name || "—") + '</span>' +
+            '<span class="ptouch">' + (won ? "DONE" : "TOUCH " + c.stage + "/" + CADENCE.length) + '</span></div>' +
+        '</div>';
+      }).join("");
+      if (col.length > 6) cards += '<div class="pmore">+ ' + (col.length - 6) + ' more</div>';
+    }
     return '<div class="rv" style="--d:' + (0.3 + i * 0.08) + 's">' +
       '<div class="colh"><span class="ct">' + s[0] + '</span><span class="cc' + (col.length ? "" : " zero") + '">' + col.length + '</span></div>' +
-      cards + overflow + '</div>';
+      cards + '</div>';
   }).join("");
 
   v.innerHTML =
@@ -3658,7 +3745,7 @@ function viewPipeline(v) {
     '<div class="funnel">' + funnel + '</div>' +
     '<div class="board">' + board + '</div>';
 
-  Array.prototype.forEach.call(v.querySelectorAll(".pcard"), function (c) {
+  Array.prototype.forEach.call(v.querySelectorAll(".pcard,.pgroup .pprow"), function (c) {
     c.onclick = function () {
       var map = liveByKey(), id = c.dataset.a + "|" + c.dataset.t;
       if (!map[id]) return toast("This contact has finished their cadence.");
@@ -3974,6 +4061,15 @@ function coLead(a) {
 }
 var WHY_FLAME = '<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="var(--vm-no)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/></svg>';
 var WHY_LABEL = { hot: "WHY NOW", warm: "WARMING", cool: "NEW" };
+/* bad-data rule: a numeric record ID imported as a company name (57233868201)
+   falls back to a domain-derived name so the tile is readable. */
+function coDisplayName(a) {
+  var n = String(a.company || "").trim();
+  if (n && !/^\d[\d\s-]*$/.test(n)) return n;
+  var d = String(a.domain || "").replace(/^https?:\/\//i, "").replace(/^www\./i, "").split("/")[0];
+  if (d) { var base = d.split(".")[0]; return base.charAt(0).toUpperCase() + base.slice(1); }
+  return n || "—";
+}
 function coMetaLine(a) {
   return [a.domain, a.size, a.place].filter(Boolean).join(" · ") || "No details yet";
 }
@@ -4113,18 +4209,47 @@ function viewCompanies(v) {
     return d !== 0 ? d : (x.company || "").localeCompare(y.company || "");
   });
 
-  var cards = accts.map(function (a) {
-    var lvl = coWhyLevel(a), pill = lvl === "hot" ? "" : lvl;
+  /* ACT NOW = white cards (perishable, engine-verified). WATCHING = glass tiles. */
+  var hotSet = accts.filter(function (a) { return coWhyLevel(a) === "hot"; });
+  var restSet = accts.filter(function (a) { return coWhyLevel(a) !== "hot"; });
+
+  var actCards = hotSet.map(function (a) {
+    var sig = coSignals(a), lead = sig.filter(function (s) { return s.kind === "trigger"; })[0] || sig[0];
+    var kind = lead && /hiring|role|req|open/i.test(lead.text || "") ? "HIRING" : "PERISHABLE";
+    var ns = coSignalCount(a), nc = coContacts(a).length;
+    var foot = [];
+    if (ns) foot.push('<span><b>' + ns + '</b> signal' + (ns === 1 ? '' : 's') + '</span>');
+    if (nc) foot.push('<span><b>' + nc + '</b> contact' + (nc === 1 ? '' : 's') + '</span>');
     return '<div class="cocard" data-id="' + esc(a.id) + '">' +
       '<div class="cotop"><div class="cologo">' + esc((a.company || "?").slice(0, 1).toUpperCase()) + '</div>' +
-        '<div style="min-width:0"><div class="coname">' + esc(a.company || "—") + '</div><div class="cometa">' + esc(coMetaLine(a)) + '</div></div>' +
-        '<span class="cowhy"><span class="whypill ' + pill + '">' + (lvl === "hot" ? WHY_FLAME : "") + WHY_LABEL[lvl] + '</span></span></div>' +
-      '<div class="colead' + (lvl === "hot" ? "" : " plain") + '"><span class="li">' +
-        '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="' + (lvl === "hot" ? "var(--vm-no)" : "var(--steel)") + '" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/></svg></span>' +
-        esc(String(coLead(a)).slice(0, 90)) + '</div>' +
-      '<div class="cofoot2"><span><b>' + coSignalCount(a) + '</b> signals</span><span><b>' + coContacts(a).length + '</b> contacts</span><span class="arrow">Open &rarr;</span></div>' +
+        '<div style="min-width:0"><div class="coname">' + esc(a.company || "—") + '</div>' +
+          '<div class="cometa">' + esc(a.place || coMetaLine(a)) + '</div></div>' +
+        '<span class="whynow"><span class="pulse" aria-hidden="true"></span>WHY NOW</span></div>' +
+      '<div class="cosig"><span class="k">' + kind + '</span>' + esc(coLead(a)) + '</div>' +
+      '<div class="cofoot2">' + foot.join('') + '<span class="arrow">Open &rarr;</span></div>' +
     '</div>';
   }).join("");
+
+  var watchTiles = restSet.map(function (a) {
+    var nc = coContacts(a).length;
+    return '<div class="cotile" data-id="' + esc(a.id) + '">' +
+      '<span class="cotile-lg">' + esc((a.company || "?").slice(0, 1).toUpperCase()) + '</span>' +
+      '<span class="cotile-b"><span class="cotile-nm">' + esc(coDisplayName(a)) + '</span>' +
+        '<span class="cotile-me">' + esc(a.place || a.domain || "—") + '</span></span>' +
+      '<span class="cotile-n">' + (nc ? nc : '&mdash;') + '</span>' +
+    '</div>';
+  }).join("");
+
+  var cards = (actCards
+      ? '<div class="section-label"><span class="dot hot"></span>ACT NOW' +
+        '<span class="hint">— perishable signals, engine-verified</span><span class="line"></span></div>' +
+        '<div class="actgrid">' + actCards + '</div>'
+      : '') +
+    (watchTiles
+      ? '<div class="section-label"><span class="dot quiet"></span>WATCHING' +
+        '<span class="hint">— engine-matched, no signal yet &middot; ' + restSet.length + ' accounts</span><span class="line"></span></div>' +
+        '<div class="watchgrid">' + watchTiles + '</div>'
+      : '');
 
   var counts = { all: (state.accounts || []).length };
   v.innerHTML =
@@ -4137,7 +4262,7 @@ function viewCompanies(v) {
           return '<button class="fchip' + (CO_FILT.f === f[0] ? " on" : "") + '" data-cf="' + f[0] + '">' + f[1] + '</button>';
         }).join('') + '</div>' +
     '</div>' +
-    (cards ? '<div class="cogrid rv" style="--d:.30s">' + cards + '</div>'
+    (cards ? '<div class="rv" style="--d:.30s">' + cards + '</div>'
       : '<div class="vm-card rv" style="--d:.3s"><p class="vm-sub" style="margin:0">' +
         (CO_Q || CO_FILT.f !== "all" ? 'No companies match. <a id="coReset" style="color:var(--accent-ink);cursor:pointer">Clear it</a>.'
           : 'No companies yet — add some below.') + '</p></div>') +
@@ -4162,7 +4287,7 @@ function viewCompanies(v) {
   si.addEventListener("keydown", function (e) { if (e.key === "Escape") { CO_Q = ""; viewCompanies(v); } });
   var cr = document.getElementById("coReset"); if (cr) cr.onclick = function () { CO_Q = ""; CO_FILT.f = "all"; viewCompanies(v); };
   Array.prototype.forEach.call(v.querySelectorAll("[data-cf]"), function (b) { b.onclick = function () { CO_FILT.f = b.dataset.cf; viewCompanies(v); }; });
-  Array.prototype.forEach.call(v.querySelectorAll(".cocard"), function (c) {
+  Array.prototype.forEach.call(v.querySelectorAll(".cocard,.cotile"), function (c) {
     c.onclick = function () { CO_VIEW = c.dataset.id; navView = "companyprofile"; render(); window.scrollTo(0, 0); };
   });
   wireGaps();
