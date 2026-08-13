@@ -3288,17 +3288,27 @@ function cardBodyHTML(t, a) {
   var liUrl = t.li ? liProfileUrl(t.li) : ("https://www.linkedin.com/search/results/people/?keywords=" + encodeURIComponent((t.who || "") + " " + (t.company || "")));
   var eyebrow = t.touchNo === 1 ? 'First touch · <b>Touch 1</b>' : 'Follow-up · <b>Touch ' + t.touchNo + '</b>';
 
-  /* --- ORG facts: real data + engine/source tags --- */
+  /* --- ORG facts: real data + engine/source tags ---
+     One fact, one slot. The company-intel fallback can otherwise drop the
+     same signal into Signal, Buyer and Why, which reads as a broken card. */
+  var usedFacts = {};
+  var normFact = function (s) { return String(s || "").trim().toLowerCase().slice(0, 90); };
+  var claim = function (v) {
+    var k = normFact(v);
+    if (!k || usedFacts[k]) return "";
+    usedFacts[k] = 1; return v;
+  };
   var orgFacts = [
-    { lab: "Signal", v: trip[0].v, src: trip[0].from },
-    { lab: "Money", v: trip[1].v, src: trip[1].from },
-    { lab: "Buyer", v: trip[2].v, src: trip[2].from }
+    { lab: "Signal", v: claim(trip[0].v), src: trip[0].from },
+    { lab: "Money", v: claim(trip[1].v), src: trip[1].from },
+    { lab: "Buyer", v: claim(trip[2].v), src: trip[2].from }
   ];
-  if (a.building) orgFacts.push({ lab: "Building", v: a.building, src: "Agent note" });
-  if (a.funding) orgFacts.push({ lab: "Funding", v: a.funding, src: "Sheet" });
+  if (a.building) orgFacts.push({ lab: "Building", v: claim(a.building), src: "Agent note" });
+  if (a.funding) orgFacts.push({ lab: "Funding", v: claim(a.funding), src: "Sheet" });
   (a.signals || []).forEach(function (s) {
-    if (s && s.text && orgFacts.length < 6 && !orgFacts.some(function (o) { return o.v === s.text; }))
-      orgFacts.push({ lab: "Signal", v: s.text, src: (s.src || "Signal") });
+    if (!s || !s.text || orgFacts.length >= 6) return;
+    var v = claim(s.text);
+    if (v) orgFacts.push({ lab: "Signal", v: v, src: (s.src || "Signal") });
   });
   var orgHTML = orgFacts.map(function (f) { return factRow(f, false); }).join('');
 
@@ -3306,11 +3316,15 @@ function cardBodyHTML(t, a) {
   /* company intel is shared — fall back to it so a contact without their own
      note still shows why this account matters instead of "not tracked yet" */
   var coSig = (a.signals || []).map(function (s) { return s.text || s; }).filter(Boolean);
-  var whyV = th.whyCares || th.angle || t.angle ||
-    (a.thesis && (a.thesis.bottleneck || a.thesis.what)) || a.whyNow || coSig[0] || "";
+  var firstUnused = function (list) {
+    for (var i = 0; i < list.length; i++) { var v = claim(list[i]); if (v) return v; }
+    return "";
+  };
+  var whyV = firstUnused([th.whyCares, th.angle, t.angle,
+    (a.thesis && (a.thesis.bottleneck || a.thesis.what)), a.whyNow].concat(coSig));
   var whySrc = th.whyCares ? "Why they care" : "Company intel";
   var hk = (th.hook && th.hook.length) ? th.hook.join(" · ")
-    : (t.angle && t.angle !== whyV ? t.angle : (coSig[1] || a.news || a.wins || ""));
+    : firstUnused([a.news, a.wins].concat(coSig));
   var hkSrc = (th.hook && th.hook.length) ? "LinkedIn" : (a.news ? "News" : (a.wins ? "Recent win" : "Company intel"));
   var conFacts = [
     { lab: "Why", v: whyV, src: whySrc },
@@ -3332,7 +3346,13 @@ function cardBodyHTML(t, a) {
 
   var meta = '';
   if (t.email) meta += '<span class="it">' + IC_MAIL + ' ' + esc(t.email) + (th.emailConf ? ' <span class="conf">' + esc(th.emailConf) + '</span>' : '') + '</span>';
-  if (t.li) meta += (meta ? '<span class="dot">·</span>' : '') + '<a class="it" href="' + esc(liUrl) + '" target="_blank" rel="noopener">' + IC_LI + ' LINKEDIN</a>';
+  /* Always offer a way to their profile. With a stored URL it opens the real
+     page; without one it opens a name+company search so the button is never
+     a dead end — labelled so it's clear which you're getting. */
+  meta += (meta ? '<span class="dot">·</span>' : '') +
+    '<a class="it" href="' + esc(liUrl) + '" target="_blank" rel="noopener" title="' +
+    (t.li ? 'Open LinkedIn profile' : 'Search LinkedIn for this person') + '">' +
+    IC_LI + (t.li ? ' LINKEDIN' : ' FIND ON LINKEDIN') + '</a>';
   if (t.phone) meta += (meta ? '<span class="dot">·</span>' : '') + '<span class="it">' + esc(t.phone) + '</span>';
   var placeBits = [a.place, a.size].filter(Boolean).join(" · ");
   if (placeBits) meta += (meta ? '<span class="dot">·</span>' : '') + '<span class="it">' + esc(String(placeBits).toUpperCase()) + '</span>';
