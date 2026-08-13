@@ -58,6 +58,16 @@
 .railitem.on{box-shadow:none;border-color:var(--coral)}   /* Volt hairline, no glow */
 .ri-tag .rpill,.rpill{border-radius:3px}
 .demobar{background:transparent;border:1px solid var(--line)}
+/* demo bar doubles as the signup CTA — it's the top of the funnel */
+.demo-cta{display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+  border-color:rgba(212,255,0,.25) !important;background:rgba(212,255,0,.04) !important}
+.demo-cta .dm-t{color:var(--ink-2b);flex:1;min-width:200px}
+.demo-cta .dm-go{background:var(--volt);color:#0B0C10;border:0;border-radius:999px;
+  padding:9px 18px;font-family:inherit;font-weight:800;font-size:13.5px;cursor:pointer;
+  white-space:nowrap;transition:background .15s}
+.demo-cta .dm-go:hover{background:var(--volt-2)}
+.demo-cta a{color:var(--steel) !important;font-weight:600 !important;font-size:12.5px;text-decoration:none !important}
+.demo-cta a:hover{color:var(--ink) !important}
 /* ============================================================
    GLASS SYSTEM — "Glass = inventory. White = act now."
    Frosted surfaces hold what's waiting; white is reserved for
@@ -1991,6 +2001,8 @@ select.auth-input{appearance:none}
     var params=new URLSearchParams(location.search);
     var rst=params.get("reset");
     if(rst){ showApp(false); openAuth(); renderResetForm(rst); return; }
+    /* ?signup=1 — land straight on the create-account form (demo CTA target) */
+    if(params.get("signup")){ showApp(false); openAuth("signup"); return; }
     if(params.get("demo")){
       DEMO=true;
       seedPublicDemo();
@@ -2853,7 +2865,12 @@ function streakDays() {
 /* ---------- chrome ---------- */
 function banners() {
   var h = "";
-  if (DEMO) h += '<div class="demobar">You\'re viewing a live demo with sample data — nothing here is saved. <a id="demoExit">Exit demo</a></div>';
+  /* The demo is the top of the funnel — give it somewhere to go. Without a
+     signup CTA in here, "Exit demo" is the only exit and the visitor leaves. */
+  if (DEMO) h += '<div class="demobar demo-cta">' +
+    '<span class="dm-t">Live demo &middot; sample data, nothing is saved.</span>' +
+    '<button class="dm-go" id="demoSignup">Create your free account</button>' +
+    '<a id="demoExit">Exit demo</a></div>';
   if (ACCOUNT && ACCOUNT.email && ACCOUNT.verified === false)
     h += '<div class="verifybar">Confirm your email to secure your account — check your inbox. <a id="vbResend">Resend</a></div>';
   var bn = document.getElementById("vmBanners");
@@ -2861,6 +2878,9 @@ function banners() {
   bn.innerHTML = h;
   var de = document.getElementById("demoExit");
   if (de) de.onclick = function () { location.href = location.pathname; };
+  /* leave the demo straight into the signup form, not the login wall */
+  var ds = document.getElementById("demoSignup");
+  if (ds) ds.onclick = function () { location.href = location.pathname + "?signup=1"; };
   var vr = document.getElementById("vbResend");
   if (vr) vr.onclick = function () { resendVerify(); };
 }
