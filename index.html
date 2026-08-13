@@ -58,8 +58,107 @@
 .railitem.on{box-shadow:none;border-color:var(--coral)}   /* Volt hairline, no glow */
 .ri-tag .rpill,.rpill{border-radius:3px}
 .demobar{background:transparent;border:1px solid var(--line)}
-/* ===== WHITE CARDS ON BLACK — tokens re-scoped locally to each card ===== */
-.vcard,.railitem,.ctile,.cocard,.cp-card,.pcard,.qcard,.fstage,.vmodal,.accdone,.ol-card,.cxpeekcard,.sender-card{
+/* ============================================================
+   GLASS SYSTEM — "Glass = inventory. White = act now."
+   Frosted surfaces hold what's waiting; white is reserved for
+   whatever needs action right now. Never invert this.
+   ============================================================ */
+:root{
+  --volt-2:#E4FF4D;
+  --volt-dim:rgba(212,255,0,.12);
+  --red:#FF5C5C;
+  --glass:rgba(255,255,255,.045);
+  --glass-2:rgba(255,255,255,.08);
+  --glass-line:rgba(255,255,255,.09);
+  --glass-line-2:rgba(255,255,255,.16);
+  --w-ink:#0B0C10; --w-body:#33414E; --w-meta:#5A6875;
+  --w-line:#E7EAEF; --w-line-soft:#EEF1F5; --w-inset:#F1F3F6;
+  --w-accent-ink:#3A4600;
+}
+/* ambient glow — gives the glass something to refract */
+.ambient{position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(900px 500px at 85% -10%, rgba(212,255,0,.07), transparent 60%),
+    radial-gradient(700px 500px at -10% 110%, rgba(212,255,0,.05), transparent 60%)}
+#appMain{position:relative;z-index:1}
+.g-card{background:var(--glass);backdrop-filter:blur(18px);
+  border:1px solid var(--glass-line);border-radius:14px;transition:all .15s}
+.g-card:hover{border-color:var(--glass-line-2);background:var(--glass-2)}
+@supports not (backdrop-filter: blur(1px)){.g-card,.askbar,.railitem{background:#14161F}}
+/* section label: DOT + LABEL + hint + rule to the edge */
+.section-label{display:flex;align-items:center;gap:10px;padding:44px 0 18px;
+  font-family:'IBM Plex Mono',monospace;font-size:10.5px;font-weight:700;letter-spacing:.2em;color:var(--steel)}
+.section-label .dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.section-label .dot.hot{background:var(--red);box-shadow:0 0 8px var(--red)}
+.section-label .dot.volt{background:var(--volt);box-shadow:0 0 8px rgba(212,255,0,.6)}
+.section-label .dot.quiet{background:var(--mute)}
+.section-label .line{flex:1;height:1px;background:var(--line)}
+.section-label .hint{letter-spacing:.03em;font-weight:400;color:var(--mute);text-transform:none}
+/* mono tags */
+.tg{font-family:'IBM Plex Mono',monospace;font-size:8.5px;font-weight:700;letter-spacing:.08em;
+  padding:3px 8px;border:1px solid var(--glass-line);border-radius:4px;color:var(--steel);white-space:nowrap}
+.tg.rec{color:var(--volt);border-color:rgba(212,255,0,.3);background:rgba(212,255,0,.06)}
+/* ---- Toolbar: replaces the full-width heroes on inner pages ---- */
+.toolbar{display:flex;align-items:center;gap:18px;flex-wrap:wrap;padding:30px 0 24px}
+.tb-title{display:flex;align-items:center;gap:12px;flex:none}
+.tb-title h1{font-family:'Archivo Black','Archivo',sans-serif;font-weight:400;font-size:28px;
+  letter-spacing:-.03em;line-height:1;color:var(--ink);margin:0}
+.count-pill{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;color:var(--steel);
+  background:var(--glass);border:1px solid var(--glass-line);border-radius:999px;padding:5px 12px;white-space:nowrap}
+.tb-hint{color:var(--mute);font-size:13px;flex:1;min-width:220px}
+.toolbar .controls,.toolbar .askbar{margin:0}
+.toolbar .filters{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
+/* ---- Contacts: one dense grouped glass table (~3x the old card grid) ---- */
+.cttable{overflow:hidden;padding:0;margin-top:6px}
+.ct-head,.ctrow{display:grid;
+  grid-template-columns:44px 1.3fr 1.6fr 1fr auto 92px 118px;gap:14px;align-items:center;padding:11px 18px}
+.ct-head{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--mute);border-bottom:1px solid var(--glass-line)}
+.ctrow{border-top:1px solid rgba(255,255,255,.05);cursor:pointer;transition:background .12s}
+.ctrow:hover{background:rgba(255,255,255,.05)}
+.ct-av{width:30px;height:30px;border-radius:8px;background:rgba(255,255,255,.06);color:var(--steel);
+  display:grid;place-items:center;font-size:10.5px;font-weight:800;letter-spacing:.02em}
+.ct-nm{font-weight:800;font-size:14px;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ct-ti{font-size:13px;color:var(--ink-2b);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ct-co{font-size:13px;font-weight:700;color:var(--ink-2b);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ct-tg{display:flex;gap:6px;align-items:center}
+.ct-st{font-size:11px}
+.ct-gap{color:var(--volt);font-size:12.5px;font-weight:700;opacity:.75;white-space:nowrap;cursor:pointer;
+  overflow:hidden;text-overflow:ellipsis;text-align:right}
+.ctrow:hover .ct-gap{opacity:1}
+.ct-grp{display:flex;align-items:center;gap:9px;padding:9px 18px;background:rgba(255,255,255,.03);
+  font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--steel)}
+.ct-grp-n{color:var(--mute);letter-spacing:.06em;text-transform:none}
+@media(max-width:900px){
+  .ct-head,.ctrow{grid-template-columns:44px 1.4fr 92px}
+  .ct-ti,.ct-co,.ct-tg,.ct-gap{display:none}
+}
+/* urgency pulse — decorative, aria-hidden */
+.pulse{width:6px;height:6px;border-radius:50%;background:var(--red);
+  animation:pulseDot 1.6s infinite;display:inline-block}
+@keyframes pulseDot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.75)}}
+@media (prefers-reduced-motion: reduce){.pulse{animation:none}}
+
+/* ===== GLASS: the queue rail is inventory, not action ===== */
+.railitem{background:var(--glass) !important;backdrop-filter:blur(14px);
+  border:1px solid var(--glass-line) !important;border-radius:11px !important;color:var(--ink)}
+.railitem:hover{border-color:var(--glass-line-2) !important;background:var(--glass-2) !important}
+.railitem .ri-nm{color:var(--ink)}
+.railitem .ri-role{color:var(--steel)}
+.railitem .ri-co{color:var(--ink-2b)}
+.railitem .ri-co .cl{background:rgba(255,255,255,.06);color:var(--steel)}
+.railitem .rpill{background:var(--volt-dim);color:var(--volt);border-radius:4px}
+/* selected rail item flips WHITE — mirrors the focus card */
+.railitem.on{background:#FFFFFF !important;color:var(--w-ink);
+  border-color:transparent !important;box-shadow:0 0 0 2px rgba(212,255,0,.6) !important}
+.railitem.on .ri-nm{color:var(--w-ink)}
+.railitem.on .ri-role{color:var(--w-meta)}
+.railitem.on .ri-co{color:var(--w-body)}
+.railitem.on .ri-co .cl{background:var(--w-line-soft);color:var(--w-ink)}
+.railitem.on .rpill{background:#0B0C10;color:var(--volt)}
+
+/* ===== WHITE "ACT NOW" CARDS — tokens re-scoped locally ===== */
+.vcard,.ctile,.cocard,.cp-card,.pcard,.qcard,.fstage,.vmodal,.accdone,.ol-card,.cxpeekcard,.sender-card{
   --card:#FFFFFF; --navy-2:#FFFFFF; --surface:#F1F3F6;
   --bone:#0B0C10; --ink-2b:#33414E; --ink-2:#33414E;
   --steel:#5A6875; --mute:#5A6875; --proof:#5A6875;
@@ -68,10 +167,23 @@
   --volt-bg:#0B0C10;         /* pills get a dark carrier so Volt text reads */
   background:#FFFFFF; color:#0B0C10; border:1px solid #E7EAEF;
 }
-.vcard .v3 .ask,.vcard .ask{background:#F1F3F6 !important;border-color:#E7EAEF !important}
 .ctile .ctav{background:#EEF1F5 !important;color:#0B0C10 !important;font-weight:800}   /* readable initials on white */
-.railitem.on{border-color:#0B0C10}         /* selected = ink hairline on white */
-.vcard{box-shadow:0 40px 90px -50px #000 !important}   /* let the white lift off the black */
+/* white card carries a volt ring — it reads as "act now" */
+.vcard{box-shadow:0 30px 70px -40px rgba(0,0,0,.9), 0 0 0 1px rgba(212,255,0,.25) !important}
+.vcard:hover{box-shadow:0 30px 70px -34px rgba(0,0,0,.95), 0 0 0 2px rgba(212,255,0,.55) !important}
+/* ŌLLIN ask bar — volt skin. Its real job is helping write the email. */
+.askbar-x{display:flex;align-items:center;gap:12px;background:var(--glass);backdrop-filter:blur(16px);
+  border:1px solid var(--glass-line);border-radius:100px;padding:7px 7px 7px 22px;
+  transition:border-color .3s, box-shadow .3s;cursor:text}
+.askbar-x:hover,.askbar-x:focus-within{border-color:var(--volt);
+  box-shadow:0 12px 34px -10px rgba(212,255,0,.55), 0 0 0 4px rgba(212,255,0,.1)}
+.v3 .ask{background:var(--w-inset) !important;border:1px solid var(--w-line) !important;
+  border-radius:100px !important;padding:7px 7px 7px 22px !important;backdrop-filter:none;
+  transition:border-color .3s, box-shadow .3s}
+.v3 .ask:hover,.v3 .ask:focus-within{border-color:var(--volt) !important;
+  box-shadow:0 8px 24px -10px rgba(212,255,0,.5), 0 0 0 3px rgba(212,255,0,.15)}
+.v3 .ask input{color:var(--w-ink) !important}
+.v3 .ask input::placeholder{color:var(--w-meta) !important}
 /* ===== MUUL-style intro: kicker rules + giant headline + Volt highlight box ===== */
 .gd-kicker{display:flex;align-items:center;gap:18px;margin-bottom:20px}
 .gd-kicker .mn{color:var(--steel);white-space:nowrap;font-size:10px;letter-spacing:.18em}
@@ -130,9 +242,14 @@
 .gtext .hl{background:var(--volt);color:#0B0C10;padding:0 .09em;border-radius:2px;
   box-shadow:0 0 60px rgba(212,255,0,.35),0 0 20px rgba(212,255,0,.22)}
 /* ===== green header buttons ===== */
-.vm-top .vm-just{background:var(--coral) !important;color:var(--navy) !important;border-color:var(--coral) !important;font-weight:800}
-.vm-top .vm-just:hover{background:var(--coral-2) !important;border-color:var(--coral-2) !important}
-.vm-top .vm-just .d{background:var(--navy)}
+/* nav: Import is glass (inventory), Run one is volt (action) */
+.vm-top #vmImport{background:var(--glass) !important;backdrop-filter:blur(12px);
+  color:var(--ink) !important;border:1px solid var(--glass-line) !important;font-weight:700}
+.vm-top #vmImport:hover{border-color:var(--glass-line-2) !important;background:var(--glass-2) !important}
+.vm-top #vmJust{background:var(--coral) !important;color:var(--navy) !important;
+  border-color:var(--coral) !important;font-weight:800}
+.vm-top #vmJust:hover{background:var(--volt-2) !important;border-color:var(--volt-2) !important}
+.vm-top #vmJust .d{background:var(--navy)}
 
 /* ===== LIGHT MODE — Cool Paper. A white version when the user wants it. =====
    Rules from the brand doc: orange is a FILL only (text uses Kinetic Ink #B73D00);
@@ -1022,6 +1139,7 @@ select.auth-input{appearance:none}
 
 </style>
 
+<div class="ambient" aria-hidden="true"></div>
 <div id="appMain" class="hide">
   <div class="vm-top">
     <div class="vm-topin">
@@ -3532,10 +3650,11 @@ function viewPipeline(v) {
   }).join("");
 
   v.innerHTML =
-    '<div class="mn head-eyebrow rv" style="--d:.06s">Ollin : Vamos · Pipeline</div>' +
-    '<h1 class="vm-h1 rv-t" style="--d:.14s">Your pipeline — <span class="co">' + contacts.length + '</span> in motion.</h1>' +
-    '<p class="vm-sub rv" style="--d:.2s">Stages are your real cadence progress — how far each contact is through the 4 touches. ' +
-      'Replies &amp; meetings live in your CRM after export.</p>' +
+    '<div class="toolbar rv" style="--d:.10s">' +
+      '<div class="tb-title"><h1>Pipeline</h1>' +
+        '<span class="count-pill">' + contacts.length + ' IN MOTION</span></div>' +
+      '<span class="tb-hint">Stages are your real cadence progress — how far each contact is through the 4 touches.</span>' +
+    '</div>' +
     '<div class="funnel">' + funnel + '</div>' +
     '<div class="board">' + board + '</div>';
 
@@ -3735,28 +3854,46 @@ function viewContacts(v) {
     return matchQ(t, c.a, CQ.q);
   });
 
-  var tiles = list.map(function (c) {
-    var th = c.th, a = c.a, cls = ctCls(th);
-    return '<div class="ctile" data-a="' + esc(a.id) + '" data-t="' + esc(th.id) + '">' +
-      '<div class="cthd"><div class="ctav ' + cls + '">' + initialsOf(th.name) + '</div>' +
-        '<div style="min-width:0"><div class="ctnm">' + esc(th.name || "—") + '</div><div class="ctt2">' + esc(th.title || "") + '</div></div></div>' +
-      '<div class="ctco"><span class="cl">' + esc((a.company || "?").slice(0, 1).toUpperCase()) + '</span> ' + esc(a.company || "—") + '</div>' +
-      '<div class="ctmeta"><span class="roletag">' + esc(roleLabelOf(th)) + '</span>' + stBadge(statusOf(th)) + '</div>' +
-      '<div class="ctfoot"><span>Recommended</span><span class="angle">' + esc(recAngle(th)) + ' &rarr;</span></div>' +
-    '</div>';
+  /* Grouped glass table — density over decoration. Every gathered field stays:
+     role tag, RECOMMENDED, status, and The Gap. Compress, never drop. */
+  var groups = {}, order = [];
+  list.forEach(function (c) {
+    var k = c.a.company || "—";
+    if (!groups[k]) { groups[k] = []; order.push(k); }
+    groups[k].push(c);
+  });
+  var tiles = order.map(function (co) {
+    var rows = groups[co].map(function (c) {
+      var th = c.th, a = c.a;
+      return '<div class="ctrow" data-a="' + esc(a.id) + '" data-t="' + esc(th.id) + '">' +
+        '<div class="ct-av">' + initialsOf(th.name) + '</div>' +
+        '<div class="ct-nm">' + esc(th.name || "—") + '</div>' +
+        '<div class="ct-ti">' + esc(th.title || "") + '</div>' +
+        '<div class="ct-co">' + esc(a.company || "—") + '</div>' +
+        '<div class="ct-tg"><span class="tg">' + esc(roleLabelOf(th)) + '</span>' +
+          '<span class="tg rec">RECOMMENDED</span></div>' +
+        '<div class="ct-st">' + stBadge(statusOf(th)) + '</div>' +
+        '<a class="ct-gap" aria-label="View the gap for ' + esc(th.name || "this contact") + '">' +
+          esc(recAngle(th)) + ' &rarr;</a>' +
+      '</div>';
+    }).join("");
+    return '<div class="ct-grp"><span class="ct-grp-nm">' + esc(co) + '</span>' +
+      '<span class="ct-grp-n">&middot; ' + groups[co].length + ' ' + (groups[co].length === 1 ? 'person' : 'people') + '</span></div>' + rows;
   }).join("");
 
   v.innerHTML =
-    '<div class="mn head-eyebrow rv" style="--d:.06s">Ollin : Guide</div>' +
-    '<h1 class="vm-h1 rv-t" style="--d:.14s">Contacts — <span class="co">' + all.length + '</span> people, engine-matched.</h1>' +
-    '<div class="controls rv" style="--d:.22s">' +
-      askBarHTML("cSearch", "Ask Ollin… or search a name, company, title", { soft: 1, sm: 1 }) +
+    '<div class="toolbar rv" style="--d:.10s">' +
+      '<div class="tb-title"><h1>Contacts</h1>' +
+        '<span class="count-pill">' + all.length + ' PEOPLE</span></div>' +
+      askBarHTML("cSearch", "Ask Ōllin… or search a name, company, title", { soft: 1, sm: 1 }) +
       '<div class="filters">' + C_FILTERS.map(function (f) {
         return '<button class="fchip' + (CQ.filter === f[0] ? " on" : "") + '" data-f="' + f[0] + '">' + f[1] + '<em>' + counts[f[0]] + '</em></button>';
       }).join('') + '</div>' +
     '</div>' +
     (tiles
-      ? '<div class="ctgrid rv" style="--d:.30s">' + tiles + '</div>'
+      ? '<div class="cttable g-card rv" style="--d:.30s">' +
+          '<div class="ct-head"><span></span><span>Name</span><span>Title</span><span>Company</span>' +
+          '<span>Tags</span><span>Status</span><span></span></div>' + tiles + '</div>'
       : '<div class="vm-card rv" style="--d:.3s"><p class="vm-sub" style="margin:0">' +
         (CQ.q || CQ.filter !== "all" ? 'Nothing matches. <a id="cReset" style="color:var(--accent-ink);cursor:pointer">Clear it</a>.'
           : 'Nobody yet — import a list under Companies or a CSV.') + '</p></div>');
@@ -3771,7 +3908,7 @@ function viewContacts(v) {
   var cr = document.getElementById("cReset");
   if (cr) cr.onclick = function () { CQ.q = ""; CQ.filter = "all"; viewContacts(v); };
   Array.prototype.forEach.call(v.querySelectorAll(".fchip"), function (b) { b.onclick = function () { CQ.filter = b.dataset.f; viewContacts(v); }; });
-  Array.prototype.forEach.call(v.querySelectorAll(".ctile"), function (t) { t.onclick = function () { openContactModal(t.dataset.a, t.dataset.t); }; });
+  Array.prototype.forEach.call(v.querySelectorAll(".ctile,.ctrow"), function (t) { t.onclick = function () { openContactModal(t.dataset.a, t.dataset.t); }; });
 }
 
 /* ---------- Companies (grid of white cards) ---------- */
@@ -3991,10 +4128,10 @@ function viewCompanies(v) {
 
   var counts = { all: (state.accounts || []).length };
   v.innerHTML =
-    '<div class="mn head-eyebrow rv" style="--d:.06s">Ollin : Guide</div>' +
-    '<h1 class="vm-h1 rv-t" style="--d:.14s">Companies — <span class="co">' + (state.accounts || []).length + '</span> accounts, engine-scored.</h1>' +
-    '<div class="controls rv" style="--d:.22s">' +
-      askBarHTML("coSearch", "Ask Ollin… or search a company, domain, signal", { soft: 1, sm: 1 }) +
+    '<div class="toolbar rv" style="--d:.10s">' +
+      '<div class="tb-title"><h1>Companies</h1>' +
+        '<span class="count-pill">' + (state.accounts || []).length + ' ACCOUNTS</span></div>' +
+      askBarHTML("coSearch", "Ask Ōllin… or search a company, domain, signal", { soft: 1, sm: 1 }) +
       '<div class="filters">' +
         [["all", "All"], ["hot", "Why now"], ["sig", "Has signals"], ["con", "Has contacts"]].map(function (f) {
           return '<button class="fchip' + (CO_FILT.f === f[0] ? " on" : "") + '" data-cf="' + f[0] + '">' + f[1] + '</button>';
