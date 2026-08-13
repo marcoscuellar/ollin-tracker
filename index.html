@@ -1479,44 +1479,97 @@ select.auth-input{appearance:none}
   }
   // Public, unauthenticated walkthrough (?demo=1) — obviously-fake sample data, never persisted.
   function seedPublicDemo(){
-    var t = todayStr();
+    /* PUBLIC DEMO DATA — entirely fictional.
+       Invented companies, invented people, invented reqs. No real contact,
+       employer, email, phone or profile appears here, and nothing is
+       persisted. Written to show the SHAPE of good intel (a dated signal
+       with a source, a thesis, a cost of the gap) without exposing anyone. */
+    var t = todayStr(), H = 3600*1000, D = 24*H;
     state.accounts = [
-      { id:"demoA", company:"Northwind Logistics", start:t, domain:"northwind.com", size:"350 employees", place:"Chicago, IL", sector:"Logistics",
-        whyNow:"4 Senior Azure roles open 60+ days — $15K/week bleeding.",
+      { id:"demoA", company:"Northwind Logistics", start:t, domain:"northwind.example", size:"350 employees", place:"Chicago, IL", sector:"Logistics — freight brokerage and supply chain",
+        whyNow:"Azure migration stalled — 4 senior roles open past 60 days.",
         signals:[
-          {kind:"trigger", text:"4 Senior Azure roles open > 60 days", detail:"Workday ATS · Req #10492"},
-          {kind:"secondary", text:"New Chief AI Officer hired", detail:"Marcus Vance · 45 days ago · press release"}
+          {kind:"trigger", text:"4 Senior Azure Engineer reqs open more than 60 days; two reposted twice", detail:"Careers page · reqs NW-1042 / NW-1051 · 2026-06-30"},
+          {kind:"secondary", text:"New Chief AI Officer hired to lead the platform migration", detail:"Company press release · 2026-06-28"}
         ],
-        thesis:{ what:"Migrating the core supply-chain platform to Azure.", bottleneck:"4 senior engineering roles unfilled past 60 days.", cost:"Project delays + team overtime while the migration stalls." },
+        thesis:{ what:"Moving the core supply-chain platform from on-prem to Azure, with an AI routing layer on top.",
+                 bottleneck:"Four senior engineering seats unfilled past 60 days; the migration team is running at half strength.",
+                 cost:"Migration milestones slipping a sprint at a time while the existing team absorbs the overtime." },
         costOfGap:"$15,000/wk",
+        wins:"Won a national retail distribution contract (Q2 2026) that doubles peak-season volume.",
+        news:"Named Chief AI Officer in June and announced a two-year platform modernization program.",
         techStack:["Azure","Kubernetes","Terraform","C# / .NET Core","Snowflake"],
         flags:["Direct-to-manager friendly","No VMS/MSP restrictions detected"],
         threads:[
-        {id:"na1", name:"Reyna Ortiz", title:"VP Talent Acquisition", persona:"Additional", roleLabel:"Gatekeeper", entryDay:1, channel:"em", linkedin:"linkedin.com/in/reynaortiz", email:"r.ortiz@northwind.com", emailConf:"95%", city:"Chicago, IL", status:"ok",
-          whyCares:"Reyna owns internal recruitment capacity. When 4 technical reqs stay open past 60 days, her team takes heat from the CTO.",
-          hook:["Joined Northwind 8 months ago from C.H. Robinson.","Posted on LinkedIn 2 weeks ago about scaling the engineering team for Q3."],
+        {id:"na1", name:"Reyna Ortiz", title:"VP Talent Acquisition", persona:"Additional", roleLabel:"Gatekeeper", entryDay:1, channel:"em", linkedin:"linkedin.com/in/demo-reyna-ortiz", email:"r.ortiz@northwind.example", emailConf:"95%", city:"Chicago, IL", status:"ok",
+          whyCares:"Owns internal recruitment capacity. When four technical reqs stay open past 60 days, her team takes the heat from the CTO.",
+          hook:["Joined Northwind 8 months ago from a national 3PL.","Posted about scaling the engineering team for Q3."],
           angles:[{n:"01",label:"The Gap",rec:true},{n:"03",label:"Anon. Senior Azure Candidate"}],
-          angle:"Owns internal recruitment capacity — 4 reqs open 60+ days = heat from the CTO.", pulledAt:Date.now()-4*60*1000},
-        {id:"na2", name:"Marcus Vance", title:"Chief AI Officer", persona:"Economic Buyer", roleLabel:"Economic Buyer", entryDay:1, channel:"em", linkedin:"linkedin.com/in/marcusvance", email:"m.vance@northwind.com", emailConf:"78%", city:"Chicago, IL", status:"ok",
-          whyCares:"Just hired to lead the Azure/AI migration — the unfilled roles are blocking his mandate in his first 90 days.",
-          hook:["Hired 45 days ago (press release).","Owns the platform migration the open roles support."],
+          angle:"Owns internal recruitment capacity — 4 reqs open 60+ days puts her team under the CTO's spotlight.", pulledAt:Date.now()-4*60*1000},
+        {id:"na2", name:"Marcus Vance", title:"Chief AI Officer", persona:"Economic Buyer", roleLabel:"Economic Buyer", entryDay:1, channel:"em", linkedin:"linkedin.com/in/demo-marcus-vance", email:"m.vance@northwind.example", emailConf:"78%", city:"Chicago, IL", status:"ok",
+          whyCares:"Hired 45 days ago to run the Azure and AI migration — the unfilled roles block his mandate inside his first 90 days.",
+          hook:["Hired 45 days ago to lead platform modernization.","Owns the migration the open reqs support."],
           angles:[{n:"02",label:"Cost of Waiting",rec:true},{n:"03",label:"Anon. Senior Azure Candidate"}],
-          angle:"Hired to run the Azure migration — the open roles block his mandate.", pulledAt:Date.now()-45*60*1000},
-        {id:"na3", name:"Devin Cole", title:"Director, Platform Engineering", persona:"Technical Evaluator", roleLabel:"Hiring Manager", entryDay:1, channel:"li", linkedin:"linkedin.com/in/devincole", email:"", status:"pending",
-          whyCares:"Directly manages the 4 open reqs — feels the overtime and delivery slip firsthand.",
+          angle:"New in seat with a modernization mandate and four empty chairs under it.", pulledAt:Date.now()-45*60*1000},
+        {id:"na3", name:"Devin Cole", title:"Director, Platform Engineering", persona:"Technical Evaluator", roleLabel:"Hiring Manager", entryDay:1, channel:"li", linkedin:"linkedin.com/in/demo-devin-cole", email:"", status:"pending",
+          whyCares:"Directly manages the four open reqs and absorbs the overtime every week they stay open.",
           hook:["Owns the reqs blocking the migration."],
           angles:[{n:"01",label:"The Gap",rec:true}],
-          angle:"Manages the 4 open reqs — feels the overtime firsthand.", pulledAt:Date.now()-3*3600*1000}
+          angle:"Manages the 4 open reqs — feels the overtime firsthand.", pulledAt:Date.now()-3*H}
       ]},
-      { id:"demoB", company:"Aster Health", start:t, domain:"asterhealth.com", size:"900 employees", place:"Boston, MA", sector:"Healthcare",
-        whyNow:"Q3 compliance deadline forcing a hiring decision now.",
-        signals:[{kind:"trigger", text:"Same senior role reposted 90+ days", detail:"Job board"}],
+      { id:"demoB", company:"Aster Health", start:t, domain:"asterhealth.example", size:"900 employees", place:"Boston, MA", sector:"Healthcare — clinical data platform",
+        whyNow:"Q3 compliance deadline with the lead engineering seat still open.",
+        signals:[
+          {kind:"trigger", text:"Same Senior Compliance Engineer role reposted three times in 90 days", detail:"Careers page · req AH-318 · 2026-07-02"},
+          {kind:"secondary", text:"Hiring a Director of Data Governance — a function they did not previously staff", detail:"Careers page · 2026-07-19"}
+        ],
+        thesis:{ what:"Standing up a governance layer ahead of a Q3 regulatory deadline.",
+                 bottleneck:"The senior compliance engineering seat has been open through three reposts.",
+                 cost:"A fixed external deadline that does not move whether the seat is filled or not." },
+        costOfGap:"$22,000/wk",
+        wins:"Closed a Series D in March and signed two regional hospital networks.",
+        news:"Announced an expanded clinical data partnership in July.",
+        techStack:["AWS","Python","Snowflake","HL7 / FHIR"],
         threads:[
-        {id:"ab1", name:"Priya Shah", title:"CTO", persona:"Economic Buyer", roleLabel:"Economic Buyer", entryDay:1, channel:"em", linkedin:"", email:"priya@asterhealth.com", emailConf:"90%", status:"ok", angle:"Compliance deadline in Q3 is forcing a hiring decision now.", whyCares:"A Q3 compliance deadline lands on her — unfilled roles put it at risk.", pulledAt:Date.now()-2*3600*1000},
-        {id:"ab2", name:"Marcus Webb", title:"Eng Manager", persona:"Champion", roleLabel:"Champion", entryDay:1, channel:"li", linkedin:"linkedin.com/in/marcuswebb", email:"", status:"pending", angle:"Team has been re-posting the same senior role for 90+ days.", pulledAt:Date.now()-26*3600*1000},
-        {id:"ab3", name:"Dana Okafor", title:"Head of Talent", persona:"Additional", roleLabel:"Gatekeeper", entryDay:1, channel:"em", linkedin:"", email:"dana@asterhealth.com", emailConf:"88%", status:"ok", angle:"Runs the req intake — every outside vendor goes through her first.", pulledAt:Date.now()-5*3600*1000}
+        {id:"ab1", name:"Priya Shah", title:"CTO", persona:"Economic Buyer", roleLabel:"Economic Buyer", entryDay:1, channel:"em", linkedin:"linkedin.com/in/demo-priya-shah", email:"p.shah@asterhealth.example", emailConf:"90%", status:"ok",
+          angle:"A Q3 compliance deadline lands on her desk with the lead seat unfilled.",
+          whyCares:"The Q3 deadline is hers to hit. An unfilled compliance engineering seat is the single biggest risk to it.",
+          hook:["Presented on clinical data governance at a industry summit this spring."],
+          angles:[{n:"02",label:"Cost of Waiting",rec:true}], pulledAt:Date.now()-2*H},
+        {id:"ab2", name:"Marcus Webb", title:"Engineering Manager", persona:"Champion", roleLabel:"Champion", entryDay:1, channel:"li", linkedin:"linkedin.com/in/demo-marcus-webb", email:"", status:"pending",
+          angle:"His team has re-posted the same senior role three times in 90 days.",
+          whyCares:"Running the governance build a person short while the deadline holds.",
+          angles:[{n:"01",label:"The Gap",rec:true}], pulledAt:Date.now()-26*H},
+        {id:"ab3", name:"Dana Okafor", title:"Head of Talent", persona:"Additional", roleLabel:"Gatekeeper", entryDay:1, channel:"em", linkedin:"linkedin.com/in/demo-dana-okafor", email:"d.okafor@asterhealth.example", emailConf:"88%", status:"ok",
+          angle:"Runs req intake — every outside vendor goes through her first.",
+          whyCares:"Owns the vendor relationship: one approval from her covers every open req, not a single role.", pulledAt:Date.now()-5*H}
+      ]},
+      { id:"demoC", company:"Cobalt Ledger", start:t, domain:"cobaltledger.example", size:"1,200 employees", place:"Austin, TX", sector:"Fintech — payments infrastructure",
+        signals:[{kind:"secondary", text:"Opened a second engineering hub in Austin", detail:"Company blog · 2026-05-12"}],
+        wins:"Launched a card-issuing product line in April.",
+        threads:[
+        {id:"cl1", name:"Elena Marchetti", title:"VP Engineering", persona:"Technical Evaluator", roleLabel:"Hiring Manager", entryDay:6, channel:"em", linkedin:"linkedin.com/in/demo-elena-marchetti", email:"e.marchetti@cobaltledger.example", emailConf:"84%", status:"ok",
+          angle:"Standing up a second engineering hub from a small founding team.", pulledAt:Date.now()-3*D},
+        {id:"cl2", name:"Tobias Reed", title:"Director, Platform Security", persona:"Additional", roleLabel:"Evaluator", entryDay:8, channel:"li", linkedin:"linkedin.com/in/demo-tobias-reed", email:"", status:"pending", pulledAt:Date.now()-4*D}
+      ]},
+      { id:"demoD", company:"Verdant Bio", start:t, domain:"verdantbio.example", size:"480 employees", place:"Raleigh, NC", sector:"Biotech — research informatics",
+        threads:[
+        {id:"vb1", name:"Sana Qureshi", title:"Head of Data Platform", persona:"Technical Evaluator", roleLabel:"Hiring Manager", entryDay:9, channel:"em", linkedin:"linkedin.com/in/demo-sana-qureshi", email:"s.qureshi@verdantbio.example", emailConf:"81%", status:"ok", pulledAt:Date.now()-6*D}
+      ]},
+      { id:"demoE", company:"Tilde Studio", start:t, domain:"tildestudio.example", size:"180 employees", place:"Denver, CO", sector:"Creative agency — brand and digital",
+        threads:[
+        {id:"ts1", name:"Owen Brady", title:"Director of Technology", persona:"Additional", roleLabel:"Evaluator", entryDay:11, channel:"li", linkedin:"linkedin.com/in/demo-owen-brady", email:"", status:"pending", pulledAt:Date.now()-8*D}
       ]}
     ];
+    /* one drafted, audited email so the composer shows its real job */
+    state.notes = state.notes || {};
+    state.notes["demoA|na1|0"] =
+      "Subject: the four Azure reqs\n\n" +
+      "Reyna — saw Northwind has four senior Azure reqs open past sixty days, two of them reposted. " +
+      "With the migration timeline public, I'd guess that gap lands on your team before it lands anywhere else.\n\n" +
+      "We place senior Azure and .NET engineers in EST hours, usually inside two weeks. " +
+      "Worth a short call to see if it's useful?\n\n" +
+      "— Marcos";
     state.activeId="demoA";
     state.seeded=true;
   }
