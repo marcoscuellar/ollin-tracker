@@ -2238,14 +2238,27 @@ select.auth-input{appearance:none}
 
   /* ===== index.html lines 2028-2094 - parseCSV + colMap (all header aliases) ===== */
   // ---------- Engine 7 CSV import ----------
-  function parseCSV(text){
+  /* Delimiter is sniffed from the first line, so a table copied straight out
+     of a spreadsheet or a doc (tab-separated) parses the same as a .csv.
+     Commas inside cells are common in titles, so a tab-majority header wins. */
+  function sniffDelim(text){
+    var first=String(text||"").split(/\r?\n/)[0]||"";
+    var tabs=(first.match(/\t/g)||[]).length;
+    var commas=(first.match(/,/g)||[]).length;
+    var semis=(first.match(/;/g)||[]).length;
+    if(tabs>=commas && tabs>0) return "\t";
+    if(semis>commas && semis>0) return ";";
+    return ",";
+  }
+  function parseCSV(text, delim){
+    var D=delim||sniffDelim(text);
     var rows=[], row=[], cur="", q=false;
     for(var i=0;i<text.length;i++){
       var c=text[i];
       if(q){ if(c==='"'){ if(text[i+1]==='"'){cur+='"';i++;} else q=false; } else cur+=c; }
       else {
         if(c==='"')q=true;
-        else if(c===','){ row.push(cur); cur=""; }
+        else if(c===D){ row.push(cur); cur=""; }
         else if(c==='\n'||c==='\r'){ if(c==='\r'&&text[i+1]==='\n')i++; row.push(cur); rows.push(row); row=[]; cur=""; }
         else cur+=c;
       }
@@ -2264,8 +2277,8 @@ select.auth-input{appearance:none}
     return {
       first:find("first name","firstname","first"),
       last:find("last name","lastname","last"),
-      name:find("name","full name","contact"),
-      email:find("email","email address"),
+      name:pick(find("name","full name","contact","contact name"), findC("full","name"), findC("contact","name")),
+      email:pick(find("email","email address","email addr","work email"), findC("email")),
       // Exact names first, then anything whose header merely contains the word.
       // Sales Navigator, ZoomInfo and HubSpot exports all label this column
       // differently, and an exact-match miss silently named every row
@@ -2277,8 +2290,8 @@ select.auth-input{appearance:none}
              "company/account","primary company","account / company"),
         findC("company"), findC("organization"), findC("organisation"), findC("employer")
       ),
-      title:find("job title","title"),
-      li:find("linkedin url","linkedin","linkedin profile"),
+      title:pick(find("job title","title","role"), findC("title")),
+      li:pick(find("linkedin url","linkedin","linkedin profile","linkedin link"), findC("linkedin"), findC("li","url")),
       thread:find("outreach thread","thread","persona"),
       seq:find("sequence day","entry day","day"),
       chan:find("first touch channel","channel","first channel"),
@@ -4643,9 +4656,27 @@ function addCompaniesSmart(text) {
     var res = applyAgentNotes(parsed);
     state.seeded = true; persistAccounts(); render();
     toast("Intel: " + res.companies + " companies, " + res.contacts + " contacts.");
-  } else {
-    if (applyCompanyImport(addCompaniesFromText(text))) { /* re-rendered by applyCompanyImport */ }
+    return;
   }
+  /* A pasted table with a header row is a contact list, not a company list —
+     route it through the same importer the file upload uses. Without this a
+     copied contact table was read as "Company, City, State" and every person
+     in it was dropped. */
+  var first = String(text || "").split(/\r?\n/)[0] || "";
+  var looksTabular = /\t|,/.test(first) && /\bname\b/i.test(first) &&
+    /(company|account|email|title|linkedin)/i.test(first);
+  if (looksTabular) {
+    var rows = parseCSV(text);
+    var r = importRows(rows, true);
+    if (!r || !r.ok) return toast((r && r.msg) || "Couldn't read that table.");
+    state.seeded = true; persistAccounts(); render(); window.scrollTo(0, 0);
+    var bits = [];
+    if (r.added) bits.push(r.added + " added");
+    if (r.updated) bits.push(r.updated + " updated");
+    toast(bits.length ? "Contacts: " + bits.join(", ") + "." : "Nothing new in that table.");
+    return;
+  }
+  if (applyCompanyImport(addCompaniesFromText(text))) { /* re-rendered by applyCompanyImport */ }
 }
 
 /* Parse the agent's [ COMPANY NOTE ] / [ CONTACT NOTE ] text blocks. */
