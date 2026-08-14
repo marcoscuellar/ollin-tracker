@@ -7,7 +7,7 @@ import {
   signSession, requireSession,
   normalizeEmail, userKey, emailKey, entriesKey,
   newUserId, makeSalt, hashPassword, verifyPassword,
-  signToken, verifyToken, sendEmail, emailShell, mailFailureMessage, MAIL_FROM,
+  signToken, verifyToken, sendEmail, emailShell, mailFailureMessage, MAIL_FROM, escapeHtml,
   MIGRATED_FLAG, LEGACY_OWNER_EMAIL, OWNER_EMAIL, FOUNDING_LIST_KEY,
   normalizeSender,
 } from './_lib.js';
@@ -58,7 +58,7 @@ async function notifyOwnerOfSignup(user) {
     to,
     subject: `New VAMOS signup — ${user.email}`,
     html: emailShell('Someone signed up', `
-      <p style="margin:0 0 10px"><b>${user.email}</b></p>
+      <p style="margin:0 0 10px"><b>${escapeHtml(user.email)}</b></p>
       <p style="margin:0 0 4px;color:#6B6B6B;font-size:14px">${when}</p>
       <p style="margin:14px 0 0;color:#6B6B6B;font-size:14px">
         They're on the free plan and haven't confirmed their email yet.</p>`),
@@ -272,7 +272,10 @@ async function mailCheck(req, res) {
   const r = await sendEmail({
     to: user.email,
     subject: 'VAMOS mail check',
-    html: emailShell('Mail is working.', `<p style="margin:0">Sent from <b>${MAIL_FROM}</b>. If this reached you, signup and reset emails will too.</p>`),
+    // MAIL_FROM carries angle brackets ("VAMOS <hello@heyvamos.app>"), so it
+    // has to be escaped — dropped in raw, the address reads as a tag and the
+    // client silently eats the one detail this line exists to show.
+    html: emailShell('Mail is working.', `<p style="margin:0">Sent from <b>${escapeHtml(MAIL_FROM)}</b>. If this reached you, signup and reset emails will too.</p>`),
   });
   return send(res, 200, {
     ok: !!r.ok, configured: true, from: MAIL_FROM,

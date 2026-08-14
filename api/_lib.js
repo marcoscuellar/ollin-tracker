@@ -217,6 +217,16 @@ export function mailFailureMessage(reason) {
     : 'Couldn’t send just now — give it a minute and try again.';
 }
 
+// Anything interpolated into an email body needs this. Two reasons, one of
+// each kind: MAIL_FROM legitimately contains angle brackets and would vanish
+// unescaped, and an address is attacker-chosen — the signup regex admits `<`
+// and `>`, so a crafted email lands as live markup in the owner's inbox.
+export function escapeHtml(s) {
+  return String(s == null ? '' : s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
 // Branded HTML shell for VAMOS emails.
 export function emailShell(headline, bodyHtml, cta) {
   const btn = cta
