@@ -171,10 +171,11 @@ export function verifyToken(token, typ) {
 }
 
 // ---------- transactional email (Resend) ----------
-// The From address must be on a domain verified in Resend, which is not
-// necessarily the domain the app runs on — so it is configurable. Set
-// MAIL_FROM to change it without a deploy of this file.
-export const MAIL_FROM = process.env.MAIL_FROM || 'VAMOS <hello@send.anywayidid.com>';
+// The From address must be on a domain verified in Resend — mail from an
+// unverified domain is refused outright, which is how this app spent a stretch
+// sending nothing at all. heyvamos.app is verified; keep it that way, or set
+// MAIL_FROM to another verified domain to change it without a deploy.
+export const MAIL_FROM = process.env.MAIL_FROM || 'VAMOS <hello@heyvamos.app>';
 
 // Failures are returned rather than thrown, and always logged. A silent mail
 // failure is the worst kind here: verification gates AI drafting, so a send
