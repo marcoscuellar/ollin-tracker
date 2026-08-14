@@ -7,7 +7,7 @@ import {
   signSession, requireSession,
   normalizeEmail, userKey, emailKey, entriesKey,
   newUserId, makeSalt, hashPassword, verifyPassword,
-  signToken, verifyToken, sendEmail, emailShell,
+  signToken, verifyToken, sendEmail, emailShell, mailFailureMessage, MAIL_FROM,
   MIGRATED_FLAG, LEGACY_OWNER_EMAIL, FOUNDING_LIST_KEY,
   normalizeSender,
 } from './_lib.js';
@@ -33,6 +33,7 @@ export default async function handler(req, res) {
       case 'save-sender': return saveSender(req, res);
       case 'change-email': return changeEmail(req, res);
       case 'delete-account': return deleteAccount(req, res);
+      case 'mail-check': return mailCheck(req, res);
       default: return send(res, 400, { error: 'unknown action' });
     }
   } catch (e) {
@@ -116,11 +117,20 @@ async function signup(req, res) {
   await kv.set(emailKey(email), id);
   setSession(res, id);
 
-  // Best-effort: never fail signup if the email doesn't send.
-  try { await sendVerifyEmail(req, user); } catch (e) { /* ignore */ }
+  // Never fail signup if the email doesn't send — but never hide it either.
+  // Verification gates AI drafting, so a swallowed failure here is an account
+  // that can sign up and then do nothing. `mailed` lets the client say so.
+  let mailed = false;
+  try {
+    const r = await sendVerifyEmail(req, user);
+    mailed = !!(r && r.ok);
+  } catch (e) {
+    console.error(`[signup] verify email threw for ${email}: ${String((e && e.message) || e)}`);
+  }
+  if (!mailed) console.error(`[signup] ${email} created but no verification email went out`);
   try { await notifyOwnerOfSignup(user); } catch (e) { /* ignore */ }
 
-  return send(res, 200, { ok: true, email, plan: 'free', verified: false, migrated, sender: null });
+  return send(res, 200, { ok: true, email, plan: 'free', verified: false, migrated, sender: null, mailed });
 }
 
 async function login(req, res) {
@@ -212,7 +222,9 @@ async function reset(req, res) {
   return send(res, 200, { ok: true, email: user.email, plan: user.plan || 'free', verified: !!user.verified });
 }
 
-// POST (session-gated) — resend the verification email.
+// POST (session-gated) — resend the verification email. Reports why a send
+// failed instead of a bare ok:false: "try again" is the wrong advice when the
+// server has no API key, and it is the only thing the old shape could say.
 async function resendVerify(req, res) {
   const s = requireSession(req);
   if (!s || !s.sub) return send(res, 401, { error: 'unauthorized' });
@@ -220,7 +232,43 @@ async function resendVerify(req, res) {
   if (!user) return send(res, 401, { error: 'unauthorized' });
   if (user.verified) return send(res, 200, { ok: true, already: true });
   const r = await sendVerifyEmail(req, user);
-  return send(res, 200, { ok: !!r.ok });
+  if (r && r.ok) return send(res, 200, { ok: true });
+  const reason = (r && r.reason) || 'upstream';
+  console.error(`[resend-verify] failed for ${user.email}: ${(r && r.error) || 'unknown'}`);
+  return send(res, 200, { ok: false, reason, message: mailFailureMessage(reason) });
+}
+
+// GET/POST (owner-gated) — is outbound mail actually configured? Verification
+// gates drafting, so when signups go quiet this says which half is wrong: no
+// API key at all, or a From address Resend won't accept. Never returns the key.
+async function mailCheck(req, res) {
+  const s = requireSession(req);
+  if (!s || !s.sub) return send(res, 401, { error: 'unauthorized' });
+  const user = await kv.get(userKey(s.sub));
+  if (!user) return send(res, 401, { error: 'unauthorized' });
+
+  const owner = normalizeEmail(process.env.SIGNUP_ALERT_EMAIL || LEGACY_OWNER_EMAIL || '');
+  if (!owner || normalizeEmail(user.email) !== owner) return send(res, 403, { error: 'forbidden' });
+
+  const configured = !!process.env.RESEND_API_KEY;
+  if (!configured) {
+    return send(res, 200, {
+      ok: false, configured: false, from: MAIL_FROM,
+      message: 'RESEND_API_KEY is not set on this deployment — no email can send.',
+    });
+  }
+  // Prove it end to end by sending to the owner: a set key still fails if the
+  // From domain isn't verified in Resend, and only a real send reveals that.
+  const r = await sendEmail({
+    to: user.email,
+    subject: 'VAMOS mail check',
+    html: emailShell('Mail is working.', `<p style="margin:0">Sent from <b>${MAIL_FROM}</b>. If this reached you, signup and reset emails will too.</p>`),
+  });
+  return send(res, 200, {
+    ok: !!r.ok, configured: true, from: MAIL_FROM,
+    reason: r.ok ? null : r.reason,
+    message: r.ok ? `Test email sent to ${user.email}.` : (r.error || 'Send failed.'),
+  });
 }
 
 // POST (session-gated) — the user raises their hand for founding-member

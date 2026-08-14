@@ -164,10 +164,23 @@ export function verifyToken(token, typ) {
 }
 
 // ---------- transactional email (Resend) ----------
-export const MAIL_FROM = 'VAMOS <hello@send.anywayidid.com>';
+// The From address must be on a domain verified in Resend, which is not
+// necessarily the domain the app runs on — so it is configurable. Set
+// MAIL_FROM to change it without a deploy of this file.
+export const MAIL_FROM = process.env.MAIL_FROM || 'VAMOS <hello@send.anywayidid.com>';
+
+// Failures are returned rather than thrown, and always logged. A silent mail
+// failure is the worst kind here: verification gates AI drafting, so a send
+// that quietly fails locks a new account out of the product with no trace.
+// `reason` is a stable code callers can turn into copy: 'unconfigured' (no API
+// key), 'rejected' (Resend refused — bad key, unverified From domain, blocked
+// recipient), 'upstream' (Resend 5xx), 'network' (never reached them).
 export async function sendEmail({ to, subject, html }) {
   const key = process.env.RESEND_API_KEY;
-  if (!key) return { ok: false, error: 'RESEND_API_KEY not set' };
+  if (!key) {
+    console.error('[mail] RESEND_API_KEY is not set — no email can be sent');
+    return { ok: false, reason: 'unconfigured', error: 'RESEND_API_KEY not set' };
+  }
   try {
     const r = await fetch('https://api.resend.com/emails', {
       method: 'POST',
@@ -176,12 +189,24 @@ export async function sendEmail({ to, subject, html }) {
     });
     if (!r.ok) {
       const t = await r.text().catch(() => '');
-      return { ok: false, error: `resend ${r.status}: ${t.slice(0, 200)}` };
+      const error = `resend ${r.status}: ${t.slice(0, 200)}`;
+      console.error(`[mail] send failed (from=${MAIL_FROM}) ${error}`);
+      return { ok: false, reason: r.status >= 500 ? 'upstream' : 'rejected', error };
     }
     return { ok: true };
   } catch (e) {
-    return { ok: false, error: String((e && e.message) || e) };
+    const error = String((e && e.message) || e);
+    console.error(`[mail] network failure reaching Resend: ${error}`);
+    return { ok: false, reason: 'network', error };
   }
+}
+
+// Turn a sendEmail failure into something a user can read. The detail behind
+// it is in the server log — none of it is the recipient's problem to decode.
+export function mailFailureMessage(reason) {
+  return reason === 'unconfigured' || reason === 'rejected'
+    ? 'Email delivery is down on our side — nothing you did. It has been logged.'
+    : 'Couldn’t send just now — give it a minute and try again.';
 }
 
 // Branded HTML shell for VAMOS emails.

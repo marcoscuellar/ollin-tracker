@@ -39,6 +39,10 @@ Source of truth: `ollin-tracker/api/` (runs in production on heyvamos.app).
    - `KV_REST_API_URL` and `KV_REST_API_TOKEN`
      *(or `UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN`)*
    - `AUTH_SECRET` — a long random string; it signs the session cookies.
+   - `RESEND_API_KEY` — sends verification and password-reset mail.
+   - `MAIL_FROM` — optional; defaults to `VAMOS <hello@send.anywayidid.com>`.
+     **Must be on a domain verified in Resend**, which is not necessarily the
+     domain the app is served from.
 3. Copy the 3 files into the new project's `/api`.
 4. **Rename the data endpoint for the new app**: in `entries.js`, change the key
    from `entries:<id>` to your app's namespace (e.g. `adhd:<id>`) and replace the
@@ -47,6 +51,20 @@ Source of truth: `ollin-tracker/api/` (runs in production on heyvamos.app).
    - Auth: `POST /api/auth?action=login` (also `register`, `logout`,
      `request-reset`, `reset`).
    - Data: `GET /api/entries` to load the user's doc, `POST /api/entries` to save it.
+
+## When signups go quiet — checking mail
+
+Email verification gates real features (in Vamos, AI drafting returns 403 until
+`user.verified`), so a silent mail failure looks like a broken product rather
+than a broken config. Two things make it visible:
+
+- Every `sendEmail` failure is `console.error`'d with the reason and the From
+  address — check the Vercel function logs first.
+- `GET /api/auth?action=mail-check`, signed in as the owner
+  (`SIGNUP_ALERT_EMAIL`, falling back to `LEGACY_OWNER_EMAIL`), reports whether
+  `RESEND_API_KEY` is set and then sends a real test message to the owner. It
+  never returns the key. A set key that still fails almost always means the
+  `MAIL_FROM` domain isn't verified in Resend.
 
 That's the whole kit. Same accounts, same server-saved document, in any Ollin app —
 built once, here.
