@@ -247,8 +247,18 @@ async function mailCheck(req, res) {
   const user = await kv.get(userKey(s.sub));
   if (!user) return send(res, 401, { error: 'unauthorized' });
 
-  const owner = normalizeEmail(process.env.SIGNUP_ALERT_EMAIL || LEGACY_OWNER_EMAIL || '');
-  if (!owner || normalizeEmail(user.email) !== owner) return send(res, 403, { error: 'forbidden' });
+  // Either address qualifies, rather than one falling back to the other.
+  // SIGNUP_ALERT_EMAIL can legitimately be "off" (signup alerts silenced),
+  // which as a fallback chain would lock this endpoint out of its own account
+  // permanently — and the address you sign in with isn't always the one alerts
+  // route to. Who tried is logged, since the 403 itself can't say.
+  const alert = normalizeEmail(process.env.SIGNUP_ALERT_EMAIL || '');
+  const owners = [alert === 'off' ? '' : alert, normalizeEmail(LEGACY_OWNER_EMAIL || '')].filter(Boolean);
+  const me = normalizeEmail(user.email);
+  if (!owners.includes(me)) {
+    console.error(`[mail-check] refused ${me} — owner accounts are: ${owners.join(', ') || '(none configured)'}`);
+    return send(res, 403, { error: 'forbidden' });
+  }
 
   const configured = !!process.env.RESEND_API_KEY;
   if (!configured) {
