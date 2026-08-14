@@ -120,8 +120,15 @@ export const userKey = (id) => `user:${id}`;
 export const emailKey = (email) => `useremail:${normalizeEmail(email)}`;
 export const entriesKey = (id) => `entries:${id}`;
 
+// Who runs this app: signup alerts go here, and owner-only endpoints answer
+// to it. Set OWNER_EMAIL to change it without a deploy.
+export const OWNER_EMAIL = process.env.OWNER_EMAIL || 'marcosmcuellar@gmail.com';
+
 // One-time migration of the legacy single-user blob (ollin:entries) to the
-// first owner account that signs up with this email.
+// first account that signs up with this email. This is a fact about the past —
+// which address owned the data before accounts existed — so it is deliberately
+// NOT the owner address above, and changing who runs the app must not silently
+// hand that old pipeline to a different account.
 export const MIGRATED_FLAG = 'ollin:migrated';
 export const LEGACY_OWNER_EMAIL = 'marcoscuellar99@icloud.com';
 

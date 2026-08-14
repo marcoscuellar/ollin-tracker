@@ -8,7 +8,7 @@ import {
   normalizeEmail, userKey, emailKey, entriesKey,
   newUserId, makeSalt, hashPassword, verifyPassword,
   signToken, verifyToken, sendEmail, emailShell, mailFailureMessage, MAIL_FROM,
-  MIGRATED_FLAG, LEGACY_OWNER_EMAIL, FOUNDING_LIST_KEY,
+  MIGRATED_FLAG, LEGACY_OWNER_EMAIL, OWNER_EMAIL, FOUNDING_LIST_KEY,
   normalizeSender,
 } from './_lib.js';
 
@@ -51,7 +51,7 @@ function setSession(res, userId) {
 // Set SIGNUP_ALERT_EMAIL to route alerts somewhere other than the owner, or
 // to "off" to switch them off.
 async function notifyOwnerOfSignup(user) {
-  const to = (process.env.SIGNUP_ALERT_EMAIL || LEGACY_OWNER_EMAIL || '').trim();
+  const to = (process.env.SIGNUP_ALERT_EMAIL || OWNER_EMAIL || '').trim();
   if (!to || to.toLowerCase() === 'off') return;
   const when = new Date(user.createdAt).toISOString().replace('T', ' ').slice(0, 16) + ' UTC';
   await sendEmail({
@@ -253,7 +253,7 @@ async function mailCheck(req, res) {
   // permanently — and the address you sign in with isn't always the one alerts
   // route to. Who tried is logged, since the 403 itself can't say.
   const alert = normalizeEmail(process.env.SIGNUP_ALERT_EMAIL || '');
-  const owners = [alert === 'off' ? '' : alert, normalizeEmail(LEGACY_OWNER_EMAIL || '')].filter(Boolean);
+  const owners = [alert === 'off' ? '' : alert, normalizeEmail(OWNER_EMAIL || '')].filter(Boolean);
   const me = normalizeEmail(user.email);
   if (!owners.includes(me)) {
     console.error(`[mail-check] refused ${me} — owner accounts are: ${owners.join(', ') || '(none configured)'}`);
