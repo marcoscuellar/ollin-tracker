@@ -177,6 +177,11 @@ export function verifyToken(token, typ) {
 // MAIL_FROM to another verified domain to change it without a deploy.
 export const MAIL_FROM = process.env.MAIL_FROM || 'VAMOS <hello@heyvamos.app>';
 
+// Where replies go. The From address is a sending identity, not necessarily a
+// mailbox anyone reads, so replies are routed to the owner unless REPLY_TO
+// says otherwise.
+export const REPLY_TO = process.env.REPLY_TO || OWNER_EMAIL;
+
 // Failures are returned rather than thrown, and always logged. A silent mail
 // failure is the worst kind here: verification gates AI drafting, so a send
 // that quietly fails locks a new account out of the product with no trace.
@@ -193,7 +198,13 @@ export async function sendEmail({ to, subject, html }) {
     const r = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ from: MAIL_FROM, to: Array.isArray(to) ? to : [to], subject, html }),
+      body: JSON.stringify({
+        from: MAIL_FROM, to: Array.isArray(to) ? to : [to], subject, html,
+        // Sending through Resend doesn't require hello@heyvamos.app to be a
+        // real mailbox, so without this a reply goes nowhere and the sender
+        // never learns it did. Point replies at a person.
+        reply_to: REPLY_TO,
+      }),
     });
     if (!r.ok) {
       const t = await r.text().catch(() => '');
