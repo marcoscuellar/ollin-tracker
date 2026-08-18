@@ -3464,16 +3464,22 @@ function focusBarHTML(b) {
      about what is waiting — not about what the current filter left behind. */
   var nToday = all.filter(function (t) { return whenAxis(t) === "today"; }).length;
   var nLate = all.filter(function (t) { return whenAxis(t) === "late"; }).length;
-  var moreOpen = FX_MORE || FOCUS.added !== "any" || FOCUS.who !== "any" ||
-    FOCUS.kind !== "any" || FOCUS.hot !== "any" || FOCUS.cap > 0;
-  var quick = function (sel, label, n) {
+  /* "Uploaded today" has its own visible toggle, so that one value is not
+     hidden when the panel is shut. Every other hidden axis still forces it. */
+  var moreOpen = FX_MORE || (FOCUS.added !== "any" && FOCUS.added !== "today") ||
+    FOCUS.who !== "any" || FOCUS.kind !== "any" || FOCUS.hot !== "any" || FOCUS.cap > 0;
+  var quick = function (ax, sel, label, n) {
     if (!n) return "";
-    return '<button class="fx-quick' + (FOCUS.when === sel ? " on" : "") + '" data-when="' + sel + '">' +
+    return '<button class="fx-quick' + (FOCUS[ax] === sel ? " on" : "") +
+      '" data-ax="' + ax + '" data-sel="' + sel + '">' +
       esc(label) + '<span class="qn2">' + n + '</span></button>';
   };
+  var nUp = all.filter(function (t) { return addedAxis(t) === "today"; }).length;
   return '<div class="fxbar rv" style="--d:.20s">' +
     '<div class="fx-lead mn">Build my list</div>' +
-    '<div class="fx-quicks">' + quick("today", "Due today", nToday) + quick("late", "Overdue", nLate) + '</div>' +
+    '<div class="fx-quicks">' + quick("when", "today", "Due today", nToday) +
+      quick("when", "late", "Overdue", nLate) +
+      quick("added", "today", "Uploaded today", nUp) + '</div>' +
     '<div class="fx-grp"><span class="fx-lab mn">When</span>' + focusSel("fxWhen", AX_WHEN, FOCUS.when) + '</div>' +
     '<div class="fx-grp"><span class="fx-lab mn">Company</span>' + focusSel("fxCo", companyOpts(all), FOCUS.co) + '</div>' +
     (focusActive()
@@ -3508,11 +3514,11 @@ function wireFocusBar() {
       VM.narrow = false; VM.qIds = null; VM.i = 0; render(); window.scrollTo(0, 0);
     };
   });
-  /* the two shortcuts toggle, so a second click on "Due today" gets you back out */
+  /* the shortcuts toggle, so a second click on "Due today" gets you back out */
   Array.prototype.forEach.call(document.querySelectorAll(".fx-quick"), function (q) {
     q.onclick = function () {
-      var sel = q.dataset.when;
-      FOCUS.when = FOCUS.when === sel ? "any" : sel;
+      var ax = q.dataset.ax, sel = q.dataset.sel;
+      FOCUS[ax] = FOCUS[ax] === sel ? "any" : sel;
       VM.narrow = false; VM.qIds = null; VM.i = 0; render(); window.scrollTo(0, 0);
     };
   });
