@@ -3466,21 +3466,27 @@ function focusBarHTML(b) {
   var nLate = all.filter(function (t) { return whenAxis(t) === "late"; }).length;
   /* "Uploaded today" has its own visible toggle, so that one value is not
      hidden when the panel is shut. Every other hidden axis still forces it. */
-  var moreOpen = FX_MORE || (FOCUS.added !== "any" && FOCUS.added !== "today") ||
-    FOCUS.who !== "any" || FOCUS.kind !== "any" || FOCUS.hot !== "any" || FOCUS.cap > 0;
+  /* the chips carry when + added, so those two never force the panel open */
+  var moreOpen = FX_MORE || FOCUS.who !== "any" || FOCUS.kind !== "any" ||
+    FOCUS.hot !== "any" || FOCUS.cap > 0;
   var quick = function (ax, sel, label, n) {
-    if (!n) return "";
-    return '<button class="fx-quick' + (FOCUS[ax] === sel ? " on" : "") +
+    if (!n && sel !== "any") return "";
+    /* "All" is on whenever nothing narrower is */
+    var on = sel === "any" ? (FOCUS.when === "any" && FOCUS.added === "any") : FOCUS[ax] === sel;
+    return '<button class="fchip fx-quick' + (on ? " on" : "") +
       '" data-ax="' + ax + '" data-sel="' + sel + '">' +
-      esc(label) + '<span class="qn2">' + n + '</span></button>';
+      esc(label) + '<em>' + n + '</em></button>';
   };
   var nUp = all.filter(function (t) { return addedAxis(t) === "today"; }).length;
   return '<div class="fxbar rv" style="--d:.20s">' +
     '<div class="fx-lead mn">Build my list</div>' +
-    '<div class="fx-quicks">' + quick("when", "today", "Due today", nToday) +
+    /* Same chip row as Contacts. One click, a count on each, nothing to read. */
+    '<div class="filters">' +
+      quick("when", "any", "All", all.length) +
+      quick("when", "today", "Due today", nToday) +
       quick("when", "late", "Overdue", nLate) +
-      quick("added", "today", "Uploaded today", nUp) + '</div>' +
-    '<div class="fx-grp"><span class="fx-lab mn">When</span>' + focusSel("fxWhen", AX_WHEN, FOCUS.when) + '</div>' +
+      quick("added", "today", "Uploaded today", nUp) +
+    '</div>' +
     '<div class="fx-grp"><span class="fx-lab mn">Company</span>' + focusSel("fxCo", companyOpts(all), FOCUS.co) + '</div>' +
     (focusActive()
       ? '<span class="fx-count">' + shown + ' of ' + all.length + '</span><a class="fx-clear" id="fxClear">Clear</a>'
@@ -3491,6 +3497,7 @@ function focusBarHTML(b) {
     '<a class="fx-more" id="fxMore">' + (moreOpen ? 'Fewer filters' : 'More filters') + '</a>' +
     (moreOpen
       ? '<div class="fx-row2">' +
+          '<div class="fx-grp"><span class="fx-lab mn">When</span>' + focusSel("fxWhen", AX_WHEN, FOCUS.when) + '</div>' +
           '<div class="fx-grp"><span class="fx-lab mn">Added</span>' + focusSel("fxAdded", AX_ADDED, FOCUS.added) + '</div>' +
           '<div class="fx-grp"><span class="fx-lab mn">Who</span>' + focusSel("fxWho", AX_WHO, FOCUS.who) + '</div>' +
           '<div class="fx-grp"><span class="fx-lab mn">What kind</span>' + focusSel("fxKind", AX_KIND, FOCUS.kind) + '</div>' +
@@ -3518,7 +3525,9 @@ function wireFocusBar() {
   Array.prototype.forEach.call(document.querySelectorAll(".fx-quick"), function (q) {
     q.onclick = function () {
       var ax = q.dataset.ax, sel = q.dataset.sel;
-      FOCUS[ax] = FOCUS[ax] === sel ? "any" : sel;
+      /* the chips are one row, so picking one clears the other axis */
+      if (sel === "any") { FOCUS.when = "any"; FOCUS.added = "any"; }
+      else { FOCUS.when = "any"; FOCUS.added = "any"; FOCUS[ax] = sel; }
       VM.narrow = false; VM.qIds = null; VM.i = 0; render(); window.scrollTo(0, 0);
     };
   });
