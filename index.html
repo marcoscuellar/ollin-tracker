@@ -337,7 +337,25 @@
   letter-spacing:.08em;color:var(--navy);background:var(--coral);padding:5px 11px;border-radius:999px;font-weight:700;white-space:nowrap}
 .fxbar .fx-clear{align-self:center;color:var(--steel);font-size:12.5px;font-weight:700;cursor:pointer;text-decoration:underline}
 .fxbar .fx-clear:hover{color:var(--bone)}
-@media(max-width:820px){.fxbar .fx-sel{min-width:0;width:100%}.fxbar .fx-grp{flex:1 1 140px}}
+/* Due today / Overdue sit ahead of the selects — the day's first question
+   should be one click, not a trip through a dropdown. */
+.fxbar .fx-quicks{display:flex;gap:8px;align-self:center;flex-wrap:wrap}
+.fxbar .fx-quick{display:flex;align-items:center;gap:7px;background:var(--surface);color:var(--bone);
+  border:1px solid var(--line);border-radius:999px;padding:8px 14px;cursor:pointer;
+  font-family:'Archivo',sans-serif;font-size:13px;font-weight:800;white-space:nowrap}
+.fxbar .fx-quick:hover{border-color:var(--steel)}
+.fxbar .fx-quick.on{background:var(--coral);color:var(--navy);border-color:var(--coral)}
+.fxbar .fx-quick .qn2{font-family:'IBM Plex Mono',monospace;font-size:10.5px;font-weight:700;opacity:.7}
+.fxbar .fx-quick.on .qn2{opacity:.85}
+.fxbar .fx-more{align-self:center;color:var(--steel);font-size:12.5px;font-weight:700;cursor:pointer;
+  text-decoration:underline;white-space:nowrap}
+.fxbar .fx-more:hover{color:var(--bone)}
+.fxbar .fx-count + .fx-clear + .fx-more{margin-left:0}
+.fxbar .fx-count{margin-left:auto}
+.fxbar .fx-row2{flex-basis:100%;display:flex;gap:14px;flex-wrap:wrap;align-items:flex-end;
+  padding-top:14px;margin-top:2px;border-top:1px solid var(--line)}
+@media(max-width:820px){.fxbar .fx-sel{min-width:0;width:100%}.fxbar .fx-grp{flex:1 1 140px}
+  .fxbar .fx-quicks{width:100%}.fxbar .fx-quick{flex:1 1 auto;justify-content:center}}
 /* --- what's missing (gaps audit) --- */
 .gapbar{display:flex;align-items:center;gap:14px;margin-top:20px;padding:14px 18px;border:1px solid var(--line);
   border-radius:10px;background:rgba(255,255,255,.02);cursor:pointer}
@@ -3102,7 +3120,7 @@ function render() {
    One list of everything is a wall. Pick WHO (role) × WHAT KIND (company
    archetype) × HOW HOT (signal state), cap the volume, and you get a day's
    work instead. Each axis is derived from data already on the record. */
-var FOCUS = { who: "any", kind: "any", hot: "any", cap: 0 };   /* cap 0 = no cap */
+var FOCUS = { when: "any", co: "any", added: "any", who: "any", kind: "any", hot: "any", cap: 0 };  /* cap 0 = no cap */
 
 var AX_WHO = [
   ["any", "Anyone"],
@@ -3127,7 +3145,7 @@ function whoAxis(th) {
 }
 
 var AX_KIND = [
-  ["any", "Any company"],
+  ["any", "Any type"],   /* not "Any company" — that is the Company axis now */
   ["agency", "Traditional agency"],
   ["internal", "Internal software dept"],
   ["product", "Product company"],
@@ -3161,10 +3179,73 @@ function hotAxis(t, a) {
 }
 var AX_CAPS = [[0, "No cap"], [5, "5"], [10, "10"], [20, "20"], [40, "40"]];
 
-function focusActive() { return FOCUS.who !== "any" || FOCUS.kind !== "any" || FOCUS.hot !== "any" || FOCUS.cap > 0; }
+/* WHEN — the plain question the day starts with: what is due today?
+   Purely temporal, so the answer is never mixed up with who or how hot. */
+var AX_WHEN = [["any", "Anything"], ["today", "Due today"], ["late", "Overdue"],
+               ["now", "Due today + overdue"], ["new", "Not started yet"]];
+function whenAxis(t) {
+  var td = todayStr(), d = dueOf(t);
+  if (d < td) return "late";
+  if (d === td) return "today";
+  return "new";
+}
+function whenMatch(t, sel) {
+  var w = whenAxis(t);
+  return sel === "now" ? (w === "today" || w === "late") : w === sel;
+}
+
+/* ADDED — the day the contact landed in the book, so a batch that came in
+   from one sheet can be worked as one batch. */
+var AX_ADDED = [["any", "Any time"], ["today", "Added today"], ["yest", "Added yesterday"],
+                ["week", "Added this week"], ["older", "Added earlier"]];
+function addedAxis(t) {
+  var th = threadOf(t) || {};
+  if (!th.pulledAt) return "older";
+  var d = iso(new Date(th.pulledAt)), td = todayStr();
+  if (d === td) return "today";
+  if (d === iso(addDays(td, -1))) return "yest";
+  return daysBetween(d, td) <= 7 ? "week" : "older";
+}
+function addedMatch(t, sel) {
+  var a = addedAxis(t);
+  /* "this week" is a window, not a slice — today and yesterday are inside it */
+  if (sel === "week") return a === "today" || a === "yest" || a === "week";
+  return a === sel;
+}
+
+/* COMPANY — built from whatever is actually in the queue, so the list is never
+   a wall of accounts with nothing to do at them. */
+function companyOpts(list) {
+  var seen = {};
+  list.forEach(function (t) {
+    var k = t.acctId;
+    if (!seen[k]) seen[k] = { nm: coDisplayName(acctOf(k) || { company: t.company }), n: 0 };
+    seen[k].n++;
+  });
+  /* Keep a chosen company on the list even after its last touch is sent —
+     otherwise the select silently snaps back to "Any company" while the filter
+     is still on, and the empty queue looks like a bug. */
+  if (FOCUS.co !== "any" && !seen[FOCUS.co]) {
+    var a = acctOf(FOCUS.co);
+    if (a) seen[FOCUS.co] = { nm: coDisplayName(a), n: 0 };
+    else FOCUS.co = "any";
+  }
+  var opts = Object.keys(seen).map(function (k) { return [k, seen[k].nm + " (" + seen[k].n + ")", seen[k].nm]; })
+    .sort(function (x, y) { return x[2].localeCompare(y[2]); })
+    .map(function (o) { return [o[0], o[1]]; });
+  return [["any", "Any company"]].concat(opts);
+}
+
+function focusActive() {
+  return FOCUS.who !== "any" || FOCUS.kind !== "any" || FOCUS.hot !== "any" ||
+    FOCUS.when !== "any" || FOCUS.co !== "any" || FOCUS.added !== "any" || FOCUS.cap > 0;
+}
 function applyFocus(list) {
   var out = list.filter(function (t) {
     var a = acctOf(t.acctId) || {}, th = threadOf(t) || {};
+    if (FOCUS.when !== "any" && !whenMatch(t, FOCUS.when)) return false;
+    if (FOCUS.co !== "any" && t.acctId !== FOCUS.co) return false;
+    if (FOCUS.added !== "any" && !addedMatch(t, FOCUS.added)) return false;
     if (FOCUS.who !== "any" && whoAxis(th) !== FOCUS.who) return false;
     if (FOCUS.kind !== "any" && kindAxis(a) !== FOCUS.kind) return false;
     if (FOCUS.hot !== "any" && hotAxis(t, a) !== FOCUS.hot) return false;
@@ -3379,19 +3460,47 @@ function focusSel(id, opts, cur) {
 function focusBarHTML(b) {
   var all = b.late.concat(b.today, b.fresh);
   var shown = applyFocus(all).length;
+  /* Counts come off the unfiltered day, so the shortcuts always tell the truth
+     about what is waiting — not about what the current filter left behind. */
+  var nToday = all.filter(function (t) { return whenAxis(t) === "today"; }).length;
+  var nLate = all.filter(function (t) { return whenAxis(t) === "late"; }).length;
+  var moreOpen = FX_MORE || FOCUS.added !== "any" || FOCUS.who !== "any" ||
+    FOCUS.kind !== "any" || FOCUS.hot !== "any" || FOCUS.cap > 0;
+  var quick = function (sel, label, n) {
+    if (!n) return "";
+    return '<button class="fx-quick' + (FOCUS.when === sel ? " on" : "") + '" data-when="' + sel + '">' +
+      esc(label) + '<span class="qn2">' + n + '</span></button>';
+  };
   return '<div class="fxbar rv" style="--d:.20s">' +
     '<div class="fx-lead mn">Build my list</div>' +
-    '<div class="fx-grp"><span class="fx-lab mn">Who</span>' + focusSel("fxWho", AX_WHO, FOCUS.who) + '</div>' +
-    '<div class="fx-grp"><span class="fx-lab mn">What kind</span>' + focusSel("fxKind", AX_KIND, FOCUS.kind) + '</div>' +
-    '<div class="fx-grp"><span class="fx-lab mn">How hot</span>' + focusSel("fxHot", AX_HOT, FOCUS.hot) + '</div>' +
-    '<div class="fx-grp"><span class="fx-lab mn">How many</span>' + focusSel("fxCap", AX_CAPS, FOCUS.cap) + '</div>' +
+    '<div class="fx-quicks">' + quick("today", "Due today", nToday) + quick("late", "Overdue", nLate) + '</div>' +
+    '<div class="fx-grp"><span class="fx-lab mn">When</span>' + focusSel("fxWhen", AX_WHEN, FOCUS.when) + '</div>' +
+    '<div class="fx-grp"><span class="fx-lab mn">Company</span>' + focusSel("fxCo", companyOpts(all), FOCUS.co) + '</div>' +
     (focusActive()
       ? '<span class="fx-count">' + shown + ' of ' + all.length + '</span><a class="fx-clear" id="fxClear">Clear</a>'
       : '') +
+    /* Seven dropdowns in a row is a wall. The day's own question — when, and
+       where — stays out; the rest is there when it is wanted. Opens by itself
+       if one of them is already set, so no filter is ever hidden while on. */
+    '<a class="fx-more" id="fxMore">' + (moreOpen ? 'Fewer filters' : 'More filters') + '</a>' +
+    (moreOpen
+      ? '<div class="fx-row2">' +
+          '<div class="fx-grp"><span class="fx-lab mn">Added</span>' + focusSel("fxAdded", AX_ADDED, FOCUS.added) + '</div>' +
+          '<div class="fx-grp"><span class="fx-lab mn">Who</span>' + focusSel("fxWho", AX_WHO, FOCUS.who) + '</div>' +
+          '<div class="fx-grp"><span class="fx-lab mn">What kind</span>' + focusSel("fxKind", AX_KIND, FOCUS.kind) + '</div>' +
+          '<div class="fx-grp"><span class="fx-lab mn">How hot</span>' + focusSel("fxHot", AX_HOT, FOCUS.hot) + '</div>' +
+          '<div class="fx-grp"><span class="fx-lab mn">How many</span>' + focusSel("fxCap", AX_CAPS, FOCUS.cap) + '</div>' +
+        '</div>'
+      : '') +
   '</div>';
 }
+var FX_MORE = false;   /* the extra axes, expanded by hand */
+function clearFocus() {
+  FOCUS = { when: "any", co: "any", added: "any", who: "any", kind: "any", hot: "any", cap: 0 };
+  VM.narrow = false; VM.qIds = null; VM.i = 0; render();
+}
 function wireFocusBar() {
-  var ids = { fxWho: "who", fxKind: "kind", fxHot: "hot", fxCap: "cap" };
+  var ids = { fxWhen: "when", fxCo: "co", fxAdded: "added", fxWho: "who", fxKind: "kind", fxHot: "hot", fxCap: "cap" };
   Object.keys(ids).forEach(function (id) {
     var el = document.getElementById(id); if (!el) return;
     el.onchange = function () {
@@ -3399,9 +3508,18 @@ function wireFocusBar() {
       VM.narrow = false; VM.qIds = null; VM.i = 0; render(); window.scrollTo(0, 0);
     };
   });
-  var clear = function () { FOCUS = { who: "any", kind: "any", hot: "any", cap: 0 }; VM.i = 0; render(); };
-  var c = document.getElementById("fxClear"); if (c) c.onclick = clear;
-  var c2 = document.getElementById("fxClear2"); if (c2) c2.onclick = clear;
+  /* the two shortcuts toggle, so a second click on "Due today" gets you back out */
+  Array.prototype.forEach.call(document.querySelectorAll(".fx-quick"), function (q) {
+    q.onclick = function () {
+      var sel = q.dataset.when;
+      FOCUS.when = FOCUS.when === sel ? "any" : sel;
+      VM.narrow = false; VM.qIds = null; VM.i = 0; render(); window.scrollTo(0, 0);
+    };
+  });
+  var mo = document.getElementById("fxMore");
+  if (mo) mo.onclick = function () { FX_MORE = !FX_MORE; render(); };
+  var c = document.getElementById("fxClear"); if (c) c.onclick = function () { FX_MORE = false; clearFocus(); };
+  var c2 = document.getElementById("fxClear2"); if (c2) c2.onclick = function () { FX_MORE = false; clearFocus(); };
 }
 
 function doneBody(b) {
