@@ -120,8 +120,15 @@ export const userKey = (id) => `user:${id}`;
 export const emailKey = (email) => `useremail:${normalizeEmail(email)}`;
 export const entriesKey = (id) => `entries:${id}`;
 
+// Who runs this app: signup alerts go here, and owner-only endpoints answer
+// to it. Set OWNER_EMAIL to change it without a deploy.
+export const OWNER_EMAIL = process.env.OWNER_EMAIL || 'marcosmcuellar@gmail.com';
+
 // One-time migration of the legacy single-user blob (ollin:entries) to the
-// first owner account that signs up with this email.
+// first account that signs up with this email. This is a fact about the past —
+// which address owned the data before accounts existed — so it is deliberately
+// NOT the owner address above, and changing who runs the app must not silently
+// hand that old pipeline to a different account.
 export const MIGRATED_FLAG = 'ollin:migrated';
 export const LEGACY_OWNER_EMAIL = 'marcoscuellar99@icloud.com';
 
@@ -164,24 +171,71 @@ export function verifyToken(token, typ) {
 }
 
 // ---------- transactional email (Resend) ----------
-export const MAIL_FROM = 'VAMOS <hello@send.anywayidid.com>';
+// The From address must be on a domain verified in Resend — mail from an
+// unverified domain is refused outright, which is how this app spent a stretch
+// sending nothing at all. heyvamos.app is verified; keep it that way, or set
+// MAIL_FROM to another verified domain to change it without a deploy.
+export const MAIL_FROM = process.env.MAIL_FROM || 'VAMOS <hello@heyvamos.app>';
+
+// Where replies go. The From address is a sending identity, not necessarily a
+// mailbox anyone reads, so replies are routed to the owner unless REPLY_TO
+// says otherwise.
+export const REPLY_TO = process.env.REPLY_TO || OWNER_EMAIL;
+
+// Failures are returned rather than thrown, and always logged. A silent mail
+// failure is the worst kind here: verification gates AI drafting, so a send
+// that quietly fails locks a new account out of the product with no trace.
+// `reason` is a stable code callers can turn into copy: 'unconfigured' (no API
+// key), 'rejected' (Resend refused — bad key, unverified From domain, blocked
+// recipient), 'upstream' (Resend 5xx), 'network' (never reached them).
 export async function sendEmail({ to, subject, html }) {
   const key = process.env.RESEND_API_KEY;
-  if (!key) return { ok: false, error: 'RESEND_API_KEY not set' };
+  if (!key) {
+    console.error('[mail] RESEND_API_KEY is not set — no email can be sent');
+    return { ok: false, reason: 'unconfigured', error: 'RESEND_API_KEY not set' };
+  }
   try {
     const r = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ from: MAIL_FROM, to: Array.isArray(to) ? to : [to], subject, html }),
+      body: JSON.stringify({
+        from: MAIL_FROM, to: Array.isArray(to) ? to : [to], subject, html,
+        // Sending through Resend doesn't require hello@heyvamos.app to be a
+        // real mailbox, so without this a reply goes nowhere and the sender
+        // never learns it did. Point replies at a person.
+        reply_to: REPLY_TO,
+      }),
     });
     if (!r.ok) {
       const t = await r.text().catch(() => '');
-      return { ok: false, error: `resend ${r.status}: ${t.slice(0, 200)}` };
+      const error = `resend ${r.status}: ${t.slice(0, 200)}`;
+      console.error(`[mail] send failed (from=${MAIL_FROM}) ${error}`);
+      return { ok: false, reason: r.status >= 500 ? 'upstream' : 'rejected', error };
     }
     return { ok: true };
   } catch (e) {
-    return { ok: false, error: String((e && e.message) || e) };
+    const error = String((e && e.message) || e);
+    console.error(`[mail] network failure reaching Resend: ${error}`);
+    return { ok: false, reason: 'network', error };
   }
+}
+
+// Turn a sendEmail failure into something a user can read. The detail behind
+// it is in the server log — none of it is the recipient's problem to decode.
+export function mailFailureMessage(reason) {
+  return reason === 'unconfigured' || reason === 'rejected'
+    ? 'Email delivery is down on our side — nothing you did. It has been logged.'
+    : 'Couldn’t send just now — give it a minute and try again.';
+}
+
+// Anything interpolated into an email body needs this. Two reasons, one of
+// each kind: MAIL_FROM legitimately contains angle brackets and would vanish
+// unescaped, and an address is attacker-chosen — the signup regex admits `<`
+// and `>`, so a crafted email lands as live markup in the owner's inbox.
+export function escapeHtml(s) {
+  return String(s == null ? '' : s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 }
 
 // Branded HTML shell for VAMOS emails.

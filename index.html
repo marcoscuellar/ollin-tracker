@@ -806,7 +806,7 @@ button{font-family:inherit}
 .sheetform input{flex:1;min-width:220px;background:var(--navy);border:1px solid var(--line);color:var(--bone);
   border-radius:10px;padding:10px 13px;font-family:inherit;font-size:13px}
 
-/* ======================= ONBOARDING — the 4-question arc ======================= */
+/* ================= ONBOARDING — 4 questions, then the list ================= */
 .ob-screen{position:fixed;inset:0;z-index:60;background:var(--black);display:flex;align-items:center;justify-content:center;padding:24px;overflow:auto}
 .ob-inner{width:1020px;max-width:100%;min-height:min(660px,90vh);display:flex;background:var(--black);
   overflow:hidden;border-radius:16px;border:1px solid var(--line);box-shadow:0 60px 140px -50px #000}
@@ -1816,16 +1816,17 @@ select.auth-input{appearance:none}
   /* ===== index.html lines 2456-2536 - onboarding wizard (3 steps) + finishOnboarding ===== */
   // 3-step onboarding wizard: account → AI intro → pricing. Opaque + blocking;
   // the app stays hidden until the identity is saved on the final step.
-  // Onboarding — the 4-question on-ramp (Ollin : Vamos). Split screen:
-  // left = "This is what I'll know about you." + a profile card that fills in;
-  // right = one question at a time with 4 progress bars. Only captures what the
-  // USER can say (constant, personal). Everything about the target comes from
-  // the engines. Q3 is the reworked "What do you help them with?" (the problem
-  // you solve — constant across orgs — which feeds the outreach angle).
+  // Onboarding — the on-ramp (Ollin : Vamos). Split screen: left = "This is
+  // what I'll know about you." + a profile card that fills in; right = one
+  // question at a time. Four questions capture only what the USER can say
+  // (constant, personal) — everything about the target comes from the engines.
+  // Q3 is the reworked "What do you help them with?" (the problem you solve —
+  // constant across orgs — which feeds the outreach angle). A fifth step takes
+  // their list, because identity alone still leaves them on an empty pipeline.
   var OB_Q = [
     { kick:"QUESTION 1 OF 4", q:"What should I call you?",
       sub:"First name is fine — it's just how I'll address you.",
-      ph:"Type your name…", key:"name", big:false },
+      ph:"Type your name…", key:"name", big:false, required:true },
     { kick:"QUESTION 2 OF 4", q:"What do you do?",
       sub:"Your title and company. I'll use it as a fallback intro if you skip the last step.",
       ph:"Sr Manager at Ollin Systems", key:"role", big:false },
@@ -1877,13 +1878,19 @@ select.auth-input{appearance:none}
           '</div>'+ line +
         '</div>';
     }
-    function drawRight(){
+    // Four questions, then the list. OB_LIST is that last step's index.
+    var OB_LIST=OB_Q.length, OB_TOTAL=OB_Q.length+1;
+    function progBars(){
+      var bars="";
+      for(var i=0;i<OB_TOTAL;i++) bars+='<i class="'+(i<=step?"on":"")+'"></i>';
+      return '<div class="ob-prog">'+bars+'</div>';
+    }
+    function drawRight(){ if(step===OB_LIST) drawList(); else drawQuestion(); }
+    function drawQuestion(){
       var Q=OB_Q[step], val=ans[Q.key]||"";
       var input= Q.big
         ? '<textarea id="obIn" placeholder="'+esc(Q.ph)+'">'+esc(val)+'</textarea>'
         : '<input id="obIn" placeholder="'+esc(Q.ph)+'" value="'+esc(val)+'" autocomplete="off">';
-      var bars="";
-      for(var i=0;i<4;i++) bars+='<i class="'+(i<=step?"on":"")+'"></i>';
       document.getElementById("obRight").innerHTML=
         '<div class="mn ob-kick">'+Q.kick+'</div>'+
         '<div class="ob-q">'+Q.q+'</div>'+
@@ -1893,24 +1900,71 @@ select.auth-input{appearance:none}
         (Q.tag ? '<div class="ob-tag">'+Q.tag+'</div>' : '')+
         '<div class="ob-err" id="obErr"></div>'+
         '<div class="ob-actions">'+
-          '<button class="ob-go" id="obNext">'+(step===3?"Finish":"Continue")+'</button>'+
+          '<button class="ob-go" id="obNext">Continue</button>'+
           (step>0?'<button class="ob-lnk" id="obBack">Back</button>':'')+
-          '<button class="ob-lnk" id="obSkip">Skip this</button>'+
-        '</div>'+
-        '<div class="ob-prog">'+bars+'</div>';
+          // Only offered where it does something. On a required question the
+          // link used to sit there and refuse, which reads as a broken button.
+          (Q.required?'':'<button class="ob-lnk" id="obSkip">Skip this</button>')+
+        '</div>'+ progBars();
       var inp=document.getElementById("obIn");
       function grab(){ ans[Q.key]=inp.value; drawLeft(); }
       inp.addEventListener("input", grab);
       inp.addEventListener("keydown", function(e){ if(e.key==="Enter" && !Q.big){ e.preventDefault(); grab(); next(); } });
       document.getElementById("obNext").onclick=function(){ grab(); next(); };
       var bk=document.getElementById("obBack"); if(bk) bk.onclick=function(){ grab(); step--; drawRight(); };
-      document.getElementById("obSkip").onclick=function(){ next(); };
+      var sk=document.getElementById("obSkip"); if(sk) sk.onclick=function(){ next(); };
       setTimeout(function(){ try{ inp.focus(); }catch(e){} }, 30);
     }
+    /* The arc used to end at identity and drop the rep on an empty pipeline
+       with nothing to act on. This is the step that gives them a queue: same
+       importer as the Import button, so a CSV, an Excel export, a pasted table
+       and agent notes all land the same way. Skippable — but asked for once. */
+    function drawList(){
+      var n=contactCount(), acc=(state.accounts||[]).length;
+      var got=n||acc;
+      var status=got
+        ? '<div class="ob-tag">In already: <b>'+n+'</b> contact'+(n===1?'':'s')+' across <b>'+acc+'</b> compan'+(acc===1?'y':'ies')+'. Add more, or finish.</div>'
+        : '<div class="ob-tag">Nothing in yet — a header row plus names is all I need.</div>';
+      document.getElementById("obRight").innerHTML=
+        '<div class="mn ob-kick">LAST STEP</div>'+
+        '<div class="ob-q">Who are you chasing?</div>'+
+        '<div class="ob-qsub">Bring your list in and I\'ll build the cadence around it. A CSV or Excel export, or paste a table straight out of a sheet.</div>'+
+        '<div class="ob-actions" style="margin:14px 0 4px">'+
+          '<button class="ob-go" id="obPick">Choose a file</button>'+
+        '</div>'+
+        '<div class="ob-field"><textarea id="obPaste" placeholder="…or paste rows here — headers like Name, Title, Company, Email"></textarea></div>'+
+        '<div class="ob-actions" style="margin-top:0">'+
+          '<button class="ob-lnk" id="obPasteGo">Add pasted list</button>'+
+        '</div>'+
+        status+
+        '<div class="ob-err" id="obErr"></div>'+
+        '<div class="ob-actions">'+
+          '<button class="ob-go" id="obNext">'+(got?"Finish":"Finish — I'll add them later")+'</button>'+
+          '<button class="ob-lnk" id="obBack">Back</button>'+
+        '</div>'+ progBars()+
+        '<input type="file" id="obFile" accept=".csv,.tsv,.txt,.xlsx,.xls" style="display:none">';
+      var file=document.getElementById("obFile");
+      document.getElementById("obPick").onclick=function(){ file.click(); };
+      file.onchange=function(){
+        var f=file.files && file.files[0];
+        // Redraw off the callback: the file reads are async, so counting now
+        // would report the state from before the import.
+        if(f) handleCompanyFile(f, function(){ if(step===OB_LIST) drawList(); });
+        file.value="";
+      };
+      document.getElementById("obPasteGo").onclick=function(){
+        var t=(document.getElementById("obPaste").value||"").trim();
+        if(!t){ document.getElementById("obErr").textContent="Paste some rows first."; return; }
+        addCompaniesSmart(t);
+        if(step===OB_LIST) drawList();
+      };
+      document.getElementById("obNext").onclick=function(){ next(); };
+      document.getElementById("obBack").onclick=function(){ step--; drawRight(); };
+    }
     function next(){
-      var Q=OB_Q[step], err=document.getElementById("obErr");
+      var err=document.getElementById("obErr");
       if(step===0 && !(ans.name||"").trim()){ if(err) err.textContent="I need a name to address you by."; return; }
-      if(step<3){ step++; drawRight(); return; }
+      if(step<OB_LIST){ step++; drawRight(); return; }
       finish();
     }
     async function finish(){
@@ -2083,7 +2137,10 @@ select.auth-input{appearance:none}
     try{
       var r=await fetch("/api/auth?action=resend-verify",{method:"POST",credentials:"same-origin"});
       var d=await r.json().catch(function(){ return {}; });
-      toast(d.already?"Already verified — you’re good.":(d.ok?"Verification email sent.":"Couldn’t send — try again."));
+      if(d.already) return toast("Already verified — you’re good.");
+      if(d.ok) return toast("Verification email sent.");
+      // The server knows whether this is worth retrying; say what it said.
+      toast(d.message||"Couldn’t send — try again.");
     }catch(e){ toast("Couldn’t send — try again."); }
   }
   async function doAuth(mode, email, password){
@@ -2099,9 +2156,16 @@ select.auth-input{appearance:none}
       ACCOUNT={email:d.email,plan:d.plan,verified:d.verified,sender:d.sender||null};
       await afterAuthLoad();
       computeComeback();
+      // Drop ?signup=1 — leaving it on means a refresh lands the now-logged-in
+      // user back on the create-account form, where their own email 409s.
+      cleanUrl();
       closeAuth(); enterAppOrOnboard();
       if(d.migrated) toast("Welcome back — your pipeline’s here.");
-      else if(mode==="signup") toast("Welcome to VAMOS. Check your inbox to confirm your email.");
+      else if(mode==="signup"){
+        toast(d.mailed===false
+          ? "You’re in. We couldn’t send the confirmation email — try Resend up top in a minute."
+          : "Welcome to VAMOS. Check your inbox to confirm your email.");
+      }
     }catch(e){
       lockErr((e&&e.message)||"Something went wrong. Try again.");
       if(go){ go.disabled=false; go.textContent=(mode==="signup"?"Start free":"Log in"); }
@@ -2138,8 +2202,6 @@ select.auth-input{appearance:none}
     var params=new URLSearchParams(location.search);
     var rst=params.get("reset");
     if(rst){ showApp(false); openAuth(); renderResetForm(rst); return; }
-    /* ?signup=1 — land straight on the create-account form (demo CTA target) */
-    if(params.get("signup")){ showApp(false); openAuth("signup"); return; }
     if(params.get("demo")){
       DEMO=true;
       seedPublicDemo();
@@ -2155,11 +2217,17 @@ select.auth-input{appearance:none}
         ACCOUNT={email:d.email,plan:d.plan,verified:d.verified,sender:d.sender||null};
         await afterAuthLoad();
         computeComeback();
+        // A live session outranks ?signup=1: someone who is already in should
+        // never be shown a create-account form for the account they're in.
+        if(params.get("signup")) cleanUrl();
         enterAppOrOnboard();
         afterBootParams(params);
         return;
       }
     }catch(e){}
+    /* ?signup=1 — land straight on the create-account form (demo CTA target),
+       but only once we know there's nobody signed in. */
+    if(params.get("signup")){ showApp(false); openAuth("signup"); return; }
     showApp(false); closeAuth();
     afterBootParams(params);
   }
@@ -2704,8 +2772,12 @@ select.auth-input{appearance:none}
     if(cm.name>=0 || cm.first>=0){ applyImportRows(rows); }        // contacts (has Name)
     else { applyCompanyImport(importCompanyRows(rows)); }           // companies
   }
-  function handleCompanyFile(file){
+  // `after` runs once the rows have actually landed in state — the reads are
+  // async, so callers that need to redraw off the result (onboarding) can't
+  // just redraw on the next line.
+  function handleCompanyFile(file, after){
     if(!file) return;
+    var done=function(){ if(typeof after==="function") after(); };
     var nm=(file.name||"").toLowerCase(), ty=(file.type||"").toLowerCase();
     var isXlsx=/\.(xlsx|xls)$/.test(nm) || ty.indexOf("sheet")>-1 || ty.indexOf("excel")>-1;
     if(isXlsx){
@@ -2719,14 +2791,15 @@ select.auth-input{appearance:none}
             var rows=XLSX.utils.sheet_to_json(sh, {header:1, blankrows:false, defval:""});
             routeImport(rows);
           }catch(e){ toast("Couldn’t read that Excel file"); }
+          done();
         };
-        rd.onerror=function(){ toast("Couldn’t read that file"); };
+        rd.onerror=function(){ toast("Couldn’t read that file"); done(); };
         rd.readAsArrayBuffer(file);
-      }).catch(function(e){ toast(e.message||"Excel reader failed to load"); });
+      }).catch(function(e){ toast(e.message||"Excel reader failed to load"); done(); });
     } else {
       var rd=new FileReader();
-      rd.onload=function(){ routeImport(parseCSV(String(rd.result||""))); };
-      rd.onerror=function(){ toast("Couldn’t read that file"); };
+      rd.onload=function(){ routeImport(parseCSV(String(rd.result||""))); done(); };
+      rd.onerror=function(){ toast("Couldn’t read that file"); done(); };
       rd.readAsText(file);
     }
   }
