@@ -1291,6 +1291,266 @@ select.auth-input{appearance:none}
   padding:11px 20px;font-size:13.5px;font-weight:700;box-shadow:0 20px 50px -20px #000;
   animation:rise .4s cubic-bezier(.16,.84,.3,1) both}
 
+/* ============================================================================
+   MOBILE — phone-first corrections, kept in one block at the end so it wins
+   on source order without touching a single desktop rule.
+
+   The desktop layout assumes a wide viewport in a few load-bearing places:
+   the nav is one un-wrapping flex row, the shell pads 30px a side, the
+   display type has clamp() floors set for a laptop, and the kanban/rail are
+   fixed-column grids. On a 390px phone the nav alone forced the document to
+   ~973px wide, so the whole page rendered zoomed out and pannable. Below,
+   each of those comes down to the phone.
+   ========================================================================== */
+
+html{-webkit-text-size-adjust:100%}
+img,svg,video,canvas{max-width:100%}
+
+/* dvh: the iOS address bar sliding away shouldn't resize the layout under you */
+@supports(height:100dvh){
+  #appMain{min-height:100dvh}
+  .lock,.authsplit{min-height:100dvh}
+  .vmodal{max-height:88dvh}
+  @media(min-width:901px){.rail{max-height:calc(100dvh - 260px)}}
+}
+
+/* ---------------------------------------------------------------- tablet */
+@media(max-width:900px){
+  /* the queue rail is a horizontal strip here — let it bleed to the screen
+     edge and snap, so a half-card never reads as a broken layout */
+  .rail{scroll-snap-type:x mandatory;scrollbar-width:none;-ms-overflow-style:none;
+    overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch}
+  .rail::-webkit-scrollbar{display:none}
+  .railitem{scroll-snap-align:start}
+}
+
+/* ------------------------------------------------------------------ phone */
+@media(max-width:760px){
+  /* Belt-and-braces guard so nothing can push the document sideways again.
+     overflow-x:clip rather than hidden on purpose — hidden would make these
+     scroll containers, and this page's scroller is <body>, so hidden here
+     silently kills vertical scrolling. */
+  html,body{overflow-x:clip}
+  #appMain,.vm-top,.vm-wrap,#vmBanners{max-width:100%}
+
+  /* ---- nav ------------------------------------------------------------
+     One un-wrapping flex row is what blew the document out to 973px. A
+     grid with named areas gives exactly two rows at every width instead of
+     letting flex-wrap decide (which lands on three rows at 390px):
+
+         brand ................ Just this one   [avatar]
+         Today Pipeline Co… ..  Import          [theme]
+
+     .vm-right is display:contents so its five children join the grid
+     directly — no markup change needed. -------------------------------- */
+  .vm-topin{display:grid;align-items:center;column-gap:8px;row-gap:6px;
+    grid-template-columns:minmax(0,1fr) auto auto;
+    grid-template-areas:"brand just av" "tabs import theme";
+    padding:8px 14px 7px;
+    padding-left:max(14px,env(safe-area-inset-left));
+    padding-right:max(14px,env(safe-area-inset-right))}
+  .vm-right{display:contents}
+  .vm-streak{display:none}                       /* the count lives in the list filters */
+  .vm-brand{grid-area:brand;gap:8px;justify-self:start}
+  .vm-brand svg{width:24px;height:24px}
+  .vm-brand .wm{font-size:19px}
+  #vmJust{grid-area:just}
+  #vmAv{grid-area:av}
+  #vmImport{grid-area:import;justify-self:end}
+  #vmTheme{grid-area:theme}
+  .vm-just{padding:7px 12px;font-size:12.5px;gap:6px;min-height:36px}
+  .vm-theme,.vm-av{width:36px;height:36px;border-radius:10px}
+
+  /* the tab strip scrolls rather than wrapping — four tabs never fit a phone */
+  .vm-tabs{grid-area:tabs;min-width:0;margin:0 0 0 -6px;gap:2px;
+    overflow-x:auto;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;
+    scrollbar-width:none;-ms-overflow-style:none}
+  .vm-tabs::-webkit-scrollbar{display:none}
+  .vm-tabs button{flex:none;white-space:nowrap;padding:8px 11px;font-size:13.5px;min-height:36px}
+  /* the strip is cut off by design — fade the edge so that reads as "more" */
+  .vm-tabs{-webkit-mask-image:linear-gradient(90deg,#000 0,#000 calc(100% - 20px),transparent 100%);
+    mask-image:linear-gradient(90deg,#000 0,#000 calc(100% - 20px),transparent 100%)}
+  /* --navy is all but the page colour, so the active pill needs a real edge */
+  .vm-tabs button.on{background:rgba(212,255,0,.12);color:var(--bone);
+    box-shadow:inset 0 0 0 1px rgba(212,255,0,.35)}
+
+  /* ---- shell padding: 30px a side is a third of the screen ---- */
+  .vm-wrap{padding:6px 16px calc(72px + env(safe-area-inset-bottom))}
+  #vmBanners{padding:0 16px}
+  .vm-bar,.vm-count{max-width:100%}
+
+  /* ---- display type: the clamp() floors were set for a laptop ---- */
+  .vm-h1{font-size:clamp(30px,8.2vw,44px) !important}
+  .gtext{font-size:clamp(29px,8vw,44px) !important;line-height:1.04 !important}
+  .v3 .who{font-size:clamp(32px,8.6vw,48px) !important}
+  .ah-title{font-size:clamp(31px,8.4vw,44px)}
+  .ob-htitle,.ob-q{font-size:clamp(26px,7vw,32px) !important}
+  .af-h,.lock-h,.up-title{font-size:28px}
+  .toolbar{padding:20px 0 16px;gap:12px}
+  .tb-title h1{font-size:24px}
+  .tb-hint{flex:1 1 100%;min-width:0;font-size:12.5px}
+  .section-label{padding:30px 0 14px}
+  .gd-kicker{gap:12px;margin-bottom:14px;flex-wrap:wrap}
+  .gd-kicker .mn{font-size:9px;letter-spacing:.12em}
+
+  /* ---- 16px is the threshold below which iOS zooms the page on focus ---- */
+  input,select,textarea,
+  .askbar input,.v3 .ask input,.v3 .subj input,.v3 textarea.body,
+  .fxbar .fx-sel,.sheetform input,.ol-field input,.auth-input{font-size:16px}
+
+  /* ---- thumb-sized targets ---- */
+  .fxbar .fx-quick,.v3 .angle,.v3 .v3foot a,.gp-act,.vm-gh,.ghost,.ol-go,.btn,
+  .demo-cta .dm-go,.ob-go{min-height:42px}
+  .cxnav{width:42px;height:42px}
+
+  /* ---- list builder ---- */
+  .fxbar{padding:14px;gap:10px;margin:16px 0 4px}
+  .fxbar .fx-count{margin-left:0}
+  .fxbar .fx-quicks{gap:7px}
+  .fxbar .fx-quick{flex:1 1 calc(50% - 4px);padding:9px 10px;font-size:12.5px}
+  .fxbar .fx-row2{gap:10px;padding-top:12px}
+  .gapbar{flex-wrap:wrap;gap:8px;padding:12px 14px}
+  .gp-open{margin-left:0}
+  .gp-co{min-width:0;flex:1 1 100%}
+
+  /* ---- the queue rail, edge to edge ---- */
+  .todaywrap{gap:14px;padding-bottom:24px}
+  .rail{margin:0 -16px;padding:2px 16px 10px;gap:9px}
+  .railitem{flex:0 0 76vw;max-width:290px;min-width:0}
+
+  /* ---- the focus card ----
+     The card sits in a centring flex/grid chain whose items default to
+     min-width:auto, so one long unbreakable string (an email, a URL) sets
+     the floor for the whole card and pushes it past the screen. Zero the
+     floor, and let the long strings wrap. */
+  .cxstage,.cxcenter,.stage,.vcard,.v3 .cols,.v3 .cols > *,.todaywrap > *{min-width:0}
+  .vmeta,.vmeta .it,.v3 .fact .txt,.v3 .fact .src,.v3 .subj,.pcard .pw,.cosig,
+  .ct-nm,.ct-ti,.ct-co,.gp-co,.o2-note{word-break:break-word;overflow-wrap:anywhere}
+  .vcard{border-radius:16px}
+  .vhead{padding:18px 16px 16px}
+  .vtop{gap:10px;margin-bottom:12px}
+  .vname{font-size:clamp(30px,8.6vw,40px)}
+  .vrole{margin-top:9px;font-size:14px}
+  .vmeta{margin-top:12px;gap:8px 10px;font-size:10.5px}
+  .v3 .colL,.v3 .colR{padding:18px 16px}
+  .v3 .fact{grid-template-columns:1fr;gap:5px;padding:11px 0}
+  .v3 .fact .lab{padding-top:0}
+  /* the source tag trails the sentence inline on desktop; stacked, it reads
+     as part of the copy — give it its own line */
+  .v3 .fact .src{display:flex;margin-top:6px}
+  .v3 .crow{gap:8px;margin-bottom:12px}
+  .v3 .chan button{padding:9px 12px;font-size:12.5px}
+  .v3 textarea.body{min-height:190px;line-height:1.6}
+  .v3 .draftmeta{flex-wrap:wrap;gap:6px}
+  .v3 .v3foot a[data-o="Skip"]{margin-left:0}
+  .v3 .go{width:100%;justify-content:center}
+  .v3 .ask{padding:6px 6px 6px 15px}
+  .askbar input,.v3 .ask input,.v3 .subj input{min-width:0}
+  .carousel{padding:14px 0 4px}
+  .cxcenter{max-width:100%}
+
+  /* ---- pipeline: a kanban reads better as a snapping strip than as
+         five columns squeezed into a phone ---- */
+  .funnel{grid-template-columns:repeat(2,1fr);gap:10px}
+  .fstage{padding:13px 13px 12px}
+  .fstage .n{font-size:24px}
+  .board{grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:74vw;
+    gap:12px;margin:0 -16px;padding:0 16px 10px;overflow-x:auto;
+    scroll-snap-type:x mandatory;overscroll-behavior-x:contain;
+    -webkit-overflow-scrolling:touch;scrollbar-width:none;-ms-overflow-style:none}
+  .board::-webkit-scrollbar{display:none}
+  .board > *{scroll-snap-align:start;min-width:0}
+
+  /* ---- companies / contacts ---- */
+  .actgrid{grid-template-columns:1fr;gap:12px}
+  .watchgrid{grid-template-columns:1fr;gap:9px}
+  .cogrid,.ctgrid{grid-template-columns:1fr}
+  /* the header row's seven cells have no classes to hide against, and a
+     two-field row doesn't need labelling — drop it and stack name over title */
+  .ct-head{display:none}
+  .ctrow{grid-template-columns:36px minmax(0,1fr) auto;column-gap:10px;row-gap:2px;
+    grid-template-areas:"av nm st" "av ti st";padding:11px 14px}
+  .ctrow .ct-av{grid-area:av}
+  .ctrow .ct-nm{grid-area:nm}
+  .ctrow .ct-ti{grid-area:ti;display:block;font-size:12px;color:var(--mute)}
+  .ctrow .ct-ti:empty{display:none}
+  .ctrow .ct-st{grid-area:st}
+  .ctrow .ct-co,.ctrow .ct-tg,.ctrow .ct-gap{display:none}
+  .ct-av{width:28px;height:28px}
+  .ct-grp{padding:9px 14px}
+  .controls{gap:10px}
+  /* the search bar is a direct child of .toolbar on Companies/Contacts and of
+     .controls elsewhere — both need to take the whole line and be shrinkable */
+  .controls .askbar,.toolbar .askbar{flex:1 1 100%;min-width:0;max-width:none}
+  .toolbar .filters{margin-left:0;width:100%}
+
+  /* ---- modals become bottom sheets; a centred dialog on a phone
+         leaves the keyboard nowhere to go ---- */
+  .vmodal-overlay{padding:0;align-items:flex-end}
+  .vmodal{max-width:100%;border-radius:18px 18px 0 0;padding:20px 16px
+    calc(20px + env(safe-area-inset-bottom));max-height:90vh}
+  @supports(height:100dvh){.vmodal{max-height:90dvh}}
+  /* the modal header packs avatar, name, two tags, Edit and close into one
+     row — let it break, keeping close reachable on the first line */
+  .vmtop{flex-wrap:wrap;column-gap:12px;row-gap:10px;margin-bottom:2px}
+  .vmtop .ctav{width:42px;height:42px;font-size:16px;border-radius:11px}
+  .vmtop > div:nth-of-type(2){flex:1 0 55%;min-width:0}
+  .vmnm{font-size:20px}
+  .vmnm,.vmtt{word-break:break-word;overflow-wrap:anywhere}
+  .vmtags{display:contents}
+  .vmtop .vmclose{order:1;margin-left:auto}
+  .vmtop .roletag,.vmtop .stbadge,.vmtop .vcta2{order:2}
+  .vmbody{gap:16px;margin-top:14px}
+  .lp-overlay{padding:16px;align-items:center}
+  .lock-card{width:100%;padding:26px 20px}
+  .cp-card{padding:18px 16px}
+
+  /* ---- auth / onboarding ---- */
+  .authhero{padding:28px 20px}
+  .ah-mid{padding:32px 0}
+  .ah-sub{font-size:14.5px;margin-top:16px}
+  .authform{padding:32px 20px}
+  .ob-screen{padding:0;align-items:stretch}
+  .ob-inner{border-radius:0 !important;min-height:100%;border:0 !important}
+  .ob-half{padding:28px 20px}
+  .ob-prog i{width:100%;flex:1}
+  .ob-prog{width:100%}
+  .ob-actions{gap:12px}
+
+  /* ---- misc ---- */
+  .demo-cta{gap:10px;padding:12px 14px}
+  .demo-cta .dm-t{min-width:0;flex:1 1 100%;font-size:13px}
+  .sheetform input{min-width:0;flex:1 1 100%}
+  .o2-stack{bottom:calc(20px + env(safe-area-inset-bottom));padding:0 16px}
+  .o2-note{max-width:100%;text-align:center}
+}
+
+/* ------------------------------------------------------------------ tablet
+   Between the phone rules and the desktop layout the nav still wants ~973px
+   of one un-wrapping row, so anything narrower than that pushed the document
+   sideways. Tighten the row and let the tab strip scroll instead. */
+@media(min-width:761px) and (max-width:1099px){
+  .vm-topin{gap:12px;padding:14px 20px}
+  .vm-tabs{min-width:0;margin-left:0;overflow-x:auto;overscroll-behavior-x:contain;
+    -webkit-overflow-scrolling:touch;scrollbar-width:none;-ms-overflow-style:none}
+  .vm-tabs::-webkit-scrollbar{display:none}
+  .vm-tabs button{flex:none;white-space:nowrap;padding:8px 11px;font-size:13.5px}
+  .vm-right{flex:none;gap:9px}
+  .vm-just{padding:8px 13px;font-size:12.5px;white-space:nowrap}
+  .vm-streak{font-size:12px}
+}
+@media(min-width:761px) and (max-width:900px){
+  .vm-wrap,#vmBanners{padding-left:20px;padding-right:20px}
+}
+
+/* --------------------------------------------------------- small phones */
+@media(max-width:400px){
+  .vm-just{padding:8px 11px;font-size:12px}
+  .vm-brand .wm{font-size:18px}
+  .fxbar .fx-quick{font-size:12px;padding:9px 8px}
+  .vmeta{font-size:10px}
+}
+
 </style>
 
 <div class="ambient" aria-hidden="true"></div>
@@ -3145,6 +3405,12 @@ function chrome() {
     Array.prototype.forEach.call(tb.querySelectorAll("button"), function (b) {
       b.onclick = function () { navView = b.dataset.v; render(); window.scrollTo(0, 0); };
     });
+    // narrow screens scroll the tab strip — centre whichever tab is active so
+    // it never sits half-cut off the edge. No-op when the strip fits.
+    var onTab = tb.querySelector("button.on");
+    if (onTab && tb.scrollWidth > tb.clientWidth) {
+      tb.scrollLeft = Math.max(0, onTab.offsetLeft - (tb.clientWidth - onTab.offsetWidth) / 2);
+    }
   }
   var st = document.getElementById("vmStreak");
   if (st) {
