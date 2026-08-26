@@ -1575,32 +1575,106 @@ html[data-theme="light"] .vm-tabs button.on{background:#FFFFFF;color:#0B0C10;box
 }
 .vm-just{white-space:nowrap}
 
-/* ======================= DASHBOARD ======================= */
-.dashgrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-top:26px}
-.dashgrid.two{grid-template-columns:repeat(3,minmax(0,1fr));margin-top:14px}
-.dtile{padding:20px 22px;border-radius:16px;display:flex;flex-direction:column;gap:6px}
+/* ======================= DASHBOARD =======================
+   Single volt series throughout, so no legend on the plots — each card
+   title names what the marks are. Grid and axes stay recessive; only the
+   heat grid carries a key, because a ramp needs one. */
+.dash .gtext{margin-bottom:4px}
+.dgrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-top:22px}
+.dgrid.halves{grid-template-columns:repeat(2,minmax(0,1fr))}
+.dsplit{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;min-width:0}
+
+.dtile{padding:20px 22px;border-radius:16px;display:flex;flex-direction:column;min-width:0}
 .dt-lab{font-size:9.5px;letter-spacing:.16em;color:var(--steel)}
-.dt-n{font-family:'Archivo',sans-serif;font-weight:400;font-size:42px;line-height:1;
-  letter-spacing:-.045em;color:var(--ink);margin-top:8px}
+.dt-n{font-family:'Archivo',sans-serif;font-weight:400;font-size:44px;line-height:1;
+  letter-spacing:-.045em;color:var(--ink);margin:14px 0 8px}
 .dt-n.hot{color:var(--red)}
-.dt-none{font-size:17px;font-weight:600;color:var(--mute);margin-top:10px;letter-spacing:-.01em}
+.dt-none{font-size:17px;font-weight:600;color:var(--mute);margin:14px 0 8px;letter-spacing:-.01em}
 .dt-sub{font-size:12.5px;color:var(--mute);line-height:1.45}
-.dtile.thin .dt-sub{max-width:34ch}
-.dashgo{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-top:26px}
+/* the inverted hero — the one card that flips, as in the reference */
+.dtile.ink{background:#FFFFFF;border:0;box-shadow:0 1px 2px rgba(0,0,0,.5),0 30px 60px -34px #000}
+.dtile.ink .dt-lab{color:#5A6875}
+.dtile.ink .dt-n{color:#0B0C10}
+.dtile.ink .dt-sub{color:#5A6875}
+.dtile.ink .dc-head{margin-bottom:14px}
+.dtile.wide{grid-column:span 1}
+.dt-of{font-size:22px;letter-spacing:-.02em;opacity:.4}
+/* goal bar — the one place a target and an actual share a track */
+.gbarw{height:8px;border-radius:6px;background:rgba(11,12,16,.1);overflow:hidden;margin-bottom:12px}
+.gbarw i{display:block;height:100%;border-radius:6px;background:#0B0C10}
+.dc-pill.ink{background:rgba(11,12,16,.08);color:#3A4600}
+.dc-pill.up{color:var(--volt);background:rgba(212,255,0,.14)}
+.dc-pill.down{color:var(--red);background:rgba(255,92,92,.12)}
+/* two labelled bars — identity is the label, never the colour alone */
+.cmp{display:flex;flex-direction:column;gap:10px}
+.cmp-row{display:flex;align-items:center;gap:11px}
+.cmp-lab{font-size:11.5px;color:var(--mute);width:66px;flex:none}
+.cmp-track{flex:1;height:10px;border-radius:5px;background:rgba(255,255,255,.05);overflow:hidden;min-width:0}
+.cmp-track i{display:block;height:100%;border-radius:5px;background:rgba(255,255,255,.16)}
+.cmp-track i.now{background:var(--volt)}
+.cmp-n{font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--steel);width:30px;text-align:right;flex:none}
+
+.dcard{padding:20px 22px 18px;border-radius:16px;display:flex;flex-direction:column;min-width:0}
+.dc-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:20px}
+.dc-t{font-size:15px;font-weight:600;letter-spacing:-.015em;color:var(--ink);margin-top:7px}
+.dc-pill{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.08em;color:var(--steel);
+  background:rgba(255,255,255,.06);border-radius:999px;padding:6px 11px;white-space:nowrap;flex:none}
+.dc-legend{display:flex;gap:3px;align-items:center;flex:none;padding-top:2px}
+.dc-legend i{width:9px;height:9px;border-radius:2px;display:block}
+
+/* --- bars: thin marks, 2px gaps, 4px rounded end anchored to the baseline --- */
+.ch-plot{display:flex;align-items:flex-end;gap:2px;height:110px;
+  background:repeating-linear-gradient(to top,transparent 0 27px,rgba(255,255,255,.05) 27px 28px)}
+.ch-col{flex:1;height:100%;display:flex;align-items:flex-end;justify-content:stretch;cursor:default}
+.ch-fill{width:100%;background:rgba(255,255,255,.16);border-radius:4px 4px 0 0;transition:background .15s}
+.ch-col.now .ch-fill{background:var(--volt)}
+.ch-col:hover .ch-fill{background:rgba(212,255,0,.55)}
+.ch-zero{width:100%;height:2px;background:rgba(255,255,255,.1);border-radius:2px}
+.ch-axis{display:flex;justify-content:space-between;margin-top:10px;
+  font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.08em;color:var(--mute)}
+
+/* --- heat grid: one hue, dim to bright --- */
+.hg{display:grid;grid-template-rows:repeat(7,1fr);grid-auto-flow:column;grid-auto-columns:1fr;
+  gap:3px;height:110px}
+.hg-c{border-radius:2px;display:block;cursor:default}
+.s0,.hg-c.s0{background:rgba(255,255,255,.05)}
+.s1,.hg-c.s1{background:rgba(212,255,0,.18)}
+.s2,.hg-c.s2{background:rgba(212,255,0,.38)}
+.s3,.hg-c.s3{background:rgba(212,255,0,.64)}
+.s4,.hg-c.s4{background:var(--volt)}
+
+/* --- funnel --- */
+.fn{display:flex;flex-direction:column;gap:12px}
+.fn-row{display:flex;align-items:center;gap:14px}
+.fn-lab{font-size:13px;font-weight:600;color:var(--ink-2b);width:62px;flex:none}
+.fn-track{flex:1;height:12px;border-radius:6px;background:rgba(255,255,255,.05);overflow:hidden;min-width:0}
+.fn-track i{display:block;height:100%;border-radius:6px;background:rgba(255,255,255,.16)}
+.fn-track i.lead{background:var(--volt)}
+.fn-n{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--steel);width:34px;
+  text-align:right;flex:none}
+
+.dashgo{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-top:24px}
 .dashgo-h{font-size:13.5px;color:var(--steel);font-weight:600}
-@media(max-width:900px){
-  .dashgrid{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .dashgrid.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+
+@media(max-width:1000px){
+  .dgrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .dgrid.halves{grid-template-columns:1fr}
 }
 @media(max-width:760px){
-  .dashgrid,.dashgrid.two{gap:10px;margin-top:18px}
+  .dgrid,.dgrid.halves,.dsplit{gap:10px}
+  .dgrid{margin-top:16px}
   .dtile{padding:16px}
-  .dt-n{font-size:34px;margin-top:6px}
-  .dashgo{margin-top:20px;gap:12px}
+  .dcard{padding:16px 16px 14px}
+  .dt-n{font-size:34px;margin:10px 0 6px}
+  .dt-none{font-size:15px;margin:10px 0 6px}
+  .dc-head{margin-bottom:16px}
+  .ch-plot,.hg{height:92px}
+  .fn-lab{width:54px;font-size:12.5px}
+  .dashgo{margin-top:18px;gap:12px}
   .dashgo .vm-pri{flex:1 1 100%;min-height:46px}
 }
 @media(max-width:430px){
-  .dashgrid.two{grid-template-columns:1fr}
+  .dsplit{grid-template-columns:1fr}
 }
 
 </style>
@@ -3719,18 +3793,28 @@ function intelTriples(t, a) {
   ];
 }
 
-/* ---------- Dashboard: the landing view. Counts only, straight from state.
-   Nothing here is estimated — a number we do not hold says so. ---------- */
-function weekAgo() { return iso(addDays(todayStr(), -6)); }   /* today + 6 back = 7 days */
+/* ---------- Dashboard: the landing view.
+   Every figure below is counted from state — nothing is estimated, and a
+   number we do not hold says so rather than showing a zero that reads real.
+   Single series throughout, so one volt hue and no legend: the title names
+   what the marks are. ---------- */
+function weekAgo() { return iso(addDays(todayStr(), -6)); }
+/* this week is today + 6 back; last week is the 7 before that, so the two
+   windows are the same length and the comparison is fair */
 function sentCounts() {
-  var td = todayStr(), wk = weekAgo(), today = 0, week = 0;
+  var td = todayStr(), wk = weekAgo(), pStart = iso(addDays(td, -13)), pEnd = iso(addDays(td, -7));
+  var today = 0, week = 0, prev = 0;
   for (var k in state.done) {
     var d = state.done[k]; if (!d) continue;
     if (d === td) today++;
     if (d >= wk) week++;
+    else if (d >= pStart && d <= pEnd) prev++;
   }
-  return { today: today, week: week };
+  return { today: today, week: week, prev: prev };
 }
+/* the stored target is per day; the weekly one is that across five working
+   days. Stated in the card so the arithmetic is visible, not assumed. */
+function goalPerDay() { return parseInt(state.dailyGoal, 10) || 50; }
 function pulledCounts() {
   var td = todayStr(), wk = weekAgo(), today = 0, week = 0;
   (state.accounts || []).forEach(function (a) {
@@ -3743,6 +3827,40 @@ function pulledCounts() {
   });
   return { today: today, week: week };
 }
+/* sends per calendar day, oldest first */
+function sendsByDay(n) {
+  var byDay = {}, k, out = [], i;
+  for (k in state.done) { if (state.done[k]) byDay[state.done[k]] = (byDay[state.done[k]] || 0) + 1; }
+  for (i = n - 1; i >= 0; i--) {
+    var d = iso(addDays(todayStr(), -i));
+    out.push({ d: d, n: byDay[d] || 0 });
+  }
+  return out;
+}
+/* how many sends landed at each of the four touches — done keys end in the
+   touch index, so this is a real funnel rather than a guess at intent */
+function doneByTouch() {
+  var out = [0, 0, 0, 0], k, i;
+  for (k in state.done) {
+    if (!state.done[k]) continue;
+    i = parseInt(String(k).split("|").pop(), 10);
+    if (i >= 0 && i < 4) out[i]++;
+  }
+  return out;
+}
+var DOW = ["S", "M", "T", "W", "T", "F", "S"];
+function fmtDay(d) {
+  var p = String(d).split("-");
+  return DOW[new Date(+p[0], +p[1] - 1, +p[2]).getDay()] + " " + (+p[2]) + "/" + (+p[1]);
+}
+/* one hue, dim -> bright: the dark-surface form of a sequential ramp */
+function heatStep(n, max) {
+  if (!n) return 0;
+  if (max <= 1) return 4;
+  var r = n / max;
+  return r > .75 ? 4 : r > .5 ? 3 : r > .25 ? 2 : 1;
+}
+
 function dTile(lab, big, sub, cls) {
   return '<div class="dtile g-card">' +
     '<div class="mn dt-lab">' + lab + '</div>' +
@@ -3750,35 +3868,120 @@ function dTile(lab, big, sub, cls) {
     '<div class="dt-sub">' + sub + '</div>' +
   '</div>';
 }
+function dNone(lab, why) {
+  return '<div class="dtile g-card"><div class="mn dt-lab">' + lab + '</div>' +
+    '<div class="dt-none">Not tracked yet</div>' +
+    '<div class="dt-sub">' + why + '</div></div>';
+}
+
 function viewDash(v) {
   var b = buckets(), sent = sentCounts(), pulled = pulledCounts();
   var overdue = b.late.length, due = b.today.length, streak = streakDays();
+  var target = goalPerDay() * 5;
+  var pct = target ? Math.round(sent.week / target * 100) : 0;
+  var left = target - sent.week;
+  var delta = sent.week - sent.prev;
+  var cmpMax = Math.max(sent.week, sent.prev, 1);
+  var wNow = Math.max(sent.week ? 2 : 0, Math.round(sent.week / cmpMax * 100));
+  var wPrev = Math.max(sent.prev ? 2 : 0, Math.round(sent.prev / cmpMax * 100));
   var name = (ACCOUNT && ACCOUNT.sender && ACCOUNT.sender.name) ? ACCOUNT.sender.name.split(" ")[0] : "";
 
+  /* --- the run, last 14 days --- */
+  var days = sendsByDay(14);
+  var peak = Math.max.apply(null, days.map(function (x) { return x.n; }).concat([1]));
+  var bars = days.map(function (x, i) {
+    var h = x.n ? Math.max(4, Math.round(x.n / peak * 100)) : 0;
+    var last = i === days.length - 1;
+    return '<div class="ch-col' + (last ? " now" : "") + '" title="' + fmtDay(x.d) + ' · ' +
+      x.n + (x.n === 1 ? " send" : " sends") + '">' +
+      (h ? '<span class="ch-fill" style="height:' + h + '%"></span>' : '<span class="ch-zero"></span>') +
+    '</div>';
+  }).join("");
+
+  /* --- the four touches --- */
+  var tch = doneByTouch(), tmax = Math.max.apply(null, tch.concat([1]));
+  var funnel = tch.map(function (n, i) {
+    var w = n ? Math.max(2, Math.round(n / tmax * 100)) : 0;
+    return '<div class="fn-row"><span class="fn-lab">Touch ' + (i + 1) + '</span>' +
+      '<span class="fn-track"><i style="width:' + w + '%"' + (i === 0 ? ' class="lead"' : '') + '></i></span>' +
+      '<span class="fn-n">' + n + '</span></div>';
+  }).join("");
+
+  /* --- activity, last 10 weeks --- */
+  var gridDays = sendsByDay(70);
+  var gmax = Math.max.apply(null, gridDays.map(function (x) { return x.n; }).concat([1]));
+  var cells = gridDays.map(function (x) {
+    return '<span class="hg-c s' + heatStep(x.n, gmax) + '" title="' + fmtDay(x.d) + ' · ' +
+      x.n + (x.n === 1 ? " send" : " sends") + '"></span>';
+  }).join("");
+
   v.innerHTML =
-    '<div class="today">' +
+    '<div class="today dash">' +
       '<div class="gd-kicker rv" style="--d:.06s"><span class="mn">Ollin : Vamos</span><span class="krule"></span>' +
         '<span class="mn">Your desk</span><span class="krule"></span><span class="mn">Outreach, Informed</span></div>' +
-      '<h1 class="gtext rv-t" style="--d:.14s">' + greetWord() + (name ? ", " + esc(name) : "") + '. <span class="hl">Vamos!</span></h1>' +
+      '<h1 class="gtext rv-t" style="--d:.12s">' + greetWord() + (name ? ", " + esc(name) : "") + '. <span class="hl">Vamos!</span></h1>' +
 
-      '<div class="dashgrid rv" style="--d:.24s">' +
-        dTile("Sent today", sent.today, sent.week + " this week") +
-        dTile("Pulled today", pulled.today, pulled.week + " this week") +
+      /* row one — goal against actual, then this week against last */
+      '<div class="dgrid rv" style="--d:.2s">' +
+        '<div class="dtile ink wide">' +
+          '<div class="dc-head"><div><div class="mn dt-lab">This week vs. goal</div>' +
+            '<div class="dt-n">' + sent.week + '<span class="dt-of"> / ' + target + '</span></div></div>' +
+            '<span class="dc-pill ink">' + pct + '%</span></div>' +
+          '<div class="gbarw"><i style="width:' + Math.min(100, pct) + '%"></i></div>' +
+          '<div class="dt-sub">' + (left > 0 ? left + ' to go' : 'target met') +
+            ' &middot; ' + goalPerDay() + '/day across 5 days</div>' +
+        '</div>' +
+        '<div class="dtile g-card wide">' +
+          '<div class="dc-head"><div><div class="mn dt-lab">This week vs. last</div>' +
+            '<div class="dt-n">' + sent.week + '</div></div>' +
+            '<span class="dc-pill ' + (delta > 0 ? 'up' : delta < 0 ? 'down' : '') + '">' +
+              (delta > 0 ? '&uarr; +' + delta : delta < 0 ? '&darr; ' + delta : 'level') + '</span></div>' +
+          '<div class="cmp">' +
+            '<div class="cmp-row"><span class="cmp-lab">This week</span>' +
+              '<span class="cmp-track"><i class="now" style="width:' + wNow + '%"></i></span>' +
+              '<span class="cmp-n">' + sent.week + '</span></div>' +
+            '<div class="cmp-row"><span class="cmp-lab">Last week</span>' +
+              '<span class="cmp-track"><i style="width:' + wPrev + '%"></i></span>' +
+              '<span class="cmp-n">' + sent.prev + '</span></div>' +
+          '</div>' +
+        '</div>' +
         dTile("Due today", due, due ? "waiting on you" : "nothing queued") +
         dTile("Overdue", overdue, overdue ? "the debt" : "all clear", overdue ? "hot" : "") +
       '</div>' +
 
-      '<div class="dashgrid two rv" style="--d:.32s">' +
-        dTile("Streak", streak, streak === 1 ? "day in a row" : "days in a row") +
-        '<div class="dtile g-card thin"><div class="mn dt-lab">This week&rsquo;s goal</div>' +
-          '<div class="dt-none">Not tracked yet</div>' +
-          '<div class="dt-sub">No weekly target is stored — nothing to measure against.</div></div>' +
-        '<div class="dtile g-card thin"><div class="mn dt-lab">Meetings booked</div>' +
-          '<div class="dt-none">Not tracked yet</div>' +
-          '<div class="dt-sub">Replies and meetings are not recorded anywhere yet.</div></div>' +
+      /* row two — the run and the calendar */
+      '<div class="dgrid halves rv" style="--d:.28s">' +
+        '<div class="dcard g-card">' +
+          '<div class="dc-head"><div><div class="mn dt-lab">The run</div>' +
+            '<div class="dc-t">Sends a day, last 14</div></div>' +
+            '<span class="dc-pill">' + sent.week + ' this week</span></div>' +
+          '<div class="ch-plot">' + bars + '</div>' +
+          '<div class="ch-axis"><span>' + fmtDay(days[0].d) + '</span><span>Today</span></div>' +
+        '</div>' +
+        '<div class="dcard g-card">' +
+          '<div class="dc-head"><div><div class="mn dt-lab">Activity</div>' +
+            '<div class="dc-t">Last 10 weeks</div></div>' +
+            '<span class="dc-legend"><i class="s0"></i><i class="s1"></i><i class="s2"></i><i class="s3"></i><i class="s4"></i></span></div>' +
+          '<div class="hg">' + cells + '</div>' +
+          '<div class="ch-axis"><span>10 weeks ago</span><span>Today</span></div>' +
+        '</div>' +
       '</div>' +
 
-      '<div class="dashgo rv" style="--d:.4s">' +
+      /* row three — the funnel and the two honest gaps */
+      '<div class="dgrid halves rv" style="--d:.36s">' +
+        '<div class="dcard g-card">' +
+          '<div class="dc-head"><div><div class="mn dt-lab">The four touches</div>' +
+            '<div class="dc-t">How far people actually get</div></div>' +
+            '<span class="dc-pill">' + tch[0] + ' opened</span></div>' +
+          '<div class="fn">' + funnel + '</div>' +
+        '</div>' +
+        '<div class="dsplit">' +
+          dTile("Pulled this week", pulled.week, pulled.today + " today") +
+          dNone("Meetings booked", "Replies and meetings are not recorded yet.") +
+        '</div>' +
+      '</div>' +
+
+      '<div class="dashgo rv" style="--d:.44s">' +
         '<button class="vm-pri" id="dashGo">' + (due + overdue ? "Start the run" : "Open Workspace") + '</button>' +
         '<span class="dashgo-h">' + (due + overdue
           ? (due + overdue) + " " + (due + overdue === 1 ? "person is" : "people are") + " waiting."
@@ -3896,7 +4099,6 @@ function viewToday(v) {
   var ak = active ? keyOf(active) : null;
   if (ak !== VM.activeKey) { VM.activeKey = ak; VM.channel = null; VM.angle = "gap"; }
   if (active && VM.channel === null) VM.channel = active.ch === "call" ? "li" : active.ch;
-  var g = greeting(b);
 
   var items = q.ids.length
     ? q.ids.map(function (id, i) { var t = q.map[id]; return t ? railHTML(t, i, i === VM.i) : ""; }).join("")
@@ -3905,7 +4107,7 @@ function viewToday(v) {
   v.innerHTML =
     '<div class="today">' +
       '<div class="gd-kicker rv" style="--d:.06s"><span class="mn">Ollin : Guide</span><span class="krule"></span><span class="mn">The Daily Run</span><span class="krule"></span><span class="mn">Outreach, Informed</span></div>' +
-      '<h1 class="gtext rv-t" style="--d:.14s">' + g + '</h1>' +
+      /* the greeting lives on the Dashboard now — this page is the run itself */
       '<div id="gdSay"></div>' +
       (q.ids.length
         ? focusBarHTML(b) +
