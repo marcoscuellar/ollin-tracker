@@ -1576,9 +1576,9 @@ html[data-theme="light"] .vm-tabs button.on{background:#FFFFFF;color:#0B0C10;box
 .vm-just{white-space:nowrap}
 
 /* ======================= DASHBOARD =======================
-   Single volt series throughout, so no legend on the plots — each card
-   title names what the marks are. Grid and axes stay recessive; only the
-   heat grid carries a key, because a ramp needs one. */
+   Glass cards on Signal Black, one card flipped to white. Single volt series
+   throughout, so no legend on the plots — each card title names its marks —
+   and volt is spent on exactly one highlight per chart. */
 .dash .gtext{margin-bottom:4px}
 .dgrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-top:22px}
 .dgrid.halves{grid-template-columns:repeat(2,minmax(0,1fr))}
@@ -1589,43 +1589,35 @@ html[data-theme="light"] .vm-tabs button.on{background:#FFFFFF;color:#0B0C10;box
 .dt-n{font-family:'Archivo',sans-serif;font-weight:400;font-size:44px;line-height:1;
   letter-spacing:-.045em;color:var(--ink);margin:14px 0 8px}
 .dt-n.hot{color:var(--red)}
+.dt-of{font-size:22px;letter-spacing:-.02em;opacity:.4}
 .dt-none{font-size:17px;font-weight:600;color:var(--mute);margin:14px 0 8px;letter-spacing:-.01em}
 .dt-sub{font-size:12.5px;color:var(--mute);line-height:1.45}
-/* the inverted hero — the one card that flips, as in the reference */
+
+/* the one card that flips, as in the reference */
 .dtile.ink{background:#FFFFFF;border:0;box-shadow:0 1px 2px rgba(0,0,0,.5),0 30px 60px -34px #000}
 .dtile.ink .dt-lab{color:#5A6875}
 .dtile.ink .dt-n{color:#0B0C10}
+.dtile.ink .dt-of{color:#5A6875;opacity:1}
 .dtile.ink .dt-sub{color:#5A6875}
 .dtile.ink .dc-head{margin-bottom:14px}
-.dtile.wide{grid-column:span 1}
-.dt-of{font-size:22px;letter-spacing:-.02em;opacity:.4}
-/* goal bar — the one place a target and an actual share a track */
 .gbarw{height:8px;border-radius:6px;background:rgba(11,12,16,.1);overflow:hidden;margin-bottom:12px}
 .gbarw i{display:block;height:100%;border-radius:6px;background:#0B0C10}
-.dc-pill.ink{background:rgba(11,12,16,.08);color:#3A4600}
-.dc-pill.up{color:var(--volt);background:rgba(212,255,0,.14)}
-.dc-pill.down{color:var(--red);background:rgba(255,92,92,.12)}
-/* two labelled bars — identity is the label, never the colour alone */
-.cmp{display:flex;flex-direction:column;gap:10px}
-.cmp-row{display:flex;align-items:center;gap:11px}
-.cmp-lab{font-size:11.5px;color:var(--mute);width:66px;flex:none}
-.cmp-track{flex:1;height:10px;border-radius:5px;background:rgba(255,255,255,.05);overflow:hidden;min-width:0}
-.cmp-track i{display:block;height:100%;border-radius:5px;background:rgba(255,255,255,.16)}
-.cmp-track i.now{background:var(--volt)}
-.cmp-n{font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--steel);width:30px;text-align:right;flex:none}
 
 .dcard{padding:20px 22px 18px;border-radius:16px;display:flex;flex-direction:column;min-width:0}
 .dc-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:20px}
 .dc-t{font-size:15px;font-weight:600;letter-spacing:-.015em;color:var(--ink);margin-top:7px}
 .dc-pill{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.08em;color:var(--steel);
   background:rgba(255,255,255,.06);border-radius:999px;padding:6px 11px;white-space:nowrap;flex:none}
+.dc-pill.ink{background:rgba(11,12,16,.08);color:#3A4600}
+.dc-pill.up{color:var(--volt);background:rgba(212,255,0,.14)}
+.dc-pill.down{color:var(--red);background:rgba(255,92,92,.12)}
 .dc-legend{display:flex;gap:3px;align-items:center;flex:none;padding-top:2px}
 .dc-legend i{width:9px;height:9px;border-radius:2px;display:block}
 
-/* --- bars: thin marks, 2px gaps, 4px rounded end anchored to the baseline --- */
+/* --- bars: neutral marks, one volt highlight, 2px gaps, 4px rounded ends --- */
 .ch-plot{display:flex;align-items:flex-end;gap:2px;height:110px;
   background:repeating-linear-gradient(to top,transparent 0 27px,rgba(255,255,255,.05) 27px 28px)}
-.ch-col{flex:1;height:100%;display:flex;align-items:flex-end;justify-content:stretch;cursor:default}
+.ch-col{flex:1;height:100%;display:flex;align-items:flex-end;cursor:default}
 .ch-fill{width:100%;background:rgba(255,255,255,.16);border-radius:4px 4px 0 0;transition:background .15s}
 .ch-col.now .ch-fill{background:var(--volt)}
 .ch-col:hover .ch-fill{background:rgba(212,255,0,.55)}
@@ -1643,15 +1635,19 @@ html[data-theme="light"] .vm-tabs button.on{background:#FFFFFF;color:#0B0C10;box
 .s3,.hg-c.s3{background:rgba(212,255,0,.64)}
 .s4,.hg-c.s4{background:var(--volt)}
 
-/* --- funnel --- */
+/* --- funnel + week-on-week: two labelled bars, identity never colour alone --- */
 .fn{display:flex;flex-direction:column;gap:12px}
-.fn-row{display:flex;align-items:center;gap:14px}
+.fn-row,.cmp-row{display:flex;align-items:center;gap:14px}
 .fn-lab{font-size:13px;font-weight:600;color:var(--ink-2b);width:62px;flex:none}
-.fn-track{flex:1;height:12px;border-radius:6px;background:rgba(255,255,255,.05);overflow:hidden;min-width:0}
-.fn-track i{display:block;height:100%;border-radius:6px;background:rgba(255,255,255,.16)}
-.fn-track i.lead{background:var(--volt)}
-.fn-n{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--steel);width:34px;
+.fn-track,.cmp-track{flex:1;border-radius:6px;background:rgba(255,255,255,.05);overflow:hidden;min-width:0}
+.fn-track{height:12px}
+.fn-track i,.cmp-track i{display:block;height:100%;border-radius:6px;background:rgba(255,255,255,.16)}
+.fn-track i.lead,.cmp-track i.now{background:var(--volt)}
+.fn-n,.cmp-n{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--steel);width:34px;
   text-align:right;flex:none}
+.cmp{display:flex;flex-direction:column;gap:10px}
+.cmp-lab{font-size:11.5px;color:var(--mute);width:66px;flex:none}
+.cmp-track{height:10px}
 
 .dashgo{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-top:24px}
 .dashgo-h{font-size:13.5px;color:var(--steel);font-weight:600}
@@ -1666,6 +1662,7 @@ html[data-theme="light"] .vm-tabs button.on{background:#FFFFFF;color:#0B0C10;box
   .dtile{padding:16px}
   .dcard{padding:16px 16px 14px}
   .dt-n{font-size:34px;margin:10px 0 6px}
+  .dt-of{font-size:18px}
   .dt-none{font-size:15px;margin:10px 0 6px}
   .dc-head{margin-bottom:16px}
   .ch-plot,.hg{height:92px}
@@ -1673,9 +1670,7 @@ html[data-theme="light"] .vm-tabs button.on{background:#FFFFFF;color:#0B0C10;box
   .dashgo{margin-top:18px;gap:12px}
   .dashgo .vm-pri{flex:1 1 100%;min-height:46px}
 }
-@media(max-width:430px){
-  .dsplit{grid-template-columns:1fr}
-}
+@media(max-width:430px){ .dsplit{grid-template-columns:1fr} }
 
 </style>
 
