@@ -1567,10 +1567,40 @@ html[data-theme="light"] .vm-tabs button.on{background:#FFFFFF;color:#0B0C10;box
     transition:background .15s, color .15s}
   html[data-theme="light"] .vm-tabs{background:rgba(11,12,16,.05);border-color:rgba(11,12,16,.08)}
 }
-/* the roomy padding only once the row actually fits it — below this the
-   tablet block above keeps the tabs tight so the header stays one row */
-@media(min-width:1200px){
-  .vm-tabs button{padding:8px 15px}
+/* Six tabs is the most this row holds. They keep the tight padding at every
+   width — at the roomy size the group ran 628px and squeezed the action
+   cluster until "Just this one" broke onto three lines. */
+@media(min-width:761px){
+  .vm-tabs button{padding:8px 11px}
+}
+.vm-just{white-space:nowrap}
+
+/* ======================= DASHBOARD ======================= */
+.dashgrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-top:26px}
+.dashgrid.two{grid-template-columns:repeat(3,minmax(0,1fr));margin-top:14px}
+.dtile{padding:20px 22px;border-radius:16px;display:flex;flex-direction:column;gap:6px}
+.dt-lab{font-size:9.5px;letter-spacing:.16em;color:var(--steel)}
+.dt-n{font-family:'Archivo',sans-serif;font-weight:400;font-size:42px;line-height:1;
+  letter-spacing:-.045em;color:var(--ink);margin-top:8px}
+.dt-n.hot{color:var(--red)}
+.dt-none{font-size:17px;font-weight:600;color:var(--mute);margin-top:10px;letter-spacing:-.01em}
+.dt-sub{font-size:12.5px;color:var(--mute);line-height:1.45}
+.dtile.thin .dt-sub{max-width:34ch}
+.dashgo{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-top:26px}
+.dashgo-h{font-size:13.5px;color:var(--steel);font-weight:600}
+@media(max-width:900px){
+  .dashgrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .dashgrid.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:760px){
+  .dashgrid,.dashgrid.two{gap:10px;margin-top:18px}
+  .dtile{padding:16px}
+  .dt-n{font-size:34px;margin-top:6px}
+  .dashgo{margin-top:20px;gap:12px}
+  .dashgo .vm-pri{flex:1 1 100%;min-height:46px}
+}
+@media(max-width:430px){
+  .dashgrid.two{grid-template-columns:1fr}
 }
 
 </style>
@@ -3276,7 +3306,7 @@ html[data-theme="light"] .vm-tabs button.on{background:#FFFFFF;color:#0B0C10;box
    One card at a time. The user decides and sends; the 8 Engines do the research.
    ======================================================================== */
 
-var navView = "today";              // "today" | "pipeline" | "contacts" | "account"
+var navView = "dash";               // the landing view — "dash" | "today" | "pipeline" | "companies" | "contacts" | "ollin" | "account"
 var comebackDismissed = false;
 var COMEBACK = { away: 0, show: false };
 
@@ -3286,8 +3316,8 @@ var VM = { i: 0, qIds: null, narrow: false, channel: null, angle: "gap",
            drafting: false, activeKey: null, lastDraft: "", lastSteer: "" };
 /* [0] is the route key and is persisted nowhere but memory; [1] is the label.
    "today" stays the key so every navView check downstream keeps working. */
-var VM_TABS = [["today", "Workspace"], ["pipeline", "Pipeline"], ["companies", "Companies"],
-               ["contacts", "Contacts"], ["ollin", "Ollin"]];
+var VM_TABS = [["dash", "Dashboard"], ["today", "Workspace"], ["pipeline", "Pipeline"],
+               ["companies", "Companies"], ["contacts", "Contacts"], ["ollin", "Ollin"]];
 var VM_ANGLES = [["gap", "The gap"], ["cow", "Cost of waiting"], ["person", "The person"], ["free", "Freestyle"]];
 /* exactly three, per the editor spec */
 var CARD_STEERS = [["Shorter", "Make it shorter."],
@@ -3475,6 +3505,7 @@ function render() {
   if (navView === "companyprofile") return viewCompanyProfile(v);
   if (navView === "contacts") return viewContacts(v);
   if (navView === "ollin") return viewOllin(v);
+  if (navView === "dash") return viewDash(v);
   if (navView === "account") return viewAccount(v);
   return viewToday(v);
 }
@@ -3686,6 +3717,77 @@ function intelTriples(t, a) {
     { l: "Cost of Waiting", v: cost, from: "Engine 01 · Timing" },
     { l: "The Person", v: person, from: "Engine 06 · Buyer map" }
   ];
+}
+
+/* ---------- Dashboard: the landing view. Counts only, straight from state.
+   Nothing here is estimated — a number we do not hold says so. ---------- */
+function weekAgo() { return iso(addDays(todayStr(), -6)); }   /* today + 6 back = 7 days */
+function sentCounts() {
+  var td = todayStr(), wk = weekAgo(), today = 0, week = 0;
+  for (var k in state.done) {
+    var d = state.done[k]; if (!d) continue;
+    if (d === td) today++;
+    if (d >= wk) week++;
+  }
+  return { today: today, week: week };
+}
+function pulledCounts() {
+  var td = todayStr(), wk = weekAgo(), today = 0, week = 0;
+  (state.accounts || []).forEach(function (a) {
+    (a.threads || []).forEach(function (th) {
+      if (!th.pulledAt) return;
+      var d = iso(new Date(th.pulledAt));
+      if (d === td) today++;
+      if (d >= wk) week++;
+    });
+  });
+  return { today: today, week: week };
+}
+function dTile(lab, big, sub, cls) {
+  return '<div class="dtile g-card">' +
+    '<div class="mn dt-lab">' + lab + '</div>' +
+    '<div class="dt-n' + (cls ? " " + cls : "") + '">' + big + '</div>' +
+    '<div class="dt-sub">' + sub + '</div>' +
+  '</div>';
+}
+function viewDash(v) {
+  var b = buckets(), sent = sentCounts(), pulled = pulledCounts();
+  var overdue = b.late.length, due = b.today.length, streak = streakDays();
+  var name = (ACCOUNT && ACCOUNT.sender && ACCOUNT.sender.name) ? ACCOUNT.sender.name.split(" ")[0] : "";
+
+  v.innerHTML =
+    '<div class="today">' +
+      '<div class="gd-kicker rv" style="--d:.06s"><span class="mn">Ollin : Vamos</span><span class="krule"></span>' +
+        '<span class="mn">Your desk</span><span class="krule"></span><span class="mn">Outreach, Informed</span></div>' +
+      '<h1 class="gtext rv-t" style="--d:.14s">' + greetWord() + (name ? ", " + esc(name) : "") + '. <span class="hl">Vamos!</span></h1>' +
+
+      '<div class="dashgrid rv" style="--d:.24s">' +
+        dTile("Sent today", sent.today, sent.week + " this week") +
+        dTile("Pulled today", pulled.today, pulled.week + " this week") +
+        dTile("Due today", due, due ? "waiting on you" : "nothing queued") +
+        dTile("Overdue", overdue, overdue ? "the debt" : "all clear", overdue ? "hot" : "") +
+      '</div>' +
+
+      '<div class="dashgrid two rv" style="--d:.32s">' +
+        dTile("Streak", streak, streak === 1 ? "day in a row" : "days in a row") +
+        '<div class="dtile g-card thin"><div class="mn dt-lab">This week&rsquo;s goal</div>' +
+          '<div class="dt-none">Not tracked yet</div>' +
+          '<div class="dt-sub">No weekly target is stored — nothing to measure against.</div></div>' +
+        '<div class="dtile g-card thin"><div class="mn dt-lab">Meetings booked</div>' +
+          '<div class="dt-none">Not tracked yet</div>' +
+          '<div class="dt-sub">Replies and meetings are not recorded anywhere yet.</div></div>' +
+      '</div>' +
+
+      '<div class="dashgo rv" style="--d:.4s">' +
+        '<button class="vm-pri" id="dashGo">' + (due + overdue ? "Start the run" : "Open Workspace") + '</button>' +
+        '<span class="dashgo-h">' + (due + overdue
+          ? (due + overdue) + " " + (due + overdue === 1 ? "person is" : "people are") + " waiting."
+          : "Nothing due. Pull a list when you're ready.") + '</span>' +
+      '</div>' +
+    '</div>';
+
+  var g = document.getElementById("dashGo");
+  if (g) g.onclick = function () { navView = "today"; render(); window.scrollTo(0, 0); };
 }
 
 /* ---------- Ollin: the agent surface. Stub — the pathway cards land here. ---------- */
