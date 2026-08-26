@@ -1529,7 +1529,7 @@ img,svg,video,canvas{max-width:100%}
    Between the phone rules and the desktop layout the nav still wants ~973px
    of one un-wrapping row, so anything narrower than that pushed the document
    sideways. Tighten the row and let the tab strip scroll instead. */
-@media(min-width:761px) and (max-width:1099px){
+@media(min-width:761px) and (max-width:1199px){
   .vm-topin{gap:12px;padding:14px 20px}
   .vm-tabs{min-width:0;margin-left:0;overflow-x:auto;overscroll-behavior-x:contain;
     -webkit-overflow-scrolling:touch;scrollbar-width:none;-ms-overflow-style:none}
@@ -1549,6 +1549,28 @@ img,svg,video,canvas{max-width:100%}
   .vm-brand .wm{font-size:18px}
   .fxbar .fx-quick{font-size:12px;padding:9px 8px}
   .vmeta{font-size:10px}
+}
+
+/* ============================================================================
+   NAV TABS — one segmented control rather than loose buttons.
+   Desktop gets the capsule; the phone keeps the scrolling strip from the
+   mobile pass (a capsule plus the edge fade mask would fade the capsule too).
+   Both share the same filled active pill so "where am I" reads the same.
+   ========================================================================== */
+.vm-tabs button.on,
+html[data-theme="light"] .vm-tabs button.on{background:#FFFFFF;color:#0B0C10;box-shadow:none}
+
+@media(min-width:761px){
+  .vm-tabs{gap:2px;margin-left:2px;padding:4px;border-radius:999px;
+    background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.07)}
+  .vm-tabs button{border-radius:999px;font-weight:600;
+    transition:background .15s, color .15s}
+  html[data-theme="light"] .vm-tabs{background:rgba(11,12,16,.05);border-color:rgba(11,12,16,.08)}
+}
+/* the roomy padding only once the row actually fits it — below this the
+   tablet block above keeps the tabs tight so the header stays one row */
+@media(min-width:1200px){
+  .vm-tabs button{padding:8px 15px}
 }
 
 </style>
@@ -3262,7 +3284,10 @@ var COMEBACK = { away: 0, show: false };
    narrow is false the day's actionable work (overdue + due + fresh) is used. */
 var VM = { i: 0, qIds: null, narrow: false, channel: null, angle: "gap",
            drafting: false, activeKey: null, lastDraft: "", lastSteer: "" };
-var VM_TABS = [["today", "Today"], ["pipeline", "Pipeline"], ["companies", "Companies"], ["contacts", "Contacts"]];
+/* [0] is the route key and is persisted nowhere but memory; [1] is the label.
+   "today" stays the key so every navView check downstream keeps working. */
+var VM_TABS = [["today", "Workspace"], ["pipeline", "Pipeline"], ["companies", "Companies"],
+               ["contacts", "Contacts"], ["ollin", "Ollin"]];
 var VM_ANGLES = [["gap", "The gap"], ["cow", "Cost of waiting"], ["person", "The person"], ["free", "Freestyle"]];
 /* exactly three, per the editor spec */
 var CARD_STEERS = [["Shorter", "Make it shorter."],
@@ -3449,6 +3474,7 @@ function render() {
   if (navView === "companies") return viewCompanies(v);
   if (navView === "companyprofile") return viewCompanyProfile(v);
   if (navView === "contacts") return viewContacts(v);
+  if (navView === "ollin") return viewOllin(v);
   if (navView === "account") return viewAccount(v);
   return viewToday(v);
 }
@@ -3660,6 +3686,18 @@ function intelTriples(t, a) {
     { l: "Cost of Waiting", v: cost, from: "Engine 01 · Timing" },
     { l: "The Person", v: person, from: "Engine 06 · Buyer map" }
   ];
+}
+
+/* ---------- Ollin: the agent surface. Stub — the pathway cards land here. ---------- */
+function viewOllin(v) {
+  v.innerHTML =
+    '<div class="toolbar rv" style="--d:.10s">' +
+      '<div class="tb-title"><h1>Ollin</h1></div>' +
+      '<span class="tb-hint">Everything the agent knows and everything you can ask it to run.</span>' +
+    '</div>' +
+    '<div class="vm-card rv" style="--d:.30s"><p class="vm-sub" style="margin:0">' +
+      'The pathway cards live here next \u2014 Full OLLIN, Current Signals, Intel, ELY Redeploy, Future GTM. ' +
+      'Nothing runs from this page yet.</p></div>';
 }
 
 /* ---------- Today: greeting + queue + focus card ---------- */
