@@ -1576,15 +1576,27 @@ html[data-theme="light"] .vm-tabs button.on{background:#FFFFFF;color:#0B0C10;box
 .vm-just{white-space:nowrap}
 
 /* ======================= DASHBOARD =======================
-   Three card treatments, mixed on purpose rather than at random: volt for
-   the one number you are chasing, black for the pair that belong together,
-   white where the detail needs room to read. Card craft matches the
-   Workspace focus card — 20px radius, no hard border, soft lift. */
-.dgrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-top:24px}
-.dgrid.two{grid-template-columns:repeat(4,minmax(0,1fr));margin-top:14px}
-.dtile{padding:22px 24px;border-radius:20px;display:flex;flex-direction:column;min-width:0;
-  box-shadow:0 1px 2px rgba(0,0,0,.45),0 26px 54px -32px #000}
-.dtile.wide{grid-column:span 3}
+   A 3x3 with spans rather than a flat row: the goal card runs tall down
+   the left, the two data cards run wide across. Three treatments, mixed
+   on purpose — frosted volt for the one number being chased, black for
+   the pair that belong together, white where detail needs room.
+   Depth is layered (contact shadow + ambient throw), and every card
+   lifts on hover. Motion is skipped for anyone who asked it to be. */
+.dgrid{display:grid;gap:14px;margin-top:24px;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  grid-template-areas:
+    "goal  last   cont"
+    "goal  stage  stage"
+    "comp  quota  quota"}
+.dtile.volt{grid-area:goal}
+.dtile.paper:not(.wide):not(.quiet){grid-area:last}
+.dtile.ink:first-of-type{grid-area:cont}
+.dtile.wide{grid-area:stage}
+.dtile.quiet{grid-area:quota}
+
+.dtile{padding:24px;border-radius:20px;display:flex;flex-direction:column;min-width:0;
+  position:relative;transition:transform .24s cubic-bezier(.16,.84,.3,1), box-shadow .24s}
+.dtile:hover{transform:translateY(-3px)}
 
 .dc-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
 .dt-lab{font-size:9.5px;letter-spacing:.16em}
@@ -1597,27 +1609,49 @@ html[data-theme="light"] .vm-tabs button.on{background:#FFFFFF;color:#0B0C10;box
 .dc-pill{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.08em;
   border-radius:999px;padding:6px 11px;white-space:nowrap;flex:none}
 
-/* --- white: the detail cards --- */
-.dtile.paper{background:#FFFFFF}
+/* --- white: contact shadow, then a wide throw --- */
+.dtile.paper{background:#FFFFFF;
+  box-shadow:0 1px 2px rgba(0,0,0,.5), 0 10px 20px -12px rgba(0,0,0,.6), 0 40px 70px -34px #000}
+.dtile.paper:hover{box-shadow:0 2px 4px rgba(0,0,0,.5), 0 16px 30px -14px rgba(0,0,0,.65), 0 54px 90px -36px #000}
 .paper .dt-lab{color:#5A6875} .paper .dc-t{color:#0B0C10}
 .paper .dt-n{color:#0B0C10} .paper .dt-of{color:#5A6875}
 .paper .dt-sub{color:#5A6875} .paper .dt-none{color:#8A94A0}
 .paper .dc-pill{background:#F1F3F0;color:#5A6875}
 .paper .dc-pill.up{background:#0B0C10;color:var(--volt)}
 .paper .dc-pill.down{background:rgba(196,52,46,.1);color:#C4342E}
-.dtile.quiet{background:#F4F5F2;box-shadow:none}
+.dtile.quiet{background:#F4F5F2;box-shadow:0 1px 2px rgba(0,0,0,.4), 0 24px 44px -30px #000}
+.dtile.quiet:hover{box-shadow:0 2px 4px rgba(0,0,0,.45), 0 34px 60px -32px #000}
 
-/* --- black: the pair that belong together --- */
-.dtile.ink{background:#0B0C10;box-shadow:inset 0 0 0 1px rgba(255,255,255,.07),0 26px 54px -34px #000}
+/* --- black: a lit top edge gives it thickness against the ground --- */
+.dtile.ink{background:#0C0D12;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08), inset 0 0 0 1px rgba(255,255,255,.05),
+    0 10px 20px -12px #000, 0 40px 70px -38px #000}
+.dtile.ink:hover{box-shadow:inset 0 1px 0 rgba(255,255,255,.12), inset 0 0 0 1px rgba(255,255,255,.09),
+    0 16px 30px -14px #000, 0 54px 90px -40px #000}
 .ink .dt-lab{color:#94A3B8} .ink .dt-n{color:#FFFFFF} .ink .dt-sub{color:#94A3B8}
 .ink .dc-pill{background:rgba(255,255,255,.07);color:#94A3B8}
 
-/* --- volt: the one you are chasing --- */
-.dtile.volt{background:var(--volt);box-shadow:0 26px 54px -30px rgba(212,255,0,.45)}
-.volt .dt-lab{color:#3A4600} .volt .dt-n{color:#0B0C10} .volt .dt-of{color:#3A4600;opacity:1}
-.volt .dt-sub{color:#3A4600} .volt .dc-pill{background:#0B0C10;color:var(--volt)}
-.gbarw{height:8px;border-radius:6px;background:rgba(11,12,16,.16);overflow:hidden;margin-bottom:12px}
-.gbarw i{display:block;height:100%;border-radius:6px;background:#0B0C10}
+/* --- volt, frosted: translucent so the ground shows through, blurred,
+       with a volt hairline and a glow beneath it --- */
+.dtile.volt{background:rgba(212,255,0,.13);backdrop-filter:blur(20px) saturate(140%);
+  -webkit-backdrop-filter:blur(20px) saturate(140%);
+  box-shadow:inset 0 1px 0 rgba(212,255,0,.35), inset 0 0 0 1px rgba(212,255,0,.28),
+    0 10px 24px -14px rgba(212,255,0,.35), 0 44px 80px -40px rgba(212,255,0,.45)}
+.dtile.volt:hover{background:rgba(212,255,0,.18);
+  box-shadow:inset 0 1px 0 rgba(212,255,0,.5), inset 0 0 0 1px rgba(212,255,0,.42),
+    0 16px 32px -14px rgba(212,255,0,.45), 0 60px 100px -42px rgba(212,255,0,.55)}
+@supports not (backdrop-filter: blur(1px)){ .dtile.volt{background:#1A2000} }
+.volt .dt-lab{color:var(--volt)} .volt .dt-n{color:#FFFFFF}
+.volt .dt-of{color:var(--volt);opacity:.75}
+.volt .dt-sub{color:#C9D3DE} .volt .dc-pill{background:var(--volt);color:#0B0C10;font-weight:700}
+/* the goal card runs two rows tall — let the number take the room and sit
+   the caption on the floor, so the height reads as space rather than a gap */
+.dtile.volt .dt-n{font-size:68px;margin:22px 0 16px}
+.dtile.volt .dt-of{font-size:28px}
+.dtile.volt .dt-sub{margin-top:auto;padding-top:18px}
+.gbarw{height:10px;border-radius:6px;background:rgba(255,255,255,.1);overflow:hidden;margin-bottom:0}
+.gbarw i{display:block;height:100%;border-radius:6px;background:var(--volt);
+  box-shadow:0 0 18px rgba(212,255,0,.55)}
 
 /* --- bars: neutral track, one volt lead, labelled so identity is never colour --- */
 .fn{display:flex;flex-direction:column;gap:11px;margin-top:18px}
@@ -1625,7 +1659,8 @@ html[data-theme="light"] .vm-tabs button.on{background:#FFFFFF;color:#0B0C10;box
 .fn-lab{font-size:13px;font-weight:600;color:#33414E;width:96px;flex:none}
 .fn-track,.cmp-track{flex:1;border-radius:6px;background:#F1F3F0;overflow:hidden;min-width:0}
 .fn-track{height:12px}
-.fn-track i,.cmp-track i{display:block;height:100%;border-radius:6px;background:#DDE1D9}
+.fn-track i,.cmp-track i{display:block;height:100%;border-radius:6px;background:#DDE1D9;
+  transition:width .5s cubic-bezier(.16,.84,.3,1)}
 .fn-track i.lead,.cmp-track i.now{background:var(--volt)}
 .fn-n,.cmp-n{font-family:'IBM Plex Mono',monospace;font-size:12px;color:#5A6875;width:34px;
   text-align:right;flex:none}
@@ -1633,13 +1668,24 @@ html[data-theme="light"] .vm-tabs button.on{background:#FFFFFF;color:#0B0C10;box
 .cmp-lab{font-size:11.5px;color:#5A6875;width:66px;flex:none}
 .cmp-track{height:10px}
 
+@media(prefers-reduced-motion:reduce){
+  .dtile,.dtile:hover{transform:none;transition:none}
+  .fn-track i,.cmp-track i{transition:none}
+}
 @media(max-width:1100px){
-  .dgrid,.dgrid.two{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .dtile.wide{grid-column:span 2}
+  .dgrid{grid-template-columns:repeat(2,minmax(0,1fr));
+    grid-template-areas:"goal last" "goal cont" "stage stage" "comp quota"}
+}
+@media(max-width:1100px){
+  .dtile.volt .dt-n{font-size:54px;margin:18px 0 14px}
 }
 @media(max-width:760px){
-  .dgrid,.dgrid.two{grid-template-columns:1fr;gap:10px;margin-top:16px}
-  .dtile,.dtile.wide{grid-column:span 1;padding:18px}
+  .dgrid{grid-template-columns:1fr;gap:10px;margin-top:16px;
+    grid-template-areas:"goal" "last" "cont" "stage" "comp" "quota"}
+  .dtile{padding:18px}
+  .dtile.volt .dt-n{font-size:40px;margin:12px 0 10px}
+  .dtile.volt .dt-of{font-size:20px}
+  .dtile.volt .dt-sub{margin-top:0;padding-top:12px}
   .dt-n{font-size:36px;margin:12px 0 8px}
   .dt-of{font-size:18px}
   .dt-none{font-size:15px;margin:12px 0 8px}
@@ -3838,10 +3884,10 @@ function viewDash(v) {
         '<span class="mn">Your desk</span><span class="krule"></span><span class="mn">Outreach, Informed</span></div>' +
       '<h1 class="gtext rv-t" style="--d:.12s">' + greetWord() + (name ? ", " + esc(name) : "") + '. <span class="hl">Vamos!</span></h1>' +
 
-      '<div class="dgrid rv" style="--d:.2s">' +
+      '<div class="dgrid">' +
 
         /* the one you are chasing — volt */
-        '<div class="dtile volt">' +
+        '<div class="dtile volt rv-s" style="--d:.16s">' +
           '<div class="dc-head"><div class="mn dt-lab">This week vs. goal</div>' +
             '<span class="dc-pill">' + pct + '%</span></div>' +
           '<div class="dt-n">' + sent.week + '<span class="dt-of"> / ' + target + '</span></div>' +
@@ -3850,7 +3896,7 @@ function viewDash(v) {
             ' &middot; ' + goalPerDay() + '/day across 5 days</div>' +
         '</div>' +
 
-        '<div class="dtile paper">' +
+        '<div class="dtile paper rv-s" style="--d:.22s">' +
           '<div class="dc-head"><div class="mn dt-lab">This week vs. last</div>' +
             '<span class="dc-pill ' + (delta > 0 ? 'up' : delta < 0 ? 'down' : '') + '">' +
               (delta > 0 ? '&uarr; +' + delta : delta < 0 ? '&darr; ' + delta : 'level') + '</span></div>' +
@@ -3865,30 +3911,28 @@ function viewDash(v) {
           '</div>' +
         '</div>' +
 
-        '<div class="dtile ink">' +
+        '<div class="dtile ink rv-s" style="--d:.28s">' +
           '<div class="dc-head"><div class="mn dt-lab">Contacts pulled</div>' +
             '<span class="dc-pill">this week</span></div>' +
           '<div class="dt-n">' + pulled.week + '</div>' +
           '<div class="dt-sub">' + pulled.today + ' today</div>' +
         '</div>' +
 
-        '<div class="dtile ink">' +
+        '<div class="dtile ink rv-s" style="--d:.4s">' +
           '<div class="dc-head"><div class="mn dt-lab">Companies pulled</div>' +
             '<span class="dc-pill">this week</span></div>' +
           '<div class="dt-n">' + pulled.coWeek + '</div>' +
           '<div class="dt-sub">' + pulled.coToday + ' today</div>' +
         '</div>' +
 
-      '</div>' +
-
-      '<div class="dgrid two rv" style="--d:.3s">' +
-        '<div class="dtile paper wide">' +
+      
+        '<div class="dtile paper wide rv-s" style="--d:.34s">' +
           '<div class="dc-head"><div><div class="mn dt-lab">Where everyone stands</div>' +
             '<div class="dc-t">Contacts in each stage</div></div>' +
             '<span class="dc-pill">' + stages.reduce(function (a, b) { return a + b; }, 0) + ' total</span></div>' +
           '<div class="fn">' + stageRows + '</div>' +
         '</div>' +
-        '<div class="dtile paper quiet">' +
+        '<div class="dtile paper quiet rv-s" style="--d:.46s">' +
           '<div class="mn dt-lab">Sales quota</div>' +
           '<div class="dt-none">Not tracked yet</div>' +
           '<div class="dt-sub">No revenue or placement target is stored — the weekly goal above counts outreach, not sales.</div>' +
