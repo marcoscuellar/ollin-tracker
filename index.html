@@ -400,10 +400,10 @@
 .vm-top #vmImport{background:var(--glass) !important;backdrop-filter:blur(12px);
   color:var(--ink) !important;border:1px solid var(--glass-line) !important;font-weight:700}
 .vm-top #vmImport:hover{border-color:var(--glass-line-2) !important;background:var(--glass-2) !important}
-.vm-top #vmJust{background:var(--coral) !important;color:var(--navy) !important;
+.vm-top #vmCta{background:var(--coral) !important;color:var(--navy) !important;
   border-color:var(--coral) !important;font-weight:800}
-.vm-top #vmJust:hover{background:var(--volt-2) !important;border-color:var(--volt-2) !important}
-.vm-top #vmJust .d{background:var(--navy)}
+.vm-top #vmCta:hover{background:var(--volt-2) !important;border-color:var(--volt-2) !important}
+.vm-top #vmCta .d{background:var(--navy)}
 
 /* ===== LIGHT MODE — Cool Paper. A white version when the user wants it. =====
    Rules from the brand doc: orange is a FILL only (text uses Kinetic Ink #B73D00);
@@ -1354,7 +1354,7 @@ img,svg,video,canvas{max-width:100%}
   .vm-brand{grid-area:brand;gap:8px;justify-self:start}
   .vm-brand svg{width:24px;height:24px}
   .vm-brand .wm{font-size:19px}
-  #vmJust{grid-area:just}
+  #vmCta{grid-area:just}
   #vmAv{grid-area:av}
   #vmImport{grid-area:import;justify-self:end}
   #vmTheme{grid-area:theme}
@@ -1574,6 +1574,10 @@ html[data-theme="light"] .vm-tabs button.on{background:#FFFFFF;color:#0B0C10;box
   .vm-tabs button{padding:8px 11px}
 }
 .vm-just{white-space:nowrap}
+.vm-cta{background:var(--volt);color:#0B0C10;border:0;font-weight:800}
+.vm-cta:hover{background:var(--volt-2)}
+/* "Following up" is the longest stage label — keep it on one line */
+.fn-lab{width:92px;font-size:12px;white-space:nowrap}
 
 /* ======================= DASHBOARD =======================
    A 3x3 with spans rather than a flat row: the goal card runs tall down
@@ -1585,14 +1589,11 @@ html[data-theme="light"] .vm-tabs button.on{background:#FFFFFF;color:#0B0C10;box
 .dgrid{display:grid;gap:14px;margin-top:24px;
   grid-template-columns:repeat(3,minmax(0,1fr));
   grid-template-areas:
-    "goal  last   cont"
-    "goal  stage  stage"
-    "comp  quota  quota"}
-.dtile.volt{grid-area:goal}
-.dtile.paper:not(.wide):not(.quiet){grid-area:last}
-.dtile.ink:first-of-type{grid-area:cont}
-.dtile.wide{grid-area:stage}
-.dtile.quiet{grid-area:quota}
+    "goal   last   cont"
+    "goal   stage  comp"
+    "quota  stage  comp"}
+.a-goal{grid-area:goal} .a-last{grid-area:last} .a-cont{grid-area:cont}
+.a-stage{grid-area:stage} .a-comp{grid-area:comp} .a-quota{grid-area:quota}
 
 .dtile{padding:24px;border-radius:20px;display:flex;flex-direction:column;min-width:0;
   position:relative;transition:transform .24s cubic-bezier(.16,.84,.3,1), box-shadow .24s}
@@ -1649,14 +1650,16 @@ html[data-theme="light"] .vm-tabs button.on{background:#FFFFFF;color:#0B0C10;box
 .dtile.volt .dt-n{font-size:68px;margin:22px 0 16px}
 .dtile.volt .dt-of{font-size:28px}
 .dtile.volt .dt-sub{margin-top:auto;padding-top:18px}
+.a-comp .dt-n{font-size:58px;margin:20px 0 14px}
+.a-comp .dt-sub{margin-top:auto;padding-top:18px}
 .gbarw{height:10px;border-radius:6px;background:rgba(255,255,255,.1);overflow:hidden;margin-bottom:0}
 .gbarw i{display:block;height:100%;border-radius:6px;background:var(--volt);
   box-shadow:0 0 18px rgba(212,255,0,.55)}
 
 /* --- bars: neutral track, one volt lead, labelled so identity is never colour --- */
-.fn{display:flex;flex-direction:column;gap:11px;margin-top:18px}
-.fn-row,.cmp-row{display:flex;align-items:center;gap:14px}
-.fn-lab{font-size:13px;font-weight:600;color:#33414E;width:96px;flex:none}
+.fn{display:flex;flex-direction:column;gap:10px;margin-top:16px}
+.fn-row,.cmp-row{display:flex;align-items:center;gap:11px}
+.fn-lab{font-size:12.5px;font-weight:600;color:#33414E;width:88px;flex:none}
 .fn-track,.cmp-track{flex:1;border-radius:6px;background:#F1F3F0;overflow:hidden;min-width:0}
 .fn-track{height:12px}
 .fn-track i,.cmp-track i{display:block;height:100%;border-radius:6px;background:#DDE1D9;
@@ -1674,7 +1677,8 @@ html[data-theme="light"] .vm-tabs button.on{background:#FFFFFF;color:#0B0C10;box
 }
 @media(max-width:1100px){
   .dgrid{grid-template-columns:repeat(2,minmax(0,1fr));
-    grid-template-areas:"goal last" "goal cont" "stage stage" "comp quota"}
+    grid-template-areas:"goal last" "goal cont" "stage comp" "quota quota"}
+  .a-comp .dt-n{font-size:46px;margin:16px 0 12px}
 }
 @media(max-width:1100px){
   .dtile.volt .dt-n{font-size:54px;margin:18px 0 14px}
@@ -1685,7 +1689,8 @@ html[data-theme="light"] .vm-tabs button.on{background:#FFFFFF;color:#0B0C10;box
   .dtile{padding:18px}
   .dtile.volt .dt-n{font-size:40px;margin:12px 0 10px}
   .dtile.volt .dt-of{font-size:20px}
-  .dtile.volt .dt-sub{margin-top:0;padding-top:12px}
+  .dtile.volt .dt-sub,.a-comp .dt-sub{margin-top:0;padding-top:12px}
+  .a-comp .dt-n{font-size:36px;margin:12px 0 8px}
   .dt-n{font-size:36px;margin:12px 0 8px}
   .dt-of{font-size:18px}
   .dt-none{font-size:15px;margin:12px 0 8px}
@@ -1711,7 +1716,7 @@ html[data-theme="light"] .vm-tabs button.on{background:#FFFFFF;color:#0B0C10;box
       <div class="vm-right">
         <span class="vm-streak" id="vmStreak"></span>
         <button class="vm-just" id="vmImport" title="Import a CSV or Excel list">Import</button>
-        <button class="vm-just" id="vmJust" title="Open one card"><span class="d"></span>Just this one</button>
+        <button class="vm-just vm-cta hide" id="vmCta"></button>
         <button class="vm-theme" id="vmTheme" title="Toggle light / dark" aria-label="Toggle theme"></button>
         <button class="vm-av" id="vmAv" title="Account"></button>
       </div>
@@ -3525,7 +3530,6 @@ function banners() {
      signup CTA in here, "Exit demo" is the only exit and the visitor leaves. */
   if (DEMO) h += '<div class="demobar demo-cta">' +
     '<span class="dm-t">Live demo &middot; sample data, nothing is saved.</span>' +
-    '<button class="dm-go" id="demoSignup">Try it out for free</button>' +
     '<a id="demoExit">Exit demo</a></div>';
   if (ACCOUNT && ACCOUNT.email && ACCOUNT.verified === false)
     h += '<div class="verifybar">Confirm your email to secure your account — check your inbox. <a id="vbResend">Resend</a></div>';
@@ -3534,9 +3538,6 @@ function banners() {
   bn.innerHTML = h;
   var de = document.getElementById("demoExit");
   if (de) de.onclick = function () { location.href = location.pathname; };
-  /* leave the demo straight into the signup form, not the login wall */
-  var ds = document.getElementById("demoSignup");
-  if (ds) ds.onclick = function () { location.href = location.pathname + "?signup=1"; };
   var vr = document.getElementById("vbResend");
   if (vr) vr.onclick = function () { resendVerify(); };
 }
@@ -3565,8 +3566,18 @@ function chrome() {
   }
   var tb = document.getElementById("vmTheme");
   if (tb) { paintThemeIcon(tb); tb.onclick = function () { toggleTheme(); paintThemeIcon(tb); }; }
-  var jb = document.getElementById("vmJust");
-  if (jb) jb.onclick = function () { justThisOne(); };
+  /* the primary nav slot: in the demo it is the way out into signup, which
+     is the only thing a visitor there can usefully do. Signed in there is
+     nothing to sell, so the slot stays empty rather than holding a button
+     that means nothing. */
+  var cta = document.getElementById("vmCta");
+  if (cta) {
+    cta.classList.toggle("hide", !DEMO);
+    if (DEMO) {
+      cta.textContent = "Try it out for free";
+      cta.onclick = function () { location.href = location.pathname + "?signup=1"; };
+    }
+  }
   var ib = document.getElementById("vmImport");
   if (ib) ib.onclick = function () { var f = document.getElementById("coFile"); if (f) f.click(); };
   var av = document.getElementById("vmAv");
@@ -3761,13 +3772,6 @@ function startQueue(which) {
   VM.i = 0;
   return (VM.narrow && VM.qIds) ? VM.qIds.length : b.late.concat(b.today, b.fresh).length;
 }
-function justThisOne() {
-  var b = buckets(), set = b.late.concat(b.today, b.fresh);
-  if (!set.length) { navView = "today"; render(); return toast("Nothing's due — go outside."); }
-  VM.narrow = true; VM.qIds = [keyOf(set[0])]; VM.i = 0;
-  navView = "today"; render(); window.scrollTo(0, 0);
-}
-
 /* ---------- the read (inferred, labelled as inferred) ---------- */
 function readOf(t, a) {
   var out = [];
@@ -3887,7 +3891,7 @@ function viewDash(v) {
       '<div class="dgrid">' +
 
         /* the one you are chasing — volt */
-        '<div class="dtile volt rv-s" style="--d:.16s">' +
+        '<div class="dtile volt a-goal rv-s" style="--d:.16s">' +
           '<div class="dc-head"><div class="mn dt-lab">This week vs. goal</div>' +
             '<span class="dc-pill">' + pct + '%</span></div>' +
           '<div class="dt-n">' + sent.week + '<span class="dt-of"> / ' + target + '</span></div>' +
@@ -3896,7 +3900,7 @@ function viewDash(v) {
             ' &middot; ' + goalPerDay() + '/day across 5 days</div>' +
         '</div>' +
 
-        '<div class="dtile paper rv-s" style="--d:.22s">' +
+        '<div class="dtile paper a-last rv-s" style="--d:.22s">' +
           '<div class="dc-head"><div class="mn dt-lab">This week vs. last</div>' +
             '<span class="dc-pill ' + (delta > 0 ? 'up' : delta < 0 ? 'down' : '') + '">' +
               (delta > 0 ? '&uarr; +' + delta : delta < 0 ? '&darr; ' + delta : 'level') + '</span></div>' +
@@ -3911,14 +3915,14 @@ function viewDash(v) {
           '</div>' +
         '</div>' +
 
-        '<div class="dtile ink rv-s" style="--d:.28s">' +
+        '<div class="dtile ink a-cont rv-s" style="--d:.28s">' +
           '<div class="dc-head"><div class="mn dt-lab">Contacts pulled</div>' +
             '<span class="dc-pill">this week</span></div>' +
           '<div class="dt-n">' + pulled.week + '</div>' +
           '<div class="dt-sub">' + pulled.today + ' today</div>' +
         '</div>' +
 
-        '<div class="dtile ink rv-s" style="--d:.4s">' +
+        '<div class="dtile ink a-comp rv-s" style="--d:.4s">' +
           '<div class="dc-head"><div class="mn dt-lab">Companies pulled</div>' +
             '<span class="dc-pill">this week</span></div>' +
           '<div class="dt-n">' + pulled.coWeek + '</div>' +
@@ -3926,13 +3930,13 @@ function viewDash(v) {
         '</div>' +
 
       
-        '<div class="dtile paper wide rv-s" style="--d:.34s">' +
+        '<div class="dtile paper a-stage rv-s" style="--d:.34s">' +
           '<div class="dc-head"><div><div class="mn dt-lab">Where everyone stands</div>' +
             '<div class="dc-t">Contacts in each stage</div></div>' +
             '<span class="dc-pill">' + stages.reduce(function (a, b) { return a + b; }, 0) + ' total</span></div>' +
           '<div class="fn">' + stageRows + '</div>' +
         '</div>' +
-        '<div class="dtile paper quiet rv-s" style="--d:.46s">' +
+        '<div class="dtile paper quiet a-quota rv-s" style="--d:.46s">' +
           '<div class="mn dt-lab">Sales quota</div>' +
           '<div class="dt-none">Not tracked yet</div>' +
           '<div class="dt-sub">No revenue or placement target is stored — the weekly goal above counts outreach, not sales.</div>' +
