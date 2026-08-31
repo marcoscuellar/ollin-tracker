@@ -225,6 +225,12 @@
   color:var(--red);margin-right:8px}
 .cocard .cofoot2{display:flex;align-items:center;gap:16px;margin-top:14px;font-size:12.5px;color:var(--w-meta)}
 .cocard .cofoot2 b{color:var(--w-ink)}
+/* the OLLIN run an account came from — searchable, so it doubles as a way to
+   pull back everything one report brought in */
+.cocard .wfid{margin-top:12px;font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:10.5px;
+  letter-spacing:.02em;color:var(--w-meta);background:var(--w-inset);border:1px solid var(--w-line);
+  border-radius:6px;padding:4px 8px;display:inline-block;max-width:100%;overflow:hidden;
+  text-overflow:ellipsis;white-space:nowrap}
 .cocard .cofoot2 .arrow{margin-left:auto;color:var(--w-accent-ink);font-weight:800}
 .watchgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
 .cotile{display:flex;align-items:center;gap:11px;padding:12px 14px;cursor:pointer;
@@ -534,6 +540,13 @@ button{font-family:inherit}
 .demobar,.verifybar{margin-top:12px;border-radius:12px;padding:11px 15px;font-size:13px;font-weight:600}
 .demobar{background:var(--surface);color:var(--ink-2)}
 .verifybar{background:rgba(212,255,0,.14);color:var(--coral-2)}
+/* persistence trouble — the one failure that must never be quiet */
+.savebar{background:rgba(212,255,0,.10);border:1px solid rgba(212,255,0,.34);color:var(--ink);
+  border-radius:12px;padding:11px 16px;margin:12px 0 0;font-size:13.5px;font-weight:600;
+  display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.savebar a{color:var(--accent-ink);font-weight:800;cursor:pointer;text-decoration:underline;white-space:nowrap}
+html[data-theme="light"] .savebar{background:#F4F7DA;border-color:#D8E27A;color:#0B0C10}
+html[data-theme="light"] .savebar a{color:#0B0C10}
 .demobar a,.verifybar a{color:var(--accent-ink);font-weight:800;cursor:pointer;text-decoration:underline;margin-left:6px}
 
 .vm-wrap{max-width:1240px;margin:0 auto;padding:8px 30px 60px}
@@ -1261,6 +1274,21 @@ select.auth-input{appearance:none}
 .v3 .go{flex:none;border:0;border-radius:999px;padding:14px 24px;font-family:'Archivo';font-weight:900;font-size:14px;background:var(--coral);color:var(--navy);
   display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;box-shadow:0 18px 46px -16px rgba(212,255,0,.5)}
 .v3 .go.gofull{width:100%;margin-top:10px;font-size:15px;padding:15px 24px}
+/* The next-touch picker. Sending is still one button — this only moves the
+   default, so the common case stays a single click. Lives on a white card, so
+   it uses the --w-* scale like .v3 .ask does. */
+.nextsel{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-top:14px;
+  padding:10px 12px;border:1px solid var(--w-line);border-radius:12px;background:var(--w-inset)}
+.nextsel .nl{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--w-meta)}
+.nextsel .gp{border:1px solid var(--w-line);background:#FFFFFF;color:var(--w-ink);
+  border-radius:999px;padding:6px 13px;font-family:'Archivo';font-weight:800;font-size:13px;
+  cursor:pointer;transition:background .15s ease,border-color .15s ease,color .15s ease}
+.nextsel .gp:hover{border-color:#0B0C10}
+.nextsel .gp.on{background:#0B0C10;border-color:#0B0C10;color:var(--volt)}
+.nextsel .nd{margin-left:auto;font-family:'IBM Plex Mono',ui-monospace,monospace;
+  font-size:12px;font-weight:600;color:var(--w-meta);white-space:nowrap}
+.nextsel.last{color:var(--w-meta);font-size:12.5px;font-weight:600}
+@media(max-width:560px){ .nextsel .nd{margin-left:0;width:100%} }
 .v3 .go:hover{background:var(--coral-2)}
 .v3 .v3foot{display:flex;gap:9px;margin-top:16px;align-items:center;flex-wrap:wrap}
 .v3 .v3foot .fl{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute);margin-right:2px}
@@ -1846,6 +1874,7 @@ html[data-theme="light"] .vm-tabs button.on{background:#FFFFFF;color:#0B0C10;box
   // ---------- model ----------
   // Cadence — Marcos, 2026-08-06: 4 touches, gaps 0/+2/+3/+3.
   // LinkedIn day 0 -> Email +2 -> LinkedIn +3 -> Email +3 (cumulative 0/2/5/8).
+  /* @export:cadence */
   var CADENCE = [
     {off:0, ch:"li", label:"LinkedIn"},
     {off:2, ch:"em", label:"Email"},
@@ -1853,46 +1882,118 @@ html[data-theme="light"] .vm-tabs button.on{background:#FFFFFF;color:#0B0C10;box
     {off:8, ch:"em", label:"Email"}
   ];
   var PERSONA_ENTRY = { "Champion":1, "Technical Evaluator":3, "Economic Buyer":5, "Additional":8, "Blocker":0 };
+  /* @end */
   var PERSONAS = ["Champion","Technical Evaluator","Economic Buyer","Additional","Blocker"];
 
-  var state = { accounts:[], done:{}, notes:{}, reschedule:{}, todos:[], activeId:null, view:"today", seeded:false, sheetUrl:"", dailyGoal:50, handoffNote:"", extra:{}, coldStreakSince:null };
+  var state = { accounts:[], done:{}, notes:{}, reschedule:{}, todos:[], activeId:null, view:"today", seeded:false, sheetUrl:"", dailyGoal:50, handoffNote:"", extra:{}, coldStreakSince:null, loaded:false };
+  // loaded=true only once a GET /api/entries has actually returned this user's
+  // blob. Until then nothing is POSTed: an empty state written over the stored
+  // one is how a whole pipeline disappears.
   var MODE = { api:false }; // api=true once the Vercel /api + KV backend is detected
   var DEMO = false; // ?demo=1 — public, unauthenticated walkthrough; nothing persists
   var ALL = "__all__"; // sentinel activeId meaning "show every account combined"
 
   /* ===== index.html lines 1860-1869 - date helpers (local, no tz drift) - needed by seed()/load()/import ===== */
   // ---------- date helpers (local, no tz drift) ----------
+  /* @export:dates */
   function todayStr(){ var d=new Date(); return iso(d); }
   function iso(d){ return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate()); }
   function pad(n){ return (n<10?"0":"")+n; }
   function parse(s){ var p=s.split("-"); return new Date(+p[0], +p[1]-1, +p[2]); }
   function addDays(s,n){ var d=parse(s); d.setDate(d.getDate()+n); return d; }
   function shiftWeekend(d){ var g=d.getDay(); if(g===6)d.setDate(d.getDate()+2); else if(g===0)d.setDate(d.getDate()+1); return d; }
+  /* @end */
   function fmtLong(s){ var d=parse(s); return d.toLocaleDateString(undefined,{weekday:"short",month:"short",day:"numeric"}); }
   function fmtShort(s){ var d=parse(s); return d.toLocaleDateString(undefined,{weekday:"short",month:"short",day:"numeric"}); }
   function daysBetween(a,b){ return Math.round((parse(b)-parse(a))/86400000); }
 
   /* ===== index.html lines 1871-1898 - schedule build - defines the composite touch key acctId|threadId|i ===== */
   // ---------- schedule build ----------
+  /* @export:schedule */
+  /*
+    Only the FIRST touch carries a date. Touches 2-4 are undated until the one
+    before them is actually sent, at which point the user picks the gap and
+    scheduleNext() writes the date into state.reschedule.
+
+    This used to compute all four dates up front from acct.start, which meant
+    that on any account older than the 8-day window every remaining touch was
+    already overdue — sending one didn't schedule the next, it just unveiled it
+    late. The queue could never drain.
+
+    Touch 1 anchors on the contact's own addedAt where it has one, so a contact
+    added today to a months-old account starts today rather than in the past.
+  */
+  function firstTouchDate(acct, t){
+    var entry = t.entryDay || PERSONA_ENTRY[t.persona] || 1;
+    var anchor = t.addedAt || acct.start;
+    return iso(shiftWeekend(addDays(anchor, entry-1)));
+  }
   function buildTouches(acct){
     var out=[];
     (acct.threads||[]).forEach(function(t){
       if(t.persona==="Blocker") return; // blocker not sequenced
-      var entry = t.entryDay || PERSONA_ENTRY[t.persona] || 1;
+      var first = firstTouchDate(acct, t);
       CADENCE.forEach(function(c,i){
-        var d = addDays(acct.start, (entry-1)+c.off);
-        d = shiftWeekend(d);
         out.push({
           id: acct.id+"|"+t.id+"|"+i,
           acctId: acct.id, threadId:t.id, company:acct.company,
           who:t.name, title:t.title, persona:t.persona,
           li:t.linkedin, email:t.email, angle:t.angle,
-          ch:c.ch, chLabel:c.label, touchNo:i+1, date:iso(d)
+          ch:c.ch, chLabel:c.label, touchNo:i+1,
+          date: i===0 ? first : null      // null = not scheduled yet
         });
       });
     });
     return out;
   }
+
+  /* The only gaps the user is offered. Marcos: "one day three days five days
+     out and that's it" — anything longer stops being a sequence. */
+  var GAPS = [1,3,5];
+  var GAP_DEFAULT = 3;
+  function nextTouchId(t){
+    return t.touchNo >= CADENCE.length ? null : (t.acctId+"|"+t.threadId+"|"+t.touchNo);
+  }
+  /* Sending touch N is what schedules touch N+1 — never account creation. */
+  function scheduleNext(t, gapDays){
+    var id = nextTouchId(t);
+    if(!id) return null;
+    var g = GAPS.indexOf(gapDays)>=0 ? gapDays : GAP_DEFAULT;
+    var d = iso(shiftWeekend(addDays(todayStr(), g)));
+    state.reschedule[id] = d;
+    return d;
+  }
+
+  /*
+    One-time migration for data created under the old scheme, where all four
+    touches were dated from acct.start and every one of them was already
+    overdue. For each contact, whatever comes after its last send is scheduled
+    forward from that send — clamped to today, so nothing lands in the past.
+    Contacts that have never been touched keep their touch-1 date.
+  */
+  function migrateSchedule(){
+    if((state.extra||{}).schedV2) return 0;
+    var td=todayStr(), n=0;
+    (state.accounts||[]).forEach(function(a){
+      (a.threads||[]).forEach(function(t){
+        if(t.persona==="Blocker") return;
+        var last=-1, lastDate=null;
+        for(var i=0;i<CADENCE.length;i++){
+          var d=state.done[a.id+"|"+t.id+"|"+i];
+          if(d){ last=i; lastDate=d; }
+        }
+        if(last<0 || last>=CADENCE.length-1) return;   // untouched, or finished
+        var nid=a.id+"|"+t.id+"|"+(last+1);
+        if(state.reschedule[nid]) return;              // already has a real date
+        var want=iso(addDays(lastDate, GAP_DEFAULT));
+        state.reschedule[nid]=iso(shiftWeekend(parse(want<td?td:want)));
+        n++;
+      });
+    });
+    state.extra=state.extra||{}; state.extra.schedV2=1;
+    return n;
+  }
+  /* @end */
   function activeAcct(){ return state.accounts.find(function(a){return a.id===state.activeId;}); }
   function allTouches(){ var out=[]; state.accounts.forEach(function(a){ out=out.concat(buildTouches(a)); }); return out; }
   function byDateThenCompany(a,b){
@@ -1904,7 +2005,7 @@ html[data-theme="light"] .vm-tabs button.on{background:#FFFFFF;color:#0B0C10;box
 
   /* ===== index.html lines 1900-1927 - load() - reads the tracker:* localStorage keys ===== */
   // ---------- persistence ----------
-  async function load(){
+  async function load(noSeed){
     var a = await sGet("tracker:accounts");
     var d = await sGet("tracker:done");
     var n = await sGet("tracker:notes");
@@ -1923,7 +2024,7 @@ html[data-theme="light"] .vm-tabs button.on{background:#FFFFFF;color:#0B0C10;box
     if(rs){ try{ state.reschedule = JSON.parse(rs); }catch(e){} }
     if(td){ try{ state.todos = JSON.parse(td); }catch(e){} }
     state.seeded = !!seeded;
-    if(!state.seeded && (!state.accounts || state.accounts.length===0)){
+    if(!noSeed && !state.seeded && (!state.accounts || state.accounts.length===0)){
       seed();
       state.seeded = true;
       localSave();
@@ -1934,7 +2035,20 @@ html[data-theme="light"] .vm-tabs button.on{background:#FFFFFF;color:#0B0C10;box
 
   /* ===== index.html lines 1929-1958 - save layer: localSave / apiSave (POST /api/entries) / scheduleSave ===== */
   // ---------- save layer (local keys OR Vercel KV via /api/entries) ----------
-  var saveTimer=null;
+  /*
+    Two rules, both learned from data going missing:
+
+    1. Never POST before a successful load. MODE.api used to be set before the
+       GET that fills state, so a failed GET left the empty initializer in
+       place and the next save wrote that straight over the stored pipeline.
+       state.loaded is the gate, and localSave() is the floor underneath it.
+    2. A debounced save is a lost save if the tab goes away first. Every exit
+       path — pagehide, tab hidden — flushes what is pending as a beacon.
+  */
+  var saveTimer=null, saveDirty=false, saveFailed=false, retryTimer=null, retryStep=0;
+  var RETRY_MS=[2000,5000,15000,30000];
+  var allowEmptyOnce=false;   // set by doClear(), the one legitimate wipe
+
   function localSave(){
     sSet("tracker:accounts", JSON.stringify(state.accounts));
     sSet("tracker:active", state.activeId||"");
@@ -1949,17 +2063,86 @@ html[data-theme="light"] .vm-tabs button.on{background:#FFFFFF;color:#0B0C10;box
     sSet("tracker:extra", JSON.stringify(state.extra||{}));
     sSet("tracker:coldStreakSince", state.coldStreakSince||"");
   }
-  function apiSave(){
-    if(saveTimer) clearTimeout(saveTimer);
-    saveTimer=setTimeout(function(){
-      fetch("/api/entries",{method:"POST",headers:{"Content-Type":"application/json"},credentials:"same-origin",
-        body:JSON.stringify({accounts:state.accounts,done:state.done,notes:state.notes,reschedule:state.reschedule||{},todos:state.todos||[],active:state.activeId,seeded:!!state.seeded,sheetUrl:state.sheetUrl||"",dailyGoal:state.dailyGoal||50,handoffNote:state.handoffNote||"",extra:state.extra||{},coldStreakSince:state.coldStreakSince||null})})
-        .then(function(r){ if(!r.ok) throw new Error("save"); })
-        .catch(function(){ toast("Save failed — check connection"); });
-    },300);
+
+  function savePayload(){
+    var p={accounts:state.accounts,done:state.done,notes:state.notes,reschedule:state.reschedule||{},todos:state.todos||[],active:state.activeId,seeded:!!state.seeded,sheetUrl:state.sheetUrl||"",dailyGoal:state.dailyGoal||50,handoffNote:state.handoffNote||"",extra:state.extra||{},coldStreakSince:state.coldStreakSince||null};
+    if(allowEmptyOnce) p.allowEmpty=true;   // the server refuses an empty blob otherwise
+    return JSON.stringify(p);
   }
-  function scheduleSave(){ if(DEMO) return; if(MODE.api) apiSave(); else localSave(); }
-  // optimistic: update UI now, persist in the background
+
+  function saveState(failed){
+    if(saveFailed===!!failed) return;
+    saveFailed=!!failed;
+    if(typeof banners==="function") banners();
+  }
+
+  function postSave(){
+    return fetch("/api/entries",{method:"POST",headers:{"Content-Type":"application/json"},credentials:"same-origin",body:savePayload()})
+      .then(function(r){
+        /* 409 = the server refused an empty payload over real data. Retrying
+           can only send the same empty payload again, so stop and reload
+           rather than nag. */
+        if(r.status===409){ var e=new Error("refused"); e.refused=true; throw e; }
+        if(!r.ok) throw new Error("save "+r.status);
+      })
+      .then(function(){
+        saveDirty=false; retryStep=0; allowEmptyOnce=false; saveState(false); return true;
+      }, function(err){
+        if(err && err.refused){
+          saveDirty=false; saveState(false);
+          toast("Your saved data is safe — reloading to pick it up.");
+          setTimeout(function(){ location.reload(); },1200);
+          return false;
+        }
+        saveDirty=true; saveState(true); scheduleRetry(); return false;
+      });
+  }
+
+  /* Backoff, then a steady 30s. The change stays in memory and in localStorage
+     the whole time, so a retry that finally lands loses nothing. */
+  function scheduleRetry(){
+    if(retryTimer) return;
+    var ms=RETRY_MS[Math.min(retryStep,RETRY_MS.length-1)];
+    retryStep++;
+    retryTimer=setTimeout(function(){
+      retryTimer=null;
+      if(saveDirty && state.loaded && MODE.api && !DEMO) postSave();
+    },ms);
+  }
+
+  function apiSave(){
+    saveDirty=true;
+    if(saveTimer) clearTimeout(saveTimer);
+    saveTimer=setTimeout(function(){ saveTimer=null; postSave(); },300);
+  }
+
+  /* The tab may not survive a normal fetch, so the pending write goes out as a
+     beacon (same-origin, so it carries the session cookie). This is the fix for
+     the phone case: backgrounding the app used to drop the last send. */
+  function flushSave(){
+    if(DEMO || !MODE.api || !state.loaded || !saveDirty) return;
+    if(saveTimer){ clearTimeout(saveTimer); saveTimer=null; }
+    var body=savePayload();
+    try{
+      if(navigator.sendBeacon && navigator.sendBeacon("/api/entries", new Blob([body],{type:"application/json"}))){
+        saveDirty=false; return;
+      }
+    }catch(e){}
+    try{
+      fetch("/api/entries",{method:"POST",headers:{"Content-Type":"application/json"},credentials:"same-origin",body:body,keepalive:true});
+      saveDirty=false;
+    }catch(e){}
+  }
+
+  function scheduleSave(){
+    if(DEMO) return;
+    localSave();                 // always, in both modes — the floor under everything
+    if(!MODE.api) return;
+    if(!state.loaded) return;    // never write a state we never loaded over the stored one
+    apiSave();
+  }
+  // optimistic: update UI now, persist in the background. The truth about
+  // whether it landed is the banner, not this promise.
   function persistAccounts(){ scheduleSave(); return Promise.resolve(); }
   function persistDone(){ scheduleSave(); return Promise.resolve(); }
   function persistNotes(){ scheduleSave(); return Promise.resolve(); }
@@ -2153,6 +2336,7 @@ html[data-theme="light"] .vm-tabs button.on{background:#FFFFFF;color:#0B0C10;box
     if(!confirm("Clear ALL accounts, contacts, touches and messages? Cannot be undone. Login stays.")) return;
     if(!confirm("Really wipe everything and start over?")) return;
     state.accounts=[]; state.done={}; state.notes={}; state.extra={}; state.activeId=null; state.seeded=true;
+    allowEmptyOnce=true;   // the server rejects an empty blob unless it's asked for
     persistAccounts(); render(); toast("All cleared");
   }
 
@@ -2590,16 +2774,39 @@ html[data-theme="light"] .vm-tabs button.on{background:#FFFFFF;color:#0B0C10;box
 
   /* ===== index.html lines 2698-2714 - afterAuthLoad (GET /api/entries) + clearState + logout ===== */
   async function afterAuthLoad(){
-    MODE.api=true;
+    /* MODE.api used to be set here, before the fetch. On a failed GET that left
+       an empty state marked as live, and the next save wrote it over the user's
+       stored blob. Both flags now flip only inside the r.ok branch. */
     try{
       var r=await fetch("/api/entries",{credentials:"same-origin"});
       if(r.ok){
+        MODE.api=true; state.loaded=true; loadFailed=false;
         var d=await r.json();
         state.accounts=d.accounts||[]; state.done=d.done||{}; state.notes=d.notes||{}; state.reschedule=d.reschedule||{}; state.todos=Array.isArray(d.todos)?d.todos:[]; state.seeded=!!d.seeded; state.sheetUrl=d.sheetUrl||""; state.dailyGoal=parseInt(d.dailyGoal,10)||50; state.handoffNote=d.handoffNote||""; state.extra=d.extra||{}; state.coldStreakSince=d.coldStreakSince||null;
         state.activeId=((d.active===ALL && state.accounts.length) || (d.active && state.accounts.some(function(a){return a.id===d.active;})))?d.active:((state.accounts[0]&&state.accounts[0].id)||null);
         if(!state.seeded){ state.seeded=true; apiSave(); } // new users start empty → guided onboarding
+        /* Old data has every touch dated from the account's start. Pull the
+           backlog forward once, then save the result. */
+        if(migrateSchedule()) apiSave();
+        return true;
       }
-    }catch(e){}
+      throw new Error("entries "+r.status);
+    }catch(e){
+      /* Couldn't read this account's data. Keep whatever the local mirror gave
+         us on screen, keep MODE.api/state.loaded false so nothing is written
+         back, and say so out loud instead of failing silently. */
+      loadFailed=true;
+      if(typeof banners==="function") banners();
+      return false;
+    }
+  }
+  /* true when the last GET /api/entries failed — saving is suspended until a
+     retry succeeds, and the banner says why. */
+  var loadFailed=false;
+  async function retryLoad(){
+    var ok=await afterAuthLoad();
+    if(ok){ toast("Reconnected — your data is back."); render(); }
+    else toast("Still can't reach it. Your changes are safe on this device.");
   }
   function clearState(){ state.accounts=[]; state.done={}; state.notes={}; state.reschedule={}; state.todos=[]; state.extra={}; state.handoffNote=""; state.activeId=null; state.seeded=false; state.coldStreakSince=null; }
   async function logout(){
@@ -2608,6 +2815,14 @@ html[data-theme="light"] .vm-tabs button.on{background:#FFFFFF;color:#0B0C10;box
   }
 
   /* ===== index.html lines 2715-2747 - afterBootParams + boot() (GET /api/auth?action=status, ?reset=, ?demo=) ===== */
+  /* Nothing in this app used to survive the tab going away mid-debounce.
+     pagehide covers close/navigate/bfcache; visibilitychange covers the phone
+     case, where backgrounding is far more common than closing. */
+  window.addEventListener("pagehide", flushSave);
+  document.addEventListener("visibilitychange", function(){
+    if(document.visibilityState==="hidden") flushSave();
+  });
+
   function afterBootParams(params){
     var vf=params.get("verified");
     if(vf==="1") toast("Email verified. You’re all set.");
@@ -2626,6 +2841,11 @@ html[data-theme="light"] .vm-tabs button.on{background:#FFFFFF;color:#0B0C10;box
       render();
       return;
     }
+    /* Prime from this device's mirror first. If the API load then succeeds it
+       overwrites all of this; if it fails, the user sees their last known
+       pipeline instead of an empty app — and state.loaded stays false, so
+       nothing here can be written back over the server copy. */
+    try{ await load(true); }catch(e){}
     try{
       var r=await fetch("/api/auth?action=status",{credentials:"same-origin"});
       var d=r.ok ? await r.json() : {};
@@ -2962,7 +3182,7 @@ html[data-theme="light"] .vm-tabs button.on{background:#FFFFFF;color:#0B0C10;box
         angle:get(cm.angle),
         signal:get(cm.signal), signalSrc:normSignalSource(get(cm.signalsrc)),
         isContractor: /^(y|yes|true|1)/i.test(get(cm.contractor)),
-        pulledAt:Date.now()
+        pulledAt:Date.now(), addedAt:todayStr()
       };
       if(!thread.signalSrc) thread.signal=""; // no valid, real source → not tracked, never shown
       // capture per-touch message copy (maps to the 5-touch cadence i=0..4)
@@ -3028,7 +3248,7 @@ html[data-theme="light"] .vm-tabs button.on{background:#FFFFFF;color:#0B0C10;box
         channel:channelFrom(get(cm.chan)), linkedin:get(cm.li), email:get(cm.email), angle:get(cm.angle),
         signal: signalSrc?get(cm.signal):"", signalSrc: signalSrc,
         isContractor: /^(y|yes|true|1)/i.test(get(cm.contractor)),
-        pulledAt: Date.now()
+        pulledAt: Date.now(), addedAt: todayStr()
       };
       var msgs = { 0:get(cm.t1), 1:withSubjG(get(cm.t2subj),get(cm.t2)), 2:get(cm.t3), 3:withSubjG(get(cm.t4subj),get(cm.t4)), 4:get(cm.t5) };
       var acct = state.accounts.find(function(a){ return normCompany(a.company)===normCompany(company); });
@@ -3417,7 +3637,8 @@ var COMEBACK = { away: 0, show: false };
 /* Working focus queue. qIds is a chosen subset of "acctId|threadId" keys; when
    narrow is false the day's actionable work (overdue + due + fresh) is used. */
 var VM = { i: 0, qIds: null, narrow: false, channel: null, angle: "gap",
-           drafting: false, activeKey: null, lastDraft: "", lastSteer: "" };
+           drafting: false, activeKey: null, lastDraft: "", lastSteer: "",
+           gap: GAP_DEFAULT };   /* how far out the next touch lands, in days */
 /* [0] is the route key and is persisted nowhere but memory; [1] is the label.
    "today" stays the key so every navView check downstream keeps working. */
 var VM_TABS = [["dash", "Dashboard"], ["today", "Workspace"], ["pipeline", "Pipeline"],
@@ -3495,7 +3716,11 @@ function liveTouches() {
     var k = t.acctId + "|" + t.threadId;
     if (seen[k]) return;
     if (isDone(t)) return;
-    seen[k] = 1; out.push(t);
+    seen[k] = 1;
+    /* An unscheduled touch is invisible, not undated — the contact drops out of
+       the queue until the previous send schedules it. */
+    if (!dueOf(t)) return;
+    out.push(t);
   });
   return out;
 }
@@ -3519,15 +3744,18 @@ function buckets() {
   b.late.sort(srt); b.today.sort(srt); b.resting.sort(srt);
   return b;
 }
+/* touches closed out via "Not a fit" — marked done so they leave the queue,
+   but never counted as sends. */
+function isClosedOut(k) { return !!((state.extra || {}).closed || {})[k]; }
 function doneToday() {
   var td = todayStr(), n = 0;
-  for (var k in state.done) { if (state.done[k] === td) n++; }
+  for (var k in state.done) { if (state.done[k] === td && !isClosedOut(k)) n++; }
   return n;
 }
 /* a light day-streak: consecutive days back from today with at least one send */
 function streakDays() {
   var days = {};
-  for (var k in state.done) { if (state.done[k]) days[state.done[k]] = 1; }
+  for (var k in state.done) { if (state.done[k] && !isClosedOut(k)) days[state.done[k]] = 1; }
   var n = 0, d = todayStr();
   while (days[d]) { n++; d = iso(addDays(d, -1)); }
   return n;
@@ -3543,6 +3771,13 @@ function banners() {
     '<a id="demoExit">Exit demo</a></div>';
   if (ACCOUNT && ACCOUNT.email && ACCOUNT.verified === false)
     h += '<div class="verifybar">Confirm your email to secure your account — check your inbox. <a id="vbResend">Resend</a></div>';
+  /* Persistence is the one thing that must never fail quietly. Both states are
+     recoverable and both keep working locally, so say what is true and offer
+     the retry rather than hiding it behind a toast that scrolls away. */
+  if (loadFailed)
+    h += '<div class="savebar">Couldn\'t reach your saved data — working from this device only, and not writing anything back. <a id="sbRetry">Try again</a></div>';
+  else if (saveFailed)
+    h += '<div class="savebar">Unsaved changes — can\'t reach the server. Kept on this device, still retrying. <a id="sbNow">Retry now</a></div>';
   var bn = document.getElementById("vmBanners");
   if (!bn) return;
   bn.innerHTML = h;
@@ -3550,6 +3785,10 @@ function banners() {
   if (de) de.onclick = function () { location.href = location.pathname; };
   var vr = document.getElementById("vbResend");
   if (vr) vr.onclick = function () { resendVerify(); };
+  var sr = document.getElementById("sbRetry");
+  if (sr) sr.onclick = function () { retryLoad(); };
+  var sn = document.getElementById("sbNow");
+  if (sn) sn.onclick = function () { postSave(); };
 }
 function chrome() {
   var tb = document.getElementById("vmTabs");
@@ -4417,6 +4656,13 @@ function cardBodyHTML(t, a) {
           '<input id="vmAsk" placeholder="Ask Ollin to write it — or ask about the intel…">' +
           '<button class="mic" id="vmMic" title="Speak">' + IC_MIC + '</button>' +
           '<button class="send" id="vmAskGo" title="Send">' + IC_GO + '</button></div>' +
+        (t.touchNo < CADENCE.length
+          ? '<div class="nextsel" id="vmNext"><span class="nl">Next touch in</span>' +
+              GAPS.map(function (g) {
+                return '<button class="gp' + (VM.gap === g ? ' on' : '') + '" data-g="' + g + '">' + g + ' day' + (g === 1 ? '' : 's') + '</button>';
+              }).join('') +
+              '<span class="nd" id="vmNextDate">' + esc(fmtLong(iso(shiftWeekend(addDays(todayStr(), VM.gap))))) + '</span></div>'
+          : '<div class="nextsel last">Last touch in the sequence — nothing follows it.</div>') +
         '<button class="go gofull" id="vmSend">Let\'s go <span>»</span></button>' +
         '<div id="vmSay"></div>' +
         '<div class="angles angles-lo">' + VM_ANGLES.map(function (x) {
@@ -4479,6 +4725,17 @@ function wireCard(t) {
       decide(o === "Later" ? "later" : (o === "Week" ? "week" : "skip"), t);
     };
   });
+  /* Picking a gap only moves the selection — the send is still one button. */
+  Array.prototype.forEach.call(document.querySelectorAll(".nextsel .gp"), function (bt) {
+    bt.onclick = function () {
+      VM.gap = parseInt(bt.dataset.g, 10) || GAP_DEFAULT;
+      Array.prototype.forEach.call(document.querySelectorAll(".nextsel .gp"), function (o) {
+        o.classList.toggle("on", parseInt(o.dataset.g, 10) === VM.gap);
+      });
+      var nd = document.getElementById("vmNextDate");
+      if (nd) nd.textContent = fmtLong(iso(shiftWeekend(addDays(todayStr(), VM.gap))));
+    };
+  });
   var go = document.getElementById("vmSend");
   if (go) go.onclick = function () { decide("sent", t); };
 }
@@ -4530,8 +4787,13 @@ function logActivity(action, t) {
 }
 function decide(kind, t) {
   if (kind === "sent") {
-    state.done[t.id] = todayStr(); logActivity("sent", t); persistDone();
-    toast(t.touchNo >= CADENCE.length ? "Cadence complete. Vamos." : "Logged. Next touch scheduled.");
+    state.done[t.id] = todayStr(); logActivity("sent", t);
+    /* This is the whole fix for the queue: the next touch gets its date HERE,
+       from today plus the gap the user picked — not from the account's start
+       date months ago. */
+    var landed = scheduleNext(t, VM.gap);
+    persistDone();
+    toast(landed ? ("Logged. Next touch " + fmtLong(landed) + ".") : "Cadence complete. Vamos.");
   } else if (kind === "later") {
     state.reschedule[t.id] = iso(addDays(todayStr(), 1)); logActivity("pushed", t); scheduleSave();
     toast("Moved to tomorrow.");
@@ -4540,7 +4802,15 @@ function decide(kind, t) {
     toast("Moved to next week.");
   } else {
     logActivity("skipped", t);
-    touchesOfThread(t.acctId, t.threadId).forEach(function (x) { if (!state.done[x.id]) state.done[x.id] = todayStr(); });
+    /* Closing a contact out marks its remaining touches done so it leaves the
+       queue — but those are not sends, and counting them inflated the daily
+       number and the streak by up to four per contact. They are tagged here so
+       doneToday()/streakDays() can ignore them. */
+    state.extra = state.extra || {};
+    state.extra.closed = state.extra.closed || {};
+    touchesOfThread(t.acctId, t.threadId).forEach(function (x) {
+      if (!state.done[x.id]) { state.done[x.id] = todayStr(); state.extra.closed[x.id] = 1; }
+    });
     persistDone(); toast("Closed out.");
   }
   /* fade the open card out, then re-render (the next one opens) */
@@ -4955,7 +5225,8 @@ var C_FILTERS = [["all", "All"], ["late", "Ready"], ["today", "Due today"], ["ne
 function matchQ(t, a, q) {
   if (!q) return true;
   var hay = [t.who, t.title, t.company, t.email, t.li, t.angle, t.persona, t.roleLabel, t.whyCares,
-    a.sector, a.place, a.hiring, a.building, a.stack, a.money]
+    a.sector, a.place, a.hiring, a.building, a.stack, a.money,
+    a.workflowId, t.workflowId]   /* so a run id finds everything it brought in */
     .filter(Boolean).join(" ").toLowerCase();
   return q.toLowerCase().split(/\s+/).filter(Boolean).every(function (w) { return hay.indexOf(w) > -1; });
 }
@@ -4984,7 +5255,7 @@ function viewContacts(v) {
   all.forEach(function (c) { if (c.live) counts[bucketOf(c.live)]++; });
 
   var list = all.filter(function (c) {
-    var t = c.live ? { who: c.th.name, title: c.th.title, company: c.a.company, email: c.th.email, li: c.th.linkedin, angle: c.th.angle, persona: c.th.persona, roleLabel: c.th.roleLabel, whyCares: c.th.whyCares } : { who: c.th.name, title: c.th.title, company: c.a.company };
+    var t = c.live ? { who: c.th.name, title: c.th.title, company: c.a.company, email: c.th.email, li: c.th.linkedin, angle: c.th.angle, persona: c.th.persona, roleLabel: c.th.roleLabel, whyCares: c.th.whyCares, workflowId: c.th.workflowId } : { who: c.th.name, title: c.th.title, company: c.a.company, workflowId: c.th.workflowId };
     if (CQ.filter !== "all") { if (!c.live || bucketOf(c.live) !== CQ.filter) return false; }
     return matchQ(t, c.a, CQ.q);
   });
@@ -5054,7 +5325,8 @@ var CO_FACTS = [["hiring", "hiringSrc", "Hiring"], ["building", "buildingSrc", "
   ["expansion", "expansionSrc", "Expansion"], ["timing", "timingSrc", "Timing"]];
 function coMatch(a, q) {
   if (!q) return true;
-  var hay = [a.company, a.domain, a.sector, a.place, a.size, a.whyNow, a.hiring, a.building, a.stack, a.money]
+  var hay = [a.company, a.domain, a.sector, a.place, a.size, a.whyNow, a.hiring, a.building, a.stack, a.money,
+    a.workflowId, a.wins, a.news]
     .concat((a.signals || []).map(function (s) { return s.text; }))
     .concat((a.threads || []).map(function (t) { return (t.name || "") + " " + (t.title || ""); }))
     .filter(Boolean).join(" ").toLowerCase();
@@ -5370,6 +5642,7 @@ function viewCompanies(v) {
           '<div class="cometa">' + esc(a.place || coMetaLine(a)) + '</div></div>' +
         '<span class="whynow"><span class="pulse" aria-hidden="true"></span>WHY NOW</span></div>' +
       '<div class="cosig"><span class="k">' + kind + '</span>' + esc(coLead(a)) + '</div>' +
+      (a.workflowId ? '<div class="wfid" title="OLLIN run this came from">' + esc(a.workflowId) + '</div>' : '') +
       '<div class="cofoot2">' + foot.join('') + '<span class="arrow">Open &rarr;</span></div>' +
     '</div>';
   }).join("");
@@ -5636,8 +5909,194 @@ function openContactEdit(acctId, threadId) {
   });
 }
 
+/* @export:ollinreport */
+/*
+  Reader for the reports the OLLIN engines actually emit — the labelled-block
+  format, not a CSV and not the [ COMPANY NOTE ] convention:
+
+      Workflow ID: FULL-20260825-infra-VA-Denver
+      --- CONTACTS ---
+      CONTACT NAME:  James Trout — Founder & CEO
+      LINKEDIN:      https://…
+      COMPANY:       CleanArc Data Centers
+      SIGNAL 1 (WHY THEM / WHY NOW): Broke ground Nov 20 2025 on VA1…
+        * SOURCE: PR Newswire, Nov 20 2025 — https://…
+      --- COMPANIES ---
+      COMPANY NAME:  CleanArc Data Centers
+      INDUSTRY:      Data center development & operation
+      BIG WINS (LAST 8 MONTHS): $3B VA1 groundbreaking…
+      NEWS: …
+      SIGNAL 1: … (VERIFIED)
+        * SOURCE: …
+
+  Pasting one of these used to fall through to the "Company, City, State" line
+  reader, which took the first comma-separated field of EVERY line as a company
+  name — which is where the junk accounts came from.
+*/
+var OLLIN_KEYS = {
+  "CONTACT NAME":1, "COMPANY NAME":1, "COMPANY":1, "LINKEDIN":1, "EMAIL":1,
+  "TITLE":1, "ROLE":1, "LOCATION":1, "DOMAIN":1, "INDUSTRY":1, "BIG WINS":1,
+  "NEWS":1, "SIGNAL 1":1, "SIGNAL 2":1
+};
+function ollinKey(raw) {
+  return String(raw || "").replace(/\([^)]*\)/g, "").replace(/\s+/g, " ").trim().toUpperCase();
+}
+/* Placeholders the engines emit when a lookup failed. Importing them makes
+   contacts called "Unable to Verify". */
+function ollinBlank(v) {
+  return !v || /^(unable to verify|not found|n\/?a|none|tbd|unknown)\b/i.test(String(v).trim());
+}
+function ollinNoSignal(v) {
+  return !v || /^no (second |additional )?signal/i.test(String(v).trim()) || /^none found/i.test(String(v).trim());
+}
+/* One record → its fields, in order. A line only starts a new field if its
+   label is one we know; anything else is a wrapped continuation of the field
+   above it, and "* SOURCE:" always attaches to the field above it. */
+function ollinFields(block) {
+  var out = [], cur = null;
+  String(block).split("\n").forEach(function (ln) {
+    var sm = ln.match(/^\s*\*\s*SOURCE\s*:\s*(.*)$/i);
+    if (sm) { if (cur) cur.source = (cur.source ? cur.source + " " : "") + sm[1].trim(); return; }
+    var m = ln.match(/^\s*([A-Za-z][^:\n]{0,48}?)\s*:\s*(.*)$/);
+    if (m && OLLIN_KEYS[ollinKey(m[1])]) {
+      cur = { key: ollinKey(m[1]), value: m[2].trim(), source: "" };
+      out.push(cur);
+      return;
+    }
+    var t = ln.trim();
+    if (t && cur) cur.value = (cur.value ? cur.value + " " : "") + t;
+  });
+  return out;
+}
+function ollinGet(fields, key) {
+  for (var i = 0; i < fields.length; i++) if (fields[i].key === key) return fields[i];
+  return null;
+}
+/* Everything between one "--- NAME ---" rule and the next rule or ===== band. */
+function ollinSection(src, name) {
+  var re = new RegExp("^[ \\t]*-{2,}[ \\t]*" + name + "[ \\t]*-{2,}[ \\t]*$", "mi");
+  var m = re.exec(src);
+  if (!m) return "";
+  var start = m.index + m[0].length;
+  var nxt = /^[ \t]*(?:-{2,}[ \t]*[A-Z][A-Z \t]*-{2,}|={5,})[ \t]*$/gm;
+  nxt.lastIndex = start;
+  var m2 = nxt.exec(src);
+  return src.slice(start, m2 ? m2.index : src.length);
+}
+function ollinBlocks(section) {
+  return String(section).split(/\n[ \t]*\n/).map(function (b) { return b.trim(); }).filter(Boolean);
+}
+function parseOllinReport(text) {
+  var src = String(text || "").replace(/\r\n?/g, "\n");
+  var wm = src.match(/^[ \t]*Workflow ID[ \t]*:[ \t]*(\S.*)$/mi);
+  var workflowId = wm ? wm[1].trim() : "";
+  var companies = [], contacts = [], skipped = 0;
+
+  ollinBlocks(ollinSection(src, "COMPANIES")).forEach(function (blk) {
+    var f = ollinFields(blk), nm = ollinGet(f, "COMPANY NAME");
+    if (!nm) return;
+    if (ollinBlank(nm.value)) { skipped++; return; }
+    var c = { company: nm.value, signals: [] };
+    var ind = ollinGet(f, "INDUSTRY"); if (ind && !ollinBlank(ind.value)) c.sector = ind.value;
+    var bw = ollinGet(f, "BIG WINS"); if (bw && !ollinBlank(bw.value)) c.wins = bw.value;
+    var nw = ollinGet(f, "NEWS"); if (nw && !ollinBlank(nw.value) && !/^no (recent|additional)/i.test(nw.value)) c.news = nw.value;
+    var dm = ollinGet(f, "DOMAIN"); if (dm && !ollinBlank(dm.value)) c.domain = dm.value;
+    [["SIGNAL 1", "trigger"], ["SIGNAL 2", "secondary"]].forEach(function (pair) {
+      var sg = ollinGet(f, pair[0]);
+      if (!sg || ollinNoSignal(sg.value)) return;
+      c.signals.push({ kind: pair[1], text: sg.value, detail: sg.source || "" });
+    });
+    if (workflowId) c.workflowId = workflowId;
+    companies.push(c);
+  });
+
+  ollinBlocks(ollinSection(src, "CONTACTS")).forEach(function (blk) {
+    var f = ollinFields(blk), nm = ollinGet(f, "CONTACT NAME");
+    if (!nm) return;
+    var co = ollinGet(f, "COMPANY");
+    if (ollinBlank(nm.value) || !co || ollinBlank(co.value)) { skipped++; return; }
+    /* "James Trout — Founder & CEO" — em dash, en dash or a spaced hyphen. */
+    var parts = nm.value.split(/\s+[—–]\s+|\s+-\s+/);
+    var ct = { name: parts[0].trim(), title: (parts.slice(1).join(" — ") || "").trim(), company: co.value };
+    var ti = ollinGet(f, "TITLE"); if (ti && !ollinBlank(ti.value)) ct.title = ti.value;
+    var li = ollinGet(f, "LINKEDIN"); if (li && !ollinBlank(li.value)) ct.linkedin = li.value;
+    var em = ollinGet(f, "EMAIL"); if (em && !ollinBlank(em.value)) ct.email = em.value;
+    var lo = ollinGet(f, "LOCATION"); if (lo && !ollinBlank(lo.value)) ct.city = lo.value;
+    var ro = ollinGet(f, "ROLE"); if (ro && !ollinBlank(ro.value)) ct.role = ro.value;
+    var s1 = ollinGet(f, "SIGNAL 1");
+    if (s1 && !ollinNoSignal(s1.value)) { ct.signal = s1.value; ct.signalSrc = s1.source || ""; }
+    if (workflowId) ct.workflowId = workflowId;
+    contacts.push(ct);
+  });
+
+  return {
+    ok: !!(companies.length || contacts.length),
+    workflowId: workflowId, companies: companies, contacts: contacts, skipped: skipped
+  };
+}
+/* @end */
+
+/* Lands a parsed report on the existing account/thread shapes — no new model,
+   and re-importing the same report updates rather than duplicates. */
+function applyOllinReport(parsed) {
+  var comp = 0, con = 0;
+  parsed.companies.forEach(function (c) {
+    var facts = {};
+    ["sector", "wins", "news", "domain", "workflowId"].forEach(function (k) { if (c[k]) facts[k] = c[k]; });
+    if (c.signals && c.signals.length) facts.signals = c.signals;
+    var r = upsertCompany(c.company, "", facts);
+    if (r) comp++;
+  });
+  parsed.contacts.forEach(function (ct) {
+    var r = upsertCompany(ct.company, ct.city || "", parsed.workflowId ? { workflowId: parsed.workflowId } : null);
+    if (!r) return;
+    var acct = r.acct;
+    acct.threads = acct.threads || [];
+    var th = acct.threads.filter(function (t) {
+      return (ct.email && t.email && t.email.toLowerCase() === ct.email.toLowerCase()) ||
+             (ct.linkedin && t.linkedin && t.linkedin.toLowerCase() === ct.linkedin.toLowerCase()) ||
+             (t.name && ct.name && t.name.toLowerCase() === ct.name.toLowerCase());
+    })[0];
+    if (!th) {
+      th = { id: "t" + Date.now() + "_" + Math.floor(Math.random() * 99999), addedAt: todayStr() };
+      acct.threads.push(th);
+    }
+    th.name = ct.name || th.name;
+    if (ct.title) th.title = ct.title;
+    if (ct.linkedin) th.linkedin = ct.linkedin;
+    if (ct.email) th.email = ct.email;
+    if (ct.city) th.city = ct.city;
+    if (ct.role) { th.roleLabel = ct.role; th.persona = personaFromRole(ct.role); }
+    if (!th.persona) th.persona = "Additional";
+    if (th.entryDay == null) th.entryDay = 1;
+    if (!th.channel) th.channel = th.linkedin ? "li" : (th.email ? "em" : "li");
+    /* A signal without a source is not tracked anywhere else in the app, and
+       it isn't here either. */
+    if (ct.signal && ct.signalSrc) { th.signal = ct.signal; th.signalSrc = normSignalSource(ct.signalSrc); }
+    if (ct.signal && !th.angle) th.angle = ct.signal;
+    th.status = th.email ? "ok" : "pending";
+    if (ct.workflowId) th.workflowId = ct.workflowId;
+    th.pulledAt = Date.now();
+    con++;
+  });
+  return { companies: comp, contacts: con, skipped: parsed.skipped };
+}
+
 /* ---------- ingestion: smart paste (company list OR agent notes) ---------- */
 function addCompaniesSmart(text) {
+  /* An OLLIN report announces itself — by its banner or its Workflow ID — and
+     has to be caught before the tabular and line readers below, both of which
+     would happily turn it into junk. */
+  if (/^[ \t]*OLLIN\b.*\bPATHWAY\b/mi.test(text) || /^[ \t]*Workflow ID[ \t]*:[ \t]*\S/mi.test(text)) {
+    var rep = parseOllinReport(text);
+    if (!rep.ok) return toast("That looks like an OLLIN report but has no --- CONTACTS --- or --- COMPANIES --- block.");
+    var out = applyOllinReport(rep);
+    state.seeded = true; persistAccounts(); render();
+    toast(rep.workflowId
+      ? (out.companies + " companies, " + out.contacts + " contacts" + (out.skipped ? ", " + out.skipped + " unverified skipped" : "") + " — " + rep.workflowId)
+      : (out.companies + " companies, " + out.contacts + " contacts."));
+    return;
+  }
   if (/\[\s*(COMPANY|CONTACT)\s+NOTE/i.test(text)) {
     var parsed = parseAgentNotes(text);
     if (!parsed.ok) return toast("Couldn't read those notes — check the [ COMPANY NOTE ] / [ CONTACT NOTE ] headers.");
@@ -5789,7 +6248,7 @@ function applyAgentNotes(parsed) {
     if (!acct) return;
     acct.threads = acct.threads || [];
     var th = acct.threads.filter(function (t) { return (ct.email && t.email && t.email.toLowerCase() === ct.email.toLowerCase()) || (t.name && ct.name && t.name.toLowerCase() === ct.name.toLowerCase()); })[0];
-    if (!th) { th = { id: "t" + Date.now() + "_" + Math.floor(Math.random() * 99999) }; acct.threads.push(th); }
+    if (!th) { th = { id: "t" + Date.now() + "_" + Math.floor(Math.random() * 99999), addedAt: todayStr() }; acct.threads.push(th); }
     th.name = ct.name || th.name; th.title = ct.title || th.title;
     if (ct.role) { th.roleLabel = ct.role; th.persona = personaFromRole(ct.role); }
     if (!th.persona) th.persona = "Additional";

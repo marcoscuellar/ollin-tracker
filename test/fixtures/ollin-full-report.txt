@@ -1,0 +1,117 @@
+OLLIN FULL PATHWAY — ACTION-READY INTELLIGENCE & OUTREACH PLAN
+Workflow ID: FULL-20260825-infra-VA-Denver
+Mode: Discovery (industry = data center / digital infrastructure; geography = Virginia + Denver, CO)
+Run date: 2026-08-25
+
+====================================================================
+HUMAN USER SNAPSHOT
+====================================================================
+
+--- CONTACTS ---
+
+CONTACT NAME:  James Trout — Founder & CEO
+LINKEDIN:      https://www.linkedin.com/in/james-trout-74455a15/
+COMPANY:       CleanArc Data Centers
+SIGNAL 1 (WHY THEM / WHY NOW): Broke ground Nov 20, 2025 on VA1, a $3B, ~900MW hyperscale campus in Caroline County, VA — company's first VA project, ~50 permanent jobs plus hundreds of construction-phase roles.
+  * SOURCE: PR Newswire / CleanArc press release, Nov 20 2025 — https://www.prnewswire.com/news-releases/cleanarc-data-centers-breaks-ground-on-900mw-flagship-hyperscale-campus-in-virginia-302621903.html
+SIGNAL 2 (IF WE HAVE ONE): No second signal found.
+
+CONTACT NAME:  Jennifer Reininger — Director of Acquisitions
+LINKEDIN:      https://www.linkedin.com/in/jennifer-reininger-5ab79565/
+COMPANY:       CleanArc Data Centers
+SIGNAL 1 (WHY THEM / WHY NOW): Same as above (VA1 groundbreaking) — she leads CleanArc's site acquisition function, the team that identifies and secures the campuses being built out now.
+  * SOURCE: Bisnow speaker bio + CleanArc careers page + The Org + Equilar + her own LinkedIn, all consistent on title/employer, 2026 — https://www.bisnow.com/events/virginia/data-center/national-data-center-construction-design-development-east-8669
+SIGNAL 2 (IF WE HAVE ONE): No second signal found.
+
+CONTACT NAME:  Christopher Oertel — VP, Program Delivery (was: Director of Program Management)
+LINKEDIN:      https://www.linkedin.com/in/chrisoertel/
+COMPANY:       CleanArc Data Centers
+SIGNAL 1 (WHY THEM / WHY NOW): Same as above (VA1 groundbreaking) — owns program delivery for CleanArc's build-out.
+  * SOURCE: CleanArc team page (cleanarcdatacenters.com/team/christopher-oertel) shows current title VP, Program Delivery; company's own careers page (older, cached) still lists him as Director of Program Management — CONFLICTING EVIDENCE on exact title/level, flagged rather than guessed. He is now above the Sr Manager/Director band you asked for — including for completeness, not as a strict match.
+SIGNAL 2 (IF WE HAVE ONE): No second signal found.
+
+CONTACT NAME:  Camden Holland — Director of Power Structuring
+LINKEDIN:      https://www.linkedin.com/in/camdenholland/
+COMPANY:       CleanArc Data Centers
+SIGNAL 1 (WHY THEM / WHY NOW): Same as above (VA1 groundbreaking) — leads power strategy/commercial energy structuring, the function that unlocks grid capacity for the VA1 build phases.
+  * SOURCE: CleanArc "Welcome to the Team" LinkedIn post (new-hire announcement) + his own LinkedIn profile showing current employer as CleanArc Data Centers — https://www.linkedin.com/in/camdenholland/
+SIGNAL 2 (IF WE HAVE ONE): No second signal found.
+
+CONTACT NAME:  Ted Travis — Director
+LINKEDIN:      https://www.linkedin.com/in/ted-travis-43394b4b/
+COMPANY:       STACK Infrastructure
+SIGNAL 1 (WHY THEM / WHY NOW): 144MW hyperscale two-building facility in Loudoun County (Greater Ashburn), VA — construction beginning 2026. Travis is VA-based (Bluemont) and posted about STACK topping out its Stafford Technology Campus (1GW / 19 buildings / 500 acres) in Virginia.
+  * SOURCE: BlackRidge Research project tracker, 2026 (Loudoun signal) — https://www.blackridgeresearch.com/blog/list-of-largest-upcoming-data-centers-in-virginia-united-states-us — plus his own LinkedIn activity confirming STACK VA construction, title shown as "Director" but exact functional scope (which VA campus, which department) is UNVERIFIED beyond what LinkedIn displays — do not assume it's specifically the Loudoun project without asking him.
+SIGNAL 2 (IF WE HAVE ONE): No second signal found.
+
+CONTACT NAME:  Mariano Castro — Senior Director, Data Center Intelligence
+LINKEDIN:      https://www.linkedin.com/in/mariano-castro-b15a765/
+COMPANY:       CoreSite (an American Tower company)
+SIGNAL 1 (WHY THEM / WHY NOW): DE3 Denver construction milestone (see below) — Castro is Denver-based and current at CoreSite; title suggests a data-intelligence/analytics remit rather than field operations, so treat as a warm internal door, not necessarily the hiring manager for site roles.
+  * SOURCE: His own LinkedIn profile, current employer/title/location all consistent — https://www.linkedin.com/in/mariano-castro-b15a765/
+SIGNAL 2 (IF WE HAVE ONE): No second signal found.
+
+CONTACT NAME:  Unable to Verify
+LINKEDIN:      Unable to Verify
+COMPANY:       CoreSite (an American Tower company)
+SIGNAL 1 (WHY THEM / WHY NOW): Reached a construction milestone on DE3, a new 180,000 sq ft, 18 critical-MW Denver data center (part of a ~600,000 sq ft, 60 CMW campus expansion), targeted for late-2026 availability. CoreSite also has an open req for "Senior Manager, Data Center Operations (DE1)" in Denver right now — corroborates active workforce need at the Denver campus, but I could not verify a named hiring manager behind it.
+  * SOURCE: CoreSite press release, May 15 2026 — https://www.coresite.com/news/coresite-achieves-key-construction-milestone-for-new-de3-data-center-in-denver ; open-role corroboration via Workable job posting, 2026 — https://apply.workable.com/coresite/j/C394C1094A
+SIGNAL 2 (IF WE HAVE ONE): No second signal found.
+
+CONTACT NAME:  Unable to Verify
+LINKEDIN:      Unable to Verify
+COMPANY:       Flexential
+SIGNAL 1 (WHY THEM / WHY NOW): Building its fifth Denver-area data center, a 249,000 sq ft / 22.5MW facility in Parker, CO, targeted for a 2026 go-live; CEO Chris Downie quoted on the expansion.
+  * SOURCE: Data Center Dynamics, Jun 8 2026 — https://www.datacenterdynamics.com/en/news/flexential-to-build-fifth-data-center-in-denver-colorado/
+SIGNAL 2 (IF WE HAVE ONE): No second signal found.
+
+CONTACT NAME:  Unable to Verify
+LINKEDIN:      Unable to Verify
+COMPANY:       PCL Construction (Denver team / Minneapolis Buildings group)
+SIGNAL 1 (WHY THEM / WHY NOW): Topped out a $192M, 22.5MW AI-ready Denver-area data center (Mar 17 2026); project moving into interior build-out and systems installation through summer 2027 completion.
+  * SOURCE: PCL Construction press release, Mar 17 2026 — https://www.pcl.com/us/en/newsroom/press-releases/pcl-tops-out-192-million-ai-ready-data-center-as-denvers-digital-infrastructure-demand-accelerates
+SIGNAL 2 (IF WE HAVE ONE): No second signal found.
+
+--- COMPANIES ---
+
+COMPANY NAME:  CleanArc Data Centers
+INDUSTRY:      Data center development & operation (digital infrastructure)
+BIG WINS (LAST 8 MONTHS): $3B VA1 groundbreaking (Nov 2025, Caroline County); 87.5-acre land acquisition adding 300MW of planned capacity (Oct 2025); PE backing from Snowhawk, Nuveen, Townsend Group.
+NEWS: Company profile piece on CEO Jim Trout's 25-year data center career, Data Center Dynamics — dated ~Jul 2026 (article notes "1 month ago").
+SIGNAL 1: VA1 groundbreaking, $3B, 900MW, Caroline County — first CleanArc project in VA. (VERIFIED)
+  * SOURCE: PR Newswire, Nov 20 2025 (link above)
+SIGNAL 2: No second signal found.
+
+COMPANY NAME:  STACK Infrastructure
+INDUSTRY:      Hyperscale data center development
+BIG WINS (LAST 8 MONTHS): 144MW / 1.31M sq ft Loudoun County, VA project entering construction in 2026.
+NEWS: No recent news found beyond the project tracker entry.
+SIGNAL 1: 144MW Ashburn-area hyperscale build, construction beginning 2026. (VERIFIED — single tracker source, not yet independently cross-confirmed)
+  * SOURCE: BlackRidge Research, 2026 (link above)
+SIGNAL 2: No second signal found.
+
+COMPANY NAME:  CoreSite (American Tower)
+INDUSTRY:      Colocation / interconnection data centers
+BIG WINS (LAST 8 MONTHS): DE3 Denver construction milestone (May 2026) as part of a 600,000 sq ft / 60 CMW campus expansion; company HQ is in downtown Denver.
+NEWS: Denver City Council imposed a 12-month pause on new data center approvals (~May 2026), naming the CoreSite/DE3 site as part of the local debate — regulatory headwind worth noting, not a stop signal for this project (already under construction).
+SIGNAL 1: DE3 construction milestone / campus expansion. (VERIFIED)
+  * SOURCE: CoreSite press release, May 15 2026 (link above)
+SIGNAL 2: Denver 12-month pause on new data center approvals. (VERIFIED — context/regulatory, not workforce-direct)
+  * SOURCE: Colorado Politics, May 19 2026 — https://www.coloradopolitics.com/2026/05/19/denver-stops-new-data-centers-for-12-months/
+
+COMPANY NAME:  Flexential
+INDUSTRY:      Colocation / hybrid IT data centers
+BIG WINS (LAST 8 MONTHS): Announced its fifth Denver-metro facility (Parker, CO), 22.5MW, 2026 go-live.
+NEWS: No additional recent news found.
+SIGNAL 1: Fifth Denver data center announced/underway, Parker CO. (VERIFIED)
+  * SOURCE: Data Center Dynamics, Jun 8 2026 (link above)
+SIGNAL 2: No second signal found.
+
+COMPANY NAME:  PCL Construction (Denver operations)
+INDUSTRY:      General contractor — data center / industrial construction
+BIG WINS (LAST 8 MONTHS): Topped out a $192M, 22.5MW Denver-area AI-ready data center (Mar 2026), one of the largest digital-infrastructure builds currently underway in the metro.
+NEWS: No additional recent news found in this pass.
+SIGNAL 1: $192M data center topped out, moving into systems installation. (VERIFIED)
+  * SOURCE: PCL Construction press release, Mar 17 2026 (link above)
+SIGNAL 2: No second signal found.
+
