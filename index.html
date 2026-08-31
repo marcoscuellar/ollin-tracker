@@ -1653,6 +1653,16 @@ html[data-theme="light"] .vm-tabs button.on{background:#FFFFFF;color:#0B0C10;box
 .a-comp .dt-n{font-size:58px;margin:20px 0 14px}
 .a-comp .dt-sub{margin-top:auto;padding-top:18px}
 .gbarw{height:10px;border-radius:6px;background:rgba(255,255,255,.1);overflow:hidden;margin-bottom:0}
+/* editable cards: the affordance stays quiet until you go near it, so the
+   numbers stay the thing you read */
+.dtile.edit{cursor:pointer}
+.ed-hint{font-weight:700;opacity:0;margin-left:6px;transition:opacity .18s;white-space:nowrap}
+.dtile.edit:hover .ed-hint,.dtile.edit:focus-visible .ed-hint{opacity:1}
+.volt .ed-hint{color:var(--volt)}
+.paper .ed-hint,.quiet .ed-hint{color:#3A4600;text-decoration:underline}
+.qbarw{height:8px;border-radius:6px;background:#EDEEEA;overflow:hidden;margin-bottom:12px}
+.qbarw i{display:block;height:100%;border-radius:6px;background:var(--volt)}
+@media(hover:none){ .ed-hint{opacity:1} }
 .gbarw i{display:block;height:100%;border-radius:6px;background:var(--volt);
   box-shadow:0 0 18px rgba(212,255,0,.55)}
 
@@ -3859,6 +3869,64 @@ function stageCounts() {
   return out;
 }
 function goalPerDay() { return parseInt(state.dailyGoal, 10) || 50; }
+/* the quota rides in state.extra, which localSave and apiSave already carry —
+   no new field in the storage layer or the API contract */
+function salesQuota() {
+  var q = parseInt((state.extra || {}).salesQuota, 10);
+  return q > 0 ? q : 0;
+}
+function salesQuotaLabel() { return ((state.extra || {}).salesQuotaLabel || "").trim(); }
+function salesClosed() { return parseInt((state.extra || {}).salesClosed, 10) || 0; }
+
+/* both editable cards go through the app's own overlay, so this looks and
+   behaves like every other edit in the product */
+function openGoalEdit() {
+  edOverlay("Outreach goal", "How many sends you're aiming for on a working day. The weekly target is this across five days.",
+    edField("Sends per day", "egDaily", String(goalPerDay()), { ph: "50" }),
+    function (ov, close) {
+      var n = parseInt(edVal(ov, "egDaily"), 10);
+      if (!(n > 0)) { ov.querySelector("#edErr").textContent = "Give me a number above zero."; return; }
+      state.dailyGoal = n; persistAccounts(); close(); render();
+      toast("Goal set — " + n + "/day.");
+    });
+}
+function openQuotaEdit() {
+  var html =
+    edField("Quota for the week", "eqTarget", salesQuota() ? String(salesQuota()) : "", { ph: "4" }) +
+    edField("What you're counting", "eqLabel", salesQuotaLabel(), { opt: 1, ph: "placements" }) +
+    edSection("Where you are") +
+    edField("Closed so far this week", "eqClosed", salesClosed() ? String(salesClosed()) : "", { opt: 1, ph: "0" });
+  edOverlay("Sales quota", "Vamos can't see your closes, so this one you keep yourself.", html,
+    function (ov, close) {
+      var t = parseInt(edVal(ov, "eqTarget"), 10);
+      if (edVal(ov, "eqTarget") && !(t > 0)) { ov.querySelector("#edErr").textContent = "Give me a number above zero, or leave it blank."; return; }
+      state.extra = state.extra || {};
+      state.extra.salesQuota = t > 0 ? t : "";
+      state.extra.salesQuotaLabel = edVal(ov, "eqLabel");
+      state.extra.salesClosed = parseInt(edVal(ov, "eqClosed"), 10) || 0;
+      persistAccounts(); close(); render();
+      toast(t > 0 ? "Quota set." : "Quota cleared.");
+    });
+}
+
+function quotaCardHTML() {
+  var q = salesQuota(), closed = salesClosed(), unit = salesQuotaLabel();
+  if (!q) {
+    return '<div class="dtile paper quiet a-quota rv-s edit" id="dashQuota" style="--d:.46s">' +
+      '<div class="mn dt-lab">Sales quota</div>' +
+      '<div class="dt-none">Not set</div>' +
+      '<div class="dt-sub">Vamos can\'t see your closes — set a weekly number and it will track against it. ' +
+        '<span class="ed-hint">Set it</span></div></div>';
+  }
+  var pc = Math.round(closed / q * 100);
+  return '<div class="dtile paper a-quota rv-s edit" id="dashQuota" style="--d:.46s">' +
+    '<div class="dc-head"><div class="mn dt-lab">Sales quota</div>' +
+      '<span class="dc-pill">' + pc + '%</span></div>' +
+    '<div class="dt-n">' + closed + '<span class="dt-of"> / ' + q + '</span></div>' +
+    '<div class="qbarw"><i style="width:' + Math.min(100, pc) + '%"></i></div>' +
+    '<div class="dt-sub">' + (closed >= q ? 'quota met' : (q - closed) + ' to go') +
+      (unit ? ' &middot; ' + esc(unit) : '') + ' <span class="ed-hint">Edit</span></div></div>';
+}
 
 function viewDash(v) {
   var sent = sentCounts(), pulled = pulledCounts(), stages = stageCounts();
@@ -3891,13 +3959,13 @@ function viewDash(v) {
       '<div class="dgrid">' +
 
         /* the one you are chasing — volt */
-        '<div class="dtile volt a-goal rv-s" style="--d:.16s">' +
+        '<div class="dtile volt a-goal rv-s edit" id="dashGoal" style="--d:.16s">' +
           '<div class="dc-head"><div class="mn dt-lab">This week vs. goal</div>' +
             '<span class="dc-pill">' + pct + '%</span></div>' +
           '<div class="dt-n">' + sent.week + '<span class="dt-of"> / ' + target + '</span></div>' +
           '<div class="gbarw"><i style="width:' + Math.min(100, pct) + '%"></i></div>' +
           '<div class="dt-sub">' + (left > 0 ? left + ' to go' : 'target met') +
-            ' &middot; ' + goalPerDay() + '/day across 5 days</div>' +
+            ' &middot; ' + goalPerDay() + '/day across 5 days <span class="ed-hint">Edit</span></div>' +
         '</div>' +
 
         '<div class="dtile paper a-last rv-s" style="--d:.22s">' +
@@ -3936,13 +4004,14 @@ function viewDash(v) {
             '<span class="dc-pill">' + stages.reduce(function (a, b) { return a + b; }, 0) + ' total</span></div>' +
           '<div class="fn">' + stageRows + '</div>' +
         '</div>' +
-        '<div class="dtile paper quiet a-quota rv-s" style="--d:.46s">' +
-          '<div class="mn dt-lab">Sales quota</div>' +
-          '<div class="dt-none">Not tracked yet</div>' +
-          '<div class="dt-sub">No revenue or placement target is stored — the weekly goal above counts outreach, not sales.</div>' +
-        '</div>' +
+        quotaCardHTML() +
       '</div>' +
     '</div>';
+
+  var g = document.getElementById("dashGoal");
+  if (g) g.onclick = function () { openGoalEdit(); };
+  var q = document.getElementById("dashQuota");
+  if (q) q.onclick = function () { openQuotaEdit(); };
 }
 
 /* ---------- Ollin: the agent surface. Stub — the pathway cards land here. ---------- */
