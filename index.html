@@ -2047,7 +2047,11 @@ html[data-theme="light"] .vm-tabs button.on{background:#FFFFFF;color:#0B0C10;box
   */
   var saveTimer=null, saveDirty=false, saveFailed=false, retryTimer=null, retryStep=0;
   var RETRY_MS=[2000,5000,15000,30000];
-  var allowEmptyOnce=false;   // set by doClear(), the one legitimate wipe
+  /* An empty account list is only ever legitimate when the user asked for it.
+     Every deliberate delete says so; a client that failed to load cannot — which
+     is the case the server-side guard exists to catch. */
+  var allowEmptyOnce=false;
+  function intentionalWipe(){ allowEmptyOnce=true; }
 
   function localSave(){
     sSet("tracker:accounts", JSON.stringify(state.accounts));
@@ -2261,6 +2265,7 @@ html[data-theme="light"] .vm-tabs button.on{background:#FFFFFF;color:#0B0C10;box
   function deleteAcct(id){
     state.accounts=state.accounts.filter(function(a){return a.id!==id;});
     if(state.activeId===id) state.activeId = state.accounts.length?state.accounts[0].id:null;
+    if(!state.accounts.length) intentionalWipe();   // deleting the last one is still a choice
     persistAccounts().then(render);
   }
   function deleteThread(acctId,tid){
@@ -2285,6 +2290,7 @@ html[data-theme="light"] .vm-tabs button.on{background:#FFFFFF;color:#0B0C10;box
       if(!data || !Array.isArray(data.accounts)){ toast("Not an VAMOS backup"); return; }
       if(!confirm("Restore this backup? Replaces current accounts, touches and messages.")) return;
       state.accounts=data.accounts||[]; state.done=data.done||{}; state.notes=data.notes||{}; state.reschedule=data.reschedule||{}; state.todos=Array.isArray(data.todos)?data.todos:(state.todos||[]); state.extra=data.extra||{}; state.coldStreakSince=data.coldStreakSince||null; state.seeded=true;
+      if(!state.accounts.length) intentionalWipe();
       persistAccounts(); render(); toast("Backup restored");
     };
     reader.readAsText(file);
@@ -2335,8 +2341,17 @@ html[data-theme="light"] .vm-tabs button.on{background:#FFFFFF;color:#0B0C10;box
     if(!state.accounts.length){ toast("Nothing to clear"); return; }
     if(!confirm("Clear ALL accounts, contacts, touches and messages? Cannot be undone. Login stays.")) return;
     if(!confirm("Really wipe everything and start over?")) return;
-    state.accounts=[]; state.done={}; state.notes={}; state.extra={}; state.activeId=null; state.seeded=true;
-    allowEmptyOnce=true;   // the server rejects an empty blob unless it's asked for
+    /* Clear the pipeline, keep the settings. reschedule holds every scheduled
+       touch date, so leaving it behind orphans a date per touch in every save
+       from here on; extra holds the activity log AND the dashboard targets, and
+       those targets were typed by hand — a data wipe shouldn't make you retype
+       your goal. */
+    var keep = state.extra || {};
+    state.accounts=[]; state.done={}; state.notes={}; state.reschedule={}; state.todos=[];
+    state.coldStreakSince=null; state.activeId=null; state.seeded=true;
+    state.extra = {};
+    ["salesQuota","salesQuotaLabel"].forEach(function(k){ if(keep[k]!=null) state.extra[k]=keep[k]; });
+    intentionalWipe();
     persistAccounts(); render(); toast("All cleared");
   }
 
@@ -5446,6 +5461,7 @@ function doPurgeJunk() {
   if (!state.accounts.some(function (a) { return a.id === state.activeId; })) {
     state.activeId = state.accounts.length ? state.accounts[0].id : null;
   }
+  if (!state.accounts.length) intentionalWipe();   // every account was junk
   persistAccounts(); render();
   toast("Removed " + bad.length + " bad row" + (bad.length === 1 ? "" : "s") + ".");
 }
