@@ -7,6 +7,7 @@ import {
   buildDraftPrompt, resolveSender, quotaExceededMessage,
   SYSTEM, DEFAULT_SENDER_INTRO, DEFAULT_ASSET,
   auditDraft, splitSubject, rewritePrompt,
+  wordBudget, countWords, fkGrade, denseBlocks, WORD_BUDGET, TOUCH_WORDS,
 } from '../api/engine7.js';
 
 const PROFILE = {
@@ -149,19 +150,32 @@ test('auditDraft passes a clean LinkedIn draft', () => {
   assert.deepEqual(auditDraft(clean, 'li'), []);
 });
 
-test('auditDraft does not cap length on either channel', () => {
+test('auditDraft caps the body at the word budget', () => {
   const long = 'Nine of your fourteen open roles are data and ML. ' + 'The Databricks cutover lands the same quarter. '.repeat(20) + 'Want the map?';
-  assert.deepEqual(auditDraft(long, 'li'), []);
-  assert.deepEqual(auditDraft('Subject: austin data build\n' + long, 'em'), []);
+  assert.ok(auditDraft(long, 'li').some((f) => /runs \d+ words/.test(f)));
+  assert.ok(auditDraft('Subject: austin data\n' + long, 'em').some((f) => /runs \d+ words/.test(f)));
+});
+
+test('auditDraft flags a body under the floor', () => {
+  const thin = 'Subject: austin data\nSaw the role. Want the map?';
+  assert.ok(auditDraft(thin, 'em', 1).some((f) => /only \d+ words/.test(f)));
+});
+
+test('the word budget tightens by touch, and the breakup is the shortest', () => {
+  assert.deepEqual(wordBudget('em', 1), { min: 25, max: 65 });
+  assert.deepEqual(wordBudget('em', 5), { min: 25, max: 45 });
+  assert.deepEqual(wordBudget('call', 1), { min: 30, max: 140 });   // spoken keeps the channel band
+  assert.deepEqual(wordBudget('em'), { min: 25, max: 75 });         // no touch -> channel band
 });
 
 test('auditDraft catches banned wording from both lists', () => {
   const bad = 'Just reaching out to leverage our world-class network. Want the map?';
   const failures = auditDraft(bad, 'li');
-  assert.equal(failures.length, 1);
-  assert.match(failures[0], /just reaching out/);
-  assert.match(failures[0], /leverage/);
-  assert.match(failures[0], /world-class/);
+  const banned = failures.find((f) => /^Banned wording/.test(f));
+  assert.ok(banned, 'expected a banned-wording failure');
+  assert.match(banned, /just reaching out/);
+  assert.match(banned, /leverage/);
+  assert.match(banned, /world-class/);
 });
 
 test('auditDraft catches the banned word "help" in any form', () => {
@@ -175,8 +189,9 @@ test('auditDraft catches a meeting ask', () => {
 });
 
 test('auditDraft allows one em dash but not two', () => {
-  assert.deepEqual(auditDraft('One — dash only. Want the map?', 'li'), []);
-  const failures = auditDraft('One — dash — two. Want the map?', 'li');
+  const one = 'Nine of your fourteen open roles are data and ML — the Databricks cutover lands the same quarter. I built a Capacity Map around it. Want it?';
+  assert.deepEqual(auditDraft(one, 'li'), []);
+  const failures = auditDraft(one.replace('I built', 'I — built'), 'li');
   assert.ok(failures.some((f) => /em dashes/.test(f)));
 });
 
@@ -200,4 +215,98 @@ test('rewritePrompt feeds every failure back verbatim', () => {
   assert.match(prompt, /- Too long\./);
   assert.match(prompt, /- Banned wording used: leverage\./);
   assert.match(prompt, /Return only the message\./);
+});
+
+// ---------- Master Report gates: subject, reading level, density, durability ----------
+
+test('subject lines read like an internal note, not a headline', () => {
+  const body = '\nNine of your fourteen open roles are data and ML.\n\nThe Databricks cutover lands the same quarter, so the two land on the same team. Want the Capacity Map I built around it?';
+  assert.deepEqual(auditDraft('Subject: austin data' + body, 'em'), []);
+  assert.ok(
+    auditDraft('Subject: a quick note about your data engineering hiring' + body, 'em')
+      .some((f) => /subject line is \d+ words/.test(f)),
+  );
+  assert.ok(
+    auditDraft('Subject: AUSTIN DATA' + body, 'em').some((f) => /in capitals/.test(f)),
+  );
+  assert.ok(
+    auditDraft('Subject: austin data?' + body, 'em').some((f) => /! or \?/.test(f)),
+  );
+});
+
+test('corporate prose fails the reading-level gate; plain copy passes', () => {
+  const corporate =
+    'Subject: capacity\n' +
+    'Following an evaluation of your organisational engineering capability requirements, ' +
+    'we have determined that supplementary specialised personnel allocation represents a ' +
+    'demonstrably advantageous strategic consideration for infrastructure modernisation initiatives. ' +
+    'Want the analysis?';
+  assert.ok(auditDraft(corporate, 'em').some((f) => /reads at about grade/.test(f)));
+
+  const plain = 'Subject: austin data\nNine of your fourteen open roles are data and ML. The cutover lands the same quarter. Want the Capacity Map?';
+  assert.ok(!auditDraft(plain, 'em').some((f) => /reads at about grade/.test(f)));
+});
+
+test('dense paragraphs fail; 1-2 sentence blocks pass', () => {
+  const dense = 'Subject: austin data\nOne thing. Two things. Three things. Four things now. Five things after that. Want the map?';
+  assert.ok(auditDraft(dense, 'em').some((f) => /too dense to scan/.test(f)));
+
+  const scannable = 'Subject: austin data\nNine of your fourteen open roles are data and ML.\n\nThe Databricks cutover lands the same quarter. Want the Capacity Map?';
+  assert.ok(!auditDraft(scannable, 'em').some((f) => /too dense to scan/.test(f)));
+});
+
+test('bulleted capability summaries are exempt from the density gate', () => {
+  const mpc = 'Subject: cloud architect\nOne of ours rolls off Friday.\n\n' +
+    '- Migrated 45 services to Kubernetes. Zero downtime. Six months. Under budget. On call throughout.\n\n' +
+    'Want the anonymised profile?';
+  assert.ok(!auditDraft(mpc, 'em').some((f) => /too dense to scan/.test(f)));
+});
+
+test('the report’s banned words are caught on word boundaries only', () => {
+  const body = '\n\nNine of your fourteen open roles are data and ML.\n\nThe cutover lands the same quarter, so the two collide on one team. Want the Capacity Map?';
+  assert.ok(auditDraft('I hope the timing works.' + body, 'li').some((f) => /hope/.test(f)));
+  assert.ok(auditDraft('Had a thought about the cutover.' + body, 'li').some((f) => /thought/.test(f)));
+  assert.ok(auditDraft('Happy to connect this week.' + body, 'li').some((f) => /connect/.test(f)));
+  // ...but a legitimate word that merely contains one is left alone
+  assert.deepEqual(auditDraft('Your Databricks work is connected to the same cutover.' + body, 'li'), []);
+});
+
+test('the prompt states the word budget for the touch', () => {
+  const first = buildDraftPrompt(PROFILE, { channel: 'em', step: 1 });
+  assert.match(first.prompt, /WORD BUDGET for this touch: 25-65 words/);
+  assert.match(first.prompt, /Subject:" line does not count/);
+  assert.deepEqual(first.band, { min: 25, max: 65 });
+
+  const last = buildDraftPrompt(PROFILE, { channel: 'em', step: 5 });
+  assert.match(last.prompt, /WORD BUDGET for this touch: 25-45 words/);
+});
+
+test('signal durability: perishable leads, durable is only a bridge', () => {
+  const fresh = buildDraftPrompt(PROFILE, { angle: 'Staff data role open 51 days.' });
+  assert.equal(fresh.durability, 'perishable');
+  assert.match(fresh.prompt, /PERISHABLE/);
+
+  const standing = buildDraftPrompt(PROFILE, { angle: 'They run a stated onshore-first policy.', signalDurability: 'durable' });
+  assert.equal(standing.durability, 'durable');
+  assert.match(standing.prompt, /DURABLE/);
+  assert.match(standing.prompt, /bridge/);
+
+  // no signal at all -> no durability line to argue about
+  assert.ok(!/SIGNAL DURABILITY/.test(buildDraftPrompt(PROFILE, {}).prompt));
+});
+
+test('SYSTEM carries the micro-copy law and the staffing rules', () => {
+  assert.match(SYSTEM, /MICRO-COPY LAW/);
+  assert.match(SYSTEM, /3rd-5th grade/);
+  assert.match(SYSTEM, /PROOF DISCIPLINE/);
+  assert.match(SYSTEM, /STALLED REQUISITION/);
+  assert.match(SYSTEM, /never paste or attach a full resume/);
+  assert.match(SYSTEM, /No-oriented question/);
+});
+
+test('countWords and fkGrade behave on the edges', () => {
+  assert.equal(countWords(''), 0);
+  assert.equal(countWords('  one   two  '), 2);
+  assert.equal(fkGrade(''), 0);
+  assert.ok(fkGrade('The cat sat on the mat.') < fkGrade('Organisational capability requirements necessitate supplementary personnel allocation.'));
 });

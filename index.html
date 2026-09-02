@@ -3687,10 +3687,22 @@ var IC_SEARCH = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" str
 var IC_MARK = '<span class="as-mark"><svg width="13" height="13" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="12" stroke="currentColor" stroke-width="2.4" opacity=".5"/><circle cx="16" cy="16" r="4.6" fill="currentColor"/></svg></span>';
 
 /* ---------- required by the keep layer ---------- */
+/* The band is the outbound micro-copy standard the drafting engine writes to
+   (api/engine7.js WORD_BUDGET): response rates peak between 25 and 75 words and
+   fall away past 75, because the reader is scanning on a phone in about eleven
+   seconds. The exact per-touch budget is enforced server-side; the ceiling is
+   what the sender needs in front of them while they edit. An email's "Subject:"
+   line is not part of the body, so it is not counted. */
+var WORD_BAND = { min: 25, max: 75 };
 function countLabel(s) {
   s = String(s || "");
-  var w = s.trim() ? s.trim().split(/\s+/).length : 0;
-  return s.length + " CHARS · " + w + " WORDS";
+  var body = s.replace(/^\s*Subject:.*(\n|$)/i, "");
+  var w = body.trim() ? body.trim().split(/\s+/).length : 0;
+  var band = "";
+  if (w > WORD_BAND.max) band = " · OVER " + WORD_BAND.max;
+  else if (w >= WORD_BAND.min) band = " · IN BAND";
+  else if (w > 0) band = " · UNDER " + WORD_BAND.min;
+  return s.length + " CHARS · " + w + " WORDS" + band;
 }
 function computeComeback() {
   var last = "";

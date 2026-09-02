@@ -41,7 +41,7 @@ export default async function handler(req, res) {
   const body = await readJson(req);
   // All Engine 7 Lite logic — sender resolution, soft angle handling, prompt
   // assembly — is pure and lives in engine7.js.
-  const { system, prompt, angleWarning, channel } = buildDraftPrompt(user, body);
+  const { system, prompt, angleWarning, channel, step, band } = buildDraftPrompt(user, body);
 
   // One turn of the conversation. Returns the draft text, or throws the
   // upstream failure for the caller to translate.
@@ -91,7 +91,7 @@ export default async function handler(req, res) {
       Once. Past that the inputs are the problem, not the wording, and a second
       round burns the sender's quota to say so.
     */
-    const failures = auditDraft(text, channel);
+    const failures = auditDraft(text, channel, step);
     if (text && failures.length) {
       messages.push({ role: 'assistant', content: text });
       messages.push({ role: 'user', content: rewritePrompt(failures) });
@@ -106,7 +106,7 @@ export default async function handler(req, res) {
     await kv.set(userKey(s.sub), user);
 
     const remaining = unlimited ? null : Math.max(0, FREE_AI_PER_MONTH - user.ai[mk]);
-    return send(res, 200, { text: text, remaining: remaining, angleWarning: angleWarning });
+    return send(res, 200, { text: text, remaining: remaining, angleWarning: angleWarning, band: band });
   } catch (e) {
     if (e && e.upstream) {
       return send(res, 502, { error: e.message, detail: e.upstream.detail });
