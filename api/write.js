@@ -9,6 +9,27 @@ import { FREE_AI_PER_MONTH, quotaExceededMessage, buildDraftPrompt, auditDraft, 
 const MODEL = 'claude-sonnet-5';
 function monthKey() { return new Date().toISOString().slice(0, 7); } // 'YYYY-MM'
 
+/*
+  What the sender is told when the call to the model fails. "AI service error
+  (401)" was the same sentence for every failure, which made the two cases that
+  matter indistinguishable: a 401 is a key the operator has to fix and no amount
+  of retrying will help, while a 429 or a 529 is worth trying again in a minute.
+
+  401/403 from api.anthropic.com means the key was rejected, not missing — a
+  missing key is already caught above. Rejected means revoked or rotated, or a
+  stray newline or quote around the value in the deploy environment, or a
+  credential of the wrong kind (an OAuth token or an admin key sent as
+  x-api-key, which this endpoint does not use).
+*/
+function upstreamMessage(status) {
+  if (status === 401 || status === 403) {
+    return 'AI drafting is misconfigured — the API key was rejected. Nothing you can do from here; the ANTHROPIC_API_KEY needs re-setting.';
+  }
+  if (status === 429) return 'Too many drafts at once — give it a minute and try again.';
+  if (status === 529 || status >= 500) return 'The AI service is busy right now — try again in a minute.';
+  return 'AI service error (' + status + ').';
+}
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') return send(res, 405, { error: 'method not allowed' });
 
@@ -63,7 +84,7 @@ export default async function handler(req, res) {
 
     if (!r.ok) {
       const detail = await r.text().catch(() => '');
-      const err = new Error('AI service error (' + r.status + ').');
+      const err = new Error(upstreamMessage(r.status));
       err.upstream = { status: r.status, detail: detail.slice(0, 300) };
       throw err;
     }
