@@ -473,6 +473,9 @@ html[data-theme="light"] .qlab .qn{background:#181A1E;color:var(--volt);padding:
 html[data-theme="light"] .vm-tabs button.on,
 html[data-theme="light"] .ctav.econ,
 html[data-theme="light"] .o2-note{color:#FFFFFF}
+/* the goal tile is a Volt-on-black carrier in both themes */
+html[data-theme="light"] .dtile.volt{background:#181A1E;backdrop-filter:none}
+html[data-theme="light"] .dtile.volt:hover{background:#1F2227}
 
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%}
@@ -1315,7 +1318,27 @@ select.auth-input{appearance:none}
 .v3 .draftmeta a{color:var(--ink-2b);font-family:'Archivo';font-weight:700;font-size:12px;margin-left:14px;cursor:pointer}
 .v3 .draftmeta a:hover{color:var(--bone)}
 .v3 .angles{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
-.v3 .angles-lo{margin-bottom:0;margin-top:16px;padding-top:14px;border-top:1px solid var(--line-soft)}
+.v3 .angles-hi{width:100%;margin:2px 0 0;padding-top:12px;border-top:1px solid var(--line-soft);align-items:center;gap:6px;flex-wrap:nowrap}
+.v3 .angles-hi .angle{padding:7px 11px;font-size:11.5px;white-space:nowrap;flex:1;text-align:center}
+.v3 .angles-hi .al{display:none}
+.v3 .angles .al{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute);margin-right:2px}
+.v3 .ask{margin-bottom:12px}
+.v3 #vmSay:not(:empty){margin-bottom:12px}
+.v3 .draftmeta{margin-bottom:0}
+.v3 .nextsel{flex-direction:column;align-items:stretch;gap:10px}
+.v3 .nextsel .nt{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.v3 .nextsel .nd{margin-left:0}
+.v3 .nextsel .gps{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.v3 .nextsel .gp{text-align:center;padding:9px 10px}
+.v3 .nextsel.last{flex-direction:row}
+.vmush{margin-top:12px}
+.vmush .mush{display:inline-flex;align-items:center;gap:8px;font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--steel);cursor:pointer;border:1px solid var(--line);border-radius:999px;padding:6px 12px 6px 9px;transition:border-color .15s,color .15s}
+.vmush .mush b{font-weight:600;color:var(--bone);text-transform:none;letter-spacing:0;font-size:11.5px}
+.vmush .mush:hover{border-color:var(--accent-ink);color:var(--accent-ink)}
+.vmush .mu-ic{display:inline-grid;grid-template-columns:repeat(3,4px);gap:2px;align-items:end;height:10px}
+.vmush .mu-ic i{display:block;width:4px;background:var(--volt);border-radius:1px;height:5px}
+.vmush .mu-ic i:nth-child(2){height:10px}
 .v3 .angle{border:1px solid var(--line);border-radius:999px;padding:8px 14px;font-family:'Archivo';font-weight:700;font-size:12px;background:transparent;color:var(--ink-2b);cursor:pointer}
 .v3 .angle.on{background:var(--coral);color:var(--navy);border-color:var(--accent-ink)}
 .v3 .ask{display:flex;align-items:center;gap:10px;background:#000;border:1px solid rgba(255,225,77,.28);border-radius:999px;padding:7px 7px 7px 18px;
@@ -1352,6 +1375,9 @@ select.auth-input{appearance:none}
 .v3 .v3foot a:hover{color:var(--bone);border-color:var(--steel)}
 .v3 .v3foot a.sn:hover{color:var(--navy);background:var(--coral);border-color:var(--coral)}
 .v3 .v3foot a[data-o="Skip"]{margin-left:auto}
+.v3 .v3foot{flex-wrap:nowrap;gap:7px}
+.v3 .v3foot a{padding:7px 12px;font-size:12px}
+@media(max-width:560px){ .v3 .v3foot{flex-wrap:wrap} .v3 .v3foot a[data-o="Skip"]{margin-left:0} }
 .v3 .ask-say{margin-top:12px;display:flex;gap:9px;align-items:flex-start;font-size:12.5px;line-height:1.55;color:var(--ink-2b)}
 .v3 .ask-say .as-mark{color:var(--accent-ink);flex:none;margin-top:1px}
 .v3 .ask-say .as-who{font-family:'IBM Plex Mono',monospace;text-transform:uppercase;letter-spacing:.08em;font-size:9px;color:var(--accent-ink);margin-right:6px}
@@ -1672,11 +1698,82 @@ html[data-theme="light"] .vm-tabs button.on{background:#FFFFFF;color:#181A1E;box
 .dgrid{display:grid;gap:14px;margin-top:24px;
   grid-template-columns:repeat(3,minmax(0,1fr));
   grid-template-areas:
-    "goal   last   cont"
-    "goal   stage  comp"
-    "quota  stage  comp"}
+    "strip  strip  strip"
+    "next   next   goal"
+    "next   next   verify"
+    "moving moving stage"
+    "moving moving quota"}
+.a-strip{grid-area:strip} .a-next{grid-area:next} .a-verify{grid-area:verify} .a-moving{grid-area:moving}
 .a-goal{grid-area:goal} .a-last{grid-area:last} .a-cont{grid-area:cont}
 .a-stage{grid-area:stage} .a-comp{grid-area:comp} .a-quota{grid-area:quota}
+
+/* ---- the desk: dashboard v2 ---- */
+.dtile.dk-strip{flex-direction:row;align-items:center;gap:22px;padding:22px 26px;flex-wrap:wrap}
+.dk-strip .dk-nums{display:flex;gap:26px;flex:1;min-width:0;flex-wrap:wrap}
+.dk-num{display:flex;flex-direction:column;gap:6px;min-width:84px}
+.dk-num b{font-family:'Archivo',sans-serif;font-weight:800;font-size:44px;line-height:.95;letter-spacing:-.035em;color:#FFFFFF}
+.dk-num b.hot{color:var(--volt)}
+.dk-num span{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:#C9D3DE}
+.dk-go{font-family:'Archivo',sans-serif;font-weight:800;font-size:16px;letter-spacing:-.01em;background:var(--volt);color:#181A1E;
+  border:0;border-radius:12px;padding:16px 22px;cursor:pointer;white-space:nowrap;flex:none;
+  box-shadow:0 10px 26px -12px rgba(255,225,77,.55);transition:transform .16s,background .16s}
+.dk-go:hover{background:#F5D63A;transform:translateY(-1px)}
+.dk-go small{display:block;font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:9px;letter-spacing:.14em;text-transform:uppercase;opacity:.7;margin-top:3px}
+.dk-today{display:flex;flex-direction:column;gap:8px;min-width:190px;flex:none}
+.dk-today .dk-tl{display:flex;justify-content:space-between;align-items:baseline}
+.dk-today .dk-tl b{font-family:'Archivo',sans-serif;font-weight:800;font-size:22px;color:#FFFFFF;letter-spacing:-.03em}
+.dk-today .dk-tl b i{font-style:normal;font-weight:400;font-size:14px;color:var(--volt);opacity:.8}
+.dk-today .dk-tl span{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:#C9D3DE}
+.dk-today .gbarw{height:8px}
+/* the list tiles */
+.dk-list{display:flex;flex-direction:column;margin-top:14px;flex:1}
+.dk-row{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:12px;align-items:center;
+  padding:12px 10px;margin:0 -10px;border-radius:12px;cursor:pointer;border-top:1px solid rgba(255,255,255,.06);transition:background .14s}
+.dk-row:first-child{border-top:0}
+.dk-row:hover{background:rgba(255,255,255,.05)}
+.paper .dk-row{border-top-color:#E9EDF2} .paper .dk-row:hover{background:#F6F7F9}
+.dk-row .rpill{font-size:8.5px;min-width:96px;text-align:center}
+.dk-who{font-weight:800;font-size:14.5px;letter-spacing:-.01em;color:#FFFFFF;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dk-who em{font-style:normal;font-weight:400;color:#94A3B8}
+.dk-why{font-size:12px;color:#94A3B8;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.35}
+.paper .dk-who{color:#181A1E} .paper .dk-who em{color:#6B7280} .paper .dk-why{color:#6B7280}
+.dk-arrow{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--volt);white-space:nowrap;opacity:0;transition:opacity .14s}
+.paper .dk-arrow{color:#5C4F0E}
+.dk-row:hover .dk-arrow{opacity:1}
+@media(hover:none){ .dk-arrow{opacity:1} }
+.dk-foot{margin-top:auto;padding-top:14px;display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:12.5px;color:#94A3B8}
+.dk-foot a{color:var(--volt);font-weight:800;cursor:pointer;white-space:nowrap}
+.paper .dk-foot{color:#6B7280} .paper .dk-foot a{color:#5C4F0E;text-decoration:underline}
+.dk-empty{padding:26px 0 10px;font-size:15px;font-weight:600;color:#FFFFFF;line-height:1.4;max-width:420px}
+.dk-empty small{display:block;font-weight:400;font-size:12.5px;color:#94A3B8;margin-top:6px}
+.paper .dk-empty{color:#181A1E}
+/* account heat */
+.dk-heat{font-family:'IBM Plex Mono',monospace;font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;
+  border-radius:999px;padding:4px 9px;background:#F1F3F0;color:#6B7280;min-width:0;text-align:center}
+.dk-heat.hot{background:#181A1E;color:var(--volt)}
+.dk-heat.warm{background:#FFF8D6;color:#5C4F0E}
+.dk-cnt{font-family:'IBM Plex Mono',monospace;font-size:11px;color:#6B7280;white-space:nowrap}
+.dk-cnt b{color:#181A1E;font-weight:600}
+.a-verify .dt-n{font-size:46px;margin:14px 0 8px}
+.a-verify .dt-sub{margin-top:auto;padding-top:14px}
+.a-goal .dk-last{margin-top:10px;font-size:12.5px;color:#C9D3DE;display:flex;justify-content:space-between}
+.a-goal .dk-last b{color:#FFFFFF;font-weight:600}
+@media(max-width:1100px){
+  .dgrid{grid-template-areas:"strip strip" "next next" "goal verify" "moving moving" "stage quota"}
+  .dk-num b{font-size:36px}
+}
+@media(max-width:760px){
+  .dgrid{grid-template-areas:"strip" "next" "goal" "verify" "moving" "stage" "quota"}
+  .dk-strip{padding:18px;gap:16px}
+  .dk-strip .dk-nums{gap:18px}
+  .dk-num{min-width:64px} .dk-num b{font-size:32px}
+  .dk-go{width:100%;text-align:center;padding:14px 18px}
+  .dk-today{width:100%;min-width:0}
+  .dk-row{grid-template-columns:minmax(0,1fr) auto;padding:11px 6px;margin:0 -6px}
+  .dk-row .rpill{grid-column:1/-1;justify-self:start;min-width:0}
+  .dk-who,.dk-why{white-space:normal}
+  .dk-arrow{display:none}
+}
 
 .dtile{padding:24px;border-radius:20px;display:flex;flex-direction:column;min-width:0;
   position:relative;transition:transform .24s cubic-bezier(.16,.84,.3,1), box-shadow .24s}
@@ -1769,16 +1866,14 @@ html[data-theme="light"] .vm-tabs button.on{background:#FFFFFF;color:#181A1E;box
   .fn-track i,.cmp-track i{transition:none}
 }
 @media(max-width:1100px){
-  .dgrid{grid-template-columns:repeat(2,minmax(0,1fr));
-    grid-template-areas:"goal last" "goal cont" "stage comp" "quota quota"}
+  .dgrid{grid-template-columns:repeat(2,minmax(0,1fr))}
   .a-comp .dt-n{font-size:46px;margin:16px 0 12px}
 }
 @media(max-width:1100px){
   .dtile.volt .dt-n{font-size:54px;margin:18px 0 14px}
 }
 @media(max-width:760px){
-  .dgrid{grid-template-columns:1fr;gap:10px;margin-top:16px;
-    grid-template-areas:"goal" "last" "cont" "stage" "comp" "quota"}
+  .dgrid{grid-template-columns:1fr;gap:10px;margin-top:16px}
   .dtile{padding:18px}
   .dtile.volt .dt-n{font-size:40px;margin:12px 0 10px}
   .dtile.volt .dt-of{font-size:20px}
@@ -3713,7 +3808,7 @@ var VM = { i: 0, qIds: null, narrow: false, channel: null, angle: "gap",
    "today" stays the key so every navView check downstream keeps working. */
 var VM_TABS = [["dash", "Dashboard"], ["today", "Up Next"], ["pipeline", "Pipeline"],
                ["companies", "Mushroom"], ["contacts", "Contacts"], ["ollin", "Ollin"]];
-var VM_ANGLES = [["gap", "The gap"], ["cow", "Cost of waiting"], ["person", "The person"], ["free", "Freestyle"]];
+var VM_ANGLES = [["gap", "The gap"], ["cow", "Cost of waiting"], ["person", "The person"]];
 /* exactly three, per the editor spec */
 var CARD_STEERS = [["Shorter", "Make it shorter."],
                    ["More conversational", "More conversational."],
@@ -4238,16 +4333,54 @@ function quotaCardHTML() {
 }
 
 function viewDash(v) {
-  var sent = sentCounts(), pulled = pulledCounts(), stages = stageCounts();
+  var sent = sentCounts(), pulled = pulledCounts(), stages = stageCounts(), b = buckets();
   var name = (ACCOUNT && ACCOUNT.sender && ACCOUNT.sender.name) ? ACCOUNT.sender.name.split(" ")[0] : "";
 
-  var target = goalPerDay() * 5;
+  /* the queue, as Up Next would show it */
+  var queue = b.late.concat(b.today, b.fresh);
+  var nLate = b.late.length, nToday = b.today.length, nFresh = b.fresh.length, nResting = b.resting.length;
+  var done = doneToday(), perDay = goalPerDay();
+  var dPct = perDay ? Math.min(100, Math.round(done / perDay * 100)) : 0;
+
+  var target = perDay * 5;
   var pct = target ? Math.round(sent.week / target * 100) : 0;
   var left = target - sent.week;
   var delta = sent.week - sent.prev;
-  var cmpMax = Math.max(sent.week, sent.prev, 1);
-  var wNow = Math.max(sent.week ? 3 : 0, Math.round(sent.week / cmpMax * 100));
-  var wPrev = Math.max(sent.prev ? 3 : 0, Math.round(sent.prev / cmpMax * 100));
+
+  /* still verifying: threads the engines have not cleared yet */
+  var pending = 0, verified = 0;
+  (state.accounts || []).forEach(function (a) {
+    (a.threads || []).forEach(function (th) {
+      if (th.persona === "Blocker") return;
+      if (statusOf(th) === "pending") pending++; else verified++;
+    });
+  });
+
+  /* accounts moving: hot first, then warm, then by how many people we hold */
+  var rank = { hot: 0, warm: 1, cool: 2 };
+  var moving = (state.accounts || []).slice().map(function (a) {
+    return { a: a, lvl: coWhyLevel(a), n: coContacts(a).length };
+  }).filter(function (m) { return m.lvl !== "cool"; }).sort(function (x, y) {
+    return (rank[x.lvl] - rank[y.lvl]) || (y.n - x.n) || String(x.a.company || "").localeCompare(String(y.a.company || ""));
+  }).slice(0, 5);
+
+  var nextRows = queue.slice(0, 6).map(function (t) {
+    var why = t.angle || (t.signalSrc ? t.signal : "") || t.title || "";
+    return '<div class="dk-row" data-key="' + esc(keyOf(t)) + '">' +
+      rowPill(t) +
+      '<div><div class="dk-who">' + esc(t.who || t.company || "—") +
+        (t.company && t.who ? ' <em>&middot; ' + esc(t.company) + '</em>' : '') + '</div>' +
+        (why ? '<div class="dk-why">' + esc(why) + '</div>' : '') + '</div>' +
+      '<span class="dk-arrow">Open &rarr;</span></div>';
+  }).join("");
+
+  var movingRows = moving.map(function (m) {
+    return '<div class="dk-row" data-co="' + esc(m.a.id) + '">' +
+      '<span class="dk-heat ' + m.lvl + '">' + (m.lvl === "hot" ? "Trigger" : "Signal") + '</span>' +
+      '<div><div class="dk-who">' + esc(m.a.company || "—") + '</div>' +
+        '<div class="dk-why">' + esc(coLead(m.a)) + '</div></div>' +
+      '<span class="dk-cnt"><b>' + m.n + '</b> ' + (m.n === 1 ? "person" : "people") + ' &middot; <span class="dk-arrow" style="opacity:1">Mushroom &rarr;</span></span></div>';
+  }).join("");
 
   var sMax = Math.max.apply(null, stages.concat([1]));
   var lead = stages.indexOf(sMax);
@@ -4259,6 +4392,11 @@ function viewDash(v) {
       '<span class="fn-n">' + n + '</span></div>';
   }).join("");
 
+  var goLabel = queue.length ? "Let\'s go &raquo;" : "Open Up Next &raquo;";
+  var goSub = queue.length
+    ? (nLate ? nLate + " ready to send" : nToday ? nToday + " due today" : nFresh + " new to open")
+    : (nResting ? nResting + " resting" : "queue is clear");
+
   v.innerHTML =
     '<div class="today dash">' +
       '<div class="gd-kicker rv" style="--d:.06s"><span class="mn">ŌLLIN | GO</span><span class="krule"></span>' +
@@ -4267,56 +4405,97 @@ function viewDash(v) {
 
       '<div class="dgrid">' +
 
+        /* the strip: what is waiting, right now, and the one button that runs it */
+        '<div class="dtile ink dk-strip a-strip rv-s" style="--d:.14s">' +
+          '<div class="dk-nums">' +
+            '<div class="dk-num"><b class="' + (nLate ? "hot" : "") + '">' + nLate + '</b><span>Ready &middot; overdue</span></div>' +
+            '<div class="dk-num"><b>' + nToday + '</b><span>Due today</span></div>' +
+            '<div class="dk-num"><b>' + nFresh + '</b><span>New &middot; touch 1</span></div>' +
+          '</div>' +
+          '<div class="dk-today">' +
+            '<div class="dk-tl"><b>' + done + ' <i>/ ' + perDay + '</i></b><span>Sent today</span></div>' +
+            '<div class="gbarw"><i style="width:' + dPct + '%"></i></div>' +
+          '</div>' +
+          '<button class="dk-go" id="dkGo">' + goLabel + '<small>' + goSub + '</small></button>' +
+        '</div>' +
+
+        /* Up Next — the first six, in the order Up Next runs them */
+        '<div class="dtile ink a-next rv-s" style="--d:.2s">' +
+          '<div class="dc-head"><div><div class="mn dt-lab">Up Next</div>' +
+            '<div class="dc-t" style="color:#FFFFFF">' + (queue.length ? 'The next ' + Math.min(6, queue.length) + ' in line' : 'Nothing in line') + '</div></div>' +
+            '<span class="dc-pill">' + queue.length + ' waiting</span></div>' +
+          (queue.length
+            ? '<div class="dk-list">' + nextRows + '</div>'
+            : '<div class="dk-empty">Queue is clear.' +
+                '<small>' + (nResting ? nResting + ' follow-up' + (nResting === 1 ? '' : 's') + ' resting until their date. ' : '') +
+                'Pull a new account and the engines will fill this.</small></div>') +
+          '<div class="dk-foot"><span>' + (nResting ? nResting + ' resting' : 'Every send counts against today') + '</span>' +
+            '<a id="dkAll">See all in Up Next &rarr;</a></div>' +
+        '</div>' +
+
         /* the one you are chasing — volt */
-        '<div class="dtile volt a-goal rv-s edit" id="dashGoal" style="--d:.16s">' +
+        '<div class="dtile volt a-goal rv-s edit" id="dashGoal" style="--d:.26s">' +
           '<div class="dc-head"><div class="mn dt-lab">This week vs. goal</div>' +
             '<span class="dc-pill">' + pct + '%</span></div>' +
           '<div class="dt-n">' + sent.week + '<span class="dt-of"> / ' + target + '</span></div>' +
           '<div class="gbarw"><i style="width:' + Math.min(100, pct) + '%"></i></div>' +
+          '<div class="dk-last"><span>Last week</span><b>' + sent.prev +
+            (delta > 0 ? ' &middot; &uarr; +' + delta : delta < 0 ? ' &middot; &darr; ' + delta : ' &middot; level') + '</b></div>' +
           '<div class="dt-sub">' + (left > 0 ? left + ' to go' : 'target met') +
-            ' &middot; ' + goalPerDay() + '/day across 5 days <span class="ed-hint">Edit</span></div>' +
+            ' &middot; ' + perDay + '/day across 5 days <span class="ed-hint">Edit</span></div>' +
         '</div>' +
 
-        '<div class="dtile paper a-last rv-s" style="--d:.22s">' +
-          '<div class="dc-head"><div class="mn dt-lab">This week vs. last</div>' +
-            '<span class="dc-pill ' + (delta > 0 ? 'up' : delta < 0 ? 'down' : '') + '">' +
-              (delta > 0 ? '&uarr; +' + delta : delta < 0 ? '&darr; ' + delta : 'level') + '</span></div>' +
-          '<div class="dt-n">' + sent.week + '</div>' +
-          '<div class="cmp">' +
-            '<div class="cmp-row"><span class="cmp-lab">This week</span>' +
-              '<span class="cmp-track"><i class="now" style="width:' + wNow + '%"></i></span>' +
-              '<span class="cmp-n">' + sent.week + '</span></div>' +
-            '<div class="cmp-row"><span class="cmp-lab">Last week</span>' +
-              '<span class="cmp-track"><i style="width:' + wPrev + '%"></i></span>' +
-              '<span class="cmp-n">' + sent.prev + '</span></div>' +
-          '</div>' +
+        /* still verifying — the engines have not cleared these yet */
+        '<div class="dtile paper a-verify rv-s edit" id="dkVerify" style="--d:.32s">' +
+          '<div class="dc-head"><div class="mn dt-lab">Still verifying</div>' +
+            '<span class="dc-pill">' + verified + ' verified</span></div>' +
+          '<div class="dt-n">' + pending + '</div>' +
+          '<div class="dt-sub">' + (pending ? 'Not in your queue until they clear. ' : 'Everyone in your book has cleared. ') +
+            pulled.week + ' contact' + (pulled.week === 1 ? '' : 's') + ' &middot; ' + pulled.coWeek + ' compan' + (pulled.coWeek === 1 ? 'y' : 'ies') +
+            ' pulled this week <span class="ed-hint">Contacts</span></div>' +
         '</div>' +
 
-        '<div class="dtile ink a-cont rv-s" style="--d:.28s">' +
-          '<div class="dc-head"><div class="mn dt-lab">Contacts pulled</div>' +
-            '<span class="dc-pill">this week</span></div>' +
-          '<div class="dt-n">' + pulled.week + '</div>' +
-          '<div class="dt-sub">' + pulled.today + ' today</div>' +
+        /* accounts moving — where a signal or trigger exists */
+        '<div class="dtile paper a-moving rv-s" style="--d:.36s">' +
+          '<div class="dc-head"><div><div class="mn dt-lab">Accounts moving</div>' +
+            '<div class="dc-t">Where the engines found a reason</div></div>' +
+            '<span class="dc-pill">' + moving.length + ' of ' + (state.accounts || []).length + '</span></div>' +
+          (moving.length
+            ? '<div class="dk-list">' + movingRows + '</div>'
+            : '<div class="dk-empty">No sourced signal yet.<small>Accounts show here once an engine attaches a trigger or a signal. Nothing is placed by guess.</small></div>') +
+          '<div class="dk-foot"><span>Trigger = a dated event. Signal = a sourced fact.</span><a id="dkCos">All accounts &rarr;</a></div>' +
         '</div>' +
 
-        '<div class="dtile ink a-comp rv-s" style="--d:.4s">' +
-          '<div class="dc-head"><div class="mn dt-lab">Companies pulled</div>' +
-            '<span class="dc-pill">this week</span></div>' +
-          '<div class="dt-n">' + pulled.coWeek + '</div>' +
-          '<div class="dt-sub">' + pulled.coToday + ' today</div>' +
-        '</div>' +
-
-      
-        '<div class="dtile paper a-stage rv-s" style="--d:.34s">' +
+        '<div class="dtile paper a-stage rv-s" style="--d:.42s">' +
           '<div class="dc-head"><div><div class="mn dt-lab">Where everyone stands</div>' +
             '<div class="dc-t">Contacts in each stage</div></div>' +
-            '<span class="dc-pill">' + stages.reduce(function (a, b) { return a + b; }, 0) + ' total</span></div>' +
+            '<span class="dc-pill">' + stages.reduce(function (a, c) { return a + c; }, 0) + ' total</span></div>' +
           '<div class="fn">' + stageRows + '</div>' +
         '</div>' +
         quotaCardHTML() +
       '</div>' +
     '</div>';
 
+  var openIn = function (key) {
+    VM.narrow = false; VM.qIds = null;
+    var ids = applyFocus(buckets().late.concat(buckets().today, buckets().fresh)).map(keyOf);
+    var i = ids.indexOf(key); VM.i = i < 0 ? 0 : i;
+    navView = "today"; render(); window.scrollTo(0, 0);
+  };
+  var go = document.getElementById("dkGo");
+  if (go) go.onclick = function () { startQueue("due"); navView = "today"; render(); window.scrollTo(0, 0); };
+  var all = document.getElementById("dkAll");
+  if (all) all.onclick = function () { startQueue("due"); navView = "today"; render(); window.scrollTo(0, 0); };
+  Array.prototype.forEach.call(v.querySelectorAll(".dk-row[data-key]"), function (r) {
+    r.onclick = function () { openIn(r.dataset.key); };
+  });
+  Array.prototype.forEach.call(v.querySelectorAll(".dk-row[data-co]"), function (r) {
+    r.onclick = function () { CO_VIEW = r.dataset.co; CO_TAB = "mushroom"; MU_SEL = null; navView = "companyprofile"; render(); window.scrollTo(0, 0); };
+  });
+  var cos = document.getElementById("dkCos");
+  if (cos) cos.onclick = function () { navView = "companies"; render(); window.scrollTo(0, 0); };
+  var vf = document.getElementById("dkVerify");
+  if (vf) vf.onclick = function () { navView = "contacts"; render(); window.scrollTo(0, 0); };
   var g = document.getElementById("dashGoal");
   if (g) g.onclick = function () { openGoalEdit(); };
   var q = document.getElementById("dashQuota");
@@ -4695,6 +4874,12 @@ function cardBodyHTML(t, a) {
   if (placeBits) meta += (meta ? '<span class="dot">·</span>' : '') + '<span class="it">' + esc(String(placeBits).toUpperCase()) + '</span>';
 
   var companyLink = t.company ? '<a class="co" data-open-co="' + esc(t.acctId) + '">' + esc(t.company) + ' ↗</a>' : '';
+  /* the rest of the account — one click into the Mushroom map, this person selected */
+  var others = coContacts(a).filter(function (x) { return x.id !== t.threadId; }).length;
+  var mushLink = '<a class="mush" data-open-mu="' + esc(t.acctId) + '" data-mu-sel="' + esc(t.threadId) + '" title="Open the account map">' +
+    '<span class="mu-ic" aria-hidden="true"><i></i><i></i><i></i></span>Mushroom' +
+    (others ? ' <b>' + others + ' other' + (others === 1 ? '' : 's') + ' at ' + esc(t.company || 'this account') + '</b>' : ' <b>map this account</b>') +
+    ' &rarr;</a>';
 
   return '<div class="vcard v3">' +
     '<div class="vhead">' +
@@ -4702,6 +4887,7 @@ function cardBodyHTML(t, a) {
       '<div class="vname">' + esc(t.who || t.company || "—") + '</div>' +
       '<div class="vrole">' + (t.title ? esc(t.title) : '') + (t.title && companyLink ? ' &nbsp;·&nbsp; ' : '') + companyLink + '</div>' +
       (meta ? '<div class="vmeta">' + meta + '</div>' : '') +
+      '<div class="vmush">' + mushLink + '</div>' +
     '</div>' +
     '<div class="divide"></div>' +
     '<div class="cols">' +
@@ -4713,31 +4899,33 @@ function cardBodyHTML(t, a) {
         '<div class="intel">' + conHTML + '</div>' +
       '</div>' +
       '<div class="colR">' +
+        /* 1 · how + which angle — one box */
         '<div class="crow"><div class="chan">' +
           '<button data-ch="em" class="' + (email ? "on" : "") + '"><span class="ic">' + IC_MAIL + '</span> Email</button>' +
           '<button data-ch="li" class="' + (!email ? "on" : "") + '"><span class="ic">' + IC_LI + '</span> LinkedIn</button></div>' +
           '<span class="grounded">Grounded in ' + grounded + ' fact' + (grounded === 1 ? '' : 's') + '</span>' +
         '</div>' +
-        (email ? '<div class="subj"><span class="lab">Subject</span><input id="vmSubj" value="' + esc(sp.subj) + '" placeholder="Ollin writes one when you draft"></div>' : '') +
-        '<textarea id="vmBody" class="body" placeholder="Ask Ollin to write it — or type your own.">' + esc(sp.body) + '</textarea>' +
-        '<div class="draftmeta"><span id="vmMeta">' + countLabel(full) + (full.trim() ? ' · <span class="aud">AUDITED ✓</span>' : '') + '</span>' +
-          '<span>' + (t.email ? '<a id="vmMail">Open email</a>' : '') + '<a id="vmCopy">Copy</a></span></div>' +
+        /* 2 · ask Ollin — sits above the draft, the answer trickles down into it */
         '<div class="ask">' +
           '<input id="vmAsk" placeholder="Ask Ollin to write it — or ask about the intel…">' +
           '<button class="mic" id="vmMic" title="Speak">' + IC_MIC + '</button>' +
           '<button class="send" id="vmAskGo" title="Send">' + IC_GO + '</button></div>' +
-        (t.touchNo < CADENCE.length
-          ? '<div class="nextsel" id="vmNext"><span class="nl">Next touch in</span>' +
-              GAPS.map(function (g) {
-                return '<button class="gp' + (VM.gap === g ? ' on' : '') + '" data-g="' + g + '">' + g + ' day' + (g === 1 ? '' : 's') + '</button>';
-              }).join('') +
-              '<span class="nd" id="vmNextDate">' + esc(fmtLong(iso(shiftWeekend(addDays(todayStr(), VM.gap))))) + '</span></div>'
-          : '<div class="nextsel last">Last touch in the sequence — nothing follows it.</div>') +
-        '<button class="go gofull" id="vmSend">Let\'s go <span>»</span></button>' +
         '<div id="vmSay"></div>' +
-        '<div class="angles angles-lo">' + VM_ANGLES.map(function (x) {
-          return '<button class="angle ' + (VM.angle === x[0] ? "on" : "") + '" data-a="' + x[0] + '">' + x[1] + '</button>';
-        }).join('') + '</div>' +
+        /* 3 · the draft */
+        (email ? '<div class="subj"><span class="lab">Subject</span><input id="vmSubj" value="' + esc(sp.subj) + '" placeholder="Ollin writes one when you draft"></div>' : '') +
+        '<textarea id="vmBody" class="body" placeholder="Ask Ollin to write it — or type your own.">' + esc(sp.body) + '</textarea>' +
+        '<div class="draftmeta"><span id="vmMeta">' + countLabel(full) + (full.trim() ? ' · <span class="aud">AUDITED ✓</span>' : '') + '</span>' +
+          '<span>' + (t.email ? '<a id="vmMail">Open email</a>' : '') + '<a id="vmCopy">Copy</a></span></div>' +
+        /* 4 · next touch point */
+        (t.touchNo < CADENCE.length
+          ? '<div class="nextsel" id="vmNext"><div class="nt"><span class="nl">Next touch point</span>' +
+              '<span class="nd" id="vmNextDate">' + esc(fmtLong(iso(shiftWeekend(addDays(todayStr(), VM.gap))))) + '</span></div>' +
+              '<div class="gps">' + GAPS.map(function (g) {
+                return '<button class="gp' + (VM.gap === g ? ' on' : '') + '" data-g="' + g + '">' + g + ' day' + (g === 1 ? '' : 's') + '</button>';
+              }).join('') + '</div></div>'
+          : '<div class="nextsel last">Last touch in the sequence — nothing follows it.</div>') +
+        /* 5 · go */
+        '<button class="go gofull" id="vmSend">Let\'s go <span>»</span></button>' +
         '<div class="v3foot"><span class="fl">Not now?</span>' +
           '<a class="sn" data-o="Later">Tomorrow</a>' +
           '<a class="sn" data-o="Week">Next week</a>' +
@@ -4772,6 +4960,11 @@ function wireCard(t) {
   });
   var coLink = document.querySelector(".v3 [data-open-co]");
   if (coLink) coLink.onclick = function () { CO_VIEW = coLink.dataset.openCo; navView = "companyprofile"; render(); window.scrollTo(0, 0); };
+  var muLink = document.querySelector(".v3 [data-open-mu]");
+  if (muLink) muLink.onclick = function () {
+    CO_VIEW = muLink.dataset.openMu; CO_TAB = "mushroom"; MU_SEL = muLink.dataset.muSel || null;
+    navView = "companyprofile"; render(); window.scrollTo(0, 0);
+  };
   Array.prototype.forEach.call(document.querySelectorAll(".v3 [data-a]"), function (bt) {
     bt.onclick = function () {
       VM.angle = bt.dataset.a;
