@@ -1,25 +1,25 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Vamos — walk in already knowing</title>
-<meta name="description" content="Vamos tells you who to reach today, why they'd care, and writes the email — grounded in real signals, not guesswork.">
+<title>ŌLLIN GO — where the work runs</title>
+<meta name="description" content="ŌLLIN OS finds it. ŌLLIN GO runs it. Who to reach today, why they'd care, and the draft already written — grounded in verified signals, not guesswork.">
 <link rel="icon" type="image/svg+xml" href="assets/ollin-tracker-icon.svg">
 <link rel="apple-touch-icon" href="assets/ollin-tracker-icon.svg">
 <!-- Share card. Without these a shared link renders as bare text on
      LinkedIn, Slack and iMessage. og:image must be an absolute URL. -->
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="Vamos">
+<meta property="og:site_name" content="ŌLLIN GO">
 <meta property="og:url" content="https://heyvamos.app/">
-<meta property="og:title" content="Vamos — walk in already knowing">
+<meta property="og:title" content="ŌLLIN GO — where the work runs">
 <meta property="og:description" content="Who to reach today, why they'd care, and the email already written. Try the live demo — no signup.">
 <meta property="og:image" content="https://heyvamos.app/assets/vamos-share.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Vamos — walk in already knowing.">
+<meta property="og:image:alt" content="ŌLLIN GO — where the work runs.">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Vamos — walk in already knowing">
+<meta name="twitter:title" content="ŌLLIN GO — where the work runs">
 <meta name="twitter:description" content="Who to reach today, why they'd care, and the email already written.">
 <meta name="twitter:image" content="https://heyvamos.app/assets/vamos-share.png">
-<meta name="theme-color" content="#0B0C10">
+<meta name="theme-color" content="#181A1E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Archivo+Black&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -34,35 +34,35 @@
 :root{
   /* OLLIN : VAMOS — Kinetic Execution (confirmed system).
      Signal Black canvas · Kinetic Orange accent · Hyper Volt urgency · cool slate neutrals. */
-  --black:#0B0C10;      /* canvas / Signal Black */
-  --paper:#0B0C10;
-  --card:#0C0D12;       /* editorial flat — barely lifted off the black */
-  --surface:#15171F;    /* insets still read (inputs, chips) */
-  --navy:#0B0C10;       /* on-accent (black text on volt) + darkest ground */
-  --navy-2:#0C0D12;     /* panel ground — near-flat */
-  --surf:#1C1F2B;       /* raised element */
+  --black:#181A1E;      /* canvas / Signal Black */
+  --paper:#181A1E;
+  --card:#1F2227;       /* editorial flat — barely lifted off the black */
+  --surface:#22262B;    /* insets still read (inputs, chips) */
+  --navy:#181A1E;       /* on-accent (black text on volt) + darkest ground */
+  --navy-2:#1F2227;     /* panel ground — near-flat */
+  --surf:#262A30;       /* raised element */
   --steel:#94A3B8;      /* Muted Steel — secondary text / labels */
-  --coral:#D4FF00;      /* VOLT — fills, CTA, active (black text on it). */
-  --coral-2:#E4FF4D;    /* volt hover */
-  --accent-ink:#D4FF00; /* volt as TEXT/icons/links on the dark canvas */
+  --coral:#FFE14D;      /* VOLT — fills, CTA, active (black text on it). */
+  --coral-2:#F5D63A;    /* volt hover */
+  --accent-ink:#FFE14D; /* volt as TEXT/icons/links on the dark canvas */
   --bone:#FFFFFF;       /* ink */
   --ink-2b:#C9D3DE;     /* brighter secondary */
   --mute:#94A3B8;
-  --line:#222634;       /* hairline */
-  --line-soft:#1C1F2B;
+  --line:#2C3037;       /* hairline */
+  --line-soft:#262A30;
   --green:#5FD69A;      /* "won" only — semantic layer still open */
   --proof:#94A3B8;      /* proof/sources are quiet slate now (one-accent rule) */
   --proof-2:#C9D3DE;
-  --volt:#D4FF00;       /* HYPER VOLT — urgency / time-left, on dark carrier only */
-  --volt-bg:rgba(212,255,0,0.16);
+  --volt:#FFE14D;       /* HYPER VOLT — urgency / time-left, on dark carrier only */
+  --volt-bg:rgba(255,225,77,0.16);
 
   /* aliases referenced inline by the keep layer */
   --ink-2:#C9D3DE;
   --vm-no:#FF5C5C;
   --radius:4px;
   --shadow:none;
-  --glow:0 0 0 1px rgba(212,255,0,.28);
-  --glow-soft:0 0 0 1px rgba(212,255,0,.18);
+  --glow:0 0 0 1px rgba(255,225,77,.28);
+  --glow-soft:0 0 0 1px rgba(255,225,77,.18);
 }
 /* ===== EDITORIAL PREVIEW LAYER — flat black + hairlines, our own blend ===== */
 #appMain{background:var(--black) !important;}          /* kill the corner glows */
@@ -78,9 +78,9 @@
 .demobar{background:transparent;border:1px solid var(--line)}
 /* demo bar doubles as the signup CTA — it's the top of the funnel */
 .demo-cta{display:flex;align-items:center;gap:14px;flex-wrap:wrap;
-  border-color:rgba(212,255,0,.25) !important;background:rgba(212,255,0,.04) !important}
+  border-color:rgba(255,225,77,.25) !important;background:rgba(255,225,77,.04) !important}
 .demo-cta .dm-t{color:var(--ink-2b);flex:1;min-width:200px}
-.demo-cta .dm-go{background:var(--volt);color:#0B0C10;border:0;border-radius:999px;
+.demo-cta .dm-go{background:var(--volt);color:#181A1E;border:0;border-radius:999px;
   padding:9px 18px;font-family:inherit;font-weight:800;font-size:13.5px;cursor:pointer;
   white-space:nowrap;transition:background .15s}
 .demo-cta .dm-go:hover{background:var(--volt-2)}
@@ -95,7 +95,7 @@
 .ob-screen{background:var(--black) !important}
 .ob-inner{border:1px solid var(--glass-line) !important;border-radius:20px !important;overflow:hidden;
   box-shadow:0 60px 140px -60px #000}
-.ob-left{background:#0B0C10 !important;position:relative}
+.ob-left{background:#181A1E !important;position:relative}
 .ob-left::after{content:"";position:absolute;left:-20%;bottom:-30%;width:460px;height:460px;border-radius:50%;
   background:#FFFFFF;opacity:.07;filter:blur(100px);pointer-events:none}
 .ob-left > *{position:relative;z-index:1}
@@ -104,29 +104,29 @@
 /* the live-filling preview card is inventory → glass */
 .profile{background:var(--glass) !important;backdrop-filter:blur(16px);
   border:1px solid var(--glass-line) !important;border-radius:14px !important}
-.pav.on{background:var(--volt) !important;color:#0B0C10 !important}
+.pav.on{background:var(--volt) !important;color:#181A1E !important}
 /* the form side is where you act → white */
 .ob-right{background:#FFFFFF !important;border-left:0 !important;
-  --bone:#0B0C10; --steel:#5A6875; --mute:#5A6875; --surface:#F1F3F6; --line:#E7EAEF;
-  --accent-ink:#3A4600; --ink-2:#33414E}
-.ob-right .ob-kick{color:#5A6875 !important;letter-spacing:.18em}
+  --bone:#181A1E; --steel:#6B7280; --mute:#6B7280; --surface:#F1F3F6; --line:#D9DEE5;
+  --accent-ink:#5C4F0E; --ink-2:#3A404A}
+.ob-right .ob-kick{color:#6B7280 !important;letter-spacing:.18em}
 .ob-q{font-family:'Archivo Black','Archivo',sans-serif !important;font-weight:400 !important;
   font-size:clamp(28px,2.8vw,38px) !important;line-height:.95 !important;letter-spacing:-.04em !important;
-  color:#0B0C10 !important}
-.ob-right .ob-qsub,.ob-right .ob-hsub{color:#5A6875 !important}
-.ob-field input,.ob-field textarea{background:#F1F3F6 !important;border:1px solid #E7EAEF !important;
-  color:#0B0C10 !important;border-radius:12px !important;transition:border-color .25s,box-shadow .25s}
-.ob-field input::placeholder,.ob-field textarea::placeholder{color:#5A6875 !important}
+  color:#181A1E !important}
+.ob-right .ob-qsub,.ob-right .ob-hsub{color:#6B7280 !important}
+.ob-field input,.ob-field textarea{background:#F1F3F6 !important;border:1px solid #D9DEE5 !important;
+  color:#181A1E !important;border-radius:12px !important;transition:border-color .25s,box-shadow .25s}
+.ob-field input::placeholder,.ob-field textarea::placeholder{color:#6B7280 !important}
 .ob-field input:focus,.ob-field textarea:focus{border-color:var(--volt) !important;
-  box-shadow:0 8px 24px -10px rgba(212,255,0,.5), 0 0 0 3px rgba(212,255,0,.15)}
-.ob-go{background:var(--volt) !important;color:#0B0C10 !important;border:0 !important;font-weight:800 !important;
+  box-shadow:0 8px 24px -10px rgba(255,225,77,.5), 0 0 0 3px rgba(255,225,77,.15)}
+.ob-go{background:var(--volt) !important;color:#181A1E !important;border:0 !important;font-weight:800 !important;
   border-radius:999px !important;transition:background .15s}
 .ob-go:hover{background:var(--volt-2) !important}
 .ob-go:disabled{opacity:.6}
-.ob-right .ob-lnk{color:#5A6875 !important}
-.ob-right .ob-lnk:hover{color:#0B0C10 !important}
-.ob-tag{background:#F1F3F6 !important;color:#5A6875 !important}
-.ob-prog i{background:#E7EAEF !important}
+.ob-right .ob-lnk{color:#6B7280 !important}
+.ob-right .ob-lnk:hover{color:#181A1E !important}
+.ob-tag{background:#F1F3F6 !important;color:#6B7280 !important}
+.ob-prog i{background:#D9DEE5 !important}
 .ob-prog i.on{background:var(--volt) !important}
 @media(max-width:860px){.ob-inner{flex-direction:column}.ob-half{width:100%}}
 /* ============================================================
@@ -135,22 +135,22 @@
    whatever needs action right now. Never invert this.
    ============================================================ */
 :root{
-  --volt-2:#E4FF4D;
-  --volt-dim:rgba(212,255,0,.12);
+  --volt-2:#F5D63A;
+  --volt-dim:rgba(255,225,77,.12);
   --red:#FF5C5C;
   --glass:rgba(255,255,255,.045);
   --glass-2:rgba(255,255,255,.08);
   --glass-line:rgba(255,255,255,.09);
   --glass-line-2:rgba(255,255,255,.16);
-  --w-ink:#0B0C10; --w-body:#33414E; --w-meta:#5A6875;
-  --w-line:#E7EAEF; --w-line-soft:#EEF1F5; --w-inset:#F1F3F6;
-  --w-accent-ink:#3A4600;
+  --w-ink:#181A1E; --w-body:#3A404A; --w-meta:#6B7280;
+  --w-line:#D9DEE5; --w-line-soft:#EEF1F5; --w-inset:#F1F3F6;
+  --w-accent-ink:#5C4F0E;
 }
 /* ambient glow — gives the glass something to refract */
 .ambient{position:fixed;inset:0;pointer-events:none;z-index:0;
   background:
-    radial-gradient(900px 500px at 85% -10%, rgba(212,255,0,.07), transparent 60%),
-    radial-gradient(700px 500px at -10% 110%, rgba(212,255,0,.05), transparent 60%)}
+    radial-gradient(900px 500px at 85% -10%, rgba(255,225,77,.07), transparent 60%),
+    radial-gradient(700px 500px at -10% 110%, rgba(255,225,77,.05), transparent 60%)}
 #appMain{position:relative;z-index:1}
 .g-card{background:var(--glass);backdrop-filter:blur(18px);
   border:1px solid var(--glass-line);border-radius:14px;transition:all .15s}
@@ -161,14 +161,14 @@
   font-family:'IBM Plex Mono',monospace;font-size:10.5px;font-weight:700;letter-spacing:.2em;color:var(--steel)}
 .section-label .dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
 .section-label .dot.hot{background:var(--red);box-shadow:0 0 8px var(--red)}
-.section-label .dot.volt{background:var(--volt);box-shadow:0 0 8px rgba(212,255,0,.6)}
+.section-label .dot.volt{background:var(--volt);box-shadow:0 0 8px rgba(255,225,77,.6)}
 .section-label .dot.quiet{background:var(--mute)}
 .section-label .line{flex:1;height:1px;background:var(--line)}
 .section-label .hint{letter-spacing:.03em;font-weight:400;color:var(--mute);text-transform:none}
 /* mono tags */
 .tg{font-family:'IBM Plex Mono',monospace;font-size:8.5px;font-weight:700;letter-spacing:.08em;
   padding:3px 8px;border:1px solid var(--glass-line);border-radius:4px;color:var(--steel);white-space:nowrap}
-.tg.rec{color:var(--volt);border-color:rgba(212,255,0,.3);background:rgba(212,255,0,.06)}
+.tg.rec{color:var(--volt);border-color:rgba(255,225,77,.3);background:rgba(255,225,77,.06)}
 /* ---- Toolbar: replaces the full-width heroes on inner pages ---- */
 .toolbar{display:flex;align-items:center;gap:18px;flex-wrap:wrap;padding:30px 0 24px}
 .tb-title{display:flex;align-items:center;gap:12px;flex:none}
@@ -188,7 +188,7 @@
 .fstage .cv{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--mute)}
 .fstage .barw{background:rgba(255,255,255,.07);height:3px}
 .fstage .barw i{background:var(--volt);display:block;height:100%}
-.fstage.live{border-color:rgba(212,255,0,.4) !important;box-shadow:0 0 24px -8px rgba(212,255,0,.3)}
+.fstage.live{border-color:rgba(255,225,77,.4) !important;box-shadow:0 0 24px -8px rgba(255,225,77,.3)}
 .pgroup{background:var(--glass);backdrop-filter:blur(14px);border:1px solid var(--glass-line);
   border-radius:11px;padding:11px 12px;margin-bottom:10px}
 .pgh{display:flex;align-items:center;gap:8px;margin-bottom:8px}
@@ -212,11 +212,11 @@
 /* ---- Companies: ACT NOW (white) / WATCHING (glass) ---- */
 .actgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(350px,1fr));gap:16px}
 .cocard .cotop{display:flex;align-items:center;gap:12px;margin-bottom:14px}
-.cocard .cologo{width:38px;height:38px;border-radius:10px;background:var(--volt);color:#0B0C10;
+.cocard .cologo{width:38px;height:38px;border-radius:10px;background:var(--volt);color:#181A1E;
   display:grid;place-items:center;font-weight:900;font-size:16px;flex:none}
 .cocard .coname{font-weight:800;font-size:16px;color:var(--w-ink);letter-spacing:-.01em}
 .cocard .cometa{font-size:12.5px;color:var(--w-meta);margin-top:1px}
-.whynow{margin-left:auto;display:inline-flex;align-items:center;gap:6px;background:#0B0C10;color:var(--volt);
+.whynow{margin-left:auto;display:inline-flex;align-items:center;gap:6px;background:#181A1E;color:var(--volt);
   font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.1em;
   padding:5px 10px;border-radius:999px;white-space:nowrap;flex:none}
 .cosig{background:var(--w-inset);border-radius:10px;padding:12px 14px;font-size:13.5px;line-height:1.5;
@@ -287,38 +287,38 @@
 .railitem .rpill{background:var(--volt-dim);color:var(--volt);border-radius:4px}
 /* selected rail item flips WHITE — mirrors the focus card */
 .railitem.on{background:#FFFFFF !important;color:var(--w-ink);
-  border-color:transparent !important;box-shadow:0 0 0 2px rgba(212,255,0,.6) !important}
+  border-color:transparent !important;box-shadow:0 0 0 2px rgba(255,225,77,.6) !important}
 .railitem.on .ri-nm{color:var(--w-ink)}
 .railitem.on .ri-role{color:var(--w-meta)}
 .railitem.on .ri-co{color:var(--w-body)}
 .railitem.on .ri-co .cl{background:var(--w-line-soft);color:var(--w-ink)}
-.railitem.on .rpill{background:#0B0C10;color:var(--volt)}
+.railitem.on .rpill{background:#181A1E;color:var(--volt)}
 
 /* ===== WHITE "ACT NOW" CARDS — tokens re-scoped locally ===== */
 .vcard,.ctile,.cocard,.cp-card,.pcard,.qcard,.fstage,.vmodal,.accdone,.ol-card,.cxpeekcard,.sender-card{
   --card:#FFFFFF; --navy-2:#FFFFFF; --surface:#F1F3F6;
-  --bone:#0B0C10; --ink-2b:#33414E; --ink-2:#33414E;
-  --steel:#5A6875; --mute:#5A6875; --proof:#5A6875;
-  --line:#E7EAEF; --line-soft:#EEF1F5;
-  --accent-ink:#3A4600;      /* olive ink — Volt can't be text on white */
-  --volt-bg:#0B0C10;         /* pills get a dark carrier so Volt text reads */
-  background:#FFFFFF; color:#0B0C10; border:1px solid #E7EAEF;
+  --bone:#181A1E; --ink-2b:#3A404A; --ink-2:#3A404A;
+  --steel:#6B7280; --mute:#6B7280; --proof:#6B7280;
+  --line:#D9DEE5; --line-soft:#EEF1F5;
+  --accent-ink:#5C4F0E;      /* olive ink — Volt can't be text on white */
+  --volt-bg:#181A1E;         /* pills get a dark carrier so Volt text reads */
+  background:#FFFFFF; color:#181A1E; border:1px solid #D9DEE5;
 }
-.ctile .ctav{background:#EEF1F5 !important;color:#0B0C10 !important;font-weight:800}   /* readable initials on white */
+.ctile .ctav{background:#EEF1F5 !important;color:#181A1E !important;font-weight:800}   /* readable initials on white */
 /* white card carries a volt ring — it reads as "act now" */
-.vcard{box-shadow:0 30px 70px -40px rgba(0,0,0,.9), 0 0 0 1px rgba(212,255,0,.25) !important}
-.vcard:hover{box-shadow:0 30px 70px -34px rgba(0,0,0,.95), 0 0 0 2px rgba(212,255,0,.55) !important}
+.vcard{box-shadow:0 30px 70px -40px rgba(0,0,0,.9), 0 0 0 1px rgba(255,225,77,.25) !important}
+.vcard:hover{box-shadow:0 30px 70px -34px rgba(0,0,0,.95), 0 0 0 2px rgba(255,225,77,.55) !important}
 /* ŌLLIN ask bar — volt skin. Its real job is helping write the email. */
 .askbar-x{display:flex;align-items:center;gap:12px;background:var(--glass);backdrop-filter:blur(16px);
   border:1px solid var(--glass-line);border-radius:100px;padding:7px 7px 7px 22px;
   transition:border-color .3s, box-shadow .3s;cursor:text}
 .askbar-x:hover,.askbar-x:focus-within{border-color:var(--volt);
-  box-shadow:0 12px 34px -10px rgba(212,255,0,.55), 0 0 0 4px rgba(212,255,0,.1)}
+  box-shadow:0 12px 34px -10px rgba(255,225,77,.55), 0 0 0 4px rgba(255,225,77,.1)}
 .v3 .ask{background:var(--w-inset) !important;border:1px solid var(--w-line) !important;
   border-radius:100px !important;padding:7px 7px 7px 22px !important;backdrop-filter:none;
   transition:border-color .3s, box-shadow .3s}
 .v3 .ask:hover,.v3 .ask:focus-within{border-color:var(--volt) !important;
-  box-shadow:0 8px 24px -10px rgba(212,255,0,.5), 0 0 0 3px rgba(212,255,0,.15)}
+  box-shadow:0 8px 24px -10px rgba(255,225,77,.5), 0 0 0 3px rgba(255,225,77,.15)}
 .v3 .ask input{color:var(--w-ink) !important}
 .v3 .ask input::placeholder{color:var(--w-meta) !important}
 /* ===== MUUL-style intro: kicker rules + giant headline + Volt highlight box ===== */
@@ -328,7 +328,7 @@
 .gtext{font-family:'Archivo Black','Archivo',sans-serif !important;font-weight:400 !important;
   font-size:clamp(38px,4.4vw,60px) !important;line-height:1.0 !important;letter-spacing:-.04em !important;
   max-width:none !important;text-transform:none;margin-bottom:6px}
-.gtext .hl{box-shadow:0 0 34px rgba(212,255,0,.28)}
+.gtext .hl{box-shadow:0 0 34px rgba(255,225,77,.28)}
 /* --- three-axis list builder --- */
 .fxbar{display:flex;align-items:flex-end;gap:14px;flex-wrap:wrap;margin:20px 0 4px;padding:16px 18px;
   border:1px solid var(--line);border-radius:10px;background:rgba(255,255,255,.02)}
@@ -396,11 +396,11 @@
 .ah-title{line-height:.9}
 /* premium two-tone sign-in: dark brand hero (left) + WHITE form panel (right) */
 .authform{background:#FFFFFF !important;
-  --card:#FFFFFF; --bone:#0B0C10; --steel:#5A6875; --mute:#5A6875;
-  --surface:#F1F3F6; --line:#E4E8EE; --accent-ink:#3A4600}
+  --card:#FFFFFF; --bone:#181A1E; --steel:#6B7280; --mute:#6B7280;
+  --surface:#F1F3F6; --line:#E4E8EE; --accent-ink:#5C4F0E}
 .gtext .co{color:var(--volt)}
-.gtext .hl{background:var(--volt);color:#0B0C10;padding:0 .09em;border-radius:2px;
-  box-shadow:0 0 60px rgba(212,255,0,.35),0 0 20px rgba(212,255,0,.22)}
+.gtext .hl{background:var(--volt);color:#181A1E;padding:0 .09em;border-radius:2px;
+  box-shadow:0 0 60px rgba(255,225,77,.35),0 0 20px rgba(255,225,77,.22)}
 /* ===== green header buttons ===== */
 /* nav: Import is glass (inventory), Run one is volt (action) */
 .vm-top #vmImport{background:var(--glass) !important;backdrop-filter:blur(12px);
@@ -419,24 +419,24 @@ html[data-theme="light"]{
   --paper:#F6F7F9;
   --card:#FFFFFF;       /* Card White */
   --surface:#F6F7F9;    /* insets sit one step BACK, on the paper */
-  --navy:#0B0C10;       /* on-accent black + dark carriers stay dark */
+  --navy:#181A1E;       /* on-accent black + dark carriers stay dark */
   --navy-2:#FFFFFF;
   --surf:#F6F7F9;
-  --steel:#5A6875;      /* muted on light */
-  --coral:#D4FF00;      /* FILLS only — unchanged */
-  --coral-2:#FF7D3D;
-  --accent-ink:#3A4600; /* Volt-family ink for text/links on white (orange retired) */
-  --bone:#0B0C10;       /* ink flips to Signal Black */
-  --ink-2b:#33414E;
-  --ink-2:#33414E;
-  --mute:#5A6875;
+  --steel:#6B7280;      /* muted on light */
+  --coral:#FFE14D;      /* FILLS only — unchanged */
+  --coral-2:#F5D63A;
+  --accent-ink:#5C4F0E; /* Volt-family ink for text/links on white (orange retired) */
+  --bone:#181A1E;       /* ink flips to Signal Black */
+  --ink-2b:#3A404A;
+  --ink-2:#3A404A;
+  --mute:#6B7280;
   --line:#E4E8EE;       /* hairline */
   --line-soft:#EDEFF2;
   --green:#1F9D5F;
-  --proof:#5A6875;
-  --proof-2:#33414E;
-  --volt:#D4FF00;
-  --volt-bg:#0B0C10;    /* Volt's dark carrier — the badge is the darkest thing on the page */
+  --proof:#6B7280;
+  --proof-2:#3A404A;
+  --volt:#FFE14D;
+  --volt-bg:#181A1E;    /* Volt's dark carrier — the badge is the darkest thing on the page */
   --vm-no:#C4342E;
   --shadow:0 2px 4px rgba(11,12,16,.08),0 16px 40px rgba(11,12,16,.10);
   --glow:0 1px 2px rgba(11,12,16,.06),0 10px 30px rgba(11,12,16,.10);
@@ -457,7 +457,7 @@ html[data-theme="light"] .ol-card,
 html[data-theme="light"] .lock-card{box-shadow:0 1px 2px rgba(11,12,16,.06),0 8px 24px rgba(11,12,16,.06)}
 /* the Ask bar is a dark carrier in both themes (Volt/glow live on black) */
 html[data-theme="light"] .askbar,
-html[data-theme="light"] .v3 .ask{background:#0B0C10;border-color:rgba(212,255,0,.30)}
+html[data-theme="light"] .v3 .ask{background:#181A1E;border-color:rgba(255,225,77,.30)}
 html[data-theme="light"] .v3 textarea.body,
 html[data-theme="light"] .v3 .subj,
 html[data-theme="light"] .v3 .chan{background:var(--surface)}
@@ -468,7 +468,7 @@ html[data-theme="light"] .vm-theme,
 html[data-theme="light"] .vm-av{background:var(--card);color:var(--bone);border-color:var(--line)}
 html[data-theme="light"] .demobar,html[data-theme="light"] .verifybar{background:#EEF0F3;color:var(--steel)}
 /* Volt count keeps a dark carrier on white (never Volt-text on paper) */
-html[data-theme="light"] .qlab .qn{background:#0B0C10;color:var(--volt);padding:2px 10px;border-radius:999px}
+html[data-theme="light"] .qlab .qn{background:#181A1E;color:var(--volt);padding:2px 10px;border-radius:999px}
 /* dark-carrier elements keep WHITE text in light (ink flips dark, so force it) */
 html[data-theme="light"] .vm-tabs button.on,
 html[data-theme="light"] .ctav.econ,
@@ -502,8 +502,8 @@ button{font-family:inherit}
 
 /* ============================ APP CHROME (nav) ============================ */
 #appMain{min-height:100vh;background:
-  radial-gradient(1200px 620px at 78% -8%, rgba(212,255,0,.05), transparent 60%),
-  radial-gradient(1000px 560px at 6% 108%, rgba(212,255,0,.035), transparent 60%),
+  radial-gradient(1200px 620px at 78% -8%, rgba(255,225,77,.05), transparent 60%),
+  radial-gradient(1000px 560px at 6% 108%, rgba(255,225,77,.035), transparent 60%),
   var(--black);}
 .vm-top{position:sticky;top:0;z-index:40;background:rgba(10,10,10,.72);
   backdrop-filter:saturate(140%) blur(14px);border-bottom:1px solid var(--line)}
@@ -539,14 +539,14 @@ button{font-family:inherit}
 #vmBanners{max-width:1240px;margin:0 auto;padding:0 30px}
 .demobar,.verifybar{margin-top:12px;border-radius:12px;padding:11px 15px;font-size:13px;font-weight:600}
 .demobar{background:var(--surface);color:var(--ink-2)}
-.verifybar{background:rgba(212,255,0,.14);color:var(--coral-2)}
+.verifybar{background:rgba(255,225,77,.14);color:var(--coral-2)}
 /* persistence trouble — the one failure that must never be quiet */
-.savebar{background:rgba(212,255,0,.10);border:1px solid rgba(212,255,0,.34);color:var(--ink);
+.savebar{background:rgba(255,225,77,.10);border:1px solid rgba(255,225,77,.34);color:var(--ink);
   border-radius:12px;padding:11px 16px;margin:12px 0 0;font-size:13.5px;font-weight:600;
   display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .savebar a{color:var(--accent-ink);font-weight:800;cursor:pointer;text-decoration:underline;white-space:nowrap}
-html[data-theme="light"] .savebar{background:#F4F7DA;border-color:#D8E27A;color:#0B0C10}
-html[data-theme="light"] .savebar a{color:#0B0C10}
+html[data-theme="light"] .savebar{background:#F4F7DA;border-color:#D8E27A;color:#181A1E}
+html[data-theme="light"] .savebar a{color:#181A1E}
 .demobar a,.verifybar a{color:var(--accent-ink);font-weight:800;cursor:pointer;text-decoration:underline;margin-left:6px}
 
 .vm-wrap{max-width:1240px;margin:0 auto;padding:8px 30px 60px}
@@ -575,7 +575,7 @@ html[data-theme="light"] .savebar a{color:#0B0C10}
 
 /* Ask Ollin bar — dark pill, outline mic, solid coral send, coral glow beneath.
    Reused (greeting, focus card, contacts search). */
-.askbar{display:flex;align-items:center;gap:10px;background:#000;border:1px solid rgba(212,255,0,.28);border-radius:999px;
+.askbar{display:flex;align-items:center;gap:10px;background:#000;border:1px solid rgba(255,225,77,.28);border-radius:999px;
   padding:8px 8px 8px 18px;box-shadow:var(--glow)}
 .askbar.soft{box-shadow:var(--glow-soft)}
 .askbar.flat{box-shadow:none}
@@ -812,7 +812,7 @@ html[data-theme="light"] .savebar a{color:#0B0C10}
 /* import area (contacts) */
 .drop{border:1.5px dashed #3a3a34;border-radius:14px;padding:26px 18px;text-align:center;cursor:pointer;
   transition:border-color .2s,background .2s}
-.drop:hover,.drop.hot{border-color:var(--accent-ink);background:rgba(212,255,0,.05)}
+.drop:hover,.drop.hot{border-color:var(--accent-ink);background:rgba(255,225,77,.05)}
 .drop .big{font-weight:800;font-size:15px}
 .drop .sm{color:var(--steel);font-size:12.5px;margin-top:4px}
 .sheetform{margin-top:12px;display:flex;gap:8px;flex-wrap:wrap}
@@ -879,7 +879,7 @@ html[data-theme="light"] .savebar a{color:#0B0C10}
 @media(max-width:860px){.authsplit{grid-template-columns:1fr}}
 
 /* LEFT — Signal Black brand hero (dark in BOTH themes; it's the brand block) */
-.authhero{background:#0B0C10;color:#fff;position:relative;overflow:hidden;padding:44px 52px;
+.authhero{background:#181A1E;color:#fff;position:relative;overflow:hidden;padding:44px 52px;
   display:flex;flex-direction:column;justify-content:space-between;min-height:100vh}
 .authhero::after{content:"";position:absolute;left:-12%;bottom:-24%;width:540px;height:540px;border-radius:50%;
   background:#FFFFFF;opacity:.10;filter:blur(100px);pointer-events:none}
@@ -889,9 +889,9 @@ html[data-theme="light"] .savebar a{color:#0B0C10}
 .ah-mid{position:relative;z-index:1;padding:48px 0}
 .ah-eyebrow{display:inline-flex;align-items:center;gap:13px;font-family:'IBM Plex Mono',monospace;text-transform:uppercase;
   letter-spacing:.18em;font-size:11px;font-weight:600;color:#94A3B8;margin-bottom:26px}
-.ah-eyebrow .dash{width:28px;height:2px;background:#D4FF00;display:inline-block}
+.ah-eyebrow .dash{width:28px;height:2px;background:#FFE14D;display:inline-block}
 .ah-title{font-weight:900;font-size:clamp(38px,4.6vw,58px);line-height:.98;letter-spacing:-.03em;color:#fff;max-width:16ch}
-.ah-title .hl{color:#D4FF00}
+.ah-title .hl{color:#FFE14D}
 .ah-sub{color:#94A3B8;font-size:15.5px;line-height:1.55;margin-top:22px;max-width:42ch}
 .ah-foot{position:relative;z-index:1;font-family:'IBM Plex Mono',monospace;color:#5C6B7C;font-size:10.5px;letter-spacing:.14em}
 
@@ -931,7 +931,7 @@ html[data-theme="light"] .savebar a{color:#0B0C10}
 .lp-overlay{position:fixed;inset:0;z-index:70;background:rgba(5,8,14,.72);backdrop-filter:blur(6px);
   display:grid;place-items:center;padding:24px}
 .lock-card{width:420px;max-width:100%;background:var(--card);border:1px solid var(--line-soft);border-radius:22px;
-  padding:32px 30px;box-shadow:0 60px 130px -50px #000,0 0 60px -30px rgba(212,255,0,.12);position:relative}
+  padding:32px 30px;box-shadow:0 60px 130px -50px #000,0 0 60px -30px rgba(255,225,77,.12);position:relative}
 .lock-card .ll-tag{display:none}
 .lock-card .ll-rule{margin:10px 0 4px}
 .lock-h{font-weight:900;font-size:36px;line-height:.98;letter-spacing:-.03em;text-transform:uppercase;color:var(--bone);margin:14px 0 8px}
@@ -1091,7 +1091,7 @@ select.auth-input{appearance:none}
 .vmtt{color:var(--steel);font-size:13px}
 .vmtags{margin-left:auto;display:flex;align-items:center;gap:9px}
 .vmtags .roletag{font-size:11px;padding:5px 11px}
-.vmtags .stbadge{background:rgba(212,255,0,.14);border-radius:999px;padding:5px 11px;font-size:11px}
+.vmtags .stbadge{background:rgba(255,225,77,.14);border-radius:999px;padding:5px 11px;font-size:11px}
 .vmtags .stbadge.pending{background:var(--surface)}
 .vmclose{width:34px;height:34px;border-radius:9px;border:1px solid var(--line);background:var(--surface);display:grid;place-items:center;cursor:pointer;color:var(--steel);margin-left:6px;flex:none}
 .vmbody{display:grid;grid-template-columns:1.1fr 1fr;gap:24px;margin-top:16px;border-top:1px solid var(--line);padding-top:16px}
@@ -1125,6 +1125,54 @@ select.auth-input{appearance:none}
 .vmuted{color:var(--mute);font-size:13px;font-weight:500}
 
 /* ===================== COMPANY PROFILE (full page) ===================== */
+/* ===== Mushroom room: tabbed client box ===== */
+.cp-tabs{display:flex;gap:2px;margin:18px 0 0;border-bottom:1px solid var(--line);overflow-x:auto}
+.cp-tab{appearance:none;background:none;border:0;border-bottom:2px solid transparent;margin-bottom:-1px;padding:10px 14px 12px;font:600 13px 'Archivo',sans-serif;color:var(--steel);cursor:pointer;white-space:nowrap;display:flex;align-items:center;gap:8px}
+.cp-tab .n{font-family:'IBM Plex Mono',monospace;font-size:10px;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:1px 7px;color:var(--steel)}
+.cp-tab:hover{color:var(--bone)}
+.cp-tab[aria-selected="true"]{color:var(--bone);border-bottom-color:var(--coral)}
+.cp-tab[aria-selected="true"] .n{color:var(--bone)}
+.cp-panel{display:none;padding-top:20px}
+.cp-panel[data-active]{display:block}
+.mu-intro{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:6px;color:var(--ink-2);font-size:13.5px}
+.mu-intro b{color:var(--bone)}
+.mu-legend{display:flex;gap:14px;flex-wrap:wrap;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--steel)}
+.mu-legend span{display:flex;align-items:center;gap:6px}
+.mu-legend i{width:22px;height:0;border-top:2px solid var(--bone)}
+.mu-legend i.dash{border-top-style:dashed;border-top-color:var(--steel)}
+.mu-grid{display:grid;grid-template-columns:1fr;gap:18px;align-items:start}
+@media(min-width:960px){.mu-grid{grid-template-columns:1.5fr 1fr}}
+.mu-tree{overflow-x:auto;padding:10px 4px 4px;display:flex;flex-direction:column;align-items:center}
+.mu-lvl{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.mu-tier{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--steel);margin:0 0 8px;text-align:center;width:100%}
+.mu-con{width:2px;height:22px;background:var(--bone);opacity:.7}
+.mu-con.dash{background:repeating-linear-gradient(to bottom,var(--steel) 0 4px,transparent 4px 8px);opacity:1}
+.mu-node{appearance:none;text-align:left;width:190px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 12px 10px;cursor:pointer;font-family:'Archivo',sans-serif;color:var(--bone);position:relative;box-shadow:0 14px 26px -14px rgba(0,0,0,.6)}
+.mu-node:hover{border-color:var(--steel)}
+.mu-node[aria-pressed="true"]{border-color:var(--coral);box-shadow:0 0 0 3px rgba(255,225,77,.18)}
+.mu-node .nm{font-weight:700;font-size:13.5px;line-height:1.2}
+.mu-node .tt{font-size:11.5px;color:var(--ink-2);margin-top:2px;line-height:1.3}
+.mu-node .row{display:flex;gap:6px;align-items:center;margin-top:8px;flex-wrap:wrap}
+.mu-role{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;border-radius:999px;background:var(--surface);color:var(--ink-2)}
+.mu-role.econ{background:rgba(255,225,77,.16);color:var(--accent-ink)}
+.mu-role.block{background:rgba(255,92,92,.14);color:var(--vm-no)}
+.mu-line{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--steel)}
+.mu-line.ok{color:var(--bone)}
+.mu-node .seed{position:absolute;top:-9px;right:10px;background:var(--coral);color:#181A1E;font-family:'IBM Plex Mono',monospace;font-size:8.5px;letter-spacing:.12em;padding:2px 7px;border-radius:999px;font-weight:700}
+.mu-detail{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;position:sticky;top:16px}
+.mu-detail .eb{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--steel)}
+.mu-detail h3{margin:6px 0 0;font-size:18px;font-weight:800;letter-spacing:-.02em;color:var(--bone)}
+.mu-detail .sub{font-size:13px;color:var(--ink-2)}
+.mu-detail dl{margin:14px 0 0;display:grid;grid-template-columns:auto 1fr;gap:6px 12px;font-size:12.5px}
+.mu-detail dt{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--steel);padding-top:2px}
+.mu-detail dd{margin:0;color:var(--bone)}
+.mu-detail .angle{margin-top:14px;border-top:1px solid var(--line);padding-top:12px;font-size:13.5px;line-height:1.5;color:var(--ink-2)}
+.mu-detail .angle b{display:block;font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent-ink);margin-bottom:6px;font-weight:600}
+.mu-detail .act{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+.mu-detail .btn-go{font:700 12.5px 'Archivo',sans-serif;background:var(--coral);color:#181A1E;border:0;border-radius:8px;padding:10px 14px;cursor:pointer}
+.mu-detail .btn-ghost{font:600 12.5px 'Archivo',sans-serif;background:transparent;color:var(--bone);border:1px solid var(--line);border-radius:8px;padding:10px 14px;cursor:pointer}
+.mu-detail .rule{margin-top:10px;font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.06em;color:var(--steel)}
+.mu-empty{background:var(--card);border:1px dashed var(--line);border-radius:14px;padding:26px;color:var(--ink-2);font-size:13.5px;text-align:center}
 .cp-crumb{color:var(--mute);font-size:13px;font-weight:600;padding:8px 0 0}
 .cp-crumb b{color:var(--steel);margin:0 4px}
 .cp-crumb .lnk{color:var(--steel);cursor:pointer}
@@ -1134,7 +1182,7 @@ select.auth-input{appearance:none}
 .cp-name{font-weight:900;font-size:40px;letter-spacing:-.03em;line-height:1}
 .cp-meta{display:flex;gap:16px;margin-top:8px;color:var(--steel);font-size:13.5px;font-weight:600;flex-wrap:wrap}
 .cp-meta span{display:flex;align-items:center;gap:6px}
-.cp-whybadge{margin-left:auto;background:var(--volt-bg);color:var(--volt);border:1px solid rgba(212,255,0,.35);border-radius:999px;padding:10px 16px;font-weight:800;font-size:13px;display:flex;align-items:center;gap:8px;align-self:center}
+.cp-whybadge{margin-left:auto;background:var(--volt-bg);color:var(--volt);border:1px solid rgba(255,225,77,.35);border-radius:999px;padding:10px 16px;font-weight:800;font-size:13px;display:flex;align-items:center;gap:8px;align-self:center}
 .cp-whybadge.warm{background:#2a2213;color:#e6b35a;border-color:rgba(230,179,90,.35)}
 .cp-whybadge.cool{background:var(--navy-2);color:var(--steel);border-color:var(--line)}
 .cp-cols{display:grid;grid-template-columns:1.5fr 1fr;gap:20px;padding:22px 0 10px}
@@ -1155,7 +1203,7 @@ select.auth-input{appearance:none}
 .cp-thesis .row:last-child{border-bottom:0}
 .cp-thesis .k{font-family:'IBM Plex Mono',monospace;text-transform:uppercase;letter-spacing:.08em;font-size:10px;color:var(--mute);font-weight:600;width:130px;flex:none;padding-top:3px}
 .cp-thesis .v{font-size:14px;font-weight:600;color:var(--ink-2);line-height:1.5}
-.cp-cost{background:rgba(212,255,0,.06);border:1px solid rgba(212,255,0,.22);border-radius:12px;padding:16px 18px;margin-top:16px;display:flex;align-items:center;gap:16px}
+.cp-cost{background:rgba(255,225,77,.06);border:1px solid rgba(255,225,77,.22);border-radius:12px;padding:16px 18px;margin-top:16px;display:flex;align-items:center;gap:16px}
 .cp-cost .big{font-weight:900;font-size:30px;color:var(--accent-ink);letter-spacing:-.02em;line-height:1}
 .cp-cost .lbl{color:var(--mute);font-size:12.5px;font-weight:700}
 .cp-chips{display:flex;flex-wrap:wrap;gap:8px}
@@ -1181,7 +1229,7 @@ select.auth-input{appearance:none}
 .railitem{position:relative;background:var(--card);border:1px solid var(--line-soft);border-radius:14px;padding:14px 16px;cursor:pointer;
   transition:border-color .18s,box-shadow .18s,transform .12s}
 .railitem:hover{border-color:rgba(255,255,255,.18);transform:translateY(-1px)}
-.railitem.on{border-color:var(--accent-ink);box-shadow:0 0 0 1px var(--coral),0 20px 44px -26px #000,0 0 34px -12px rgba(212,255,0,.28)}
+.railitem.on{border-color:var(--accent-ink);box-shadow:0 0 0 1px var(--coral),0 20px 44px -26px #000,0 0 34px -12px rgba(255,225,77,.28)}
 .ri-tag{position:absolute;top:12px;right:12px}
 .ri-nm{font-weight:900;font-size:15px;letter-spacing:-.01em;color:var(--bone);line-height:1.15;padding-right:70px}
 .ri-role{color:var(--steel);font-size:12px;margin-top:3px}
@@ -1212,6 +1260,13 @@ select.auth-input{appearance:none}
 .vcore .ollin{width:34px;height:34px;display:block}
 .vcore .lb{font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:8px;letter-spacing:.22em;text-transform:uppercase}
 .vcore.pending{opacity:.45}
+/* ===== ŌLLIN GO rebrand: lockup + Ō mark ===== */
+.wm em{font-style:normal;font-weight:300;margin-left:7px;padding-left:9px;border-left:1.5px solid currentColor;opacity:.72}
+.omark{display:inline-flex;flex-direction:column;align-items:center;line-height:1}
+.omark .bar{display:block;width:.62em;height:.11em;border-radius:.06em;background:var(--coral);margin-bottom:.06em}
+.omark .o{font-family:'Archivo',sans-serif;font-weight:800;font-size:1em;line-height:.85;letter-spacing:0}
+.vcore .omark{font-size:30px;color:var(--bone)}
+
 .vname{font-weight:900;font-size:44px;line-height:.94;letter-spacing:-.03em;text-transform:uppercase;color:var(--bone)}
 .vrole{margin-top:12px;font-size:15px;font-weight:700;letter-spacing:-.01em;color:var(--ink-2b)}
 .vrole .co{color:var(--accent-ink);text-decoration:none}.vrole .co:hover{text-decoration:underline}
@@ -1253,7 +1308,7 @@ select.auth-input{appearance:none}
 .v3 .subj .lab{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--mute);flex:none}
 .v3 .subj input{flex:1;border:0;outline:0;font-family:'Archivo';font-size:14.5px;font-weight:700;color:var(--bone);background:transparent}
 .v3 textarea.body{width:100%;flex:1;min-height:150px;resize:vertical;border:1px solid var(--line);border-radius:12px;padding:15px 16px;font-family:'Archivo';font-size:14px;color:var(--bone);line-height:1.7;outline:0;background:var(--surface)}
-.v3 textarea.body:focus{border-color:rgba(212,255,0,.5)}
+.v3 textarea.body:focus{border-color:rgba(255,225,77,.5)}
 .v3 textarea.body::placeholder{color:var(--mute)}
 .v3 .draftmeta{display:flex;justify-content:space-between;align-items:center;color:var(--mute);font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.05em;margin:9px 0 14px}
 .v3 .draftmeta .aud{color:var(--proof)}
@@ -1263,8 +1318,8 @@ select.auth-input{appearance:none}
 .v3 .angles-lo{margin-bottom:0;margin-top:16px;padding-top:14px;border-top:1px solid var(--line-soft)}
 .v3 .angle{border:1px solid var(--line);border-radius:999px;padding:8px 14px;font-family:'Archivo';font-weight:700;font-size:12px;background:transparent;color:var(--ink-2b);cursor:pointer}
 .v3 .angle.on{background:var(--coral);color:var(--navy);border-color:var(--accent-ink)}
-.v3 .ask{display:flex;align-items:center;gap:10px;background:#000;border:1px solid rgba(212,255,0,.28);border-radius:999px;padding:7px 7px 7px 18px;
-  box-shadow:0 14px 40px -16px rgba(212,255,0,.45)}
+.v3 .ask{display:flex;align-items:center;gap:10px;background:#000;border:1px solid rgba(255,225,77,.28);border-radius:999px;padding:7px 7px 7px 18px;
+  box-shadow:0 14px 40px -16px rgba(255,225,77,.45)}
 .v3 .ask input{flex:1;background:transparent;border:0;outline:0;color:var(--bone);font-family:'Archivo';font-size:14px;font-weight:500}
 .v3 .ask input::placeholder{color:var(--mute)}
 .v3 .ask .mic{width:34px;height:34px;border-radius:999px;border:1.5px solid var(--line);display:grid;place-items:center;flex:none;color:var(--ink-2b);cursor:pointer;background:transparent}
@@ -1272,7 +1327,7 @@ select.auth-input{appearance:none}
 .v3 .ask .send{width:36px;height:36px;border-radius:999px;background:var(--coral);border:0;display:grid;place-items:center;flex:none;color:var(--navy);cursor:pointer}
 .v3 .ask .send.busy{opacity:.6;pointer-events:none}
 .v3 .go{flex:none;border:0;border-radius:999px;padding:14px 24px;font-family:'Archivo';font-weight:900;font-size:14px;background:var(--coral);color:var(--navy);
-  display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;box-shadow:0 18px 46px -16px rgba(212,255,0,.5)}
+  display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;box-shadow:0 18px 46px -16px rgba(255,225,77,.5)}
 .v3 .go.gofull{width:100%;margin-top:10px;font-size:15px;padding:15px 24px}
 /* The next-touch picker. Sending is still one button — this only moves the
    default, so the common case stays a single click. Lives on a white card, so
@@ -1283,8 +1338,8 @@ select.auth-input{appearance:none}
 .nextsel .gp{border:1px solid var(--w-line);background:#FFFFFF;color:var(--w-ink);
   border-radius:999px;padding:6px 13px;font-family:'Archivo';font-weight:800;font-size:13px;
   cursor:pointer;transition:background .15s ease,border-color .15s ease,color .15s ease}
-.nextsel .gp:hover{border-color:#0B0C10}
-.nextsel .gp.on{background:#0B0C10;border-color:#0B0C10;color:var(--volt)}
+.nextsel .gp:hover{border-color:#181A1E}
+.nextsel .gp.on{background:#181A1E;border-color:#181A1E;color:var(--volt)}
 .nextsel .nd{margin-left:auto;font-family:'IBM Plex Mono',ui-monospace,monospace;
   font-size:12px;font-weight:600;color:var(--w-meta);white-space:nowrap}
 .nextsel.last{color:var(--w-meta);font-size:12.5px;font-weight:600}
@@ -1399,8 +1454,8 @@ img,svg,video,canvas{max-width:100%}
   .vm-tabs{-webkit-mask-image:linear-gradient(90deg,#000 0,#000 calc(100% - 20px),transparent 100%);
     mask-image:linear-gradient(90deg,#000 0,#000 calc(100% - 20px),transparent 100%)}
   /* --navy is all but the page colour, so the active pill needs a real edge */
-  .vm-tabs button.on{background:rgba(212,255,0,.12);color:var(--bone);
-    box-shadow:inset 0 0 0 1px rgba(212,255,0,.35)}
+  .vm-tabs button.on{background:rgba(255,225,77,.12);color:var(--bone);
+    box-shadow:inset 0 0 0 1px rgba(255,225,77,.35)}
 
   /* ---- shell padding: 30px a side is a third of the screen ---- */
   .vm-wrap{padding:6px 16px calc(72px + env(safe-area-inset-bottom))}
@@ -1586,7 +1641,7 @@ img,svg,video,canvas{max-width:100%}
    Both share the same filled active pill so "where am I" reads the same.
    ========================================================================== */
 .vm-tabs button.on,
-html[data-theme="light"] .vm-tabs button.on{background:#FFFFFF;color:#0B0C10;box-shadow:none}
+html[data-theme="light"] .vm-tabs button.on{background:#FFFFFF;color:#181A1E;box-shadow:none}
 
 @media(min-width:761px){
   .vm-tabs{gap:2px;margin-left:2px;padding:4px;border-radius:999px;
@@ -1602,7 +1657,7 @@ html[data-theme="light"] .vm-tabs button.on{background:#FFFFFF;color:#0B0C10;box
   .vm-tabs button{padding:8px 11px}
 }
 .vm-just{white-space:nowrap}
-.vm-cta{background:var(--volt);color:#0B0C10;border:0;font-weight:800}
+.vm-cta{background:var(--volt);color:#181A1E;border:0;font-weight:800}
 .vm-cta:hover{background:var(--volt-2)}
 /* "Following up" is the longest stage label — keep it on one line */
 .fn-lab{width:92px;font-size:12px;white-space:nowrap}
@@ -1642,17 +1697,17 @@ html[data-theme="light"] .vm-tabs button.on{background:#FFFFFF;color:#0B0C10;box
 .dtile.paper{background:#FFFFFF;
   box-shadow:0 1px 2px rgba(0,0,0,.5), 0 10px 20px -12px rgba(0,0,0,.6), 0 40px 70px -34px #000}
 .dtile.paper:hover{box-shadow:0 2px 4px rgba(0,0,0,.5), 0 16px 30px -14px rgba(0,0,0,.65), 0 54px 90px -36px #000}
-.paper .dt-lab{color:#5A6875} .paper .dc-t{color:#0B0C10}
-.paper .dt-n{color:#0B0C10} .paper .dt-of{color:#5A6875}
-.paper .dt-sub{color:#5A6875} .paper .dt-none{color:#8A94A0}
-.paper .dc-pill{background:#F1F3F0;color:#5A6875}
-.paper .dc-pill.up{background:#0B0C10;color:var(--volt)}
+.paper .dt-lab{color:#6B7280} .paper .dc-t{color:#181A1E}
+.paper .dt-n{color:#181A1E} .paper .dt-of{color:#6B7280}
+.paper .dt-sub{color:#6B7280} .paper .dt-none{color:#8A94A0}
+.paper .dc-pill{background:#F1F3F0;color:#6B7280}
+.paper .dc-pill.up{background:#181A1E;color:var(--volt)}
 .paper .dc-pill.down{background:rgba(196,52,46,.1);color:#C4342E}
 .dtile.quiet{background:#F4F5F2;box-shadow:0 1px 2px rgba(0,0,0,.4), 0 24px 44px -30px #000}
 .dtile.quiet:hover{box-shadow:0 2px 4px rgba(0,0,0,.45), 0 34px 60px -32px #000}
 
 /* --- black: a lit top edge gives it thickness against the ground --- */
-.dtile.ink{background:#0C0D12;
+.dtile.ink{background:#1F2227;
   box-shadow:inset 0 1px 0 rgba(255,255,255,.08), inset 0 0 0 1px rgba(255,255,255,.05),
     0 10px 20px -12px #000, 0 40px 70px -38px #000}
 .dtile.ink:hover{box-shadow:inset 0 1px 0 rgba(255,255,255,.12), inset 0 0 0 1px rgba(255,255,255,.09),
@@ -1662,17 +1717,17 @@ html[data-theme="light"] .vm-tabs button.on{background:#FFFFFF;color:#0B0C10;box
 
 /* --- volt, frosted: translucent so the ground shows through, blurred,
        with a volt hairline and a glow beneath it --- */
-.dtile.volt{background:rgba(212,255,0,.13);backdrop-filter:blur(20px) saturate(140%);
+.dtile.volt{background:rgba(255,225,77,.13);backdrop-filter:blur(20px) saturate(140%);
   -webkit-backdrop-filter:blur(20px) saturate(140%);
-  box-shadow:inset 0 1px 0 rgba(212,255,0,.35), inset 0 0 0 1px rgba(212,255,0,.28),
-    0 10px 24px -14px rgba(212,255,0,.35), 0 44px 80px -40px rgba(212,255,0,.45)}
-.dtile.volt:hover{background:rgba(212,255,0,.18);
-  box-shadow:inset 0 1px 0 rgba(212,255,0,.5), inset 0 0 0 1px rgba(212,255,0,.42),
-    0 16px 32px -14px rgba(212,255,0,.45), 0 60px 100px -42px rgba(212,255,0,.55)}
+  box-shadow:inset 0 1px 0 rgba(255,225,77,.35), inset 0 0 0 1px rgba(255,225,77,.28),
+    0 10px 24px -14px rgba(255,225,77,.35), 0 44px 80px -40px rgba(255,225,77,.45)}
+.dtile.volt:hover{background:rgba(255,225,77,.18);
+  box-shadow:inset 0 1px 0 rgba(255,225,77,.5), inset 0 0 0 1px rgba(255,225,77,.42),
+    0 16px 32px -14px rgba(255,225,77,.45), 0 60px 100px -42px rgba(255,225,77,.55)}
 @supports not (backdrop-filter: blur(1px)){ .dtile.volt{background:#1A2000} }
 .volt .dt-lab{color:var(--volt)} .volt .dt-n{color:#FFFFFF}
 .volt .dt-of{color:var(--volt);opacity:.75}
-.volt .dt-sub{color:#C9D3DE} .volt .dc-pill{background:var(--volt);color:#0B0C10;font-weight:700}
+.volt .dt-sub{color:#C9D3DE} .volt .dc-pill{background:var(--volt);color:#181A1E;font-weight:700}
 /* the goal card runs two rows tall — let the number take the room and sit
    the caption on the floor, so the height reads as space rather than a gap */
 .dtile.volt .dt-n{font-size:68px;margin:22px 0 16px}
@@ -1687,26 +1742,26 @@ html[data-theme="light"] .vm-tabs button.on{background:#FFFFFF;color:#0B0C10;box
 .ed-hint{font-weight:700;opacity:0;margin-left:6px;transition:opacity .18s;white-space:nowrap}
 .dtile.edit:hover .ed-hint,.dtile.edit:focus-visible .ed-hint{opacity:1}
 .volt .ed-hint{color:var(--volt)}
-.paper .ed-hint,.quiet .ed-hint{color:#3A4600;text-decoration:underline}
+.paper .ed-hint,.quiet .ed-hint{color:#5C4F0E;text-decoration:underline}
 .qbarw{height:8px;border-radius:6px;background:#EDEEEA;overflow:hidden;margin-bottom:12px}
 .qbarw i{display:block;height:100%;border-radius:6px;background:var(--volt)}
 @media(hover:none){ .ed-hint{opacity:1} }
 .gbarw i{display:block;height:100%;border-radius:6px;background:var(--volt);
-  box-shadow:0 0 18px rgba(212,255,0,.55)}
+  box-shadow:0 0 18px rgba(255,225,77,.55)}
 
 /* --- bars: neutral track, one volt lead, labelled so identity is never colour --- */
 .fn{display:flex;flex-direction:column;gap:10px;margin-top:16px}
 .fn-row,.cmp-row{display:flex;align-items:center;gap:11px}
-.fn-lab{font-size:12.5px;font-weight:600;color:#33414E;width:88px;flex:none}
+.fn-lab{font-size:12.5px;font-weight:600;color:#3A404A;width:88px;flex:none}
 .fn-track,.cmp-track{flex:1;border-radius:6px;background:#F1F3F0;overflow:hidden;min-width:0}
 .fn-track{height:12px}
 .fn-track i,.cmp-track i{display:block;height:100%;border-radius:6px;background:#DDE1D9;
   transition:width .5s cubic-bezier(.16,.84,.3,1)}
 .fn-track i.lead,.cmp-track i.now{background:var(--volt)}
-.fn-n,.cmp-n{font-family:'IBM Plex Mono',monospace;font-size:12px;color:#5A6875;width:34px;
+.fn-n,.cmp-n{font-family:'IBM Plex Mono',monospace;font-size:12px;color:#6B7280;width:34px;
   text-align:right;flex:none}
 .cmp{display:flex;flex-direction:column;gap:11px}
-.cmp-lab{font-size:11.5px;color:#5A6875;width:66px;flex:none}
+.cmp-lab{font-size:11.5px;color:#6B7280;width:66px;flex:none}
 .cmp-track{height:10px}
 
 @media(prefers-reduced-motion:reduce){
@@ -1743,12 +1798,12 @@ html[data-theme="light"] .vm-tabs button.on{background:#FFFFFF;color:#0B0C10;box
     <div class="vm-topin">
       <div class="vm-brand">
         <svg width="28" height="28" viewBox="0 0 86 86" fill="none" aria-hidden="true">
-          <circle cx="30" cy="43" r="9" fill="#D4FF00"/>
+          <circle cx="30" cy="43" r="9" fill="#FFE14D"/>
           <path d="M44 22 A24 24 0 0 1 44 64" stroke="#F5F5F4" stroke-width="7" stroke-linecap="round" fill="none"/>
           <path d="M56 30 A15 15 0 0 1 56 56" stroke="var(--mute)" stroke-width="7" stroke-linecap="round" fill="none"/>
-          <path d="M60 34 l14 9 -14 9" stroke="#D4FF00" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          <path d="M60 34 l14 9 -14 9" stroke="#FFE14D" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
         </svg>
-        <span class="wm">vamos</span>
+        <span class="wm">ŌLLIN<em>GO</em></span>
       </div>
       <nav class="vm-tabs" id="vmTabs"></nav>
       <div class="vm-right">
@@ -1781,15 +1836,15 @@ html[data-theme="light"] .vm-tabs button.on{background:#FFFFFF;color:#0B0C10;box
     <!-- LEFT: brand hero -->
     <div class="authhero">
       <div class="ah-brand">
-        <svg width="30" height="30" viewBox="0 0 90 90" fill="none" aria-hidden="true"><circle cx="30" cy="43" r="9" fill="#D4FF00"/><path d="M60 34 l14 9 -14 9" stroke="#D4FF00" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
-        <span class="wm">vamos</span>
+        <svg width="30" height="30" viewBox="0 0 90 90" fill="none" aria-hidden="true"><circle cx="30" cy="43" r="9" fill="#FFE14D"/><path d="M60 34 l14 9 -14 9" stroke="#FFE14D" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+        <span class="wm">ŌLLIN<em>GO</em></span>
       </div>
       <div class="ah-mid">
         <div class="ah-eyebrow"><span class="dash"></span> Outreach, informed</div>
         <h1 class="ah-title">Walk in already <span class="hl">knowing.</span></h1>
         <p class="ah-sub">We gather the roles, the timing, the buyer — so every message lands like you spent hours on research you never had to do.</p>
       </div>
-      <div class="ah-foot">OLLIN : VAMOS · YOUR OUTREACH DESK</div>
+      <div class="ah-foot">ŌLLIN | GO · WHERE THE WORK RUNS</div>
     </div>
     <!-- RIGHT: sign-in form -->
     <div class="authform">
@@ -1819,7 +1874,7 @@ html[data-theme="light"] .vm-tabs button.on{background:#FFFFFF;color:#0B0C10;box
     <div class="lock-card">
       <button class="lp-close" id="authClose" aria-label="Close">&times;</button>
       <div class="logo-lockup">
-        <div class="vm-word"><span>Ollin</span> <i>:</i> <b>Vamos</b></div>
+        <div class="vm-word"><span>ŌLLIN</span> <i>|</i> <b>GO</b></div>
         <div class="ll-rule"></div>
         <div class="ll-tag">We got you.</div>
       </div>
@@ -2287,7 +2342,7 @@ html[data-theme="light"] .vm-tabs button.on{background:#FFFFFF;color:#0B0C10;box
     var reader=new FileReader();
     reader.onload=function(){
       var data; try{ data=JSON.parse(reader.result); }catch(e){ toast("Not a valid backup"); return; }
-      if(!data || !Array.isArray(data.accounts)){ toast("Not an VAMOS backup"); return; }
+      if(!data || !Array.isArray(data.accounts)){ toast("Not an ŌLLIN GO backup"); return; }
       if(!confirm("Restore this backup? Replaces current accounts, touches and messages.")) return;
       state.accounts=data.accounts||[]; state.done=data.done||{}; state.notes=data.notes||{}; state.reschedule=data.reschedule||{}; state.todos=Array.isArray(data.todos)?data.todos:(state.todos||[]); state.extra=data.extra||{}; state.coldStreakSince=data.coldStreakSince||null; state.seeded=true;
       if(!state.accounts.length) intentionalWipe();
@@ -2311,7 +2366,7 @@ html[data-theme="light"] .vm-tabs button.on{background:#FFFFFF;color:#0B0C10;box
     var localSheetUrl=(await sGet("tracker:sheetUrl"))||"";
     var localHandoff=(await sGet("tracker:handoffNote"))||"";
 
-    if(!confirm("Found "+localAccounts.length+" account(s) saved on this device. Add them to your VAMOS account? Existing cloud data is kept — matching accounts are skipped.")) return;
+    if(!confirm("Found "+localAccounts.length+" account(s) saved on this device. Add them to your ŌLLIN GO account? Existing cloud data is kept — matching accounts are skipped.")) return;
 
     var existingIds={}; state.accounts.forEach(function(x){ existingIds[x.id]=true; });
     var added=0;
@@ -2448,7 +2503,7 @@ html[data-theme="light"] .vm-tabs button.on{background:#FFFFFF;color:#0B0C10;box
     { kick:"QUESTION 3 OF 4", q:"What do you help them with?",
       sub:"The problem you solve stays the same even when the job title on the other end changes.",
       ph:"Filling hard technical roles fast, without the agency drag.", key:"help", big:true,
-      tag:"Vamos figures out <b>who owns that pain</b> at each company." },
+      tag:"ŌLLIN GO figures out <b>who owns that pain</b> at each company." },
     { kick:"QUESTION 4 OF 4", q:"How should I introduce you?",
       sub:"One line, in your words. Skip it and I'll fall back to your title and company.",
       ph:"I help engineering teams fill hard roles fast without the agency runaround.", key:"intro", big:true }
@@ -2459,10 +2514,10 @@ html[data-theme="light"] .vm-tabs button.on{background:#FFFFFF;color:#0B0C10;box
     var ans={ name:s.name||"", role:s.company||"", help:s.credibility||"", intro:(s.intro&&s.intro!==DEFAULT_SENDER_INTRO?s.intro:"") };
     var step=0, saving=false;
     var mkSvg='<svg width="26" height="26" viewBox="0 0 86 86" fill="none">'+
-      '<circle cx="30" cy="43" r="9" fill="#D4FF00"/>'+
+      '<circle cx="30" cy="43" r="9" fill="#FFE14D"/>'+
       '<path d="M44 22 A24 24 0 0 1 44 64" stroke="#F5F5F4" stroke-width="7" stroke-linecap="round" fill="none"/>'+
       '<path d="M56 30 A15 15 0 0 1 56 56" stroke="var(--mute)" stroke-width="7" stroke-linecap="round" fill="none"/>'+
-      '<path d="M60 34 l14 9 -14 9" stroke="#D4FF00" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>';
+      '<path d="M60 34 l14 9 -14 9" stroke="#FFE14D" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>';
     var ov=el('<div class="ob-screen"><div class="ob-inner">'+
       '<div class="ob-half ob-left" id="obLeft"></div>'+
       '<div class="ob-half ob-right" id="obRight"></div>'+
@@ -2480,7 +2535,7 @@ html[data-theme="light"] .vm-tabs button.on{background:#FFFFFF;color:#0B0C10;box
       else if(help) line='<div class="pline real">Solves: <b>'+esc(help)+'</b></div>';
       else line='<div class="pline hint">The engines fill in who to reach and why — this part is just you.</div>';
       document.getElementById("obLeft").innerHTML=
-        '<div class="ob-brand">'+mkSvg+'<span class="wm">vamos</span>'+
+        '<div class="ob-brand">'+mkSvg+'<span class="wm">ŌLLIN<em>GO</em></span>'+
           '<span class="tag">· an Ollin Systems company</span></div>'+
         '<div class="ob-htitle">This is what<br>I\'ll know about you.</div>'+
         '<div class="ob-hsub">Light by design. You give me the constant, personal part — the 8 engines handle everything about the target.</div>'+
@@ -2596,7 +2651,7 @@ html[data-theme="light"] .vm-tabs button.on{background:#FFFFFF;color:#0B0C10;box
       try{
         var d=await postSender(payload);
         ACCOUNT.sender=d.sender; ov.remove();
-        showApp(true); render(); toast("You're set. Vamos.");
+        showApp(true); render(); toast("You're set. Let's go.");
       }catch(e){
         saving=false;
         if(err) err.textContent=(e&&e.message)||"Couldn't save — try again.";
@@ -2779,7 +2834,7 @@ html[data-theme="light"] .vm-tabs button.on{background:#FFFFFF;color:#0B0C10;box
       else if(mode==="signup"){
         toast(d.mailed===false
           ? "You’re in. We couldn’t send the confirmation email — try Resend up top in a minute."
-          : "Welcome to VAMOS. Check your inbox to confirm your email.");
+          : "Welcome to ŌLLIN GO. Check your inbox to confirm your email.");
       }
     }catch(e){
       lockErr((e&&e.message)||"Something went wrong. Try again.");
@@ -3656,8 +3711,8 @@ var VM = { i: 0, qIds: null, narrow: false, channel: null, angle: "gap",
            gap: GAP_DEFAULT };   /* how far out the next touch lands, in days */
 /* [0] is the route key and is persisted nowhere but memory; [1] is the label.
    "today" stays the key so every navView check downstream keeps working. */
-var VM_TABS = [["dash", "Dashboard"], ["today", "Workspace"], ["pipeline", "Pipeline"],
-               ["companies", "Companies"], ["contacts", "Contacts"], ["ollin", "Ollin"]];
+var VM_TABS = [["dash", "Dashboard"], ["today", "Up Next"], ["pipeline", "Pipeline"],
+               ["companies", "Mushroom"], ["contacts", "Contacts"], ["ollin", "Ollin"]];
 var VM_ANGLES = [["gap", "The gap"], ["cow", "Cost of waiting"], ["person", "The person"], ["free", "Freestyle"]];
 /* exactly three, per the editor spec */
 var CARD_STEERS = [["Shorter", "Make it shorter."],
@@ -4150,7 +4205,7 @@ function openQuotaEdit() {
     edField("What you're counting", "eqLabel", salesQuotaLabel(), { opt: 1, ph: "placements" }) +
     edSection("Where you are") +
     edField("Closed so far this week", "eqClosed", salesClosed() ? String(salesClosed()) : "", { opt: 1, ph: "0" });
-  edOverlay("Sales quota", "Vamos can't see your closes, so this one you keep yourself.", html,
+  edOverlay("Sales quota", "ŌLLIN GO can't see your closes, so this one you keep yourself.", html,
     function (ov, close) {
       var t = parseInt(edVal(ov, "eqTarget"), 10);
       if (edVal(ov, "eqTarget") && !(t > 0)) { ov.querySelector("#edErr").textContent = "Give me a number above zero, or leave it blank."; return; }
@@ -4169,7 +4224,7 @@ function quotaCardHTML() {
     return '<div class="dtile paper quiet a-quota rv-s edit" id="dashQuota" style="--d:.46s">' +
       '<div class="mn dt-lab">Sales quota</div>' +
       '<div class="dt-none">Not set</div>' +
-      '<div class="dt-sub">Vamos can\'t see your closes — set a weekly number and it will track against it. ' +
+      '<div class="dt-sub">ŌLLIN GO can\'t see your closes — set a weekly number and it will track against it. ' +
         '<span class="ed-hint">Set it</span></div></div>';
   }
   var pc = Math.round(closed / q * 100);
@@ -4206,9 +4261,9 @@ function viewDash(v) {
 
   v.innerHTML =
     '<div class="today dash">' +
-      '<div class="gd-kicker rv" style="--d:.06s"><span class="mn">Ollin : Vamos</span><span class="krule"></span>' +
+      '<div class="gd-kicker rv" style="--d:.06s"><span class="mn">ŌLLIN | GO</span><span class="krule"></span>' +
         '<span class="mn">Your desk</span><span class="krule"></span><span class="mn">Outreach, Informed</span></div>' +
-      '<h1 class="gtext rv-t" style="--d:.12s">' + greetWord() + (name ? ", " + esc(name) : "") + '. <span class="hl">Vamos!</span></h1>' +
+      '<h1 class="gtext rv-t" style="--d:.12s">' + greetWord() + (name ? ", " + esc(name) : "") + '. <span class="hl">Let\'s go.</span></h1>' +
 
       '<div class="dgrid">' +
 
@@ -4291,7 +4346,7 @@ function greeting(b) {
   var lead = greetWord() + (name ? ", " + esc(name) : "") + ".";
   if (due || fresh) {
     /* no counts — a big number is a wall, not a nudge. One person at a time. */
-    return lead + ' Here\'s who\'s up. <span class="hl">Vamos!</span>';
+    return lead + ' Here\'s who\'s up. <span class="hl">Let\'s go.</span>';
   }
   if (rest) return lead + " Nothing due — " + rest + (rest === 1 ? " person is" : " people are") + " resting. Go outside.";
   return lead + " No contacts yet — drop a CSV or Sheet under Contacts and I'll build the cadence.";
@@ -4624,7 +4679,7 @@ function cardBodyHTML(t, a) {
     '<circle r="7.5" fill="#FFFFFF"/></g></svg>';
   var core = (th.status === "pending")
     ? '<div class="vcore pending">' + OLLIN_GLYPH + '<span class="lb">Verifying…</span></div>'
-    : '<div class="vcore">' + OLLIN_GLYPH + '<span class="lb">Verified</span></div>';
+    : '<div class="vcore"><span class="omark" aria-hidden="true"><i class="bar"></i><span class="o">O</span></span><span class="lb">Verified</span></div>';
 
   var meta = '';
   if (t.email) meta += '<span class="it">' + IC_MAIL + ' ' + esc(t.email) + (th.emailConf ? ' <span class="conf">' + esc(th.emailConf) + '</span>' : '') + '</span>';
@@ -4808,7 +4863,7 @@ function decide(kind, t) {
        date months ago. */
     var landed = scheduleNext(t, VM.gap);
     persistDone();
-    toast(landed ? ("Logged. Next touch " + fmtLong(landed) + ".") : "Cadence complete. Vamos.");
+    toast(landed ? ("Logged. Next touch " + fmtLong(landed) + ".") : "Cadence complete. Let's go.");
   } else if (kind === "later") {
     state.reschedule[t.id] = iso(addDays(todayStr(), 1)); logActivity("pushed", t); scheduleSave();
     toast("Moved to tomorrow.");
@@ -4968,7 +5023,7 @@ function gdAsk() {
     return gdSay("<b>&ldquo;Send them over.&rdquo;</b> Two profiles, ask for a yes/no by Friday.<br><b>&ldquo;We're all set.&rdquo;</b> &ldquo;When the next req lands, want me ready?&rdquo; then close it out.<br><b>Silence.</b> That's what the cadence is for.");
   if (/(move|bring|pull|reschedule|set|make).*(all|everyone|them|everything).*(today|now)|(all|everyone|everything).*(today|due now)|clear.*(backlog|queue).*today/.test(lq)) {
     var n = moveAllToToday();
-    return gdSay(n ? "Moved <b>" + n + "</b> into today — they're all due now. <span class=\"co\">Vamos.</span>" : "Nothing to move — the queue's empty.");
+    return gdSay(n ? "Moved <b>" + n + "</b> into today — they're all due now. <span class=\"co\">Let's go.</span>" : "Nothing to move — the queue's empty.");
   }
   if (/import|csv|sheet|upload/.test(lq)) { var f = document.getElementById("coFile"); if (f) { f.click(); return gdSay("Pick your CSV or Excel — I'll sort people vs. companies automatically."); } navView = "companies"; render(); return; }
   if (/pipeline|funnel|stage/.test(lq)) { navView = "pipeline"; render(); return; }
@@ -5335,6 +5390,8 @@ function viewContacts(v) {
 /* ---------- Companies (grid of white cards) ---------- */
 var CO_Q = "";
 var CO_VIEW = null;   /* acctId when viewing a full company profile */
+var CO_TAB = "mushroom"; /* tab inside the client box: overview | mushroom | contacts | evidence */
+var MU_SEL = null;    /* selected contact id in the Mushroom map */
 var CO_FACTS = [["hiring", "hiringSrc", "Hiring"], ["building", "buildingSrc", "Building"], ["stack", "stackSrc", "Stack"],
   ["money", "moneySrc", "Money"], ["leadership", "leadershipSrc", "Leadership"], ["product", "productSrc", "Product"],
   ["expansion", "expansionSrc", "Expansion"], ["timing", "timingSrc", "Timing"]];
@@ -5560,7 +5617,7 @@ function gapsCsv() {
 function downloadGapsCsv() {
   var blob = new Blob([gapsCsv()], { type: "text/csv;charset=utf-8" });
   var url = URL.createObjectURL(blob), a = document.createElement("a");
-  a.href = url; a.download = "vamos-whats-missing-" + todayStr() + ".csv";
+  a.href = url; a.download = "ollin-go-whats-missing-" + todayStr() + ".csv";
   document.body.appendChild(a); a.click(); document.body.removeChild(a);
   setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
   toast("CSV downloaded.");
@@ -5580,7 +5637,7 @@ function printGaps() {
       "</td><td>" + miss + "</td><td class='ppl'>" + esc(r.people || "—") + "</td></tr>";
   }).join("");
   w.document.write(
-    "<!doctype html><meta charset='utf-8'><title>Vamos — What's missing</title>" +
+    "<!doctype html><meta charset='utf-8'><title>ŌLLIN GO — What's missing</title>" +
     /* An explicit @page margin also drops the browser's own header/footer, so
        the sheet does not print "about:blank" and a timestamp across the top. */
     "<style>@page{margin:14mm}" +
@@ -5592,7 +5649,7 @@ function printGaps() {
     "tr{break-inside:avoid;page-break-inside:avoid}thead{display:table-header-group}" +
     ".co{font-weight:700;width:24%}.num{width:8%;color:#444}.f{color:#555}.ppl{width:26%;color:#555}" +
     ".ok{color:#2E7D32;font-weight:600}</style>" +
-    "<h1>What's missing</h1><p class='sub'>Vamos · " + esc(todayStr()) + " · " +
+    "<h1>What's missing</h1><p class='sub'>ŌLLIN GO · " + esc(todayStr()) + " · " +
     withPeople.length + " account" + (withPeople.length === 1 ? "" : "s") + " with contacts, " +
     totalC + " contacts · " + rows.length + " account" + (rows.length === 1 ? "" : "s") + " with gaps</p>" +
     "<table><thead><tr><th>Company</th><th>Contacts</th><th>Missing company fields</th><th>Contact gaps</th></tr></thead><tbody>" +
@@ -5606,13 +5663,13 @@ function emailGaps() {
     return "• " + r.company + " (" + r.contacts + " contacts)\n    Missing: " +
       (r.missing.join(", ") || "—") + (r.people ? "\n    Contacts: " + r.people : "");
   });
-  var body = "Vamos — what's missing (" + todayStr() + ")\n" + rows.length + " accounts with gaps\n\n" + lines.join("\n\n");
+  var body = "ŌLLIN GO — what's missing (" + todayStr() + ")\n" + rows.length + " accounts with gaps\n\n" + lines.join("\n\n");
   /* mailto has a length ceiling — send the top slice and point at the CSV for the rest */
   var MAX = 1800, trimmed = body.length > MAX;
-  if (trimmed) body = body.slice(0, MAX) + "\n\n… list truncated — use Download CSV in Vamos for the full report.";
+  if (trimmed) body = body.slice(0, MAX) + "\n\n… list truncated — use Download CSV in ŌLLIN GO for the full report.";
   var to = (ACCOUNT && ACCOUNT.email) ? ACCOUNT.email : "";
   window.location.href = "mailto:" + encodeURIComponent(to) +
-    "?subject=" + encodeURIComponent("Vamos — what's missing (" + todayStr() + ")") +
+    "?subject=" + encodeURIComponent("ŌLLIN GO — what's missing (" + todayStr() + ")") +
     "&body=" + encodeURIComponent(body);
   if (trimmed) toast("Email opened — long list, use CSV for all of it.");
 }
@@ -5704,7 +5761,7 @@ function viewCompanies(v) {
 
     '<div class="vm-card rv" style="--d:.4s;margin-top:20px">' +
       '<div class="mn" style="color:var(--steel);margin-bottom:6px">Add companies &amp; intel</div>' +
-      '<p class="vm-sub" style="margin:0 0 12px">Paste a list as <b style="color:var(--bone)">Company, City, State</b> — or drop your agent\'s <b style="color:var(--bone)">[ COMPANY NOTE ]</b> / <b style="color:var(--bone)">[ CONTACT NOTE ]</b> blocks and Vamos parses the full intel.</p>' +
+      '<p class="vm-sub" style="margin:0 0 12px">Paste a list as <b style="color:var(--bone)">Company, City, State</b> — or drop your agent\'s <b style="color:var(--bone)">[ COMPANY NOTE ]</b> / <b style="color:var(--bone)">[ CONTACT NOTE ]</b> blocks and ŌLLIN GO parses the full intel.</p>' +
       '<textarea id="coPaste" placeholder="Acme Robotics, Austin, TX&#10;&#10;— or —&#10;&#10;[ COMPANY NOTE ]&#10;COMPANY: Northwind Logistics | Domain: northwind.com | 350 Employees | Chicago, IL&#10;1. LEAD SIGNAL (TRIGGER): ..." ' +
         'style="width:100%;min-height:120px;background:var(--navy);border:1px solid var(--line);color:var(--bone);border-radius:12px;padding:13px 15px;font-family:Archivo;font-size:14px;line-height:1.6;resize:vertical;outline:0"></textarea>' +
       '<div class="vm-row" style="margin-top:12px"><button class="vm-pri" id="coAdd">Add</button>' +
@@ -5734,6 +5791,90 @@ function viewCompanies(v) {
   if (coPick) coPick.onclick = function () { var f = document.getElementById("coFile"); if (f) f.click(); };
 }
 var CO_FILT = { f: "all" };
+
+
+/* ---------- Mushroom: the org map, built from what the engines already assigned ----------
+   Tiers come from persona (Engine 6 buying-role classification). Reporting lines are drawn
+   SOLID only when a contact carries reportsTo + relVerified === true. Anything else is dashed
+   and says so. The UI never promotes a label the engine didn't. */
+function muTierOf(t) {
+  var s = ((t.roleLabel || t.persona) || "").toLowerCase();
+  if (s.indexOf("econom") > -1 || s.indexOf("buyer") > -1 || /\b(coo|cfo|ceo|cto|chief)\b/.test(s)) return 0;
+  if (s.indexOf("champion") > -1) return 1;
+  if (s.indexOf("blocker") > -1 || s.indexOf("gate") > -1) return 2;
+  if (s.indexOf("evaluat") > -1 || s.indexOf("technical") > -1 || s.indexOf("hiring") > -1 || s.indexOf("manager") > -1 || s.indexOf("director") > -1 || s.indexOf("talent") > -1) return 2;
+  return 3;
+}
+var MU_TIERS = ["Economic buyer", "Champion", "Evaluators · blockers · operators", "Additional"];
+function muRoleCls(t) {
+  var s = ((t.roleLabel || t.persona) || "").toLowerCase();
+  if (s.indexOf("blocker") > -1 || s.indexOf("gate") > -1) return "block";
+  if (s.indexOf("econom") > -1 || s.indexOf("buyer") > -1) return "econ";
+  return "";
+}
+function muLineOf(t, byId) {
+  if (t.reportsTo && byId[t.reportsTo]) {
+    return t.relVerified === true
+      ? { cls: "ok", txt: "reports to " + (byId[t.reportsTo].name || "").split(" ")[0] + " · verified" }
+      : { cls: "", txt: "reports to " + (byId[t.reportsTo].name || "").split(" ")[0] + " · inferred" };
+  }
+  return { cls: "", txt: "placed by role · inferred" };
+}
+function muSeedOf(contacts) {
+  /* the seed = the person the engine found first: earliest pulledAt, else the champion, else the first */
+  var withT = contacts.filter(function (t) { return t.pulledAt; }).sort(function (a, b) { return a.pulledAt - b.pulledAt; });
+  if (withT.length) return withT[0].id;
+  var ch = contacts.filter(function (t) { return muTierOf(t) === 1; });
+  return (ch[0] || contacts[0] || {}).id;
+}
+function renderMushroom(a, contacts) {
+  if (!contacts.length) return '<div class="mu-empty">Nothing to mushroom yet. Paste a <b style="color:var(--bone)">[ CONTACT NOTE ]</b> for this account and the map builds itself from the engine\'s buying-role calls.</div>';
+  var byId = {}; contacts.forEach(function (t) { byId[t.id] = t; });
+  var seed = muSeedOf(contacts);
+  if (!MU_SEL || !byId[MU_SEL]) MU_SEL = seed;
+  var tiers = [[], [], [], []];
+  contacts.forEach(function (t) { tiers[muTierOf(t)].push(t); });
+  var anyVerified = contacts.some(function (t) { return t.reportsTo && t.relVerified === true; });
+
+  var tree = '';
+  var first = true;
+  tiers.forEach(function (list, i) {
+    if (!list.length) return;
+    var dashed = !list.some(function (t) { return t.reportsTo && t.relVerified === true; });
+    if (!first) tree += '<div class="mu-con' + (dashed ? ' dash' : '') + '"></div>';
+    first = false;
+    tree += '<div class="mu-lvl"><div class="mu-tier">' + MU_TIERS[i] + '</div>' + list.map(function (t) {
+      var ln = muLineOf(t, byId);
+      return '<button class="mu-node" data-t="' + esc(t.id) + '" aria-pressed="' + (t.id === MU_SEL ? 'true' : 'false') + '">' +
+        (t.id === seed ? '<span class="seed">FOUND FIRST</span>' : '') +
+        '<div class="nm">' + esc(t.name || "—") + '</div><div class="tt">' + esc(t.title || "") + '</div>' +
+        '<div class="row"><span class="mu-role ' + muRoleCls(t) + '">' + esc(roleLabelOf(t)) + '</span><span class="mu-line ' + ln.cls + '">' + esc(ln.txt) + '</span></div>' +
+      '</button>';
+    }).join('') + '</div>';
+  });
+
+  var sel = byId[MU_SEL];
+  var ln = muLineOf(sel, byId);
+  var detail =
+    '<aside class="mu-detail">' +
+      '<div class="eb">' + (sel.id === seed ? 'Selected · found first' : 'Selected · mushroom out') + '</div>' +
+      '<h3>' + esc(sel.name || "—") + '</h3><div class="sub">' + esc(sel.title || "") + (roleLabelOf(sel) ? ' · ' + esc(roleLabelOf(sel)) : '') + '</div>' +
+      '<dl>' +
+        '<dt>Line</dt><dd>' + esc(ln.txt) + '</dd>' +
+        '<dt>Email</dt><dd>' + (sel.email ? esc(sel.email) : '<span style="color:var(--steel)">not verified — withheld</span>') + '</dd>' +
+        '<dt>LinkedIn</dt><dd>' + (sel.linkedin ? '<a class="lnk" href="' + esc(sel.linkedin) + '" target="_blank" rel="noopener">open</a>' : '<span style="color:var(--steel)">not tracked yet</span>') + '</dd>' +
+        '<dt>Status</dt><dd>' + (statusOf(sel) === "pending" ? 'verifying' : 'ready') + '</dd>' +
+      '</dl>' +
+      (sel.whyCares || sel.angle ? '<div class="angle"><b>Why they\'d care — from the facts, nothing else</b>' + esc(sel.whyCares || sel.angle) + '</div>' : '<div class="angle"><b>Why they\'d care</b><span style="color:var(--steel)">not tracked yet</span></div>') +
+      '<div class="act"><button class="btn-go" id="muOpen">Open ' + esc((sel.name || "").split(" ")[0] || "contact") + ' in Up Next</button><button class="btn-ghost" id="muCard">Full card</button></div>' +
+      '<div class="rule">Approval is not send · nothing leaves without you</div>' +
+    '</aside>';
+
+  return '<div class="mu-intro"><span><b>Start from the person the engine found — then mushroom out.</b> Click anyone. Solid = verified line. Dashed = inferred, and it says so.</span>' +
+    '<span class="mu-legend"><span><i></i> verified</span><span><i class="dash"></i> inferred</span></span></div>' +
+    '<div class="mu-grid"><div class="mu-tree">' + tree + '</div>' + detail + '</div>' +
+    (anyVerified ? '' : '<div class="cp-thin" style="margin-top:12px">No verified reporting lines on this account yet — every line here is placed by role. Lines turn solid when a contact arrives with <span class="mono">reportsTo</span> + <span class="mono">relVerified</span> from Engine 6.</div>');
+}
 
 /* ---------- Company profile (full page) ---------- */
 function viewCompanyProfile(v) {
@@ -5814,8 +5955,27 @@ function viewCompanyProfile(v) {
     '</div>';
   }).join("");
 
+  var overviewPanel = '<div class="cp-cols"><div class="cp-stack">' + leftStack + '</div>' +
+    '<div class="cp-stack"><div class="cp-card rv" style="--d:.26s"><div class="cp-ctitle mono">Signals</div>' + sigRows + '</div></div></div>';
+  var contactsPanel = '<div class="cp-sechead rv" style="--d:.1s"><div class="t">Contacts at ' + esc((a.company || "").split(" ")[0] || "this account") + '</div>' +
+      '<div class="c">' + contacts.length + ' engine-matched · click a card for full intel</div></div>' +
+    (tiles ? '<div class="ctgrid rv" style="--d:.16s">' + tiles + '</div>'
+      : '<div class="vm-card rv" style="--d:.16s"><p class="vm-sub" style="margin:0">No contacts on this account yet — paste a <b style="color:var(--bone)">[ CONTACT NOTE ]</b> on the Mushroom tab.</p></div>');
+  var evidencePanel = '<div class="cp-cols"><div class="cp-stack"><div class="cp-card rv" style="--d:.1s"><div class="cp-ctitle mono">Signals — cite these</div>' + sigRows + '</div></div>' +
+    '<div class="cp-stack"><div class="cp-card rv" style="--d:.16s"><div class="cp-ctitle mono">Sourced facts</div>' +
+      (CO_FACTS.filter(function (f) { return a[f[0]]; }).map(function (f) {
+        return '<div class="cp-sig"><div><div class="st">' + esc(a[f[0]]) + '</div><div class="sd">' + f[2] + (a[f[1]] ? ' · ' + esc(a[f[1]]) : ' · <span style="color:var(--steel)">source not tracked yet</span>') + '</div></div></div>';
+      }).join("") || '<div class="cp-thin">No sourced facts yet. Unknowns stay unknown.</div>') +
+    '</div></div></div>';
+  var mushroomPanel = renderMushroom(a, contacts);
+
+  function tab(id, label, n) {
+    return '<button class="cp-tab" role="tab" data-tab="' + id + '" aria-selected="' + (CO_TAB === id ? 'true' : 'false') + '">' + label + (n != null ? ' <span class="n">' + n + '</span>' : '') + '</button>';
+  }
+  function panel(id, html) { return '<div class="cp-panel" data-tab="' + id + '"' + (CO_TAB === id ? ' data-active' : '') + '>' + html + '</div>'; }
+
   v.innerHTML =
-    '<div class="cp-crumb rv" style="--d:.04s;display:flex;align-items:center;gap:8px"><span class="lnk" id="cpBack">Companies</span> <b>&rsaquo;</b> <span>' + esc(a.company || "—") + '</span><button class="cp-back" id="cpEdit" style="margin-left:auto">Edit company</button></div>' +
+    '<div class="cp-crumb rv" style="--d:.04s;display:flex;align-items:center;gap:8px"><span class="lnk" id="cpBack">Mushroom</span> <b>&rsaquo;</b> <span>' + esc(a.company || "—") + '</span><button class="cp-back" id="cpEdit" style="margin-left:auto">Edit company</button></div>' +
     '<div class="cp-hero rv" style="--d:.12s">' +
       '<div class="cp-logo">' + esc((a.company || "?").slice(0, 1).toUpperCase()) + '</div>' +
       '<div><div class="cp-name">' + esc(a.company || "—") + '</div>' +
@@ -5826,20 +5986,24 @@ function viewCompanyProfile(v) {
           (a.sector ? '<span>' + esc(a.sector) + '</span>' : '') +
         '</div></div>' +
       '<div class="cp-whybadge ' + (lvl === "hot" ? "" : lvl) + '">' +
-        (lvl === "hot" ? '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#D4FF00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/></svg>' : '') +
+        (lvl === "hot" ? '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#FFE14D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/></svg>' : '') +
         (lvl === "hot" ? "WHY NOW · HIGH INTENT" : lvl === "warm" ? "WARMING" : "NEW ACCOUNT") + '</div>' +
     '</div>' +
-
-    '<div class="cp-cols">' +
-      '<div class="cp-stack">' + leftStack + '</div>' +
-      '<div class="cp-stack"><div class="cp-card rv" style="--d:.26s"><div class="cp-ctitle mono">Signals</div>' + sigRows + '</div></div>' +
+    '<div class="cp-tabs rv" role="tablist" style="--d:.18s">' +
+      tab("overview", "Overview") + tab("mushroom", "Mushroom", contacts.length) + tab("contacts", "Contacts", contacts.length) + tab("evidence", "Evidence", sigs.length) +
     '</div>' +
+    panel("overview", overviewPanel) + panel("mushroom", mushroomPanel) + panel("contacts", contactsPanel) + panel("evidence", evidencePanel);
 
-    '<div class="cp-sechead rv" style="--d:.34s"><div class="t">Contacts at ' + esc((a.company || "").split(" ")[0] || "this account") + '</div>' +
-      '<div class="c">' + contacts.length + ' engine-matched · click a card for full intel</div></div>' +
-    (tiles ? '<div class="ctgrid rv" style="--d:.4s">' + tiles + '</div>'
-      : '<div class="vm-card rv" style="--d:.4s"><p class="vm-sub" style="margin:0">No contacts on this account yet — paste a <b style="color:var(--bone)">[ CONTACT NOTE ]</b> on the Companies tab.</p></div>');
-
+  Array.prototype.forEach.call(v.querySelectorAll(".cp-tab"), function (b) {
+    b.onclick = function () { CO_TAB = b.dataset.tab; render(); };
+  });
+  Array.prototype.forEach.call(v.querySelectorAll(".mu-node"), function (n) {
+    n.onclick = function () { MU_SEL = n.dataset.t; render(); };
+  });
+  var muOpen = document.getElementById("muOpen");
+  if (muOpen) muOpen.onclick = function () { navView = "today"; render(); window.scrollTo(0, 0); };
+  var muCard = document.getElementById("muCard");
+  if (muCard) muCard.onclick = function () { openContactModal(a.id, MU_SEL); };
   document.getElementById("cpBack").onclick = function () { navView = "companies"; render(); window.scrollTo(0, 0); };
   var ce = document.getElementById("cpEdit"); if (ce) ce.onclick = function () { openCompanyEdit(a.id); };
   Array.prototype.forEach.call(v.querySelectorAll(".ctile"), function (t) { t.onclick = function () { openContactModal(t.dataset.a, t.dataset.t); }; });
