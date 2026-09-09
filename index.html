@@ -963,7 +963,7 @@ html[data-theme="light"] .savebar a{color:#181A1E}
 .up-fine{color:var(--mute);font-size:12px;margin-top:12px}
 
 /* ======================= SENDER / ONBOARDING-STEP OVERLAY (kept fns) ======================= */
-.sender-overlay{position:fixed;inset:0;z-index:70;background:rgba(5,8,14,.72);backdrop-filter:blur(6px);
+.sender-overlay{position:fixed;inset:0;z-index:90;/* above .vmodal-overlay (80): the editor opens from inside the contact modal and must be clickable over it */background:rgba(5,8,14,.72);backdrop-filter:blur(6px);
   display:grid;place-items:center;padding:24px;overflow:auto}
 .sender-overlay.solid{background:var(--black)}
 .sender-card{width:460px;max-width:100%;background:var(--navy-2);border:1px solid var(--line);border-radius:18px;
@@ -3237,6 +3237,7 @@ html[data-theme="light"] .vm-tabs button.on{background:#FFFFFF;color:#181A1E;box
       expansion:find("expansion","new office","new market"), expansionsrc:find("expansion source"),
       timing:find("timing","fiscal","budget cycle"), timingsrc:find("timing source"),
       contractor:find("contractor","is contractor"),
+      reportsto:pick(find("reports to","reportsto","reports_to","reporting to","manager name","manager","reports to (name)"), findC("reports","to")),
       t1:pick(find("touch 1 copy","touch 1","touch1 copy","linkedin 1","touch 1 message"), findC("outreach 1"), findC("linkedin","day 1")),
       t2subj:pick(find("touch 2 subject","email 1 subject","touch2 subject"), findC("email","subject")),
       t2:pick(find("touch 2 copy","touch 2","touch2 copy","email 1 body","touch 2 message"), findC("outreach 2","body"), findC("email","body")),
@@ -3399,6 +3400,7 @@ html[data-theme="light"] .vm-tabs button.on{background:#FFFFFF;color:#181A1E;box
     // and letting the rep discover it in the table.
     var noCompanyCol = cm.company<0;
     var budget=freeLeft(); // new contacts allowed under the free cap (Infinity if unlimited)
+    var mgrByThread={}, touchedAccts={}; // Reports To arrives as a name — resolved per account after the loop
     for(var i=1;i<rows.length;i++){
       var r=rows[i];
       var get=function(idx){ return idx>=0 && idx<r.length ? (r[idx]||"").trim() : ""; };
@@ -3443,13 +3445,16 @@ html[data-theme="light"] .vm-tabs button.on{background:#FFFFFF;color:#181A1E;box
         acct.threads.push(thread); added++;
       }
       for(var k=0;k<5;k++){ var v=(msgs[k]||"").trim(); if(v) state.notes[acct.id+"|"+thread.id+"|"+k]=v; }
+      var mgr=get(cm.reportsto); if(mgr){ mgrByThread[thread.id]=mgr; touchedAccts[acct.id]=acct; }
       lastAcctId=acct.id;
     }
+    var linked=0, unmatchedMgr=0;
+    for(var aid in touchedAccts){ var rr=muLinkByManagerName(touchedAccts[aid].threads, mgrByThread); linked+=rr.linked; unmatchedMgr+=rr.unmatched; }
     // drop only accounts we created this run that ended up empty (all their rows
     // hit the free cap). Company-only accounts added on purpose are kept.
     state.accounts=state.accounts.filter(function(a){ return (a.threads||[]).length>0 || !createdIds[a.id]; });
     if(lastAcctId && state.accounts.some(function(a){return a.id===lastAcctId;})) state.activeId=lastAcctId;
-    return {ok:true, added:added, updated:updated, skipped:skipped, noCompanyCol:noCompanyCol};
+    return {ok:true, added:added, updated:updated, skipped:skipped, noCompanyCol:noCompanyCol, linked:linked, unmatchedMgr:unmatchedMgr};
   }
 
   /* ===== company-only import — a known client list needs just Company / City / State ===== */
@@ -3625,7 +3630,7 @@ html[data-theme="light"] .vm-tabs button.on{background:#FFFFFF;color:#181A1E;box
         '<label class="full"><span class="lbl">Google Sheet link</span><input id="sh-url" placeholder="https://docs.google.com/spreadsheets/d/…"></label>'+
         '<div style="font-size:12.5px; color:var(--ink-2); margin:8px 0 12px; line-height:1.55">'+
           'Make the sheet readable: <b>Share &rarr; General access &rarr; Anyone with the link &rarr; Viewer</b>.<br>'+
-          'Header columns it reads (any it can find): <span class="mono" style="font-size:11.5px">Name · Title · Company · Persona · Sequence Day · First Touch Channel · LinkedIn URL · Email · Outreach Angle · Touch 1 Copy · Touch 2 Subject · Touch 2 Copy · Touch 3 Copy · Touch 4 Subject · Touch 4 Copy · Touch 5 Copy</span>.<br>'+
+          'Header columns it reads (any it can find): <span class="mono" style="font-size:11.5px">Name · Title · Company · Persona · Sequence Day · First Touch Channel · LinkedIn URL · Email · Outreach Angle · Reports To · Touch 1 Copy · Touch 2 Subject · Touch 2 Copy · Touch 3 Copy · Touch 4 Subject · Touch 4 Copy · Touch 5 Copy</span>.<br>'+
           'Re-importing the same sheet <b>updates</b> existing contacts (matched by email) instead of duplicating them.'+
         '</div>'+
         '<div class="form-actions"><button class="btn ghost" id="sh-cancel">Cancel</button><button class="btn" id="sh-go">Import / Sync</button></div>'+
@@ -3645,7 +3650,7 @@ html[data-theme="light"] .vm-tabs button.on{background:#FFFFFF;color:#181A1E;box
           if(!res.ok) throw new Error(res.msg);
           state.sheetUrl=raw; state.seeded=true;
           persistAccounts(); render();
-          toast("Synced: "+res.added+" added, "+res.updated+" updated");
+          toast("Synced: "+res.added+" added, "+res.updated+" updated"+(res.linked?", "+res.linked+" reporting line"+(res.linked===1?"":"s"):"")+(res.unmatchedMgr?" · "+res.unmatchedMgr+" Reports To name"+(res.unmatchedMgr===1?"":"s")+" matched nobody":""));
           if(res.noCompanyCol) toast("No Company column found — everyone landed under “Imported account”.");
           if(res.skipped) openUpgrade(res.skipped+" contact"+(res.skipped>1?"s":"")+" didn’t fit your "+FREE_CONTACT_CAP+" free slots.");
         })
@@ -3677,7 +3682,7 @@ html[data-theme="light"] .vm-tabs button.on{background:#FFFFFF;color:#181A1E;box
     var res=importRows(rows, true);
     if(!res.ok){ toast(res.msg); return; }
     state.seeded=true; persistAccounts(); render();
-    toast("Imported: "+res.added+" added, "+res.updated+" updated");
+    toast("Imported: "+res.added+" added, "+res.updated+" updated"+(res.linked?", "+res.linked+" reporting line"+(res.linked===1?"":"s"):"")+(res.unmatchedMgr?" · "+res.unmatchedMgr+" Reports To name"+(res.unmatchedMgr===1?"":"s")+" matched nobody":""));
     if(res.noCompanyCol) toast("No Company column found — everyone landed under “Imported account”.");
     if(res.skipped) openUpgrade(res.skipped+" contact"+(res.skipped>1?"s":"")+" didn’t fit your "+FREE_CONTACT_CAP+" free slots.");
   }
@@ -5030,7 +5035,7 @@ function v3Draft(steerT, steer) {
       var mm = document.getElementById("vmMeta"); if (mm) mm.textContent = countLabel(full) + " · AUDITED ✓";
       syncMail(t);
       var did = steer ? ("Ollin reworked it" + (/short/i.test(steer) ? " — shorter" : /convers|warm/i.test(steer) ? " — warmer" : /angle/i.test(steer) ? " — new angle" : "")) : "Ollin wrote it";
-      vmSay((res.d.angleWarning ? esc(res.d.angleWarning) + ' &nbsp;·&nbsp; ' : '') + did + ', in the box. <span class="act undo">Undo</span> <span class="act retry">Try again</span>');
+      vmSay((res.d.angleWarning ? esc(res.d.angleWarning) + ' &nbsp;·&nbsp; ' : '') + did + ', in the box. <span class="act undo">Undo</span> <span class="act retry">Regenerate</span>');
       toast(steer ? "Reworked." : "Drafted. Yours to edit.");
     }).catch(function () { vmSay("Network hiccup — try again"); toast("Network hiccup — try again"); })
     .then(function () { VM.drafting = false; var g2 = document.getElementById("vmAskGo"); if (g2) g2.classList.remove("busy"); });
@@ -5188,7 +5193,7 @@ function askOllin(steer) {
     render();
     var did = steer ? ("Ollin reworked it" + (/short/i.test(steer) ? " — shorter" : /convers/i.test(steer) ? " — warmer" : /angle/i.test(steer) ? " — new angle" : "")) : "Ollin drafted it";
     var micro = (res.d.angleWarning ? esc(res.d.angleWarning) + ' &nbsp;·&nbsp; ' : "") +
-      did + ', in the box. <span class="act undo">Undo</span> <span class="act retry">Try again</span>';
+      did + ', in the box. <span class="act undo">Undo</span> <span class="act retry">Regenerate</span>';
     vmSay(micro);
     toast(steer ? "Reworked with your direction." : "Drafted. Yours to edit.");
   }).catch(function () {
@@ -6005,14 +6010,43 @@ function muRoleCls(t) {
   if (s.indexOf("econom") > -1 || s.indexOf("buyer") > -1) return "econ";
   return "";
 }
+/* @export:mureports */
+/* A reporting line is SOLID when Engine 6 verified it (relVerified) or a human
+   supplied it — set on the contact (relSource "user") or carried in an import
+   column (relSource "import"). Each case says which, so a human-supplied line
+   is never shown as engine-verified. */
+function muLineSolid(t) {
+  return !!(t && t.reportsTo) && (t.relVerified === true || t.relSource === "user" || t.relSource === "import");
+}
 function muLineOf(t, byId) {
   if (t.reportsTo && byId[t.reportsTo]) {
-    return t.relVerified === true
-      ? { cls: "ok", txt: "reports to " + (byId[t.reportsTo].name || "").split(" ")[0] + " · verified" }
-      : { cls: "", txt: "reports to " + (byId[t.reportsTo].name || "").split(" ")[0] + " · inferred" };
+    var who = "reports to " + (byId[t.reportsTo].name || "").split(" ")[0];
+    if (t.relVerified === true) return { cls: "ok", txt: who + " · verified" };
+    if (t.relSource === "user") return { cls: "ok", txt: who + " · set by you" };
+    if (t.relSource === "import") return { cls: "ok", txt: who + " · from your import" };
+    return { cls: "", txt: who + " · inferred" };
   }
   return { cls: "", txt: "placed by role · inferred" };
 }
+/* "Reports To" in an import carries a manager's NAME, not an id. Match it to
+   another contact on the same account (full name, case/space-insensitive) and
+   link them. An unmatched name is kept on the contact as managerName so it is
+   not lost, and draws nothing. Never overwrites a line Engine 6 verified, and
+   never links a person to themselves. */
+function muNormName(s) { return String(s || "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim(); }
+function muLinkByManagerName(threads, managerByThreadId) {
+  var byName = {}, linked = 0, unmatched = 0;
+  (threads || []).forEach(function (t) { var k = muNormName(t.name); if (k && !byName[k]) byName[k] = t; });
+  (threads || []).forEach(function (t) {
+    var raw = managerByThreadId && managerByThreadId[t.id]; if (!raw) return;
+    var m = byName[muNormName(raw)];
+    if (!m || m.id === t.id) { t.managerName = String(raw).trim(); unmatched++; return; }
+    if (t.relVerified === true && t.reportsTo) return;
+    t.reportsTo = m.id; t.relSource = "import"; delete t.managerName; linked++;
+  });
+  return { linked: linked, unmatched: unmatched };
+}
+/* @end */
 function muSeedOf(contacts) {
   /* the seed = the person the engine found first: earliest pulledAt, else the champion, else the first */
   var withT = contacts.filter(function (t) { return t.pulledAt; }).sort(function (a, b) { return a.pulledAt - b.pulledAt; });
@@ -6027,13 +6061,13 @@ function renderMushroom(a, contacts) {
   if (!MU_SEL || !byId[MU_SEL]) MU_SEL = seed;
   var tiers = [[], [], [], []];
   contacts.forEach(function (t) { tiers[muTierOf(t)].push(t); });
-  var anyVerified = contacts.some(function (t) { return t.reportsTo && t.relVerified === true; });
+  var anyVerified = contacts.some(muLineSolid);
 
   var tree = '';
   var first = true;
   tiers.forEach(function (list, i) {
     if (!list.length) return;
-    var dashed = !list.some(function (t) { return t.reportsTo && t.relVerified === true; });
+    var dashed = !list.some(muLineSolid);
     if (!first) tree += '<div class="mu-con' + (dashed ? ' dash' : '') + '"></div>';
     first = false;
     tree += '<div class="mu-lvl"><div class="mu-tier">' + MU_TIERS[i] + '</div>' + list.map(function (t) {
@@ -6063,10 +6097,10 @@ function renderMushroom(a, contacts) {
       '<div class="rule">Approval is not send · nothing leaves without you</div>' +
     '</aside>';
 
-  return '<div class="mu-intro"><span><b>Start from the person the engine found — then mushroom out.</b> Click anyone. Solid = verified line. Dashed = inferred, and it says so.</span>' +
+  return '<div class="mu-intro"><span><b>Start from the person the engine found — then mushroom out.</b> Click anyone. Solid = a verified line, or one you set. Dashed = inferred, and it says so.</span>' +
     '<span class="mu-legend"><span><i></i> verified</span><span><i class="dash"></i> inferred</span></span></div>' +
     '<div class="mu-grid"><div class="mu-tree">' + tree + '</div>' + detail + '</div>' +
-    (anyVerified ? '' : '<div class="cp-thin" style="margin-top:12px">No verified reporting lines on this account yet — every line here is placed by role. Lines turn solid when a contact arrives with <span class="mono">reportsTo</span> + <span class="mono">relVerified</span> from Engine 6.</div>');
+    (anyVerified ? '' : '<div class="cp-thin" style="margin-top:12px">No reporting lines on this account yet — every contact here is placed by role. Lines turn solid when a contact arrives with <span class="mono">reportsTo</span> + <span class="mono">relVerified</span> from Engine 6 — or when you set <b>Reports to</b> on a contact (Edit contact), or import a <span class="mono">Reports To</span> column.</div>');
 }
 
 /* ---------- Company profile (full page) ---------- */
@@ -6226,6 +6260,19 @@ function edOverlay(title, help, fieldsHTML, onSave) {
   ov.querySelector("#edSave").onclick = function () { onSave(ov, close); };
   return ov;
 }
+function edSelect(label, id, val, options, opts) {
+  opts = opts || {};
+  var sel = '<select class="auth-input" id="' + id + '">' + options.map(function (o) {
+    return '<option value="' + esc(o.v) + '"' + (o.v === (val || "") ? ' selected' : '') + '>' + esc(o.l) + '</option>';
+  }).join('') + '</select>';
+  return '<div class="fld"><label>' + esc(label) + (opts.opt ? ' <span class="opt">optional</span>' : '') + '</label>' + sel + '</div>';
+}
+/* the other people on this account, for the Reports to picker */
+function muReportOptions(a, th) {
+  var opts = [{ v: "", l: "— no one / unknown —" }];
+  (a.threads || []).forEach(function (t) { if (t.id !== th.id && t.name) opts.push({ v: t.id, l: t.name + (t.title ? " · " + t.title : "") }); });
+  return opts;
+}
 function edVal(ov, id) { var e = ov.querySelector("#" + id); return e ? e.value.trim() : ""; }
 function edLines(s) { return s ? s.split("\n").map(function (x) { return x.trim(); }).filter(Boolean) : []; }
 
@@ -6268,12 +6315,15 @@ function openContactEdit(acctId, threadId) {
     edField("Title", "etTitle", th.title, { opt: 1 }) +
     edField("Email", "etEmail", th.email, { opt: 1, ph: "name@company.com" }) +
     edField("LinkedIn", "etLi", th.linkedin, { opt: 1, ph: "linkedin.com/in/…" }) +
+    edSelect("Reports to", "etReports", th.reportsTo || "", muReportOptions(a, th), { opt: 1 }) +
     edSection("Contact intel — just this person") +
     edField("Signal 1 · Why them, why now", "etWhy", th.whyCares, { opt: 1, area: 1, rows: 2 }) +
     edField("Signal 2 · Context / hook (one per line)", "etHook", (th.hook || []).join("\n"), { opt: 1, area: 1, rows: 2 });
   edOverlay("Edit contact", "The company intel is shared automatically — this is what's unique to " + esc((th.name || "this person").split(" ")[0]) + ".", html, function (ov, close) {
     var nm = edVal(ov, "etName"); if (!nm) { ov.querySelector("#edErr").textContent = "A contact needs a name."; return; }
     th.name = nm; th.title = edVal(ov, "etTitle"); th.email = edVal(ov, "etEmail"); th.linkedin = edVal(ov, "etLi");
+    var rt = edVal(ov, "etReports");
+    if (rt !== (th.reportsTo || "")) { th.reportsTo = rt; th.relSource = rt ? "user" : ""; delete th.relVerified; delete th.managerName; }
     th.whyCares = edVal(ov, "etWhy"); th.hook = edLines(edVal(ov, "etHook"));
     persistAccounts(); close();
     if (document.getElementById("vModalOverlay")) closeContactModal();
