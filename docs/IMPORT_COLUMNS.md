@@ -25,6 +25,7 @@ harmless — send the export as it comes.
 | Channel | `First Touch Channel`, `First Channel` | `em`, `li`, or `call`. |
 | Sequence Day | `Entry Day`, `Day` | Which day of the cadence they start on. |
 | Contractor | `Is Contractor` | `Yes` / `No`. |
+| Reports To | `Reporting To`, `Manager`, `Manager Name` | The full name of the person they report to, spelled as it appears elsewhere in the same file. Draws the reporting line on the Mushroom map, labelled *from your import*. A name that matches nobody is kept on the contact and draws nothing — nothing is guessed. |
 
 ## The intel panel
 

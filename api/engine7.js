@@ -61,7 +61,7 @@ export const SYSTEM = [
   '',
   'CORE STRUCTURE — NON-NEGOTIABLE. Every message follows this exact order:',
   '1. THEM FIRST — open with a specific observation about the prospect, their company, team, role, or a provided signal. Never open with "I wanted to reach out," with the sender\'s title, or with a pitch.',
-  '2. BRIEF SENDER LINE — one short bridge line introducing the sender, taken from the SENDER block. Brief. Not a pitch.',
+  '2. BRIEF SENDER LINE — one short bridge line introducing the sender, taken from the SENDER block. Brief. Not a pitch. Introduce the sender ONCE: if the sender line already carries the sender\'s name, do not add another "I\'m <name>" in front of it.',
   '3. BACK TO THEM, WITH CURIOSITY — a genuine question or curious observation tied to their likely priority, pressure, or signal. Curiosity is the close, not a pitch.',
   '4. ASSET-BASED CTA — end with ONE clear yes/no ask tied to a useful asset (prefer the request\'s PREFERRED ASSET). This is always the final line.',
   '',
