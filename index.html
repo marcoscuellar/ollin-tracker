@@ -8,31 +8,31 @@
      LinkedIn, Slack and iMessage. og:image must be an absolute URL. -->
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="ŌLLIN GO">
-<meta property="og:url" content="https://heyvamos.app/">
+<meta property="og:url" content="https://go.ollinos.com/">
 <meta property="og:title" content="ŌLLIN GO — where the work runs">
 <meta property="og:description" content="Who to reach today, why they'd care, and the email already written. Try the live demo — no signup.">
-<meta property="og:image" content="https://heyvamos.app/assets/vamos-share.png">
+<meta property="og:image" content="https://go.ollinos.com/assets/ollin-go-share.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="ŌLLIN GO — where the work runs.">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="ŌLLIN GO — where the work runs">
 <meta name="twitter:description" content="Who to reach today, why they'd care, and the email already written.">
-<meta name="twitter:image" content="https://heyvamos.app/assets/vamos-share.png">
+<meta name="twitter:image" content="https://go.ollinos.com/assets/ollin-go-share.png">
 <meta name="theme-color" content="#181A1E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Archivo+Black&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 /* ============================================================================
-   Ollin : Vamos — brand front end.  "Momentum, cooled down."
+   ŌLLIN GO — brand front end.  "Momentum, cooled down."
    Navy runs the brand; coral (~8%) is the spark — send, primary CTA, one accent.
    Archivo (heavy) + IBM Plex Mono (micro-labels). White cards on a navy/black
    ground, soft black glow, line-art icons only, no emoji. Coral dial: Balanced.
    ========================================================================== */
 
 :root{
-  /* OLLIN : VAMOS — Kinetic Execution (confirmed system).
+  /* ŌLLIN GO — Kinetic Execution (confirmed system).
      Signal Black canvas · Kinetic Orange accent · Hyper Volt urgency · cool slate neutrals. */
   --black:#181A1E;      /* canvas / Signal Black */
   --paper:#181A1E;
@@ -2581,7 +2581,7 @@ html[data-theme="light"] .vm-tabs button.on{background:#FFFFFF;color:#181A1E;box
   /* ===== index.html lines 2456-2536 - onboarding wizard (3 steps) + finishOnboarding ===== */
   // 3-step onboarding wizard: account → AI intro → pricing. Opaque + blocking;
   // the app stays hidden until the identity is saved on the final step.
-  // Onboarding — the on-ramp (Ollin : Vamos). Split screen: left = "This is
+  // Onboarding — the on-ramp (ŌLLIN GO). Split screen: left = "This is
   // what I'll know about you." + a profile card that fills in; right = one
   // question at a time. Four questions capture only what the USER can say
   // (constant, personal) — everything about the target comes from the engines.
@@ -3787,7 +3787,7 @@ html[data-theme="light"] .vm-tabs button.on{background:#FFFFFF;color:#181A1E;box
   }
 
 
-/* ===================== Ollin : Vamos — brand front end =====================
+/* ===================== ŌLLIN GO — brand front end =====================
    Depends on the keep layer (storage / auth / import) for:
      state, ACCOUNT, DEMO, MODE, CADENCE, buildTouches, todayStr, addDays, iso,
      daysBetween, scheduleSave, persistDone, persistNotes, persistAccounts,
@@ -3832,11 +3832,11 @@ function currentTheme() { return document.documentElement.getAttribute("data-the
 function applyTheme(t) {
   if (t === "light") document.documentElement.setAttribute("data-theme", "light");
   else document.documentElement.removeAttribute("data-theme");
-  try { localStorage.setItem("vamos-theme", t); } catch (e) {}
+  try { localStorage.setItem("ollin-go-theme", t); } catch (e) {}
 }
 function toggleTheme() { applyTheme(currentTheme() === "light" ? "dark" : "light"); }
 function paintThemeIcon(btn) { if (btn) btn.innerHTML = currentTheme() === "light" ? IC_MOON : IC_SUN; }
-(function initTheme() { var t = "dark"; try { t = localStorage.getItem("vamos-theme") || "dark"; } catch (e) {} applyTheme(t); })();
+(function initTheme() { var t = "dark"; try { t = localStorage.getItem("ollin-go-theme") || localStorage.getItem("vamos-theme") || "dark"; } catch (e) {} applyTheme(t); })();
 var IC_FLAME = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c1 3 4 4.5 4 8a4 4 0 0 1-8 0c0-1 .4-2 1-2.6C9 10 8 11 8 13a4 4 0 0 0 8 0c0-4-3-7-4-10z"/></svg>';
 var IC_SEARCH = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="6.5"/><path d="M15.8 15.8L20 20"/></svg>';
 var IC_MARK = '<span class="as-mark"><svg width="13" height="13" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="12" stroke="currentColor" stroke-width="2.4" opacity=".5"/><circle cx="16" cy="16" r="4.6" fill="currentColor"/></svg></span>';
@@ -5227,7 +5227,7 @@ function gdAsk() {
   if (/pipeline|funnel|stage/.test(lq)) { navView = "pipeline"; render(); return; }
   if (/overdue|late/.test(lq)) { if (startQueue("late")) { render(); return; } return gdSay("You're all caught up — nice."); }
   if (/new|fresh|never/.test(lq)) { if (startQueue("fresh")) { render(); return; } return gdSay("No never-touched contacts right now."); }
-  if (/due|waiting|today|start|go|work|vamos/.test(lq)) { startQueue("due"); render(); return; }
+  if (/due|waiting|today|start|go|work/.test(lq)) { startQueue("due"); render(); return; }
   gdSay("I run the tracker in here — who's due, what to send, and getting you into the work. " +
     "Ask me to start on what's due, or head to Contacts to import.");
 }

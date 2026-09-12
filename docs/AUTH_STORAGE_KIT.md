@@ -28,7 +28,7 @@ Source of truth: `ollin-tracker/api/` (runs in production on heyvamos.app).
 | `api/auth.js` | The endpoints: register, login, logout, request-reset, reset. |
 | `api/entries.js` | The per-user document: `GET` loads, `POST` validates + saves. |
 
-> ⚠️ When reusing outside Vamos, delete the Vamos-only line in `_lib.js` that
+> ⚠️ When reusing outside ŌLLIN GO, delete the ŌLLIN GO-only line in `_lib.js` that
 > re-exports from `engine7.js` (`DEFAULT_SENDER_INTRO`, etc.) — that's tracker
 > content, not part of the auth/storage core.
 
@@ -40,7 +40,7 @@ Source of truth: `ollin-tracker/api/` (runs in production on heyvamos.app).
      *(or `UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN`)*
    - `AUTH_SECRET` — a long random string; it signs the session cookies.
    - `RESEND_API_KEY` — sends verification and password-reset mail.
-   - `MAIL_FROM` — optional; defaults to `VAMOS <hello@send.anywayidid.com>`.
+   - `MAIL_FROM` — optional; defaults to `ŌLLIN GO <hello@send.anywayidid.com>`.
      **Must be on a domain verified in Resend**, which is not necessarily the
      domain the app is served from.
 3. Copy the 3 files into the new project's `/api`.
@@ -54,7 +54,7 @@ Source of truth: `ollin-tracker/api/` (runs in production on heyvamos.app).
 
 ## When signups go quiet — checking mail
 
-Email verification gates real features (in Vamos, AI drafting returns 403 until
+Email verification gates real features (in ŌLLIN GO, AI drafting returns 403 until
 `user.verified`), so a silent mail failure looks like a broken product rather
 than a broken config. Two things make it visible:
 

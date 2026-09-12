@@ -173,9 +173,9 @@ export function verifyToken(token, typ) {
 // ---------- transactional email (Resend) ----------
 // The From address must be on a domain verified in Resend — mail from an
 // unverified domain is refused outright, which is how this app spent a stretch
-// sending nothing at all. heyvamos.app is verified; keep it that way, or set
+// sending nothing at all. the sender address stays on the domain Resend has verified (heyvamos.app) until ollinos.com is verified there — then set
 // MAIL_FROM to another verified domain to change it without a deploy.
-export const MAIL_FROM = process.env.MAIL_FROM || 'VAMOS <hello@heyvamos.app>';
+export const MAIL_FROM = process.env.MAIL_FROM || 'ŌLLIN GO <hello@heyvamos.app>';
 
 // Where replies go. The From address is a sending identity, not necessarily a
 // mailbox anyone reads, so replies are routed to the owner unless REPLY_TO
@@ -238,7 +238,7 @@ export function escapeHtml(s) {
     .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 }
 
-// Branded HTML shell for VAMOS emails.
+// Branded HTML shell for ŌLLIN GO emails.
 export function emailShell(headline, bodyHtml, cta) {
   const btn = cta
     ? `<tr><td style="padding:2px 32px 28px"><a href="${cta.url}" style="display:inline-block;background:#2D2D2D;color:#FCFBF9;text-decoration:none;font-weight:600;font-size:15px;padding:14px 26px;letter-spacing:.02em">${cta.text}</a></td></tr>`
@@ -246,13 +246,13 @@ export function emailShell(headline, bodyHtml, cta) {
   return `<!doctype html><html><body style="margin:0;background:#F8F7F4;padding:32px 16px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#2D2D2D">
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td align="center">
     <table role="presentation" width="460" cellpadding="0" cellspacing="0" style="max-width:460px;width:100%;background:#FCFBF9;border:1px solid #E7E3DC">
-      <tr><td style="padding:28px 32px 0"><div style="font-family:'Arial Black',Arial,sans-serif;font-weight:900;font-size:22px;letter-spacing:-.02em;color:#111110">VAMOS</div></td></tr>
+      <tr><td style="padding:28px 32px 0"><div style="font-family:'Arial Black',Arial,sans-serif;font-weight:900;font-size:22px;letter-spacing:-.02em;color:#111110">ŌLLIN GO</div></td></tr>
       <tr><td style="padding:22px 32px 6px"><h1 style="margin:0;font-size:21px;font-weight:800;letter-spacing:-.01em">${headline}</h1></td></tr>
       <tr><td style="padding:4px 32px 22px;font-size:15px;line-height:1.6;color:#4a4a4a">${bodyHtml}</td></tr>
       ${btn}
-      <tr><td style="padding:18px 32px 26px;border-top:1px solid #E7E3DC;font-size:12px;line-height:1.5;color:#9A9A9A">You're receiving this because this email was used to sign up for VAMOS. If that wasn't you, you can ignore this message.</td></tr>
+      <tr><td style="padding:18px 32px 26px;border-top:1px solid #E7E3DC;font-size:12px;line-height:1.5;color:#9A9A9A">You're receiving this because this email was used to sign up for ŌLLIN GO. If that wasn't you, you can ignore this message.</td></tr>
     </table>
-    <div style="font-family:monospace;font-size:10px;letter-spacing:.16em;color:#9A9A9A;margin-top:16px">HEYVAMOS.APP</div>
+    <div style="font-family:monospace;font-size:10px;letter-spacing:.16em;color:#9A9A9A;margin-top:16px">GO.OLLINOS.COM</div>
   </td></tr></table></body></html>`;
 }
 

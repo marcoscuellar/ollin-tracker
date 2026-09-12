@@ -1,5 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Vamos">
-  <!-- Black ! on a volt tile — the "Vamos!" highlight box, reduced to a mark.
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="ŌLLIN GO">
+  <!-- Black ! on a volt tile — the "ŌLLIN GO!" highlight box, reduced to a mark.
        Drawn rather than typeset: a favicon cannot rely on Archivo loading.
        Heavy strokes and a wide bar so it still reads at 16px. -->
   <rect width="64" height="64" rx="14" fill="#D4FF00"/>
