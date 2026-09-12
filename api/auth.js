@@ -56,7 +56,7 @@ async function notifyOwnerOfSignup(user) {
   const when = new Date(user.createdAt).toISOString().replace('T', ' ').slice(0, 16) + ' UTC';
   await sendEmail({
     to,
-    subject: `New VAMOS signup — ${user.email}`,
+    subject: `New ŌLLIN GO signup — ${user.email}`,
     html: emailShell('Someone signed up', `
       <p style="margin:0 0 10px"><b>${escapeHtml(user.email)}</b></p>
       <p style="margin:0 0 4px;color:#6B6B6B;font-size:14px">${when}</p>
@@ -71,10 +71,10 @@ async function sendVerifyEmail(req, user) {
   const url = `${origin}/api/auth?action=verify&token=${encodeURIComponent(token)}`;
   return sendEmail({
     to: user.email,
-    subject: 'Welcome to VAMOS — confirm your email',
+    subject: 'Welcome to ŌLLIN GO — confirm your email',
     html: emailShell(
-      'Welcome to VAMOS.',
-      "You're in. Confirm your email and your account is locked to you — then it's just you, your queue, and one honest touch at a time. You can start using VAMOS right now; this just keeps it yours.",
+      'Welcome to ŌLLIN GO.',
+      "You're in. Confirm your email and your account is locked to you — then it's just you, your queue, and one honest touch at a time. You can start using ŌLLIN GO right now; this just keeps it yours.",
       { text: 'Confirm your email', url }
     ),
   });
@@ -193,7 +193,7 @@ async function requestReset(req, res) {
     try {
       await sendEmail({
         to: email,
-        subject: 'Reset your VAMOS password',
+        subject: 'Reset your ŌLLIN GO password',
         html: emailShell(
           'Reset your password',
           "Click below to set a new password. This link works for one hour. Didn't ask for this? Ignore it — your password stays exactly as it is.",
@@ -271,8 +271,8 @@ async function mailCheck(req, res) {
   // From domain isn't verified in Resend, and only a real send reveals that.
   const r = await sendEmail({
     to: user.email,
-    subject: 'VAMOS mail check',
-    // MAIL_FROM carries angle brackets ("VAMOS <hello@heyvamos.app>"), so it
+    subject: 'ŌLLIN GO mail check',
+    // MAIL_FROM carries angle brackets ("ŌLLIN GO <hello@heyvamos.app>"), so it
     // has to be escaped — dropped in raw, the address reads as a tag and the
     // client silently eats the one detail this line exists to show.
     html: emailShell('Mail is working.', `<p style="margin:0">Sent from <b>${escapeHtml(MAIL_FROM)}</b>. If this reached you, signup and reset emails will too.</p>`),
