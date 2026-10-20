@@ -1,8 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="ŌLLIN GO">
-  <!-- Black ! on a volt tile — the "ŌLLIN GO!" highlight box, reduced to a mark.
-       Drawn rather than typeset: a favicon cannot rely on Archivo loading.
-       Heavy strokes and a wide bar so it still reads at 16px. -->
-  <rect width="64" height="64" rx="14" fill="#D4FF00"/>
-  <rect x="26" y="13" width="12" height="26" rx="3" fill="#0B0C10"/>
-  <circle cx="32" cy="49" r="6.5" fill="#0B0C10"/>
+  <!-- The ŌLLIN GO mark: the yellow dot and chevron that sit before the
+       wordmark, on a graphite tile. Drawn, not typeset — a favicon cannot
+       rely on Archivo loading. Heavy strokes so it still reads at 16px. -->
+  <rect width="64" height="64" rx="14" fill="#181A1E"/>
+  <circle cx="19" cy="32" r="7" fill="#FFE14D"/>
+  <path d="M34 19 L48 32 L34 45" fill="none" stroke="#FFE14D" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>
