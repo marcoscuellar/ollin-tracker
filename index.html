@@ -648,6 +648,19 @@ html[data-theme="light"] .savebar a{color:#181A1E}
 .qpill.ready{background:var(--surface);color:var(--mute)}
 .qpill.follow{background:var(--surface);color:var(--steel)}
 .qpill.late{background:var(--volt-bg);color:var(--volt)}
+.qpill.queued{background:#1E2229;color:#FFE14D}
+.v3 .go.goq{width:100%;margin-top:10px;font-size:15px;padding:14px 24px;background:#181A1E;color:#FFE14D;border:1.5px solid #FFE14D;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.v3 .go.goq .qwhen{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.06em;text-transform:uppercase;opacity:.85}
+.v3 .queued{margin-top:10px;padding:12px 14px;border-radius:8px;background:#1E2229;color:#E9EDF2;font-size:13.5px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.v3 .queued.off{color:var(--steel);background:var(--surface)}
+.v3 .queued .qtxt{flex:1 1 60%}
+.v3 .queued .qdot{width:8px;height:8px;border-radius:50%;background:#FFE14D;box-shadow:0 0 0 4px rgba(255,225,77,.15)}
+.v3 .queued .qcancel{margin-left:auto;background:transparent;border:1px solid #3A404A;color:#E9EDF2;border-radius:6px;padding:6px 10px;font-size:12.5px;cursor:pointer}
+.v3 .queued .qcancel:hover{border-color:#FFE14D;color:#FFE14D}
+.sender-card .sc-sub{margin:22px 0 4px;font-size:15px;font-weight:800;letter-spacing:-.01em}
+.sender-card .fld2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.sender-card .fhint{display:block;font-size:11.5px;color:var(--steel);margin-top:4px}
+.sender-card .chk{display:flex;align-items:center;gap:8px;font-size:13px;margin:8px 0 14px}
 .parked{margin-top:16px;color:var(--mute);font-size:12px;font-weight:600}
 .qempty{background:var(--navy-2);border:1px dashed #3a3a34;border-radius:14px;padding:20px 16px;
   color:var(--steel);font-size:13px;line-height:1.5}
@@ -2264,6 +2277,72 @@ html[data-theme="light"] .vm-tabs button.on{background:#FFFFFF;color:#181A1E;box
     },ms);
   }
 
+  /* ---------- scheduled outreach: the server-owned queue ---------- */
+  /* QUEUE is read from /api/send and never written by the page. The webhook
+     moves entries to sent / delivered / bounced; the page turns those into
+     cadence facts here, the same way pressing "Sent" would have. */
+  var QUEUE={};
+  async function loadQueue(){
+    if(!MODE.api||DEMO) return;
+    try{
+      var r=await fetch("/api/send",{credentials:"same-origin"});
+      if(!r.ok) return;
+      var d=await r.json(); QUEUE=(d&&d.queue)||{};
+      reconcileQueue();
+    }catch(e){}
+  }
+  function queuedEntry(t){ var q=QUEUE[t.id]; return q&&(q.status==="queued"||q.status==="delayed")?q:null; }
+  function fmtWhen(isoTs){
+    var d=new Date(isoTs);
+    return d.toLocaleDateString(undefined,{weekday:"short",month:"short",day:"numeric"})+", "+d.toLocaleTimeString([],{hour:"numeric",minute:"2-digit"});
+  }
+  function reconcileQueue(){
+    var changed=false, bounced=[];
+    Object.keys(QUEUE).forEach(function(id){
+      var q=QUEUE[id]; if(!q) return;
+      var t=everyTouch().filter(function(x){ return x.id===id; })[0];
+      if(!t) return;
+      if((q.status==="sent"||q.status==="delivered") && !state.done[id]){
+        var when=new Date(q.sentAt||q.deliveredAt||q.sendAt||Date.now());
+        state.done[id]=iso(when); VM.channel=null; logActivity("sent", t);
+        scheduleNext(t, GAP_DEFAULT); changed=true;
+      }
+      if((q.status==="bounced"||q.status==="complained") && !q._handled){
+        var a=acctOf(q.acctId||t.acctId), th=a&&(a.threads||[]).filter(function(x){ return x.id===(q.threadId||t.threadId); })[0];
+        if(th){ th.emailStatus="bounce"; if(q.status==="complained") th.optOut=true; }
+        state.extra=state.extra||{}; state.extra.closed=state.extra.closed||{};
+        touchesOfThread(t.acctId,t.threadId).forEach(function(x){ if(!state.done[x.id]){ state.done[x.id]=todayStr(); state.extra.closed[x.id]=1; } });
+        q._handled=true; bounced.push(t.who||q.who||"a contact"); changed=true;
+      }
+    });
+    if(changed) persistDone();
+    if(bounced.length) toast("Bounced: "+bounced.join(", ")+". Cadence stopped, address marked Do Not Use.");
+  }
+  async function queueTouch(t){
+    var si=document.getElementById("vmSubj"), ta=document.getElementById("vmBody");
+    var subject=si?si.value.trim():"", body=ta?ta.value:"";
+    recombine(t);
+    var due=dueOf(t); if(!due||due<todayStr()) due=todayStr();
+    var btn=document.getElementById("vmQueue"); if(btn){ btn.disabled=true; btn.textContent="Queueing…"; }
+    try{
+      var r=await fetch("/api/send",{method:"POST",headers:{"Content-Type":"application/json"},credentials:"same-origin",
+        body:JSON.stringify({action:"queue",acctId:t.acctId,threadId:t.threadId,touchNo:t.touchNo,subject:subject,body:body,dueDate:due})});
+      var d=await r.json().catch(function(){ return {}; });
+      if(!r.ok||!d.ok){ toast(d.error||"Couldn’t queue it."); if(btn){ btn.disabled=false; btn.textContent="Approve & queue"; } return; }
+      QUEUE[t.id]=d.entry; logActivity("queued", t);
+      toast("Queued. Leaves "+fmtWhen(d.entry.sendAt)+". Cancel any time before then.");
+      render();
+    }catch(e){ toast("Network hiccup — try again"); if(btn){ btn.disabled=false; btn.textContent="Approve & queue"; } }
+  }
+  async function cancelQueued(t){
+    try{
+      var r=await fetch("/api/send",{method:"POST",headers:{"Content-Type":"application/json"},credentials:"same-origin",body:JSON.stringify({action:"cancel",touchId:t.id})});
+      var d=await r.json().catch(function(){ return {}; });
+      if(d&&d.entry) QUEUE[t.id]=d.entry;
+      toast(r.ok&&d.ok?"Pulled back. Nothing will go out.":(d.error||"Couldn’t cancel."));
+      render();
+    }catch(e){ toast("Network hiccup — try again"); }
+  }
   function apiSave(){
     saveDirty=true;
     if(saveTimer) clearTimeout(saveTimer);
@@ -2769,6 +2848,7 @@ html[data-theme="light"] .vm-tabs button.on{background:#FFFFFF;color:#181A1E;box
       '<div class="fld"><label>Brief intro for outreach</label><textarea class="auth-input" id="snIntro" rows="3">'+esc(s.intro||DEFAULT_SENDER_INTRO)+'</textarea></div>'+
       '<div class="fld"><label>Credibility line <span class="opt">optional</span></label><input class="auth-input" id="snCred" placeholder="We’ve supported teams scaling digital, product, and engineering delivery." value="'+esc(s.credibility||"")+'"></div>'+
       '<div class="fld"><label>Default asset</label><select class="auth-input" id="snAsset">'+assetOptions(s.defaultAsset)+'</select></div>'+
+      sendingFieldsHTML()+
       '<div class="sc-err" id="snErr"></div>'+
       '<button class="btn" id="snSave">Save</button>'+
     '</div></div>');
@@ -2776,6 +2856,32 @@ html[data-theme="light"] .vm-tabs button.on{background:#FFFFFF;color:#181A1E;box
     ov.querySelector("#snClose").addEventListener("click", function(){ ov.remove(); });
     ov.querySelector("#snSave").addEventListener("click", function(){ saveSenderForm(ov); });
     ov.querySelector("#snName").focus();
+  }
+  /* Scheduled outreach settings. Approval queues an email touch for its due
+     morning; these say from whom, at what hour, how many a day, and how far
+     ahead. The send-as domain has to be one Resend has verified. */
+  function sendingFieldsHTML(){
+    var q=(ACCOUNT&&ACCOUNT.send)||{};
+    var tz=q.tz||((Intl.DateTimeFormat().resolvedOptions()||{}).timeZone)||"America/New_York";
+    return '<h3 class="sc-sub">Sending</h3>'+
+      '<p class="sc-help">Approve an email touch and it leaves on its due morning without you. Nothing goes out unapproved.</p>'+
+      '<div class="fld"><label>Send as</label><input class="auth-input" id="snSendAs" placeholder="you@ollinos.com" value="'+esc(q.sendAs||"")+'"><span class="fhint">Has to be on a domain verified for sending (ollinos.com).</span></div>'+
+      '<div class="fld"><label>Replies go to</label><input class="auth-input" id="snReplyTo" placeholder="'+esc((ACCOUNT&&ACCOUNT.email)||"")+'" value="'+esc(q.replyTo||"")+'"></div>'+
+      '<div class="fld2">'+
+        '<div class="fld"><label>First send of the day</label><input class="auth-input" id="snHour" type="time" value="'+esc(q.sendHour||"07:30")+'"></div>'+
+        '<div class="fld"><label>Timezone</label><input class="auth-input" id="snTz" value="'+esc(tz)+'"></div>'+
+      '</div>'+
+      '<div class="fld2">'+
+        '<div class="fld"><label>Daily cap</label><input class="auth-input" id="snCap" type="number" min="1" max="100" value="'+esc(String(q.dailyCap||25))+'"></div>'+
+        '<div class="fld"><label>Queue up to (days ahead)</label><input class="auth-input" id="snHorizon" type="number" min="1" max="14" value="'+esc(String(q.horizonDays||7))+'"></div>'+
+      '</div>'+
+      '<label class="chk"><input type="checkbox" id="snPaused"'+(q.paused?' checked':'')+'> Pause sending (queued touches wait, nothing is cancelled)</label>';
+  }
+  async function postSend(payload){
+    var r=await fetch("/api/auth?action=save-send",{method:"POST",headers:{"Content-Type":"application/json"},credentials:"same-origin",body:JSON.stringify(payload)});
+    var d=await r.json().catch(function(){ return {}; });
+    if(!r.ok||!d.ok) throw new Error(d.error||"Couldn’t save sending settings — try again.");
+    return d;
   }
   async function saveSenderForm(ov){
     var err=ov.querySelector("#snErr"); err.textContent="";
@@ -2791,7 +2897,19 @@ html[data-theme="light"] .vm-tabs button.on{background:#FFFFFF;color:#181A1E;box
     var btn=ov.querySelector("#snSave"), bl=btn.textContent; btn.disabled=true; btn.textContent="Saving…";
     try{
       var d=await postSender(payload);
-      ACCOUNT.sender=d.sender; ov.remove(); toast("Outreach identity updated.");
+      ACCOUNT.sender=d.sender;
+      var sendPayload={
+        sendAs:(ov.querySelector("#snSendAs").value||"").trim(),
+        replyTo:(ov.querySelector("#snReplyTo").value||"").trim(),
+        sendHour:(ov.querySelector("#snHour").value||"").trim(),
+        tz:(ov.querySelector("#snTz").value||"").trim(),
+        dailyCap:ov.querySelector("#snCap").value,
+        horizonDays:ov.querySelector("#snHorizon").value,
+        paused:ov.querySelector("#snPaused").checked
+      };
+      var d2=await postSend(sendPayload);
+      ACCOUNT.send=d2.send;
+      ov.remove(); toast("Settings saved."); render();
     }catch(e){ err.textContent=(e&&e.message)||"Couldn’t save — try again."; btn.disabled=false; btn.textContent=bl; }
   }
 
@@ -2822,7 +2940,7 @@ html[data-theme="light"] .vm-tabs button.on{background:#FFFFFF;color:#181A1E;box
         var r=await fetch("/api/auth?action=login",{method:"POST",headers:{"Content-Type":"application/json"},credentials:"same-origin",body:JSON.stringify({email:email,password:password})});
         var d=await r.json().catch(function(){ return {}; });
         if(!r.ok || !d.ok) throw new Error(d.error||"Wrong email or password.");
-        ACCOUNT={email:d.email,plan:d.plan,verified:d.verified,sender:d.sender||null};
+        ACCOUNT={email:d.email,plan:d.plan,verified:d.verified,sender:d.sender||null,send:d.send||null};
         await afterAuthLoad();
         computeComeback();
         enterAppOrOnboard();
@@ -2890,7 +3008,7 @@ html[data-theme="light"] .vm-tabs button.on{background:#FFFFFF;color:#181A1E;box
       var r=await fetch("/api/auth?action=reset",{method:"POST",headers:{"Content-Type":"application/json"},credentials:"same-origin",body:JSON.stringify({token:token,password:password})});
       var d=await r.json().catch(function(){ return {}; });
       if(!r.ok || !d.ok) throw new Error(d.error||"Couldn’t reset — request a new link.");
-      cleanUrl(); ACCOUNT={email:d.email,plan:d.plan,verified:d.verified,sender:d.sender||null};
+      cleanUrl(); ACCOUNT={email:d.email,plan:d.plan,verified:d.verified,sender:d.sender||null,send:d.send||null};
       await afterAuthLoad(); computeComeback(); closeAuth(); enterAppOrOnboard();
       toast("Password updated. You’re in.");
     }catch(e){
@@ -2918,7 +3036,7 @@ html[data-theme="light"] .vm-tabs button.on{background:#FFFFFF;color:#181A1E;box
       var r=await fetch("/api/auth?action="+mode,{method:"POST",headers:{"Content-Type":"application/json"},credentials:"same-origin",body:JSON.stringify({email:email,password:password})});
       var d=await r.json().catch(function(){ return {}; });
       if(!r.ok || !d.ok) throw new Error(d.error||"Something went wrong. Try again.");
-      ACCOUNT={email:d.email,plan:d.plan,verified:d.verified,sender:d.sender||null};
+      ACCOUNT={email:d.email,plan:d.plan,verified:d.verified,sender:d.sender||null,send:d.send||null};
       await afterAuthLoad();
       computeComeback();
       // Drop ?signup=1 — leaving it on means a refresh lands the now-logged-in
@@ -2953,6 +3071,7 @@ html[data-theme="light"] .vm-tabs button.on{background:#FFFFFF;color:#181A1E;box
         /* Old data has every touch dated from the account's start. Pull the
            backlog forward once, then save the result. */
         if(migrateSchedule()) apiSave();
+        await loadQueue();
         return true;
       }
       throw new Error("entries "+r.status);
@@ -3015,7 +3134,7 @@ html[data-theme="light"] .vm-tabs button.on{background:#FFFFFF;color:#181A1E;box
       var r=await fetch("/api/auth?action=status",{credentials:"same-origin"});
       var d=r.ok ? await r.json() : {};
       if(d && d.authenticated){
-        ACCOUNT={email:d.email,plan:d.plan,verified:d.verified,sender:d.sender||null};
+        ACCOUNT={email:d.email,plan:d.plan,verified:d.verified,sender:d.sender||null,send:d.send||null};
         await afterAuthLoad();
         computeComeback();
         // A live session outranks ?signup=1: someone who is already in should
@@ -4538,6 +4657,8 @@ function greeting(b) {
 
 function queuePill(t, b) {
   var td = todayStr(), d = dueOf(t);
+  var qe = queuedEntry(t);
+  if (qe) return '<span class="qpill queued">QUEUED · ' + esc(new Date(qe.sendAt).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })) + "</span>";
   if (d < td) return '<span class="qpill late">READY</span>';
   if (d === td) return '<span class="qpill due">DUE · TOUCH ' + t.touchNo + "</span>";
   if (t.touchNo === 1) return '<span class="qpill ready">NEW · NEVER TOUCHED</span>';
@@ -4929,8 +5050,9 @@ function cardBodyHTML(t, a) {
                 return '<button class="gp' + (VM.gap === g ? ' on' : '') + '" data-g="' + g + '">' + g + ' day' + (g === 1 ? '' : 's') + '</button>';
               }).join('') + '</div></div>'
           : '<div class="nextsel last">Last touch in the sequence — nothing follows it.</div>') +
-        /* 5 · go */
-        '<button class="go gofull" id="vmSend">Let\'s go <span>»</span></button>' +
+        /* 5 · go — approve & queue (email, server mode) or send it yourself */
+        queueControlsHTML(t, email) +
+        (email && queuedEntry(t) ? '' : '<button class="go gofull" id="vmSend">Let\'s go <span>»</span></button>') +
         '<div class="v3foot"><span class="fl">Not now?</span>' +
           '<a class="sn" data-o="Later">Tomorrow</a>' +
           '<a class="sn" data-o="Week">Next week</a>' +
@@ -4955,8 +5077,32 @@ function recombine(t) {
   syncMail(t);
 }
 
+/* The approve-and-queue control. Only email touches, only with a backend, and
+   only when the account has a send-as address; otherwise the card is exactly
+   what it was. A queued touch shows when it leaves and offers one way back. */
+function queueControlsHTML(t, email) {
+  if (!email || !MODE.api || DEMO) return '';
+  var q = queuedEntry(t);
+  if (q) {
+    return '<div class="queued"><span class="qdot"></span><span class="qtxt"><b>Queued.</b> Leaves ' + esc(fmtWhen(q.sendAt)) +
+      ' from ' + esc((ACCOUNT && ACCOUNT.send && ACCOUNT.send.sendAs) || '') + '.</span>' +
+      '<button id="vmUnqueue" class="qcancel">Cancel</button></div>';
+  }
+  var canSend = ACCOUNT && ACCOUNT.send && ACCOUNT.send.sendAs && !ACCOUNT.send.paused;
+  var due = dueOf(t); if (!due || due < todayStr()) due = todayStr();
+  var hour = (ACCOUNT && ACCOUNT.send && ACCOUNT.send.sendHour) || '07:30';
+  if (!canSend) {
+    var why = ACCOUNT && ACCOUNT.send && ACCOUNT.send.paused ? 'Sending is paused in Settings.' : 'Add a send-as address in Settings to queue emails.';
+    return '<div class="queued off">' + esc(why) + '</div>';
+  }
+  return '<button class="go goq" id="vmQueue">Approve &amp; queue <span class="qwhen">' + esc(fmtLong(due)) + ' · from ' + esc(hour) + '</span></button>';
+}
+
 function wireCard(t) {
   var si = document.getElementById("vmSubj"), ta = document.getElementById("vmBody");
+  var qb = document.getElementById("vmQueue"); if (qb) qb.onclick = function () { queueTouch(t); };
+  var qc = document.getElementById("vmUnqueue"); if (qc) qc.onclick = function () { cancelQueued(t); };
+  if (queuedEntry(t)) { if (ta) ta.readOnly = true; if (si) si.readOnly = true; }
   if (ta) ta.addEventListener("input", function () { recombine(t); });
   if (si) si.addEventListener("input", function () { recombine(t); });
   syncMail(t);

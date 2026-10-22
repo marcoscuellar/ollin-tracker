@@ -11,6 +11,7 @@ import {
   MIGRATED_FLAG, LEGACY_OWNER_EMAIL, OWNER_EMAIL, FOUNDING_LIST_KEY,
   normalizeSender,
 } from './_lib.js';
+import { normalizeSendSettings, effectiveSettings } from './_send-lib.js';
 
 const SESSION_TTL_MS = 1000 * 60 * 60 * 24 * 30; // 30 days
 const VERIFY_TTL_MS = 1000 * 60 * 60 * 24;        // 24h
@@ -31,6 +32,7 @@ export default async function handler(req, res) {
       case 'resend-verify': return resendVerify(req, res);
       case 'founding': return founding(req, res);
       case 'save-sender': return saveSender(req, res);
+      case 'save-send': return saveSend(req, res);
       case 'change-email': return changeEmail(req, res);
       case 'delete-account': return deleteAccount(req, res);
       case 'mail-check': return mailCheck(req, res);
@@ -159,7 +161,7 @@ async function status(req, res) {
   if (!s || !s.sub) return send(res, 200, { authenticated: false });
   const user = await kv.get(userKey(s.sub));
   if (!user) return send(res, 200, { authenticated: false });
-  return send(res, 200, { authenticated: true, email: user.email, plan: user.plan || 'free', verified: !!user.verified, sender: user.sender || null });
+  return send(res, 200, { authenticated: true, email: user.email, plan: user.plan || 'free', verified: !!user.verified, sender: user.sender || null, send: effectiveSettings(user) });
 }
 
 // GET — clicked from the verification email. Marks verified, then redirects
@@ -335,6 +337,25 @@ async function saveSender(req, res) {
   user.sender = sender;
   await kv.set(userKey(s.sub), user);
   return send(res, 200, { ok: true, sender });
+}
+
+// POST (session-gated) — the scheduled-outreach settings: send-as address
+// (must be on a domain Resend has verified: SEND_DOMAINS), reply-to, send
+// hour, timezone, daily cap, queue horizon, pause. Stored on the user as
+// `send`; api/send.js reads them on every approval.
+async function saveSend(req, res) {
+  const s = requireSession(req);
+  if (!s || !s.sub) return send(res, 401, { error: 'unauthorized' });
+  const user = await kv.get(userKey(s.sub));
+  if (!user) return send(res, 401, { error: 'unauthorized' });
+
+  const body = await readJson(req);
+  const r = normalizeSendSettings(body, user);
+  if (!r.ok) return send(res, 400, { error: r.error });
+
+  user.send = r.send;
+  await kv.set(userKey(s.sub), user);
+  return send(res, 200, { ok: true, send: effectiveSettings(user) });
 }
 
 // POST (session-gated) { email, password } — change the login email. Requires
