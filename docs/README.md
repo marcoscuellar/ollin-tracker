@@ -1,5 +1,11 @@
 # docs
 
+## `SENDING.md`
+
+Scheduled outreach: how an approved email touch is queued with Resend for
+its due morning, the guardrails, the webhook that reports it sent, and the
+one-time setup (`RESEND_WEBHOOK_SECRET`, `SEND_DOMAINS`).
+
 ## `OLLIN_SYSTEMS_v0.7.0.txt`
 
 The complete ŌLLIN Systems reference — the five call-outs (`/signal`, `/intel`,
