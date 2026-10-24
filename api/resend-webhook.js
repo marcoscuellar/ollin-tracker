@@ -6,10 +6,12 @@
 //
 // Set up once: Resend → Webhooks → Add endpoint
 //   https://go.ollinos.com/api/resend-webhook
-//   events: email.sent, email.delivered, email.delivery_delayed, email.bounced, email.complained
+//   events: email.sent, email.delivered, email.delivery_delayed, email.bounced, email.complained,
+//           email.opened, email.clicked (open tracking must be on for the sending domain)
 // then put the signing secret in Vercel as RESEND_WEBHOOK_SECRET.
 import { kv, send } from './_lib.js';
 import { verifySvix, statusForEvent, advanceStatus, untagValue } from './_send-lib.js';
+import { noteEngagement } from './_activation-lib.js';
 import { queueKey } from './send.js';
 
 // The signature is over the raw bytes, so helpers that pre-parse the body
@@ -31,8 +33,10 @@ export default async function handler(req, res) {
 
   let evt;
   try { evt = JSON.parse(raw); } catch { return send(res, 400, { error: 'bad json' }); }
-  const status = statusForEvent(evt && evt.type);
-  if (!status) return send(res, 200, { ok: true, ignored: evt && evt.type });
+  const type = evt && evt.type;
+  const status = statusForEvent(type);
+  const engagement = type === 'email.opened' || type === 'email.clicked';
+  if (!status && !engagement) return send(res, 200, { ok: true, ignored: type });
 
   const data = (evt && evt.data) || {};
   const tags = tagMap(data.tags);
@@ -48,6 +52,11 @@ export default async function handler(req, res) {
     return send(res, 200, { ok: true, ignored: 'id mismatch' });
   }
 
+  if (engagement) {
+    noteEngagement(entry, type, evt.created_at || new Date().toISOString());
+    await kv.set(key, q);
+    return send(res, 200, { ok: true, status: entry.status, opens: entry.opens || 0, clicks: entry.clicks || 0 });
+  }
   const next = advanceStatus(entry.status, status);
   if (next !== entry.status) {
     entry.status = next;

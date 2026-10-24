@@ -220,6 +220,10 @@ export function buildDraftPrompt(user, body) {
   const steer = (body.steer || '').toString().slice(0, 240).trim();
   const angle = (body.angle || '').toString().slice(0, 400).trim();
   const priorRel = (body.priorRelationshipNotes != null ? body.priorRelationshipNotes : (body.priorRelationship || '')).toString().slice(0, 300).trim();
+  // What the prospect has done so far (opens, clicks, LinkedIn) and what the
+  // activation rulebook proposed — one line, built by the page, so a nudge
+  // reads like a nudge instead of a first touch.
+  const engagement = (body.engagement || '').toString().slice(0, 400).trim();
 
   const sender = resolveSender(user, body);
   const senderIntro = scrubHelp(sender.intro);
@@ -243,6 +247,7 @@ export function buildDraftPrompt(user, body) {
     (angleFrame !== 'gap' ? ANGLE_FRAMES[angleFrame] + '\n' : '') +
     (angle ? 'SIGNAL / NOTES (user-provided, unverified — weave in naturally, do not quote): ' + angle + '\n' : '') +
     (priorRel ? 'PRIOR RELATIONSHIP (use as credibility AFTER the prospect-first opener — never lead with it): ' + priorRel + '\n' : '') +
+    (engagement ? engagement + '\n' : '') +
     'PREFERRED ASSET for the CTA: ' + sender.defaultAsset + '. Build the final asset-based CTA around it (e.g. "I built a quick ' + sender.defaultAsset + ' around this — should I send it over?"). Never make the CTA a meeting or call request.\n' +
     (TOUCH[step] || '') + '\n' +
     (steer ? 'DIRECTION / TONE from the sender (follow it while keeping every rule above): ' + steer + '\n' : '') +
