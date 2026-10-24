@@ -1,5 +1,11 @@
 # docs
 
+## `ACTIVATION.md`
+
+The cadence reacting to what the prospect does: contact states, the
+event → proposal rulebook (one test per row), where events come from, and
+what accepting a proposal changes. Nothing moves or sends on an event alone.
+
 ## `SENDING.md`
 
 Scheduled outreach: how an approved email touch is queued with Resend for

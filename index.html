@@ -648,7 +648,19 @@ html[data-theme="light"] .savebar a{color:#181A1E}
 .qpill.ready{background:var(--surface);color:var(--mute)}
 .qpill.follow{background:var(--surface);color:var(--steel)}
 .qpill.late{background:var(--volt-bg);color:var(--volt)}
-.qpill.queued{background:#1E2229;color:#FFE14D}
+.rpill.queued{background:#1E2229!important;color:#FFE14D!important}
+.stpill{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.08em;text-transform:uppercase;padding:2px 6px;border-radius:3px;background:var(--surface);color:var(--steel);vertical-align:middle}
+.stpill.warm{background:#FFF3B0;color:#5a4a00}.stpill.replied{background:#FFE14D;color:#181A1E}.stpill.parked{background:#E6E8EC;color:#3A404A}.stpill.opted_out,.stpill.resting{background:#EEE;color:#777}
+.v3 .act{margin:12px 0 2px;padding:12px 14px;border-radius:10px;background:#FFF8D6;border:1px solid #F1DD7A;display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:13.5px;color:#181A1E}
+.v3 .act.keep{background:var(--surface);border-color:transparent;color:var(--steel)}
+.v3 .act .actr{flex:1 1 55%}
+.v3 .act .actgo{background:#181A1E;color:#FFE14D;border:0;border-radius:7px;padding:9px 14px;font:600 13px inherit;cursor:pointer;white-space:nowrap}
+.v3 .act .actgo span{opacity:.7}
+.v3 .act .acttaps{flex-basis:100%;display:flex;gap:14px;font-size:12px;color:var(--steel)}
+.v3 .act .acttaps a{cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.v3 .act .acttaps a:hover{color:#181A1E}
+.v3 .act .acttaps .actq{text-decoration:none;color:#181A1E;font-weight:600}
+
 .v3 .go.goq{width:100%;margin-top:10px;font-size:15px;padding:14px 24px;background:#181A1E;color:#FFE14D;border:1.5px solid #FFE14D;display:flex;justify-content:space-between;align-items:center;gap:10px}
 .v3 .go.goq .qwhen{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.06em;text-transform:uppercase;opacity:.85}
 .v3 .queued{margin-top:10px;padding:12px 14px;border-radius:8px;background:#1E2229;color:#E9EDF2;font-size:13.5px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
@@ -2037,6 +2049,99 @@ html[data-theme="light"] .vm-tabs button.on{background:#FFFFFF;color:#181A1E;box
   // ---------- model ----------
   // Cadence — Marcos, 2026-08-06: 4 touches, gaps 0/+2/+3/+3.
   // LinkedIn day 0 -> Email +2 -> LinkedIn +3 -> Email +3 (cumulative 0/2/5/8).
+
+  /* ===== Activation: the cadence reacts to what the prospect does =====
+     Pure: a contact's event log in, a state and a proposed next move out.
+     The system proposes; the person accepts with one tap. Nothing here moves
+     a date or sends anything. Events live on the thread as
+     events:[{at,kind,touchNo,channel,detail}] — kinds: sent, delivered,
+     opened, clicked, bounced, complained, replied (detail.tone positive |
+     neutral | later | negative, detail.date), li_accepted, li_replied,
+     ooo (detail.date), signal (detail.text). */
+  /* @export:activation */
+  var STATE_LABEL = { cold:"Cold", touched:"Touched", warm:"Warm", replied:"Replied", parked:"Parked", opted_out:"Opted out", resting:"Resting" };
+  var STATE_RANK = { replied:0, warm:1, touched:2, cold:3, parked:4, resting:5, opted_out:6 };
+  var ACT_RULES = { warmOpens:3, coldUnopenedEmails:2, clickWindowDays:7, restingAfterDays:14 };
+  function actDayStr(d){ var x=new Date(d); return x.getFullYear()+"-"+("0"+(x.getMonth()+1)).slice(-2)+"-"+("0"+x.getDate()).slice(-2); }
+  function actAddDays(ds,n){ var p=ds.split("-").map(Number); return actDayStr(new Date(p[0],p[1]-1,p[2]+n)); }
+  function actBizDay(ds){ var p=ds.split("-").map(Number); var x=new Date(p[0],p[1]-1,p[2]); var g=x.getDay(); if(g===6) x.setDate(x.getDate()+2); else if(g===0) x.setDate(x.getDate()+1); return actDayStr(x); }
+  function actDaysAgo(at,now){ return (now.getTime()-new Date(at).getTime())/86400000; }
+  function actLast(ev,kind){ var l=ev.filter(function(e){ return e.kind===kind; }); return l.length?l[l.length-1]:null; }
+  function actAgo(at,now){ var d=Math.floor(actDaysAgo(at,now)); return d<=0?"today":(d===1?"yesterday":d+" days ago"); }
+  function engagementFacts(events, now){
+    now=now||new Date();
+    var ev=(events||[]).slice().sort(function(a,b){ return new Date(a.at)-new Date(b.at); });
+    var opens=ev.filter(function(e){ return e.kind==="opened"; }), clicks=ev.filter(function(e){ return e.kind==="clicked"; });
+    var lastSent=actLast(ev,"sent"), lastAny=ev.length?ev[ev.length-1]:null;
+    return {
+      emailsSent: ev.filter(function(e){ return e.kind==="sent"&&(e.channel==="em"||e.channel==null); }).length,
+      touchesSent: ev.filter(function(e){ return e.kind==="sent"; }).length,
+      opens: opens.length, clicks: clicks.length,
+      lastOpenAt: opens.length?opens[opens.length-1].at:null, lastClickAt: clicks.length?clicks[clicks.length-1].at:null,
+      clickedRecently: clicks.length?actDaysAgo(clicks[clicks.length-1].at,now)<=ACT_RULES.clickWindowDays:false,
+      bounced: !!actLast(ev,"bounced"), complained: !!actLast(ev,"complained"),
+      replied: actLast(ev,"replied"), ooo: actLast(ev,"ooo"), li: actLast(ev,"li_replied")||actLast(ev,"li_accepted"),
+      lastSent: lastSent, lastSignal: actLast(ev,"signal"), lastAny: lastAny,
+      daysSinceLastTouch: lastSent?actDaysAgo(lastSent.at,now):null, daysSinceAnything: lastAny?actDaysAgo(lastAny.at,now):null
+    };
+  }
+  /* First matching row wins. Returns {state, facts, proposal:{kind, reason, date?, channel?}};
+     kind: keep | pull_forward | push | nudge | switch_channel | pause | stop | park | reply | restart */
+  function nextMoveFor(o){
+    var th=o.thread||{}, nt=o.nextTouch, cadenceLength=o.cadenceLength||4, now=o.now||new Date();
+    var f=engagementFacts(th.events||[], now), today=actDayStr(now), tomorrow=actBizDay(actAddDays(today,1));
+    var out=function(state,proposal){ return {state:state, facts:f, proposal:proposal}; };
+    if(f.complained||th.optOut) return out("opted_out",{kind:"stop",reason:"They asked not to be contacted. Nothing more goes out."});
+    if(f.bounced||th.emailStatus==="bounce") return out("opted_out",{kind:"stop",reason:"The address bounced. It is marked Do Not Use."});
+    if(f.lastSignal&&(!f.lastSent||new Date(f.lastSignal.at)>new Date(f.lastSent.at))){
+      var shelved=!nt||(f.replied&&f.replied.detail&&f.replied.detail.tone==="later")||(f.daysSinceLastTouch!=null&&f.daysSinceLastTouch>ACT_RULES.restingAfterDays);
+      if(shelved) return out("touched",{kind:"restart",date:today,reason:"New signal on this account: "+((f.lastSignal.detail&&f.lastSignal.detail.text)||"see the company card")+". Start a fresh sequence from it."});
+    }
+    if(f.replied){
+      var tone=(f.replied.detail&&f.replied.detail.tone)||"neutral";
+      if(tone==="negative") return out("opted_out",{kind:"stop",reason:"They said no. Mark opted out and stop."});
+      if(tone==="later"){ var pd=f.replied.detail&&f.replied.detail.date; return out("parked",{kind:"park",date:pd||null,reason:pd?"They said later and named "+pd+". Park until then, one touch on that day.":"They said later without a date. Park it; set the date when you know it."}); }
+      return out("replied",{kind:"reply",reason:"They replied. Stop the sequence and answer them from what they wrote."});
+    }
+    if(f.ooo&&nt&&f.ooo.detail&&f.ooo.detail.date&&f.ooo.detail.date>(nt.date||today)) return out(f.opens||f.clicks?"warm":"touched",{kind:"push",date:actBizDay(f.ooo.detail.date),reason:"Out of office until "+f.ooo.detail.date+". Move the next touch to when they are back."});
+    if(!nt){
+      if(f.daysSinceLastTouch!=null&&f.daysSinceLastTouch>=ACT_RULES.restingAfterDays) return out("resting",{kind:"stop",reason:"All "+cadenceLength+" touches done, nothing back in "+Math.floor(f.daysSinceLastTouch)+" days. Resting until a new signal."});
+      return out(f.opens||f.clicks?"warm":"touched",{kind:"keep",reason:"Sequence complete. Give it "+ACT_RULES.restingAfterDays+" days before resting."});
+    }
+    if(f.li&&f.lastSent&&new Date(f.li.at)>=new Date(f.lastSent.at)){
+      var liWhat=f.li.kind==="li_replied"?"They replied on LinkedIn.":"They accepted on LinkedIn.";
+      if((nt.date||today)>tomorrow) return out("warm",{kind:"pull_forward",date:tomorrow,reason:liWhat+" Pull the next touch forward to tomorrow."});
+      return out("warm",{kind:"keep",reason:liWhat+" Next touch is already close."});
+    }
+    if(f.clickedRecently){
+      if((nt.date||today)>tomorrow) return out("warm",{kind:"pull_forward",date:tomorrow,reason:"Clicked the link "+actAgo(f.lastClickAt,now)+" and did not reply. Pull the next touch forward to tomorrow, written around what they clicked."});
+      return out("warm",{kind:"keep",reason:"Clicked "+actAgo(f.lastClickAt,now)+". Next touch is already close; write it around what they clicked."});
+    }
+    if(f.opens>=ACT_RULES.warmOpens&&!f.clicks) return out("warm",{kind:"nudge",date:nt.date||today,reason:"Opened "+f.opens+" times, no click, no reply. Make the next touch a two-line nudge."});
+    if(f.emailsSent>=ACT_RULES.coldUnopenedEmails&&f.opens===0){
+      if(nt.ch==="em") return out("cold",{kind:"switch_channel",channel:"li",date:nt.date||today,reason:f.emailsSent+" emails, none opened. Send the next touch on LinkedIn instead."});
+      return out("cold",{kind:"pause",reason:f.emailsSent+" emails, none opened, and the next touch is already LinkedIn. If that gets nothing, rest the contact."});
+    }
+    if(f.touchesSent===0) return out("cold",{kind:"keep",reason:"Not touched yet."});
+    return out(f.opens||f.clicks?"warm":"touched",{kind:"keep",reason:f.opens?"Opened "+f.opens+(f.opens===1?" time":" times")+". On schedule.":"On schedule."});
+  }
+  /* One line for the writer, so a nudge reads like a nudge. Empty when there is nothing to say. */
+  function engagementLine(f, proposal){
+    if(!f) return "";
+    var bits=[];
+    if(f.touchesSent) bits.push(f.touchesSent+(f.touchesSent===1?" touch sent":" touches sent"));
+    if(f.opens) bits.push("opened "+f.opens+(f.opens===1?" time":" times"));
+    if(f.clicks) bits.push("clicked the link");
+    if(f.li) bits.push(f.li.kind==="li_replied"?"replied on LinkedIn":"accepted on LinkedIn");
+    if(!f.touchesSent&&!f.opens) return "";
+    var line="ENGAGEMENT SO FAR: "+bits.join(", ")+", no email reply.";
+    if(proposal&&proposal.kind==="nudge") line+=" Write a two-line nudge: one line that they have seen the earlier note, one asset-based ask. No recap.";
+    if(proposal&&proposal.kind==="pull_forward"&&f.clicks) line+=" Open on what they clicked; do not pretend not to know.";
+    if(proposal&&proposal.kind==="switch_channel") line+=" The emails went unread; this is the first thing they will actually see.";
+    if(proposal&&proposal.kind==="reply") line+=" They replied: answer what they raised, no re-introduction, no recap.";
+    return line;
+  }
+  /* @end */
   /* @export:cadence */
   var CADENCE = [
     {off:0, ch:"li", label:"LinkedIn"},
@@ -2288,13 +2393,48 @@ html[data-theme="light"] .vm-tabs button.on{background:#FFFFFF;color:#181A1E;box
       var r=await fetch("/api/send",{credentials:"same-origin"});
       if(!r.ok) return;
       var d=await r.json(); QUEUE=(d&&d.queue)||{};
+      backfillEvents();
       reconcileQueue();
     }catch(e){}
   }
   function queuedEntry(t){ var q=QUEUE[t.id]; return q&&(q.status==="queued"||q.status==="delayed")?q:null; }
+  function threadByIds(acctId, threadId){ var a=acctOf(acctId); return a?((a.threads||[]).filter(function(x){ return x.id===threadId; })[0]||null):null; }
+  function pushEvent(th, kind, extra){
+    th.events=th.events||[];
+    var e={at:new Date().toISOString(), kind:kind};
+    Object.keys(extra||{}).forEach(function(k){ if(extra[k]!=null) e[k]=extra[k]; });
+    th.events.push(e); if(th.events.length>200) th.events.splice(0, th.events.length-200);
+    return e;
+  }
+  function chOf(t){ return ((state.extra||{}).chOverride||{})[t.id]||t.ch; }
+  /* the rulebook's answer for a touch: state + proposal, from the thread's events */
+  function actFor(t){
+    var th=threadByIds(t.acctId, t.threadId); if(!th) return null;
+    var nt=isDone(t)?null:{touchNo:t.touchNo, ch:chOf(t), date:dueOf(t)};
+    return nextMoveFor({thread:th, nextTouch:nt, cadenceLength:CADENCE.length, now:new Date()});
+  }
   function fmtWhen(isoTs){
     var d=new Date(isoTs);
     return d.toLocaleDateString(undefined,{weekday:"short",month:"short",day:"numeric"})+", "+d.toLocaleTimeString([],{hour:"numeric",minute:"2-digit"});
+  }
+  /* Touches logged as sent before the event log existed get a "sent" event at
+     their logged date, so the rulebook sees real history instead of "not
+     touched yet". Closed-out touches are not sends and are skipped. */
+  function backfillEvents(){
+    var changed=false, closed=(state.extra||{}).closed||{};
+    state.accounts.forEach(function(a){
+      (a.threads||[]).forEach(function(th){
+        if(th.eventsBackfilled) return;
+        CADENCE.forEach(function(c,i){
+          var id=a.id+"|"+th.id+"|"+i, d=state.done[id];
+          if(!d||closed[id]) return;
+          var has=(th.events||[]).some(function(e){ return e.kind==="sent"&&e.touchNo===i+1; });
+          if(!has){ pushEvent(th,"sent",{touchNo:i+1, channel:c.ch, at:new Date(d+"T12:00:00").toISOString()}); changed=true; }
+        });
+        th.eventsBackfilled=true; changed=true;
+      });
+    });
+    if(changed) scheduleSave();
   }
   function reconcileQueue(){
     var changed=false, bounced=[];
@@ -2302,17 +2442,25 @@ html[data-theme="light"] .vm-tabs button.on{background:#FFFFFF;color:#181A1E;box
       var q=QUEUE[id]; if(!q) return;
       var t=everyTouch().filter(function(x){ return x.id===id; })[0];
       if(!t) return;
-      if((q.status==="sent"||q.status==="delivered") && !state.done[id]){
+      var th=threadByIds(q.acctId||t.acctId, q.threadId||t.threadId); if(!th) return;
+      th.eng=th.eng||{}; var g=th.eng[id]||(th.eng[id]={opens:0,clicks:0});
+      var sentLike=(q.status==="sent"||q.status==="delivered"||q.status==="bounced"||q.status==="complained");
+      if(sentLike && !state.done[id]){
         var when=new Date(q.sentAt||q.deliveredAt||q.sendAt||Date.now());
         state.done[id]=iso(when); VM.channel=null; logActivity("sent", t);
         scheduleNext(t, GAP_DEFAULT); changed=true;
       }
-      if((q.status==="bounced"||q.status==="complained") && !q._handled){
-        var a=acctOf(q.acctId||t.acctId), th=a&&(a.threads||[]).filter(function(x){ return x.id===(q.threadId||t.threadId); })[0];
-        if(th){ th.emailStatus="bounce"; if(q.status==="complained") th.optOut=true; }
+      /* the queue is the truth about what happened; the thread's event log is
+         what the rulebook reads — copy each new fact over exactly once */
+      if(sentLike && !g.sent){ pushEvent(th,"sent",{touchNo:q.touchNo, channel:"em", at:q.sentAt||q.sendAt}); g.sent=true; changed=true; }
+      while(g.opens<(q.opens||0)){ g.opens++; pushEvent(th,"opened",{touchNo:q.touchNo, at:q.lastOpenAt}); changed=true; }
+      while(g.clicks<(q.clicks||0)){ g.clicks++; pushEvent(th,"clicked",{touchNo:q.touchNo, at:q.lastClickAt}); changed=true; }
+      if((q.status==="bounced"||q.status==="complained") && !g.stopped){
+        pushEvent(th, q.status, {touchNo:q.touchNo, detail:q.bounce?{message:q.bounce}:undefined});
+        th.emailStatus="bounce"; if(q.status==="complained") th.optOut=true;
         state.extra=state.extra||{}; state.extra.closed=state.extra.closed||{};
         touchesOfThread(t.acctId,t.threadId).forEach(function(x){ if(!state.done[x.id]){ state.done[x.id]=todayStr(); state.extra.closed[x.id]=1; } });
-        q._handled=true; bounced.push(t.who||q.who||"a contact"); changed=true;
+        g.stopped=true; bounced.push(t.who||q.who||"a contact"); changed=true;
       }
     });
     if(changed) persistDone();
@@ -4029,8 +4177,9 @@ function buckets() {
     else if (t.touchNo === 1) b.fresh.push(t);
     else b.resting.push(t);
   });
-  var srt = function (x, y) { return dueOf(x) < dueOf(y) ? -1 : 1; };
-  b.late.sort(srt); b.today.sort(srt); b.resting.sort(srt);
+  var rank = function (t) { var r = actFor(t); return STATE_RANK[r ? r.state : "cold"]; };
+  var srt = function (x, y) { var rx = rank(x), ry = rank(y); if (rx !== ry) return rx - ry; return dueOf(x) < dueOf(y) ? -1 : 1; };
+  b.late.sort(srt); b.today.sort(srt); b.resting.sort(srt); b.fresh.sort(srt);
   return b;
 }
 /* touches closed out via "Not a fit" — marked done so they leave the queue,
@@ -4655,15 +4804,6 @@ function greeting(b) {
   return lead + " No contacts yet — drop a CSV or Sheet under Contacts and I'll build the cadence.";
 }
 
-function queuePill(t, b) {
-  var td = todayStr(), d = dueOf(t);
-  var qe = queuedEntry(t);
-  if (qe) return '<span class="qpill queued">QUEUED · ' + esc(new Date(qe.sendAt).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })) + "</span>";
-  if (d < td) return '<span class="qpill late">READY</span>';
-  if (d === td) return '<span class="qpill due">DUE · TOUCH ' + t.touchNo + "</span>";
-  if (t.touchNo === 1) return '<span class="qpill ready">NEW · NEVER TOUCHED</span>';
-  return '<span class="qpill follow">FOLLOW-UP · +' + daysBetween(td, d) + "D</span>";
-}
 /* a side card in the carousel — a compact preview of an upcoming/prior contact */
 function cxPeek(t) {
   var a = acctOf(t.acctId);
@@ -4733,7 +4873,7 @@ function viewToday(v) {
   var q = resolveQueue(), b = q.b, active = q.active;
   var ak = active ? keyOf(active) : null;
   if (ak !== VM.activeKey) { VM.activeKey = ak; VM.channel = null; VM.angle = "gap"; }
-  if (active && VM.channel === null) VM.channel = active.ch === "call" ? "li" : active.ch;
+  if (active && VM.channel === null) VM.channel = chOf(active) === "call" ? "li" : chOf(active);
 
   var items = q.ids.length
     ? q.ids.map(function (id, i) { var t = q.map[id]; return t ? railHTML(t, i, i === VM.i) : ""; }).join("")
@@ -4862,10 +5002,14 @@ function doneBody(b) {
 
 function rowPill(t) {
   var td = todayStr(), d = dueOf(t);
-  if (d < td) return '<span class="rpill over">READY</span>';
-  if (d === td) return '<span class="rpill">DUE · TOUCH ' + t.touchNo + '</span>';
-  if (t.touchNo === 1) return '<span class="rpill">NEW · TOUCH 1</span>';
-  return '<span class="rpill follow">FOLLOW-UP · +' + daysBetween(td, d) + 'D</span>';
+  var r = actFor(t), st = r ? r.state : "cold";
+  var stp = (st === "warm" || st === "replied" || st === "parked") ? '<span class="stpill ' + st + '">' + esc(STATE_LABEL[st].toUpperCase()) + '</span> ' : '';
+  var qe = queuedEntry(t);
+  if (qe) return stp + '<span class="rpill queued">QUEUED · ' + esc(new Date(qe.sendAt).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })) + '</span>';
+  if (d < td) return stp + '<span class="rpill over">READY</span>';
+  if (d === td) return stp + '<span class="rpill">DUE · TOUCH ' + t.touchNo + '</span>';
+  if (t.touchNo === 1) return stp + '<span class="rpill">NEW · TOUCH 1</span>';
+  return stp + '<span class="rpill follow">FOLLOW-UP · +' + daysBetween(td, d) + 'D</span>';
 }
 function railHTML(t, i, on) {
   return '<div class="railitem' + (on ? " on" : "") + '" data-i="' + i + '">' +
@@ -4890,7 +5034,7 @@ function selectRow(i) {
   if (i === VM.i && document.querySelector(".vcard")) return;
   VM.i = i; VM.channel = null; VM.angle = "gap";
   var t = q.map[q.ids[i]];
-  if (t) { VM.activeKey = keyOf(t); VM.channel = t.ch === "call" ? "li" : t.ch; }
+  if (t) { VM.activeKey = keyOf(t); VM.channel = chOf(t) === "call" ? "li" : chOf(t); }
   Array.prototype.forEach.call(document.querySelectorAll(".railitem"), function (r) {
     r.classList.toggle("on", (parseInt(r.dataset.i, 10) || 0) === i);
   });
@@ -5042,6 +5186,8 @@ function cardBodyHTML(t, a) {
         '<textarea id="vmBody" class="body" placeholder="Ask Ollin to write it — or type your own.">' + esc(sp.body) + '</textarea>' +
         '<div class="draftmeta"><span id="vmMeta">' + countLabel(full) + (full.trim() ? ' · <span class="aud">AUDITED ✓</span>' : '') + '</span>' +
           '<span>' + (t.email ? '<a id="vmMail">Open email</a>' : '') + '<a id="vmCopy">Copy</a></span></div>' +
+        /* 3b · what they did, and what that proposes */
+        actBlockHTML(t) +
         /* 4 · next touch point */
         (t.touchNo < CADENCE.length
           ? '<div class="nextsel" id="vmNext"><div class="nt"><span class="nl">Next touch point</span>' +
@@ -5077,6 +5223,98 @@ function recombine(t) {
   syncMail(t);
 }
 
+/* Activation on the card: the contact's state, the rulebook's proposal with
+   its reason, one Accept button, and two taps for what the system cannot see
+   (a reply in your inbox, a LinkedIn accept). Accepting applies the move the
+   same way the gap picker or "Not a fit" would; it never sends. */
+function acceptLabel(p) {
+  switch (p.kind) {
+    case "pull_forward": return "Pull forward to " + fmtLong(p.date);
+    case "push": return "Move to " + fmtLong(p.date);
+    case "park": return p.date ? "Park until " + fmtLong(p.date) : "Park it";
+    case "nudge": return "Make it a nudge";
+    case "switch_channel": return "Switch to LinkedIn";
+    case "pause": return "Rest a week";
+    case "stop": return "Stop and close out";
+    case "reply": return "Stop and reply";
+    case "restart": return "Start fresh from the signal";
+    default: return "Accept";
+  }
+}
+function actBlockHTML(t) {
+  var r = actFor(t); if (!r) return "";
+  var p = r.proposal, st = r.state;
+  var pill = '<span class="stpill ' + st + '">' + esc((STATE_LABEL[st] || st).toUpperCase()) + '</span>';
+  var taps = '<span class="acttaps" id="actTaps"><a id="actReplied">They replied</a><a id="actLi">LinkedIn accepted</a></span>';
+  if (p.kind === "keep") return '<div class="act keep">' + pill + '<span class="actr">' + esc(p.reason) + '</span>' + taps + '</div>';
+  return '<div class="act">' + pill + '<span class="actr">' + esc(p.reason) + '</span>' +
+    '<button class="actgo" id="actAccept">' + esc(acceptLabel(p)) + ' <span>»</span></button>' + taps + '</div>';
+}
+function applyProposal(t, p) {
+  var th = threadByIds(t.acctId, t.threadId); if (!th) return;
+  state.extra = state.extra || {};
+  if (p.kind === "pull_forward" || p.kind === "push") {
+    state.reschedule[t.id] = p.date; scheduleSave(); toast("Moved to " + fmtLong(p.date) + "."); render(); return;
+  }
+  if (p.kind === "park") {
+    var d = p.date || window.prompt("Park until (YYYY-MM-DD)", iso(addDays(todayStr(), 30)));
+    if (!d || !/^\d{4}-\d{2}-\d{2}$/.test(d)) return toast("Need a date like 2027-01-12.");
+    th.parkedUntil = d; state.reschedule[t.id] = d; scheduleSave(); toast("Parked until " + fmtLong(d) + "."); render(); return;
+  }
+  if (p.kind === "pause") {
+    var pd = iso(shiftWeekend(addDays(todayStr(), 7))); state.reschedule[t.id] = pd; scheduleSave(); toast("Resting until " + fmtLong(pd) + "."); render(); return;
+  }
+  if (p.kind === "switch_channel") {
+    state.extra.chOverride = state.extra.chOverride || {}; state.extra.chOverride[t.id] = p.channel; VM.channel = p.channel; scheduleSave();
+    toast("Next touch switched to LinkedIn."); reopenBody(); return;
+  }
+  if (p.kind === "nudge") {
+    state.extra.nudge = state.extra.nudge || {}; state.extra.nudge[t.id] = 1; scheduleSave();
+    toast("Drafting a two-line nudge."); v3Draft(t, "Two-line nudge: they have seen the earlier note; one asset-based ask; no recap."); return;
+  }
+  if (p.kind === "stop") {
+    var r0 = actFor(t); if (r0 && r0.state === "opted_out") th.optOut = true;
+    decide("skip", t); return;
+  }
+  if (p.kind === "reply") {
+    /* close the rest of the sequence; this card becomes the reply */
+    state.extra.closed = state.extra.closed || {};
+    touchesOfThread(t.acctId, t.threadId).forEach(function (x) { if (x.id !== t.id && !state.done[x.id]) { state.done[x.id] = todayStr(); state.extra.closed[x.id] = 1; } });
+    state.extra.replying = state.extra.replying || {}; state.extra.replying[t.id] = 1; persistDone();
+    toast("Sequence stopped. Drafting the reply."); v3Draft(t, "They replied. Write the reply: answer what they raised, no re-introduction, no recap."); return;
+  }
+  if (p.kind === "restart") {
+    state.extra.closed = state.extra.closed || {};
+    touchesOfThread(t.acctId, t.threadId).forEach(function (x) { delete state.done[x.id]; delete state.extra.closed[x.id]; delete state.reschedule[x.id]; });
+    th.addedAt = todayStr(); th.restartedAt = new Date().toISOString(); delete th.parkedUntil;
+    persistDone(); toast("Fresh sequence from the new signal. Touch 1 is today."); render(); return;
+  }
+}
+function recordManual(t, kind, detail) {
+  var th = threadByIds(t.acctId, t.threadId); if (!th) return;
+  pushEvent(th, kind, { touchNo: t.touchNo, detail: detail });
+  scheduleSave(); render();
+}
+function wireAct(t) {
+  var acc = document.getElementById("actAccept");
+  if (acc) acc.onclick = function () { var r = actFor(t); if (r) applyProposal(t, r.proposal); };
+  var rp = document.getElementById("actReplied");
+  if (rp) rp.onclick = function () {
+    var taps = document.getElementById("actTaps"); if (!taps) return;
+    taps.innerHTML = '<span class="actq">What did they say?</span><a data-tone="positive">Interested</a><a data-tone="neutral">Something else</a><a data-tone="later">Later</a><a data-tone="negative">No</a>';
+    Array.prototype.forEach.call(taps.querySelectorAll("a[data-tone]"), function (x) {
+      x.onclick = function () {
+        var tone = x.dataset.tone, detail = { tone: tone };
+        if (tone === "later") { var d = window.prompt("When did they say? (YYYY-MM-DD, or leave blank)", ""); if (d && /^\d{4}-\d{2}-\d{2}$/.test(d)) detail.date = d; }
+        recordManual(t, "replied", detail);
+      };
+    });
+  };
+  var li = document.getElementById("actLi");
+  if (li) li.onclick = function () { recordManual(t, "li_accepted"); };
+}
+
+
 /* The approve-and-queue control. Only email touches, only with a backend, and
    only when the account has a send-as address; otherwise the card is exactly
    what it was. A queued touch shows when it leaves and offers one way back. */
@@ -5100,6 +5338,7 @@ function queueControlsHTML(t, email) {
 
 function wireCard(t) {
   var si = document.getElementById("vmSubj"), ta = document.getElementById("vmBody");
+  wireAct(t);
   var qb = document.getElementById("vmQueue"); if (qb) qb.onclick = function () { queueTouch(t); };
   var qc = document.getElementById("vmUnqueue"); if (qc) qc.onclick = function () { cancelQueued(t); };
   if (queuedEntry(t)) { if (ta) ta.readOnly = true; if (si) si.readOnly = true; }
@@ -5168,7 +5407,8 @@ function v3Draft(steerT, steer) {
     body: JSON.stringify({
       name: t.who || "", title: t.title || "", company: t.company || "",
       angle: t.angle || "", channel: VM.channel || "li", step: t.touchNo,
-      steer: steer || "", angleFrame: VM.angle
+      steer: steer || "", angleFrame: VM.angle,
+      engagement: (function () { var r = actFor(t); if (!r) return ""; var p = ((state.extra || {}).nudge || {})[t.id] ? { kind: "nudge" } : (((state.extra || {}).replying || {})[t.id] ? { kind: "reply" } : r.proposal); return engagementLine(r.facts, p); })()
     })
   }).then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
     .then(function (res) {
@@ -5202,6 +5442,7 @@ function logActivity(action, t) {
 function decide(kind, t) {
   if (kind === "sent") {
     state.done[t.id] = todayStr(); logActivity("sent", t);
+    var thS = threadByIds(t.acctId, t.threadId); if (thS) pushEvent(thS, "sent", { touchNo: t.touchNo, channel: VM.channel || t.ch });
     /* This is the whole fix for the queue: the next touch gets its date HERE,
        from today plus the gap the user picked — not from the account's start
        date months ago. */
@@ -5322,7 +5563,8 @@ function askOllin(steer) {
     body: JSON.stringify({
       name: t.who || "", title: t.title || "", company: t.company || "",
       angle: t.angle || "", channel: VM.channel || "li", step: t.touchNo,
-      steer: steer || "", angleFrame: VM.angle
+      steer: steer || "", angleFrame: VM.angle,
+      engagement: (function () { var r = actFor(t); if (!r) return ""; var p = ((state.extra || {}).nudge || {})[t.id] ? { kind: "nudge" } : (((state.extra || {}).replying || {})[t.id] ? { kind: "reply" } : r.proposal); return engagementLine(r.facts, p); })()
     })
   }).then(function (r) {
     return r.json().then(function (d) { return { ok: r.ok, d: d }; });
